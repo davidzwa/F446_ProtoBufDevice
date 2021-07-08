@@ -100,6 +100,14 @@
         "stm32f4xx.h": "c",
         "board-config.h": "c",
         "i2c-board.h": "c",
-        "stm32l4xx.h": "c"
-    }
+        "stm32l4xx.h": "c",
+        "pam7q.h": "c",
+        "i2c.h": "c"
+    },
+    "favorites.resources": [
+        "src\\boards\\NucleoF446\\CMakeLists.txt",
+        "src\\boards\\NucleoF446\\adc-board.c",
+        "src\\boards\\NucleoF446\\cmsis\\arm-gcc\\stm32f446retx_flash.ld",
+        "src\\boards\\NucleoF446\\cmsis\\stm32f4xx_hal_conf.h"
+    ]
 }
