@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif /*__cplusplus */
+
 #ifndef TSL2561_H
 #define TSL2561_H
 
@@ -71,7 +75,7 @@
 
 // #include "mbed.h"
 #include "stdio.h"
-#include "i2c-board.h"
+#include "i2c.h"
 
 class TSL2561_CalculateLux {
   public:
@@ -80,11 +84,11 @@ class TSL2561_CalculateLux {
     uint16_t readFSpecLuminosity();
     unsigned long calculateLux(unsigned int iGain, unsigned int tInt, int iType);
     void getLux(void);
-    int init(I2C* _I2C_hdle);
+    int init(I2C_t* _I2C_hdle);
     uint8_t readRegister(int deviceAddress, uint8_t address);
     int writeRegister(int deviceAddress, uint8_t address, uint8_t val);
   private:
-    I2C *i2c_h;
+    I2C_t *i2c_h;
     uint8_t CH0_LOW, CH0_HIGH, CH1_LOW, CH1_HIGH;
     uint16_t ch0, ch1;
     unsigned long chScale;
@@ -98,4 +102,9 @@ class TSL2561_CalculateLux {
 
 };
 extern TSL2561_CalculateLux  TSL2561;
+
 #endif
+
+#ifdef __cplusplus
+}
+#endif /*__cplusplus */

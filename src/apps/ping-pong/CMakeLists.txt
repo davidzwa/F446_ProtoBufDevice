@@ -44,7 +44,7 @@ set_property(CACHE MODULATION PROPERTY STRINGS ${MODEM_LIST})
 # Target
 #---------------------------------------------------------------------------------------
 
-file(GLOB ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_LIST_DIR}/${BOARD}/*.c")
+file(GLOB ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_LIST_DIR}/${BOARD}/*.cpp")
 
 add_executable(${PROJECT_NAME}
                             ${${PROJECT_NAME}_SOURCES}

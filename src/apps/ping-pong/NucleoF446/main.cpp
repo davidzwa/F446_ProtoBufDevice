@@ -28,7 +28,7 @@
 #include "timer.h"
 #include "radio.h"
 
-// #include "TSL2561.h"
+#include "TSL2561.h"
 #include "bme688.h"
 
 #if defined(REGION_AS923)

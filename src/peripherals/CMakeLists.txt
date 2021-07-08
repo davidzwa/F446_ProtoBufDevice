@@ -48,8 +48,10 @@ endif()
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
-file(GLOB ${PROJECT_NAME}_SOURCES "*.c" "bme68x/*.c")
+file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
+file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "TSL2561/*.cpp")
 target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)
+target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/TSL2561)
 message(STATUS "Looking for bme68x lib")
 
 if(${SECURE_ELEMENT_PRE_PROVISIONED} MATCHES ON)
