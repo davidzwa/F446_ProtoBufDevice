@@ -26,3 +26,6 @@ tmp/
 .vscode/launch.json
 .cmaketools.json
 ipch/
+
+**/*.o
+**/*.obj

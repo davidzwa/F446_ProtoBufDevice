@@ -44,7 +44,13 @@ set_property(CACHE MODULATION PROPERTY STRINGS ${MODEM_LIST})
 # Target
 #---------------------------------------------------------------------------------------
 
-file(GLOB ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_LIST_DIR}/${BOARD}/*.cpp")
+file(GLOB ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_LIST_DIR}/${BOARD}/*")
+
+# Debug c++ features
+# get_property(known_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
+# foreach(i ${known_features})
+#   message("${i}")
+# endforeach()
 
 add_executable(${PROJECT_NAME}
                             ${${PROJECT_NAME}_SOURCES}
