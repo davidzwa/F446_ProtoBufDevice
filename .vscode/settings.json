@@ -110,6 +110,7 @@
         "src\\boards\\NucleoF446\\CMakeLists.txt",
         "src\\boards\\NucleoF446\\adc-board.c",
         "src\\boards\\NucleoF446\\cmsis\\arm-gcc\\stm32f446retx_flash.ld",
-        "src\\boards\\NucleoF446\\cmsis\\stm32f4xx_hal_conf.h"
+        "src\\boards\\NucleoF446\\cmsis\\stm32f4xx_hal_conf.h",
+        "src\\system\\nvmm.c"
     ]
 }

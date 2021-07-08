@@ -179,6 +179,10 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
     printf("\n###### ===================================== ######\n\n");
 }
 
+I2c_t i2c(PB_9, PB_8);
+
+BME688 *bme688;
+
 /**
  * Main application entry point.
  */
@@ -193,7 +197,7 @@ int main(void)
 
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
-    DisplayAppInfo("pingh-pongh",
+    DisplayAppInfo("pingh-pongh Tomato-potato",
                    &appVersion,
                    &gitHubVersion);
 
