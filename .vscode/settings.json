@@ -102,7 +102,9 @@
         "i2c-board.h": "c",
         "stm32l4xx.h": "c",
         "pam7q.h": "c",
-        "i2c.h": "c"
+        "i2c.h": "c",
+        "stdbool.h": "c",
+        "mma8451.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

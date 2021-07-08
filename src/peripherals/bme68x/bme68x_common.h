@@ -9,7 +9,11 @@ extern "C" {
 #endif /*__cplusplus */
 
 #include "bme68x.h"
+
 #include "i2c.h"
+
+extern I2c_t I2c;
+
 // #include "mbed.h"
 
 /*!

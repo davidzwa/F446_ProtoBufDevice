@@ -52,7 +52,7 @@ file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
 file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "TSL2561/*.cpp")
 target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)
 target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/TSL2561)
-message(STATUS "Looking for bme68x lib")
+message(STATUS "Looking for bme68x and tsl2561 lib")
 
 if(${SECURE_ELEMENT_PRE_PROVISIONED} MATCHES ON)
     target_compile_definitions(${PROJECT_NAME} PRIVATE -DSECURE_ELEMENT_PRE_PROVISIONED)

@@ -77,6 +77,8 @@ extern "C" {
 #include "stdio.h"
 #include "i2c.h"
 
+extern I2c_t I2c;
+
 class TSL2561_CalculateLux {
   public:
     signed long readVisibleLux();

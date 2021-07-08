@@ -25,7 +25,7 @@ void TSL2561_CalculateLux::getLux(void) {
     ch0 = (CH0_HIGH << 8) | CH0_LOW;
     ch1 = (CH1_HIGH << 8) | CH1_LOW;
 }
-int TSL2561_CalculateLux::init(I2C* _I2C_hdle) {
+int TSL2561_CalculateLux::init(I2C_t* _I2C_hdle) {
     int success = 0;
     i2c_h = _I2C_hdle;
     
