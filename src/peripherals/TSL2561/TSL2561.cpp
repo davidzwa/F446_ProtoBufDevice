@@ -1,17 +1,29 @@
-#include <TSL2561.h>
+#include "TSL2561.h"
 #include "i2c.h"
 #include "delay.h"
 
-extern I2c_t I2c;
+int TSL2561_CalculateLux::init(/*I2c_t* _I2C_hdle*/) {
+    // Optional
+    // this->i2c_h = _I2C_hdle;
+    
+    int success = 0;
+    
+    success += writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP   
+    success += writeRegister(TSL2561_Address, TSL2561_Timing, 0x00); //No High Gain (1x), integration time of 13ms
+    success += writeRegister(TSL2561_Address, TSL2561_Interrupt, 0x00);
+    success += writeRegister(TSL2561_Address, TSL2561_Control, 0x00); // POWER Down
+    
+    return success;
+}
 
 uint8_t TSL2561_CalculateLux::readRegister(int deviceAddress, uint8_t address) {
     uint8_t value;
 
     // i2c_h->write(deviceAddress, (char*) &address, 1, true);
-    I2cWriteBuffer(&I2c, deviceAddress,(uint8_t*) &address, 1);
+    I2cWriteBuffer(&i2c_h, deviceAddress,(uint8_t*) &address, 1);
         
     // i2c_h->read(deviceAddress, (char*) &value, 1);
-    I2cReadBuffer(&I2c, deviceAddress,(uint8_t*) &value, 1);
+    I2cReadBuffer(&i2c_h, deviceAddress,(uint8_t*) &value, 1);
 
     return value;
 }
@@ -20,7 +32,7 @@ int TSL2561_CalculateLux::writeRegister(int deviceAddress, uint8_t address, uint
     uint8_t data[2] = {address, val};
     
     // return i2c_h->write(deviceAddress, (char*) &data, 2);
-    return I2cWriteBuffer(&I2c, deviceAddress, (uint8_t*) &data, 2);
+    return I2cWriteBuffer(&i2c_h, deviceAddress, (uint8_t*) &data, 2);
 }
 
 void TSL2561_CalculateLux::getLux(void) {
@@ -32,18 +44,9 @@ void TSL2561_CalculateLux::getLux(void) {
 
     ch0 = (CH0_HIGH << 8) | CH0_LOW;
     ch1 = (CH1_HIGH << 8) | CH1_LOW;
-}
-int TSL2561_CalculateLux::init(I2c_t* _I2C_hdle) {
-    int success = 0;
-    i2c_h = _I2C_hdle;
     
-    success += writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP   
-    success += writeRegister(TSL2561_Address, TSL2561_Timing, 0x00); //No High Gain (1x), integration time of 13ms
-    success += writeRegister(TSL2561_Address, TSL2561_Interrupt, 0x00);
-    success += writeRegister(TSL2561_Address, TSL2561_Control, 0x00); // POWER Down
-    
-    return success;
 }
+
 
 
 uint16_t TSL2561_CalculateLux::readIRLuminosity() { // read Infrared channel value only, not convert to lux.
@@ -178,4 +181,3 @@ unsigned long TSL2561_CalculateLux::calculateLux(unsigned int iGain, unsigned in
     lux = temp >> LUX_SCALE;
     return (lux);
 }
-TSL2561_CalculateLux TSL2561;

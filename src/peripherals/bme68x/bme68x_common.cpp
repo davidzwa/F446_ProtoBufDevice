@@ -7,10 +7,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstring>
 
 #include "bme68x.h"
 //#include "coines.h"
 #include "bme68x_common.h"
+
+#include "delay.h"
+
+extern I2c_t I2c;
 
 /******************************************************************************/
 /*!                 Macro definitions                                         */
@@ -20,7 +25,6 @@
 /******************************************************************************/
 /*!                Static variable definition                                 */
 static uint8_t dev_addr;
-static I2c_t *i2c_h;
 
 /******************************************************************************/
 /*!                User interface functions                                   */
@@ -33,9 +37,12 @@ BME68X_INTF_RET_TYPE bme68x_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32
 //    uint8_t dev_addr = *(uint8_t*)intf_ptr;
 
 //    return coines_read_i2c(dev_addr, reg_addr, reg_data, (uint16_t)len);
-    i2c_h->write(dev_addr, (char*) &reg_addr, 1, true);
-    return i2c_h->read(dev_addr, (char*) reg_data, len);
-
+    
+    // i2c_h->write(dev_addr, (char*) &reg_addr, 1, true);
+    I2cWriteBuffer(&I2c, dev_addr,(uint8_t*) &reg_addr, 1);
+    
+    // return i2c_h->read(dev_addr, (char*) reg_data, len);
+    return I2cReadBuffer(&I2c, dev_addr,(uint8_t*) &reg_data, 1); 
 }
 
 /*!
@@ -50,8 +57,8 @@ BME68X_INTF_RET_TYPE bme68x_i2c_write(uint8_t reg_addr, const uint8_t *reg_data,
     msg[0] = reg_addr;
     memcpy(msg + 1, reg_data, len);
 
-    return i2c_h->write(dev_addr, msg, len + 1);
-
+    // return i2c_h->write(dev_addr, msg, len + 1);
+    return I2cWriteBuffer(&I2c, dev_addr,(uint8_t*) &msg, len+1);
 }
 
 /*!
@@ -82,7 +89,7 @@ BME68X_INTF_RET_TYPE bme68x_spi_write(uint8_t reg_addr, const uint8_t *reg_data,
 void bme68x_delay_us(uint32_t period, void *intf_ptr)
 {
 //    coines_delay_usec(period);
-    HAL_Delay(14);
+    DelayMs(14);
 }
 
 void bme68x_check_rslt(const char api_name[], int8_t rslt)
@@ -121,7 +128,10 @@ int8_t bme68x_interface_init(I2c_t* _I2C_hdle, struct bme68x_dev *bme, uint8_t i
 {
     int8_t rslt = BME68X_OK;
     
-    i2c_h = _I2C_hdle;
+    // External [D. Zwart]
+    // i2c_h = _I2C_hdle;
+
+    // COINES adjustment [N. Hokke]
 //    struct coines_board_info board_info;
 
     if (bme != NULL)

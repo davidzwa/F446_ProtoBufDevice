@@ -9,6 +9,7 @@ extern "C" {
 #endif /*__cplusplus */
 
 #include "bme68x.h"
+#include "i2c.h"
 
     /*!
  *  @brief Function to select the interface between SPI and I2C.

@@ -64,7 +64,7 @@
         "MBED_RADIO_SHIELD":"SX1261MBXBAS",
         
         // ZED enabled/disabled sensor true/false
-        "BME_68X": false,
+        "BME_68X": true,
 
         // ZED enabled/disabled I2C sensor true/false
         "TSL_2561": true,

@@ -13,7 +13,6 @@ class BME688 {
     struct bme68x_dev bme;
     struct bme68x_conf conf;
     struct bme68x_heatr_conf heatr_conf;
-
 };
 
 #endif // BME688_H

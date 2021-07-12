@@ -20,6 +20,10 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
+
+#define USE_BME_68X
+#define USE_TSL_2561
+
 #include "stm32f4xx.h"
 #include "utilities.h"
 #include "gpio.h"
@@ -44,11 +48,21 @@
  */
 #if defined( USE_TSL_2561 )
     #include "TSL2561.h"
+    TSL2561_CalculateLux *TSL2561;
+    #pragma warning ( "TSL included" )
+#else
+    #pragma warning ( "TSL not included" )
 #endif
+
+
 #if defined( USE_BME_68X )
     #include "bme688.h"
     BME688 *bme688;
+    #pragma error ( "BME included" )
+#else
+    #pragma error ( "BME not included" )
 #endif
+    
 
 /*!
  * Unique Devices IDs register set ( STM32F4xxx )
@@ -133,10 +147,10 @@ void BoardInitPeriph( void )
     bme688->init(&I2c);
 #endif
 
-#if defined( USE_BME_68X )    
-    TSL2561.init(&I2c);
+#if defined( USE_TSL_2561 )  
+    // TSL2561 = new TSL2561_CalculateLux();
+    TSL2561->init(/*&I2c*/);
 #endif
-
 }
 
 void BoardInitMcu( void )
@@ -160,7 +174,6 @@ void BoardInitMcu( void )
         // Configure your terminal for 8 Bits data (7 data bit + 1 parity bit), no parity and no flow ctrl
         UartInit( &Uart2, UART_2, UART_TX, UART_RX );
         UartConfig( &Uart2, RX_TX, 921600, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
-
 
         RtcInit( );
 
