@@ -39,8 +39,16 @@
 #endif
 #include "board.h"
 
-// #include "TSL2561.h"
-#include "bme688.h"
+/**
+ * C++ instances for I2C sensors
+ */
+#if defined( USE_TSL_2561 )
+    #include "TSL2561.h"
+#endif
+#if defined( USE_BME_68X )
+    #include "bme688.h"
+    BME688 *bme688;
+#endif
 
 /*!
  * Unique Devices IDs register set ( STM32F4xxx )
@@ -61,11 +69,6 @@ Gpio_t Led2;
 Adc_t Adc;
 I2c_t I2c;
 Uart_t Uart2;
-
-/**
- * C++ instances for I2C sensors
- */
-BME688 *bme688;
 
 #if defined( LR1110MB1XXS )
     extern lr1110_t LR1110;
@@ -124,10 +127,16 @@ void BoardCriticalSectionEnd( uint32_t *mask )
 void BoardInitPeriph( void )
 {
     // Initialize the I2C sensors here
+    
+#if defined( USE_BME_68X )
     bme688 = new BME688();
     bme688->init(&I2c);
-    
-    // TSL2561.init(&I2c);
+#endif
+
+#if defined( USE_BME_68X )    
+    TSL2561.init(&I2c);
+#endif
+
 }
 
 void BoardInitMcu( void )

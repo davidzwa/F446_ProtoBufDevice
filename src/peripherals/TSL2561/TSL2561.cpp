@@ -1,11 +1,17 @@
 #include <TSL2561.h>
+#include "i2c.h"
+#include "delay.h"
 
+extern I2c_t I2c;
 
 uint8_t TSL2561_CalculateLux::readRegister(int deviceAddress, uint8_t address) {
     uint8_t value;
-    
-    i2c_h->write(deviceAddress, (char*) &address, 1, true);
-    i2c_h->read(deviceAddress, (char*) &value, 1);
+
+    // i2c_h->write(deviceAddress, (char*) &address, 1, true);
+    I2cWriteBuffer(&I2c, deviceAddress,(uint8_t*) &address, 1);
+        
+    // i2c_h->read(deviceAddress, (char*) &value, 1);
+    I2cReadBuffer(&I2c, deviceAddress,(uint8_t*) &value, 1);
 
     return value;
 }
@@ -13,8 +19,10 @@ uint8_t TSL2561_CalculateLux::readRegister(int deviceAddress, uint8_t address) {
 int TSL2561_CalculateLux::writeRegister(int deviceAddress, uint8_t address, uint8_t val) {
     uint8_t data[2] = {address, val};
     
-    return i2c_h->write(deviceAddress, (char*) &data, 2);
+    // return i2c_h->write(deviceAddress, (char*) &data, 2);
+    return I2cWriteBuffer(&I2c, deviceAddress, (uint8_t*) &data, 2);
 }
+
 void TSL2561_CalculateLux::getLux(void) {
     CH0_LOW = readRegister(TSL2561_Address, TSL2561_Channal0L);
     CH0_HIGH = readRegister(TSL2561_Address, TSL2561_Channal0H);
@@ -25,7 +33,7 @@ void TSL2561_CalculateLux::getLux(void) {
     ch0 = (CH0_HIGH << 8) | CH0_LOW;
     ch1 = (CH1_HIGH << 8) | CH1_LOW;
 }
-int TSL2561_CalculateLux::init(I2C_t* _I2C_hdle) {
+int TSL2561_CalculateLux::init(I2c_t* _I2C_hdle) {
     int success = 0;
     i2c_h = _I2C_hdle;
     
@@ -40,7 +48,7 @@ int TSL2561_CalculateLux::init(I2C_t* _I2C_hdle) {
 
 uint16_t TSL2561_CalculateLux::readIRLuminosity() { // read Infrared channel value only, not convert to lux.
     writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP
-    HAL_Delay(14);
+    Delay(14);
     getLux();
 
     writeRegister(TSL2561_Address, TSL2561_Control, 0x00); // POWER Down
@@ -55,7 +63,7 @@ uint16_t TSL2561_CalculateLux::readIRLuminosity() { // read Infrared channel val
 
 uint16_t TSL2561_CalculateLux::readFSpecLuminosity() { //read Full Spectrum channel value only,  not convert to lux.
     writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP
-    HAL_Delay(14);
+    Delay(14);
     getLux();
 
     writeRegister(TSL2561_Address, TSL2561_Control, 0x00); // POWER Down
@@ -70,7 +78,7 @@ uint16_t TSL2561_CalculateLux::readFSpecLuminosity() { //read Full Spectrum chan
 
 signed long TSL2561_CalculateLux::readVisibleLux() {
     writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP
-    HAL_Delay(14);
+    Delay(14);
     getLux();
 
     writeRegister(TSL2561_Address, TSL2561_Control, 0x00); // POWER Down
@@ -82,6 +90,7 @@ signed long TSL2561_CalculateLux::readVisibleLux() {
     }
     return calculateLux(0, 0, 0);  //T package, no gain, 13ms
 }
+
 unsigned long TSL2561_CalculateLux::calculateLux(unsigned int iGain, unsigned int tInt, int iType) {
     switch (tInt) {
         case 0:  // 13.7 msec

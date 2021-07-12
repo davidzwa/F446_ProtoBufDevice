@@ -46,14 +46,27 @@ else()
     endif()
 endif()
 
-message(STATUS "Looking for bme68x and tsl2561 lib")
-file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
-file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "TSL2561/*.cpp")
+if(BME_68X) 
+    message(STATUS "Added ZED bme68x I2C peripheral (C++)")
+    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
+endif()
+
+if(TSL_2561)
+    message(STATUS "Added ZED tsl2561 I2C peripheral (C++)")
+    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "TSL2561/*.cpp")
+endif()
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
-target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)
-target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/TSL2561)
+if (TSL_2561)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DUSE_TSL_2561)
+    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/TSL2561)
+endif()
+
+if(BME_68X) 
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DUSE_BME_68X)
+    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)
+endif()
 
 if(${SECURE_ELEMENT_PRE_PROVISIONED} MATCHES ON)
     target_compile_definitions(${PROJECT_NAME} PRIVATE -DSECURE_ELEMENT_PRE_PROVISIONED)

@@ -29,6 +29,7 @@ extern "C"
 #endif
 
 #include "gpio.h"
+#include "utilities.h"
 
 /*!
  * I2C peripheral ID

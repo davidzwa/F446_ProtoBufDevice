@@ -18,7 +18,7 @@
 #define SAMPLE_COUNT  UINT16_C(300)
 
 
-int BME688::init(I2C_t* _I2C_hdle) {
+int BME688::init(I2c_t* _I2C_hdle) {
     int rslt = 0;
 
     rslt = bme68x_interface_init(_I2C_hdle, &bme, BME68X_I2C_INTF);

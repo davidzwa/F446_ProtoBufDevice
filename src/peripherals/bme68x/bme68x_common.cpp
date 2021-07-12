@@ -20,7 +20,7 @@
 /******************************************************************************/
 /*!                Static variable definition                                 */
 static uint8_t dev_addr;
-static I2C_t *i2c_h;
+static I2c_t *i2c_h;
 
 /******************************************************************************/
 /*!                User interface functions                                   */
@@ -117,7 +117,7 @@ void bme68x_check_rslt(const char api_name[], int8_t rslt)
     }
 }
 
-int8_t bme68x_interface_init(I2C* _I2C_hdle, struct bme68x_dev *bme, uint8_t intf)
+int8_t bme68x_interface_init(I2c_t* _I2C_hdle, struct bme68x_dev *bme, uint8_t intf)
 {
     int8_t rslt = BME68X_OK;
     
