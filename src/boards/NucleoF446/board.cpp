@@ -21,9 +21,6 @@
  * \author    Gregory Cristian ( Semtech )
  */
 
-#define USE_BME_68X
-#define USE_TSL_2561
-
 #include "stm32f4xx.h"
 #include "utilities.h"
 #include "gpio.h"
