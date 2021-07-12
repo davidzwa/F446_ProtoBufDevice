@@ -148,7 +148,7 @@ void BoardInitPeriph( void )
 #endif
 
 #if defined( USE_TSL_2561 )  
-    // TSL2561 = new TSL2561_CalculateLux();
+    TSL2561 = new TSL2561_CalculateLux();
     TSL2561->init(/*&I2c*/);
 #endif
 }
