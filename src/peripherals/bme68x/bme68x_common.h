@@ -10,13 +10,7 @@ extern "C" {
 
 #include "bme68x.h"
 
-#include "i2c.h"
-
-extern I2c_t I2c;
-
-// #include "mbed.h"
-
-/*!
+    /*!
  *  @brief Function to select the interface between SPI and I2C.
  *
  *  @param[in] bme      : Structure instance of bme68x_dev
@@ -26,9 +20,9 @@ extern I2c_t I2c;
  *  @retval 0 -> Success
  *  @retval < 0 -> Failure Info
  */
-int8_t bme68x_interface_init(I2c_t* _I2C_hdle, struct bme68x_dev *bme, uint8_t intf);
+    int8_t bme68x_interface_init(I2c_t *_I2C_hdle, struct bme68x_dev *bme, uint8_t intf);
 
-/*!
+    /*!
  *  @brief Function for reading the sensor's registers through I2C bus.
  *
  *  @param[in] reg_addr     : Register address.
@@ -41,9 +35,9 @@ int8_t bme68x_interface_init(I2c_t* _I2C_hdle, struct bme68x_dev *bme, uint8_t i
  *  @retval != BME68X_INTF_RET_SUCCESS  -> Failure Info
  *
  */
-BME68X_INTF_RET_TYPE bme68x_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
+    BME68X_INTF_RET_TYPE bme68x_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
 
-/*!
+    /*!
  *  @brief Function for writing the sensor's registers through I2C bus.
  *
  *  @param[in] reg_addr     : Register address.
@@ -56,9 +50,9 @@ BME68X_INTF_RET_TYPE bme68x_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32
  *  @retval != BME68X_INTF_RET_SUCCESS  -> Failure Info
  *
  */
-BME68X_INTF_RET_TYPE bme68x_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
+    BME68X_INTF_RET_TYPE bme68x_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
 
-/*!
+    /*!
  *  @brief Function for reading the sensor's registers through SPI bus.
  *
  *  @param[in] reg_addr     : Register address.
@@ -71,9 +65,9 @@ BME68X_INTF_RET_TYPE bme68x_i2c_write(uint8_t reg_addr, const uint8_t *reg_data,
  *  @retval != BME68X_INTF_RET_SUCCESS  -> Failure Info
  *
  */
-BME68X_INTF_RET_TYPE bme68x_spi_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
+    BME68X_INTF_RET_TYPE bme68x_spi_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t len, void *intf_ptr);
 
-/*!
+    /*!
  *  @brief Function for writing the sensor's registers through SPI bus.
  *
  *  @param[in] reg_addr     : Register address.
@@ -86,9 +80,9 @@ BME68X_INTF_RET_TYPE bme68x_spi_read(uint8_t reg_addr, uint8_t *reg_data, uint32
  *  @retval != BME68X_INTF_RET_SUCCESS  -> Failure Info
  *
  */
-BME68X_INTF_RET_TYPE bme68x_spi_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
+    BME68X_INTF_RET_TYPE bme68x_spi_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t len, void *intf_ptr);
 
-/*!
+    /*!
  * @brief This function provides the delay for required time (Microsecond) as per the input provided in some of the
  * APIs.
  *
@@ -98,9 +92,9 @@ BME68X_INTF_RET_TYPE bme68x_spi_write(uint8_t reg_addr, const uint8_t *reg_data,
  *  @return void.
  *
  */
-void bme68x_delay_us(uint32_t period, void *intf_ptr);
+    void bme68x_delay_us(uint32_t period, void *intf_ptr);
 
-/*!
+    /*!
  *  @brief Prints the execution status of the APIs.
  *
  *  @param[in] api_name : Name of the API whose execution status has to be printed.
@@ -108,14 +102,14 @@ void bme68x_delay_us(uint32_t period, void *intf_ptr);
  *
  *  @return void.
  */
-void bme68x_check_rslt(const char api_name[], int8_t rslt);
+    void bme68x_check_rslt(const char api_name[], int8_t rslt);
 
-/*!
+    /*!
  *  @brief Deinitializes coines platform
  *
  *  @return void.
  */
-void bme68x_coines_deinit(void);
+    void bme68x_coines_deinit(void);
 
 #ifdef __cplusplus
 }

@@ -46,6 +46,7 @@
 #define BME68X_H_
 
 #include "bme68x_defs.h"
+#include "i2c.h"
 
 /* CPP guard */
 #ifdef __cplusplus

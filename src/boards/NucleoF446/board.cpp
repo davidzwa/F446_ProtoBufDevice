@@ -33,10 +33,14 @@
 #include "lpm-board.h"
 #include "rtc-board.h"
 
+
 #if defined( SX1261MBXBAS )
     #include "sx126x-board.h"
 #endif
 #include "board.h"
+
+// #include "TSL2561.h"
+#include "bme688.h"
 
 /*!
  * Unique Devices IDs register set ( STM32F4xxx )
@@ -57,6 +61,11 @@ Gpio_t Led2;
 Adc_t Adc;
 I2c_t I2c;
 Uart_t Uart2;
+
+/**
+ * C++ instances for I2C sensors
+ */
+BME688 *bme688;
 
 #if defined( LR1110MB1XXS )
     extern lr1110_t LR1110;
@@ -114,7 +123,11 @@ void BoardCriticalSectionEnd( uint32_t *mask )
 
 void BoardInitPeriph( void )
 {
-
+    // Initialize the I2C sensors here
+    bme688 = new BME688();
+    bme688->init(&I2c);
+    
+    // TSL2561.init(&I2c);
 }
 
 void BoardInitMcu( void )
@@ -145,7 +158,7 @@ void BoardInitMcu( void )
         BoardUnusedIoInit();
 
         I2cInit(&I2c, I2C_1, I2C_SCL, I2C_SDA);
-        
+
         if( GetBoardPowerSource( ) == BATTERY_POWER )
         {
             // Disables OFF mode - Enables lowest power mode (STOP)

@@ -12,7 +12,6 @@
 //#include "coines.h"
 #include "bme68x_common.h"
 
-
 /******************************************************************************/
 /*!                 Macro definitions                                         */
 /*! BME68X shuttle board ID */
@@ -21,7 +20,7 @@
 /******************************************************************************/
 /*!                Static variable definition                                 */
 static uint8_t dev_addr;
-static I2C *i2c_h;
+static I2C_t *i2c_h;
 
 /******************************************************************************/
 /*!                User interface functions                                   */

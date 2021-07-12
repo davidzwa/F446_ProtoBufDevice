@@ -3,7 +3,6 @@
 
 #include "bme68x.h"
 #include "bme68x_common.h"
-// #include "mbed.h"
 
 class BME688 {
   public:
@@ -16,5 +15,5 @@ class BME688 {
     struct bme68x_heatr_conf heatr_conf;
 
 };
-//extern BME688_MeasureEnv  bme688;
+
 #endif // BME688_H

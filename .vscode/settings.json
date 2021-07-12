@@ -104,7 +104,11 @@
         "pam7q.h": "c",
         "i2c.h": "c",
         "stdbool.h": "c",
-        "mma8451.h": "c"
+        "mma8451.h": "c",
+        "*.tcc": "cpp",
+        "unordered_map": "cpp",
+        "numeric": "cpp",
+        "ostream": "cpp"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

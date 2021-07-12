@@ -28,9 +28,6 @@
 #include "timer.h"
 #include "radio.h"
 
-#include "TSL2561.h"
-#include "bme688.h"
-
 #if defined(REGION_AS923)
 
 #define RF_FREQUENCY 923000000 // Hz
@@ -179,10 +176,6 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
     printf("\n###### ===================================== ######\n\n");
 }
 
-// I2c_t i2c(PB_9, PB_8);
-
-BME688 *bme688;
-
 /**
  * Main application entry point.
  */
@@ -274,7 +267,7 @@ int main(void)
     //     {
     //         Buffer[i] = i - 4;
     //     }
-        
+
     //     Radio.Send(Buffer, BufferSize);
     //     DelayMs(1000);
     //     printf("PINGED\n\r");
