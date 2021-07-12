@@ -179,7 +179,7 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
     printf("\n###### ===================================== ######\n\n");
 }
 
-I2c_t i2c(PB_9, PB_8);
+// I2c_t i2c(PB_9, PB_8);
 
 BME688 *bme688;
 

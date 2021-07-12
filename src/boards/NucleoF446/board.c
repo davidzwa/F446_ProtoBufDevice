@@ -54,7 +54,8 @@ Gpio_t Led2;
 /*
  * MCU objects
  */
-Adc_t  Adc;
+Adc_t Adc;
+I2c_t I2c;
 Uart_t Uart2;
 
 #if defined( LR1110MB1XXS )
@@ -138,9 +139,13 @@ void BoardInitMcu( void )
         UartInit( &Uart2, UART_2, UART_TX, UART_RX );
         UartConfig( &Uart2, RX_TX, 921600, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
 
+
         RtcInit( );
 
-        BoardUnusedIoInit( );
+        BoardUnusedIoInit();
+
+        I2cInit(&I2c, I2C_1, I2C_SCL, I2C_SDA);
+        
         if( GetBoardPowerSource( ) == BATTERY_POWER )
         {
             // Disables OFF mode - Enables lowest power mode (STOP)
