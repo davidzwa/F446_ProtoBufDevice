@@ -62,6 +62,12 @@
         // The following shields are supported:
         // SX1272MB2DAS, SX1276MB1LAS, SX1276MB1MAS, SX1261MBXBAS(Default), SX1262MBXCAS, SX1262MBXDAS, LR1110MB1XXS.
         "MBED_RADIO_SHIELD":"SX1261MBXBAS",
+        
+        // ZED enabled/disabled sensor true/false
+        "BME_68X": false,
+
+        // ZED enabled/disabled I2C sensor true/false
+        "TSL_2561": false,
 
         // Secure element type selection the following are supported
         // SOFT_SE(Default), LR1110_SE, ATECC608A_TNGLORA_SE
@@ -100,6 +106,21 @@
         "stm32f4xx.h": "c",
         "board-config.h": "c",
         "i2c-board.h": "c",
-        "stm32l4xx.h": "c"
-    }
+        "stm32l4xx.h": "c",
+        "pam7q.h": "c",
+        "i2c.h": "c",
+        "stdbool.h": "c",
+        "mma8451.h": "c",
+        "*.tcc": "cpp",
+        "unordered_map": "cpp",
+        "numeric": "cpp",
+        "ostream": "cpp"
+    },
+    "favorites.resources": [
+        "src\\boards\\NucleoF446\\CMakeLists.txt",
+        "src\\boards\\NucleoF446\\adc-board.c",
+        "src\\boards\\NucleoF446\\cmsis\\arm-gcc\\stm32f446retx_flash.ld",
+        "src\\boards\\NucleoF446\\cmsis\\stm32f4xx_hal_conf.h",
+        "src\\system\\nvmm.c"
+    ]
 }

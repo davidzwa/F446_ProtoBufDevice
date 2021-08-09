@@ -78,7 +78,7 @@ bool NvmmCrc32Check( uint16_t size, uint16_t offset )
 
 bool NvmmReset( uint16_t size, uint16_t offset )
 {
-    uint32_t crc32 = 0;
+    // uint32_t crc32 = 0;
 
     // if( EepromMcuWriteBuffer( offset + size - sizeof( crc32 ),
     //                           ( uint8_t* ) &crc32, sizeof( crc32 ) ) == LMN_STATUS_OK )

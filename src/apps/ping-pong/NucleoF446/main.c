@@ -190,7 +190,7 @@ int main(void)
 
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
-    DisplayAppInfo("pingh-pongh",
+    DisplayAppInfo("pingh-pongh Tomato-potato",
                    &appVersion,
                    &gitHubVersion);
 
@@ -267,7 +267,7 @@ int main(void)
     //     {
     //         Buffer[i] = i - 4;
     //     }
-        
+
     //     Radio.Send(Buffer, BufferSize);
     //     DelayMs(1000);
     //     printf("PINGED\n\r");
