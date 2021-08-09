@@ -61,7 +61,7 @@ void AdcMcuConfig(void)
 uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel)
 {
   ADC_ChannelConfTypeDef adcConf = {0};
-  uint16_t adcData = 0;
+  // uint16_t adcData = 0;
 
   // Enable HSI
   __HAL_RCC_HSI_ENABLE();
@@ -88,7 +88,7 @@ uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel)
 
   HAL_ADC_PollForConversion( &AdcHandle, HAL_MAX_DELAY );
 
-  adcData = HAL_ADC_GetValue( &AdcHandle );
+  // adcData = HAL_ADC_GetValue( &AdcHandle );
 
   __HAL_ADC_DISABLE( &AdcHandle );
 
