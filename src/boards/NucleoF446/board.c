@@ -38,6 +38,27 @@
 #endif
 #include "board.h"
 
+/**
+ * C++ instances for I2C sensors
+ */
+#if defined( USE_TSL_2561 )
+    #include "TSL2561.h"
+    TSL2561_CalculateLux *TSL2561;
+    #pragma warning ( "TSL included" )
+#else
+    #pragma warning ( "TSL not included" )
+#endif
+
+
+#if defined( USE_BME_68X )
+    #include "bme688.h"
+    BME688 *bme688;
+    #pragma error ( "BME included" )
+#else
+    #pragma error ( "BME not included" )
+#endif
+    
+
 /*!
  * Unique Devices IDs register set ( STM32F4xxx )
  */
@@ -54,7 +75,8 @@ Gpio_t Led2;
 /*
  * MCU objects
  */
-Adc_t  Adc;
+Adc_t Adc;
+I2c_t I2c;
 Uart_t Uart2;
 
 #if defined( LR1110MB1XXS )
@@ -113,7 +135,17 @@ void BoardCriticalSectionEnd( uint32_t *mask )
 
 void BoardInitPeriph( void )
 {
+    // Initialize the I2C sensors here
+    
+#if defined( USE_BME_68X )
+    bme688 = new BME688();
+    bme688->init(&I2c);
+#endif
 
+#if defined( USE_TSL_2561 )  
+    TSL2561 = new TSL2561_CalculateLux();
+    TSL2561->init(/*&I2c*/);
+#endif
 }
 
 void BoardInitMcu( void )
@@ -140,7 +172,10 @@ void BoardInitMcu( void )
 
         RtcInit( );
 
-        BoardUnusedIoInit( );
+        BoardUnusedIoInit();
+
+        I2cInit(&I2c, I2C_1, I2C_SCL, I2C_SDA);
+
         if( GetBoardPowerSource( ) == BATTERY_POWER )
         {
             // Disables OFF mode - Enables lowest power mode (STOP)
