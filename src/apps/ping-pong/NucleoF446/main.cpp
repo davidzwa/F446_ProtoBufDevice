@@ -20,6 +20,9 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
+
+#define CRLF 1
+
 #include <string.h>
 #include "stdio.h"
 #include "board.h"
@@ -27,81 +30,9 @@
 #include "delay.h"
 #include "timer.h"
 #include "radio.h"
-
-#if defined(REGION_AS923)
-
-#define RF_FREQUENCY 923000000 // Hz
-
-#elif defined(REGION_AU915)
-
-#define RF_FREQUENCY 915000000 // Hz
-
-#elif defined(REGION_CN470)
-
-#define RF_FREQUENCY 470000000 // Hz
-
-#elif defined(REGION_CN779)
-
-#define RF_FREQUENCY 779000000 // Hz
-
-#elif defined(REGION_EU433)
-
-#define RF_FREQUENCY 433000000 // Hz
-
-#elif defined(REGION_EU868)
-
-#define RF_FREQUENCY 868000000 // Hz
-
-#elif defined(REGION_KR920)
-
-#define RF_FREQUENCY 920000000 // Hz
-
-#elif defined(REGION_IN865)
-
-#define RF_FREQUENCY 865000000 // Hz
-
-#elif defined(REGION_US915)
-
-#define RF_FREQUENCY 915000000 // Hz
-
-#elif defined(REGION_RU864)
-
-#define RF_FREQUENCY 864000000 // Hz
-
-#else
-#error "Please define a frequency band in the compiler options."
-#endif
-
-#define TX_OUTPUT_POWER 14 // dBm
-
-#if defined(USE_MODEM_LORA)
-
-#define LORA_BANDWIDTH 0        // [0: 125 kHz, \
-                                //  1: 250 kHz, \
-                                //  2: 500 kHz, \
-                                //  3: Reserved]
-#define LORA_SPREADING_FACTOR 7 // [SF7..SF12]
-#define LORA_CODINGRATE 2       // [1: 4/5, \
-                                //  2: 4/6, \
-                                //  3: 4/7, \
-                                //  4: 4/8]
-#define LORA_PREAMBLE_LENGTH 8  // Same for Tx and Rx
-#define LORA_SYMBOL_TIMEOUT 5   // Symbols
-#define LORA_FIX_LENGTH_PAYLOAD_ON false
-#define LORA_IQ_INVERSION_ON false
-
-#elif defined(USE_MODEM_FSK)
-
-#define FSK_FDEV 25000          // Hz
-#define FSK_DATARATE 50000      // bps
-#define FSK_BANDWIDTH 50000     // Hz
-#define FSK_AFC_BANDWIDTH 83333 // Hz
-#define FSK_PREAMBLE_LENGTH 5   // Same for Tx and Rx
-#define FSK_FIX_LENGTH_PAYLOAD_ON false
-
-#else
-#error "Please define a modem in the compiler options."
-#endif
+#include "config.h" // Radio config shared with CLI
+#include "uart.h"
+#include "cli.h"
 
 typedef enum
 {
@@ -139,6 +70,11 @@ extern Gpio_t Led1;
 extern Gpio_t Led2;
 
 /*!
+ * UART object used for command line interface handling
+ */
+extern Uart_t Uart2;
+
+/*!
  * \brief Function to be executed on Radio Tx Done event
  */
 void OnTxDone(void);
@@ -169,11 +105,11 @@ void OnRxError(void);
 
 void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion)
 {
-    printf("\n###### ===================================== ######\n\n");
-    printf("Application name   : %s\n", appName);
-    printf("Application version: %d.%d.%d\n", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
-    printf("GitHub base version: %d.%d.%d\n", gitHubVersion->Fields.Major, gitHubVersion->Fields.Minor, gitHubVersion->Fields.Patch);
-    printf("\n###### ===================================== ######\n\n");
+    printf("\n###### ===================================== ######\n\n\r");
+    printf("Application name   : %s\n\r", appName);
+    printf("Application version: %d.%d.%d\n\r", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
+    printf("GitHub base version: %d.%d.%d\n\r", gitHubVersion->Fields.Major, gitHubVersion->Fields.Minor, gitHubVersion->Fields.Patch);
+    printf("\n###### ===================================== ######\n\n\r");
 }
 
 /**
@@ -194,7 +130,7 @@ int main(void)
                    &appVersion,
                    &gitHubVersion);
 
-    printf("Radio initializing\n");
+    printf("Radio initializing\n\r");
 
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
@@ -206,18 +142,18 @@ int main(void)
     Radio.Init(&RadioEvents);
 
     RadioState_t state = Radio.GetStatus();
-    printf("Radio state %d", state);
+    printf("Radio state %d\n\r", state);
 
-    printf("Radio init done\n");
+    printf("Radio init done\n\r");
 
     state = Radio.GetStatus();
     Radio.SetChannel(RF_FREQUENCY);
 
-    printf("Radio state %d", state);
+    printf("Radio state %d\n\r", state);
 
-    printf("Radio set channel to %d done\n", RF_FREQUENCY);
+    printf("Radio set channel to %d done\n\r", RF_FREQUENCY);
 
-    printf("Radio state %d", state);
+    printf("Radio state %d\n\r", state);
 
 #if defined(USE_MODEM_LORA)
 
@@ -251,7 +187,7 @@ int main(void)
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Radio started. Listening\n");
+    printf("Radio started. Listening\n\r");
 
     Radio.Rx(RX_TIMEOUT_VALUE);
 
@@ -274,7 +210,7 @@ int main(void)
     //     DelayMs(100);
     // }
 
-    printf("Radio going into ping-pong mode.\n");
+    printf("Radio going into ping-pong mode.\n\r");
 
     while (1)
     {
@@ -381,13 +317,14 @@ int main(void)
             State = LOWPOWER;
             break;
         case TX_TIMEOUT:
-            printf("tx\n");
+            printf("tx\n\r");
             Radio.Rx(RX_TIMEOUT_VALUE);
             State = LOWPOWER;
             break;
         case LOWPOWER:
         default:
             // Set low power
+            CliProcess( &Uart2 );
             break;
         }
 
@@ -402,14 +339,14 @@ int main(void)
 
 void OnTxDone(void)
 {
-    printf("tx done\n");
+    printf("tx done\n\r");
     Radio.Sleep();
     State = TX;
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("rx done\n");
+    printf("rx done\n\r");
     Radio.Sleep();
     BufferSize = size;
     memcpy(Buffer, payload, BufferSize);
@@ -420,21 +357,21 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 
 void OnTxTimeout(void)
 {
-    printf("tx timeout\n");
+    printf("tx timeout\n\r");
     Radio.Sleep();
     State = TX_TIMEOUT;
 }
 
 void OnRxTimeout(void)
 {
-    printf("rx timeout\n");
+    printf("rx timeout\n\r");
     Radio.Sleep();
     State = RX_TIMEOUT;
 }
 
 void OnRxError(void)
 {
-    printf("error\n");
+    printf("error\n\r");
     Radio.Sleep();
     State = RX_ERROR;
 }
