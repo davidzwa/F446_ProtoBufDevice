@@ -24,6 +24,10 @@
 #endif
 
 #include "uart.h"
+#include "config.h"
+
+extern uint16_t BufferSize;
+extern uint8_t Buffer[BUFFER_SIZE];
 
 /*!
  * Process characters received on the serial interface

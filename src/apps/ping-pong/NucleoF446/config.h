@@ -77,4 +77,7 @@
     #else
     #error "Please define a modem in the compiler options."
     #endif
+
+    #define RX_TIMEOUT_VALUE 1
+    #define BUFFER_SIZE 64 // Define the payload size here
 #endif

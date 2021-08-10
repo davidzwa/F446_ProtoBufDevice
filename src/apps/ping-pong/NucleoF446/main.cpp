@@ -44,19 +44,16 @@ typedef enum
     TX_TIMEOUT,
 } States_t;
 
-#define RX_TIMEOUT_VALUE 1
-#define BUFFER_SIZE 64 // Define the payload size here
-
 const uint8_t PingMsg[] = "PING";
 const uint8_t PongMsg[] = "PONG";
-
-uint16_t BufferSize = BUFFER_SIZE;
-uint8_t Buffer[BUFFER_SIZE];
 
 States_t State = LOWPOWER;
 
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
+
+uint16_t BufferSize = BUFFER_SIZE;
+uint8_t Buffer[BUFFER_SIZE];
 
 /*!
  * Radio events function pointer
