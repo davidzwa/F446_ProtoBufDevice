@@ -115,7 +115,11 @@
         "unordered_map": "cpp",
         "numeric": "cpp",
         "ostream": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "ranges": "cpp"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

@@ -33,6 +33,7 @@
 
 #include "radio.h"
 #include "tx.h"
+#include "rx.h"
 #include "config.h" // Radio config shared with CLI
 #include "cli.h"
 
@@ -98,10 +99,6 @@ void OnRxTimeout(void);
  */
 void OnRxError(void);
 
-#define FIRMWARE_VERSION 0x01020000 // 1.2.0.0
-
-#define GITHUB_VERSION 0x05000000 // 5.0.0.0
-
 void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion)
 {
     printf("\n###### ===================================== ######\n\n\r");
@@ -141,14 +138,11 @@ int main(void)
 
     RadioState_t state = Radio.GetStatus();
     printf("Radio state %d\n\r", state);
-
     printf("Radio init done\n\r");
 
-    
     Radio.SetChannel(RF_FREQUENCY);
     state = Radio.GetStatus();
     printf("Radio state %d\n\r", state);
-
     printf("Radio set channel to %d done\n\r", RF_FREQUENCY);
 
 #if defined(USE_MODEM_LORA)
@@ -223,7 +217,11 @@ int main(void)
             {
                 if (bufferSize > 0)
                 {
-                    if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
+                    if (IsSpreadingFactorConfig((const char *)buffer))
+                    {
+                        ProcessMode((const char *)buffer);
+                    }
+                    else if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PING
                         GpioToggle(&Led1);
@@ -270,7 +268,7 @@ int main(void)
         case LOWPOWER:
         default:
             // Set low power
-            CliProcess( &Uart2 );
+            CliProcess(&Uart2);
             break;
         }
 
@@ -303,21 +301,21 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 
 void OnTxTimeout(void)
 {
-    printf("tx timeout\n\r");
+    printf("State: tx timeout\n\r");
     Radio.Sleep();
     State = TX_TIMEOUT;
 }
 
 void OnRxTimeout(void)
 {
-    printf("rx timeout\n\r");
+    printf("State: rx timeout\n\r");
     Radio.Sleep();
     State = RX_TIMEOUT;
 }
 
 void OnRxError(void)
 {
-    printf("error\n\r");
+    printf("State: error\n\r");
     Radio.Sleep();
     State = RX_ERROR;
 }
