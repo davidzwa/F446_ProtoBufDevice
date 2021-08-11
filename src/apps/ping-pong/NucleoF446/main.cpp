@@ -29,9 +29,11 @@
 #include "gpio.h"
 #include "delay.h"
 #include "timer.h"
-#include "radio.h"
-#include "config.h" // Radio config shared with CLI
 #include "uart.h"
+
+#include "radio.h"
+#include "tx.h"
+#include "config.h" // Radio config shared with CLI
 #include "cli.h"
 
 typedef enum
@@ -52,8 +54,8 @@ States_t State = LOWPOWER;
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
 
-uint16_t BufferSize = BUFFER_SIZE;
-uint8_t Buffer[BUFFER_SIZE];
+extern uint16_t BufferSize;
+extern uint8_t Buffer[BUFFER_SIZE];
 
 /*!
  * Radio events function pointer
@@ -115,7 +117,6 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
 int main(void)
 {
     bool isMaster = true;
-    uint8_t i;
 
     // Target board initialization
     BoardInitMcu();
@@ -143,14 +144,12 @@ int main(void)
 
     printf("Radio init done\n\r");
 
-    state = Radio.GetStatus();
+    
     Radio.SetChannel(RF_FREQUENCY);
-
+    state = Radio.GetStatus();
     printf("Radio state %d\n\r", state);
 
     printf("Radio set channel to %d done\n\r", RF_FREQUENCY);
-
-    printf("Radio state %d\n\r", state);
 
 #if defined(USE_MODEM_LORA)
 
@@ -184,28 +183,9 @@ int main(void)
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Radio started. Listening\n\r");
+    printf("Radio listening\n\r");
 
     Radio.Rx(RX_TIMEOUT_VALUE);
-
-    // while (1)
-    // {
-    //     // Send the next PING frame
-    //     Buffer[0] = 'P';
-    //     Buffer[1] = 'I';
-    //     Buffer[2] = 'N';
-    //     Buffer[3] = 'G';
-    //     // We fill the buffer with numbers for the payload
-    //     for (i = 4; i < BufferSize; i++)
-    //     {
-    //         Buffer[i] = i - 4;
-    //     }
-
-    //     Radio.Send(Buffer, BufferSize);
-    //     DelayMs(1000);
-    //     printf("PINGED\n\r");
-    //     DelayMs(100);
-    // }
 
     printf("Radio going into ping-pong mode.\n\r");
 
@@ -216,28 +196,17 @@ int main(void)
         case RX:
             if (isMaster == true)
             {
-                if (BufferSize > 0)
+                if (bufferSize > 0)
                 {
-                    if (strncmp((const char *)Buffer, (const char *)PongMsg, 4) == 0)
+                    if (strncmp((const char *)buffer, (const char *)PongMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PONG
                         GpioToggle(&Led1);
 
                         // Send the next PING frame
-                        Buffer[0] = 'P';
-                        Buffer[1] = 'I';
-                        Buffer[2] = 'N';
-                        Buffer[3] = 'G';
-                        // We fill the buffer with numbers for the payload
-                        for (i = 4; i < BufferSize; i++)
-                        {
-                            Buffer[i] = i - 4;
-                        }
-                        DelayMs(1);
-                        printf("PINGED\n\r");
-                        Radio.Send(Buffer, BufferSize);
+                        TxPing();
                     }
-                    else if (strncmp((const char *)Buffer, (const char *)PingMsg, 4) == 0)
+                    else if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     { // A master already exists then become a slave
                         isMaster = false;
                         GpioToggle(&Led2); // Set LED off
@@ -252,26 +221,15 @@ int main(void)
             }
             else
             {
-                if (BufferSize > 0)
+                if (bufferSize > 0)
                 {
-                    if (strncmp((const char *)Buffer, (const char *)PingMsg, 4) == 0)
+                    if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PING
                         GpioToggle(&Led1);
 
                         // Send the reply to the PONG string
-                        Buffer[0] = 'P';
-                        Buffer[1] = 'O';
-                        Buffer[2] = 'N';
-                        Buffer[3] = 'G';
-                        // We fill the buffer with numbers for the payload
-                        for (i = 4; i < BufferSize; i++)
-                        {
-                            Buffer[i] = i - 4;
-                        }
-                        DelayMs(1);
-                        Radio.Send(Buffer, BufferSize);
-                        printf("PONGED\n\r");
+                        TxPong();
                     }
                     else // valid reception but not a PING as expected
                     {    // Set device as master and start again
@@ -296,16 +254,7 @@ int main(void)
             if (isMaster == true)
             {
                 // Send the next PING frame
-                Buffer[0] = 'P';
-                Buffer[1] = 'I';
-                Buffer[2] = 'N';
-                Buffer[3] = 'G';
-                for (i = 4; i < BufferSize; i++)
-                {
-                    Buffer[i] = i - 4;
-                }
-                DelayMs(1);
-                Radio.Send(Buffer, BufferSize);
+                TxPing();
             }
             else
             {
@@ -336,17 +285,17 @@ int main(void)
 
 void OnTxDone(void)
 {
-    printf("tx done\n\r");
+    printf("State: tx done\n\r");
     Radio.Sleep();
     State = TX;
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("rx done\n\r");
+    printf("State: rx done\n\r");
     Radio.Sleep();
-    BufferSize = size;
-    memcpy(Buffer, payload, BufferSize);
+    bufferSize = size;
+    memcpy(buffer, payload, bufferSize);
     RssiValue = rssi;
     SnrValue = snr;
     State = RX;

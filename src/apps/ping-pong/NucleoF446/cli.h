@@ -16,18 +16,16 @@
  *
  * \endcode
  */
+
+#include "uart.h"
+#include "config.h"
+
 #ifndef CLI_H
 #define CLI_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
-
-#include "uart.h"
-#include "config.h"
-
-extern uint16_t BufferSize;
-extern uint8_t Buffer[BUFFER_SIZE];
 
 /*!
  * Process characters received on the serial interface

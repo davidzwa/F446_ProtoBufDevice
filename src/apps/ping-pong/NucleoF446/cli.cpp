@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "delay.h"
 #include "cli.h"
+#include "tx.h"
 
 void SetRadioConfig(uint spreadingFactor)
 {
@@ -19,23 +20,7 @@ void SetRadioConfig(uint spreadingFactor)
     printf("SF %d set\n\r", spreadingFactor);
 
     Radio.Rx(RX_TIMEOUT_VALUE);
-
-        // Send the next PING frame
-    Buffer[0] = 'P';
-    Buffer[1] = 'I';
-    Buffer[2] = 'N';
-    Buffer[3] = 'G';
-
-    // We fill the buffer with numbers for the payload
-    for (int i = 4; i < BufferSize; i++)
-    {
-        Buffer[i] = i - 4;
-    }
-    DelayMs(1);
-    printf("PINGED\n\r");
-    Radio.Send(Buffer, BufferSize);
-
-    // Radio.SetMaxPayloadLength(MODEM_LORA, BUFFER_SIZE);
+    TxPing();
 }
 
 void CliProcess(Uart_t *uart)
@@ -47,7 +32,7 @@ void CliProcess(Uart_t *uart)
         if (data == '\x1B')
         {
             // Escape character has been received
-            printf("ESC + ");
+            printf("ESC... (options: S (SF), TODO)");
             while (UartGetChar(uart, &data) != 0)
             {
             }
@@ -73,15 +58,23 @@ void CliProcess(Uart_t *uart)
                 {
                     SetRadioConfig(9);
                 }
-                else if (data == '1')
+                else if (data == '0')
                 {
                     SetRadioConfig(10);
                 }
+                else if (data == '1')
+                {
+                    SetRadioConfig(11);
+                }
+                else if (data == '2')
+                {
+                    SetRadioConfig(12);
+                }
                 else
                 {
-                    printf("SF not 7 to 10, skipped\n\r");
+                    printf("SF not 7,8,9 or 0(=10), 1(=11) or 2(12), skipped\n\r");
                 }
-                printf("Cli received info\n\r");
+                printf("CLI done\n\r");
             }
         }
     }
