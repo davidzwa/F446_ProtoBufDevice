@@ -114,7 +114,8 @@
         "*.tcc": "cpp",
         "unordered_map": "cpp",
         "numeric": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "fstream": "cpp"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",
