@@ -53,23 +53,23 @@ int MapSpreadingFactor(uint8_t value)
     return -1;
 }
 
-void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa)
+void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
 {
-    int spreadingFactor = MapSpreadingFactor(value);
+    int spreadingFactor = MapSpreadingFactor(unicodeValue);
     if (spreadingFactor != -1)
     {
         if (broadcastLoRa)
         {
-            TxSpreadingFactor(spreadingFactor);
+            TxSpreadingFactor(unicodeValue);
             printf("[CLI] Broadcasting SF %c\n\r", spreadingFactor);            
             DelayMs(1000);
         }
         SetRadioConfig(spreadingFactor);
-        printf("[CLI] Set Radio SF %c\n\r", spreadingFactor);
+        printf("[CLI] Set Radio SF '%c'\n\r", spreadingFactor);
     }
     else
     {
-        printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: %c\n\r", value);
+        printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: '%c'\n\r", unicodeValue);
     }
 }
 

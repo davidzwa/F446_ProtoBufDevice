@@ -44,14 +44,14 @@ void TxPong()
     TxBuffer();
 }
 
-void TxSpreadingFactor(uint8_t value) {
+void TxSpreadingFactor(uint8_t unicodeValue) {
     // Send the next PING frame
     buffer[0] = 'S';
-    buffer[1] = value;
-    // We fill the buffer with numbers for the payload
-    for (int i = 4; i < bufferSize; i++)
+    buffer[1] = unicodeValue;
+    // We fill the buffer with zeroes for the payload
+    for (int i = 2; i < bufferSize; i++)
     {
-        buffer[i] = i - 4;
+        buffer[i] = 0;
     }
 
     TxBuffer();

@@ -215,11 +215,8 @@ int main(void)
             {
                 if (bufferSize > 0)
                 {
-                    if (IsSpreadingFactorConfig((const char *)buffer))
-                    {
-                        ProcessMode((const char *)buffer);
-                    }
-                    else if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
+
+                    if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PING
                         GpioToggle(&Led1);
@@ -285,6 +282,11 @@ void OnTxDone(void)
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
+    if (IsSpreadingFactorConfig((const char *)payload))
+    {
+        LoRaProcessMode((const char *)payload);
+    }
+
     printf("[Main] rx done\n\r");
     Radio.Sleep();
     bufferSize = size;
