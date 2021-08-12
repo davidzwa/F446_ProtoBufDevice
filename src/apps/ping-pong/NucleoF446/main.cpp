@@ -215,7 +215,6 @@ int main(void)
             {
                 if (bufferSize > 0)
                 {
-
                     if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PING
