@@ -171,8 +171,8 @@ int main(void)
                 }
 
                 printf("\n\rbufferSize: %d\n\r", bufferSize);
-                printf("RssiValue:      %d\n\r", RssiValue);
-                printf("SnrValue:       %d\n\r\n\r", SnrValue);
+                printf("RssiValue: %d\n\r", RssiValue);
+                printf("SnrValue: %d\n\r\n\r", SnrValue);
 
                 // Listen for next radio packet
                 Radio.Rx(RX_TIMEOUT_VALUE);
@@ -218,7 +218,6 @@ void OnTxDone(void)
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("[Main] OnRxDone\n\r");
     Radio.Sleep();
     bufferSize = size;
     memcpy(buffer, payload, bufferSize);
@@ -235,7 +234,6 @@ void OnTxTimeout(void)
 
 void OnRxTimeout(void)
 {
-    printf("[Main] OnRxTimeout\n\r");
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
