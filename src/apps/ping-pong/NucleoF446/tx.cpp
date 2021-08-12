@@ -7,7 +7,7 @@ uint8_t buffer[BUFFER_SIZE];
 
 void TxBuffer()
 {
-    printf("TX: %s\n\r", buffer);
+    printf("[TX] '%s'\n\r", buffer);
     Radio.Send(buffer, bufferSize);
     DelayMs(1);
 }
@@ -19,6 +19,7 @@ void TxPing()
     buffer[1] = 'I';
     buffer[2] = 'N';
     buffer[3] = 'G';
+    
     // We fill the buffer with numbers for the payload
     for (int i = 4; i < bufferSize; i++)
     {

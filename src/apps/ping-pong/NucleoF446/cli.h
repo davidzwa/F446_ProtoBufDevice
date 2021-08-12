@@ -35,9 +35,9 @@
  * \param [IN] uart UART interface object used by the command line interface
  */
 
-
 int MapSpreadingFactor(uint8_t value);
 void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
+void ApplyConfigIfPending();
 void CliProcess( Uart_t* uart );
 
 #ifdef __cplusplus

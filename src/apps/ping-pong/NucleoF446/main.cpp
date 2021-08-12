@@ -215,7 +215,6 @@ int main(void)
             {
                 if (bufferSize > 0)
                 {
-
                     if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PING
@@ -275,9 +274,20 @@ int main(void)
 
 void OnTxDone(void)
 {
-    printf("[Main] tx done\n\r");
+    ApplyConfigIfPending();
     Radio.Sleep();
     State = TX;
+
+    printf("[Main] tx done\n\r");
+}
+
+
+void OnTxTimeout(void)
+{
+    printf("[Main] tx timeout\n\r");
+    ApplyConfigIfPending();
+    Radio.Sleep();
+    State = TX_TIMEOUT;
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
@@ -294,13 +304,6 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     RssiValue = rssi;
     SnrValue = snr;
     State = RX;
-}
-
-void OnTxTimeout(void)
-{
-    printf("[Main] tx timeout\n\r");
-    Radio.Sleep();
-    State = TX_TIMEOUT;
 }
 
 void OnRxTimeout(void)
