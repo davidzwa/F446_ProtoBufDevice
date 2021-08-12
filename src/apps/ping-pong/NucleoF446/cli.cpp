@@ -5,22 +5,64 @@
 #include "cli.h"
 #include "tx.h"
 
-void SetRadioConfig(uint spreadingFactor)
+bool pendingConfigChange = false;
+RadioTXConfig_t txConfig = {
+    .Modem = MODEM_LORA,
+    .Power = TX_OUTPUT_POWER,
+    .Fdev = 0,
+    .Bandwidth = LORA_BANDWIDTH,
+    .SpreadingFactor = LORA_SPREADING_FACTOR,
+    .CodeRate = LORA_CODINGRATE,
+    .PreambleLen = LORA_PREAMBLE_LENGTH,
+    .FixLen = LORA_FIX_LENGTH_PAYLOAD_ON,
+    .CrcOn = true,
+    .FreqHopOn = 0,
+    .HopPeriod = 0,
+    .IqInverted = LORA_IQ_INVERSION_ON,
+    .Timeout = true};
+
+RadioRXConfig_t rxConfig = {
+    .Modem = MODEM_LORA,
+    .Bandwidth = LORA_BANDWIDTH,
+    .SpreadingFactor = LORA_SPREADING_FACTOR,
+    .CodeRate = LORA_CODINGRATE,
+    .BandwidthAfc = 0,
+    .PreambleLen = LORA_PREAMBLE_LENGTH,
+    .FixLen = LORA_FIX_LENGTH_PAYLOAD_ON,
+    .PayloadLen = 0,
+    .CrcOn = true,
+    .FreqHopOn = 0,
+    .HopPeriod = 0,
+    .IqInverted = LORA_IQ_INVERSION_ON,
+    .RxContinuous = true};
+
+void ApplyRadioTXConfig()
 {
-    Radio.SetTxConfig(MODEM_LORA, TX_OUTPUT_POWER, 0, LORA_BANDWIDTH,
-                      spreadingFactor, LORA_CODINGRATE,
-                      LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
-                      true, 0, 0, LORA_IQ_INVERSION_ON, 3000);
+    Radio.SetTxConfig(txConfig.Modem, txConfig.Power, txConfig.Fdev, txConfig.Bandwidth,
+                      txConfig.SpreadingFactor, txConfig.CodeRate,
+                      txConfig.PreambleLen, txConfig.FixLen,
+                      txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout);
+}
 
-    Radio.SetRxConfig(MODEM_LORA, LORA_BANDWIDTH, spreadingFactor,
-                      LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
-                      LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
-                      0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
+void ApplyRadioRXConfig()
+{
+    Radio.SetRxConfig(rxConfig.Modem, rxConfig.Bandwidth, txConfig.SpreadingFactor, txConfig.CodeRate,
+                      rxConfig.BandwidthAfc, rxConfig.PreambleLen,
+                      rxConfig.SymbTimeout, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, 
+                      rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
+}
 
-    printf("SF %d set\n\r", spreadingFactor);
+void ApplyRadioConfig(uint spreadingFactor)
+{
+    txConfig.SpreadingFactor = spreadingFactor;
+    rxConfig.SpreadingFactor = spreadingFactor;
+
+    ApplyRadioTXConfig();
+    ApplyRadioRXConfig();
+
+    printf("[CLI] SF %d set\n\r", spreadingFactor);
 
     Radio.Rx(RX_TIMEOUT_VALUE);
-    TxPing();
 }
 
 int MapSpreadingFactor(uint8_t value)
@@ -61,16 +103,25 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
         if (broadcastLoRa)
         {
             TxSpreadingFactor(unicodeValue);
-            printf("[CLI] Broadcasting SF %c\n\r", spreadingFactor);            
-            DelayMs(1000);
+            printf("[CLI] Broadcasting SF %c\n\r", spreadingFactor);
+            pendingConfigChange = true;
+            DelayMs(500);
         }
-        SetRadioConfig(spreadingFactor);
+
+        ApplyRadioConfig(spreadingFactor);
         printf("[CLI] Set Radio SF '%c'\n\r", spreadingFactor);
     }
     else
     {
         printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: '%c'\n\r", unicodeValue);
     }
+}
+
+void ApplyConfigIfPending()
+{
+    if (!pendingConfigChange)
+        return;
+    pendingConfigChange = true;
 }
 
 void CliProcess(Uart_t *uart)
@@ -90,7 +141,8 @@ void CliProcess(Uart_t *uart)
             ProcessSpreadingFactorMessage(value, true);
         }
 
-        if (value == 'P') {
+        if (value == 'P')
+        {
             TxPing();
         }
 
