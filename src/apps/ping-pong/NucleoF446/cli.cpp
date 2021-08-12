@@ -48,21 +48,27 @@ void ApplyRadioRXConfig()
 {
     Radio.SetRxConfig(rxConfig.Modem, rxConfig.Bandwidth, txConfig.SpreadingFactor, txConfig.CodeRate,
                       rxConfig.BandwidthAfc, rxConfig.PreambleLen,
-                      rxConfig.SymbTimeout, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, 
+                      rxConfig.SymbTimeout, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn,
                       rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
 }
 
-void ApplyRadioConfig(uint spreadingFactor)
+void ApplyRadioConfig()
+{
+    ApplyRadioTXConfig();
+    ApplyRadioRXConfig();
+
+    Radio.Rx(RX_TIMEOUT_VALUE);
+}
+
+void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect)
 {
     txConfig.SpreadingFactor = spreadingFactor;
     rxConfig.SpreadingFactor = spreadingFactor;
 
-    ApplyRadioTXConfig();
-    ApplyRadioRXConfig();
-
-    printf("[CLI] SF %d set\n\r", spreadingFactor);
-
-    Radio.Rx(RX_TIMEOUT_VALUE);
+    if (reconnect)
+    {
+        ApplyRadioConfig();
+    }
 }
 
 int MapSpreadingFactor(uint8_t value)
@@ -103,13 +109,16 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
         if (broadcastLoRa)
         {
             TxSpreadingFactor(unicodeValue);
-            printf("[CLI] Broadcasting SF %c\n\r", spreadingFactor);
+            printf("[CLI] Broadcasting SF %d\n\r", spreadingFactor);
+            
             pendingConfigChange = true;
-            DelayMs(500);
+            UpdateRadioSpreadingFactor(spreadingFactor, false);
+        }
+        else {
+            UpdateRadioSpreadingFactor(spreadingFactor, true);
         }
 
-        ApplyRadioConfig(spreadingFactor);
-        printf("[CLI] Set Radio SF '%c'\n\r", spreadingFactor);
+        printf("[CLI] Set Radio SF '%d' \n\r", spreadingFactor);
     }
     else
     {
@@ -121,7 +130,8 @@ void ApplyConfigIfPending()
 {
     if (!pendingConfigChange)
         return;
-    pendingConfigChange = true;
+    pendingConfigChange = false;
+    ApplyRadioConfig();
 }
 
 void CliProcess(Uart_t *uart)
@@ -145,7 +155,5 @@ void CliProcess(Uart_t *uart)
         {
             TxPing();
         }
-
-        printf("[CLI] Done\n\r");
     }
 }
