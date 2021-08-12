@@ -60,16 +60,16 @@ void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa)
     {
         if (broadcastLoRa)
         {
-            printf("Broadcasting SF %c\n\r", value);
-            TxSpreadingFactor(value);
-            TxSpreadingFactor(value);
-            TxSpreadingFactor(value);
+            TxSpreadingFactor(spreadingFactor);
+            printf("[CLI] Broadcasting SF %c\n\r", spreadingFactor);            
+            DelayMs(1000);
         }
         SetRadioConfig(spreadingFactor);
+        printf("[CLI] Set Radio SF %c\n\r", spreadingFactor);
     }
     else
     {
-        printf("SF not 7,8,9,0,1,2(=12) skipped\n\r");
+        printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: %c\n\r", value);
     }
 }
 
@@ -88,8 +88,12 @@ void CliProcess(Uart_t *uart)
             }
 
             ProcessSpreadingFactorMessage(value, true);
-
-            printf("CLI done\n\r");
         }
+
+        if (value == 'P') {
+            TxPing();
+        }
+
+        printf("[CLI] Done\n\r");
     }
 }

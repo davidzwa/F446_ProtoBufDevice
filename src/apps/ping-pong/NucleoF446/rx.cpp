@@ -11,5 +11,7 @@ bool IsSpreadingFactorConfig(const char *buffer)
 
 void ProcessMode(const char *buffer)
 {
-    ProcessSpreadingFactorMessage((uint8_t) buffer[0], false);   
+    if (buffer[0] == 'S'){
+        ProcessSpreadingFactorMessage((uint8_t) buffer[1], false);
+    }
 }

@@ -178,9 +178,7 @@ int main(void)
 #endif
 
     printf("Radio listening\n\r");
-
     Radio.Rx(RX_TIMEOUT_VALUE);
-
     printf("Radio going into ping-pong mode.\n\r");
 
     while (1)
@@ -243,12 +241,10 @@ int main(void)
             // Indicates on a LED that we have sent a PONG [Slave]
             GpioToggle(&Led2);
             Radio.Rx(RX_TIMEOUT_VALUE);
-            printf("TX\n\r");
             State = LOWPOWER;
             break;
         case RX_TIMEOUT:
         case RX_ERROR:
-            printf("TX error or timeout\n\r");
             if (isMaster == true)
             {
                 // Send the next PING frame
@@ -261,7 +257,6 @@ int main(void)
             State = LOWPOWER;
             break;
         case TX_TIMEOUT:
-            printf("tx\n\r");
             Radio.Rx(RX_TIMEOUT_VALUE);
             State = LOWPOWER;
             break;
@@ -283,14 +278,14 @@ int main(void)
 
 void OnTxDone(void)
 {
-    printf("State: tx done\n\r");
+    printf("[Main] tx done\n\r");
     Radio.Sleep();
     State = TX;
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("State: rx done\n\r");
+    printf("[Main] rx done\n\r");
     Radio.Sleep();
     bufferSize = size;
     memcpy(buffer, payload, bufferSize);
@@ -301,21 +296,21 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 
 void OnTxTimeout(void)
 {
-    printf("State: tx timeout\n\r");
+    printf("[Main] tx timeout\n\r");
     Radio.Sleep();
     State = TX_TIMEOUT;
 }
 
 void OnRxTimeout(void)
 {
-    printf("State: rx timeout\n\r");
+    printf("[Main] rx timeout\n\r");
     Radio.Sleep();
     State = RX_TIMEOUT;
 }
 
 void OnRxError(void)
 {
-    printf("State: error\n\r");
+    printf("[Main] error\n\r");
     Radio.Sleep();
     State = RX_ERROR;
 }
