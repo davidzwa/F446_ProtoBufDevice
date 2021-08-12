@@ -10,5 +10,6 @@ extern uint8_t buffer[BUFFER_SIZE];
 void TxBuffer();
 void TxPing();
 void TxPong();
+void TxSpreadingFactor(uint8_t value);
 
 #endif // TX_H__

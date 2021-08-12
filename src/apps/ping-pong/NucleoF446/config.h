@@ -80,4 +80,8 @@
 
     #define RX_TIMEOUT_VALUE 1
     #define BUFFER_SIZE 64 // Define the payload size here
+
+    #define FIRMWARE_VERSION 0x01020000 // 1.2.0.0
+
+    #define GITHUB_VERSION 0x05000000 // 5.0.0.0
 #endif

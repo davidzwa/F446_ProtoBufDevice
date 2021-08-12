@@ -33,6 +33,7 @@
 
 #include "radio.h"
 #include "tx.h"
+#include "rx.h"
 #include "config.h" // Radio config shared with CLI
 #include "cli.h"
 
@@ -98,10 +99,6 @@ void OnRxTimeout(void);
  */
 void OnRxError(void);
 
-#define FIRMWARE_VERSION 0x01020000 // 1.2.0.0
-
-#define GITHUB_VERSION 0x05000000 // 5.0.0.0
-
 void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion)
 {
     printf("\n###### ===================================== ######\n\n\r");
@@ -141,14 +138,11 @@ int main(void)
 
     RadioState_t state = Radio.GetStatus();
     printf("Radio state %d\n\r", state);
-
     printf("Radio init done\n\r");
 
-    
     Radio.SetChannel(RF_FREQUENCY);
     state = Radio.GetStatus();
     printf("Radio state %d\n\r", state);
-
     printf("Radio set channel to %d done\n\r", RF_FREQUENCY);
 
 #if defined(USE_MODEM_LORA)
@@ -184,9 +178,7 @@ int main(void)
 #endif
 
     printf("Radio listening\n\r");
-
     Radio.Rx(RX_TIMEOUT_VALUE);
-
     printf("Radio going into ping-pong mode.\n\r");
 
     while (1)
@@ -223,7 +215,11 @@ int main(void)
             {
                 if (bufferSize > 0)
                 {
-                    if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
+                    if (IsSpreadingFactorConfig((const char *)buffer))
+                    {
+                        ProcessMode((const char *)buffer);
+                    }
+                    else if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
                     {
                         // Indicates on a LED that the received frame is a PING
                         GpioToggle(&Led1);
@@ -245,12 +241,10 @@ int main(void)
             // Indicates on a LED that we have sent a PONG [Slave]
             GpioToggle(&Led2);
             Radio.Rx(RX_TIMEOUT_VALUE);
-            printf("TX\n\r");
             State = LOWPOWER;
             break;
         case RX_TIMEOUT:
         case RX_ERROR:
-            printf("TX error or timeout\n\r");
             if (isMaster == true)
             {
                 // Send the next PING frame
@@ -263,14 +257,13 @@ int main(void)
             State = LOWPOWER;
             break;
         case TX_TIMEOUT:
-            printf("tx\n\r");
             Radio.Rx(RX_TIMEOUT_VALUE);
             State = LOWPOWER;
             break;
         case LOWPOWER:
         default:
             // Set low power
-            CliProcess( &Uart2 );
+            CliProcess(&Uart2);
             break;
         }
 
@@ -285,14 +278,14 @@ int main(void)
 
 void OnTxDone(void)
 {
-    printf("State: tx done\n\r");
+    printf("[Main] tx done\n\r");
     Radio.Sleep();
     State = TX;
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    printf("State: rx done\n\r");
+    printf("[Main] rx done\n\r");
     Radio.Sleep();
     bufferSize = size;
     memcpy(buffer, payload, bufferSize);
@@ -303,21 +296,21 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 
 void OnTxTimeout(void)
 {
-    printf("tx timeout\n\r");
+    printf("[Main] tx timeout\n\r");
     Radio.Sleep();
     State = TX_TIMEOUT;
 }
 
 void OnRxTimeout(void)
 {
-    printf("rx timeout\n\r");
+    printf("[Main] rx timeout\n\r");
     Radio.Sleep();
     State = RX_TIMEOUT;
 }
 
 void OnRxError(void)
 {
-    printf("error\n\r");
+    printf("[Main] error\n\r");
     Radio.Sleep();
     State = RX_ERROR;
 }
