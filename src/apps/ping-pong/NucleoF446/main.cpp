@@ -183,7 +183,7 @@ int main(void)
                 {
                     if (IsSpreadingFactorConfig((const char *)buffer))
                     {
-                        ProcessMode((const char *)buffer);
+                        LoRaProcessMode((const char *)buffer);
                     }
                     else // valid reception but not config as expected
                     {
@@ -249,9 +249,6 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     SnrValue = snr;
     
     hasNewPacket = true;
-}
-
-    State = RX;
 }
 
 void OnRxTimeout(void)
