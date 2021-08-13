@@ -91,6 +91,20 @@ int main(void)
     BoardInitMcu();
     BoardInitPeriph();
 
+    uint8_t id[8];
+
+    BoardGetUniqueId(id);
+    uint32_t id0 = BoardGetHwUUID0();
+    uint32_t id1 = BoardGetHwUUID1();
+    uint32_t id2 = BoardGetHwUUID2();
+    printf("id %lu %lu %lu\n\r", id0, id1, id2);
+
+    for (int i = 0; i < 8; i++)
+    {
+        printf("0x%02X ", id[i]);
+    }
+    printf("\n\r");
+
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
     DisplayAppInfo("Tomato-potato",
@@ -220,7 +234,6 @@ void OnTxDone(void)
 
     printf("[Main] tx done\n\r");
 }
-
 
 void OnTxTimeout(void)
 {
