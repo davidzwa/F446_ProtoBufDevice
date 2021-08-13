@@ -35,22 +35,11 @@
 #include "tx.h"
 #include "rx.h"
 #include "config.h" // Radio config shared with CLI
+#include "config_personal.h"
 #include "cli.h"
 
-typedef enum
-{
-    LOWPOWER,
-    RX,
-    RX_TIMEOUT,
-    RX_ERROR,
-    TX,
-    TX_TIMEOUT,
-} States_t;
-
-const uint8_t PingMsg[] = "PING";
-const uint8_t PongMsg[] = "PONG";
-
-States_t State = LOWPOWER;
+bool isGateway = true;
+bool hasNewPacket = false;
 
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
@@ -75,29 +64,14 @@ extern Gpio_t Led2;
 extern Uart_t Uart2;
 
 /*!
- * \brief Function to be executed on Radio Tx Done event
+ * \brief Radio interupts
  */
 void OnTxDone(void);
-
-/*!
- * \brief Function to be executed on Radio Rx Done event
- */
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
-
-/*!
- * \brief Function executed on Radio Tx Timeout event
- */
 void OnTxTimeout(void);
-
-/*!
- * \brief Function executed on Radio Rx Timeout event
- */
 void OnRxTimeout(void);
-
-/*!
- * \brief Function executed on Radio Rx Error event
- */
 void OnRxError(void);
+
 
 void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion)
 {
@@ -113,17 +87,21 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
  */
 int main(void)
 {
-    bool isMaster = true;
-
     // Target board initialization
     BoardInitMcu();
     BoardInitPeriph();
 
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
-    DisplayAppInfo("pingh-pongh Tomato-potato",
+    DisplayAppInfo("Tomato-potato",
                    &appVersion,
                    &gitHubVersion);
+
+    if (isGateway == true){
+        printf("I'm a gateway\n\r");
+    }else{
+        printf("I'm a endNode\n\r");
+    }
 
     printf("Radio initializing\n\r");
 
@@ -177,91 +155,48 @@ int main(void)
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Radio listening\n\r");
+    printf("Started radio listening\n\r");
     Radio.Rx(RX_TIMEOUT_VALUE);
-    printf("Radio going into ping-pong mode.\n\r");
-
+ 
     while (1)
     {
-        switch (State)
-        {
-        case RX:
-            if (isMaster == true)
+        if(hasNewPacket){
+            if (isGateway == true)
             {
-                if (bufferSize > 0)
-                {
-                    if (strncmp((const char *)buffer, (const char *)PongMsg, 4) == 0)
-                    {
-                        // Indicates on a LED that the received frame is a PONG
-                        GpioToggle(&Led1);
+                printf("[Gateway] Received packet:\n\r");
+                //TODO Send received data to pc
 
-                        // Send the next PING frame
-                        TxPing();
-                    }
-                    else if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
-                    { // A master already exists then become a slave
-                        isMaster = false;
-                        GpioToggle(&Led2); // Set LED off
-                        Radio.Rx(RX_TIMEOUT_VALUE);
-                    }
-                    else // valid reception but neither a PING or a PONG message
-                    {    // Set device as master ans start again
-                        isMaster = true;
-                        Radio.Rx(RX_TIMEOUT_VALUE);
-                    }
+                for(int i=0; i<bufferSize; i++){
+                    printf("0x%02X ", buffer[i] );
                 }
-            }
-            else
-            {
-                if (bufferSize > 0)
-                {
-                    if (strncmp((const char *)buffer, (const char *)PingMsg, 4) == 0)
-                    {
-                        // Indicates on a LED that the received frame is a PING
-                        GpioToggle(&Led1);
 
-                        // Send the reply to the PONG string
-                        TxPong();
-                    }
-                    else // valid reception but not a PING as expected
-                    {    // Set device as master and start again
-                        isMaster = true;
-                        Radio.Rx(RX_TIMEOUT_VALUE);
-                    }
-                }
-            }
-            State = LOWPOWER;
-            break;
-        case TX:
-            // Indicates on a LED that we have sent a PING [Master]
-            // Indicates on a LED that we have sent a PONG [Slave]
-            GpioToggle(&Led2);
-            Radio.Rx(RX_TIMEOUT_VALUE);
-            State = LOWPOWER;
-            break;
-        case RX_TIMEOUT:
-        case RX_ERROR:
-            if (isMaster == true)
-            {
-                // Send the next PING frame
-                TxPing();
-            }
-            else
-            {
+                printf("\n\rbufferSize: %d\n\r", bufferSize);
+                printf("RssiValue: %d\n\r", RssiValue);
+                printf("SnrValue: %d\n\r\n\r", SnrValue);
+
+                // Listen for next radio packet
                 Radio.Rx(RX_TIMEOUT_VALUE);
             }
-            State = LOWPOWER;
-            break;
-        case TX_TIMEOUT:
-            Radio.Rx(RX_TIMEOUT_VALUE);
-            State = LOWPOWER;
-            break;
-        case LOWPOWER:
-        default:
-            // Set low power
-            CliProcess(&Uart2);
-            break;
+            else
+            {
+                if (bufferSize > 0)
+                {
+                    if (IsSpreadingFactorConfig((const char *)buffer))
+                    {
+                        LoRaProcessMode((const char *)buffer);
+                    }
+                    else // valid reception but not config as expected
+                    {
+                        Radio.Rx(RX_TIMEOUT_VALUE);
+                    }
+                }
+            }
+            // Reset has new packet flag
+            hasNewPacket = false;
         }
+        
+
+        CliProcess(&Uart2);
 
         BoardLowPowerHandler();
         // Process Radio IRQ
@@ -274,9 +209,14 @@ int main(void)
 
 void OnTxDone(void)
 {
-    ApplyConfigIfPending();
-    Radio.Sleep();
-    State = TX;
+    if (isGateway == true)
+    {
+        // Listen for next radio packet
+        Radio.Rx(RX_TIMEOUT_VALUE);
+    }else{
+	    ApplyConfigIfPending();
+	    Radio.Sleep();
+	}
 
     printf("[Main] tx done\n\r");
 }
@@ -284,10 +224,14 @@ void OnTxDone(void)
 
 void OnTxTimeout(void)
 {
+	if (isGateway == true)
+    {
+        // Listen for next radio packet
+        Radio.Rx(RX_TIMEOUT_VALUE);
+    }
     printf("[Main] tx timeout\n\r");
     ApplyConfigIfPending();
     Radio.Sleep();
-    State = TX_TIMEOUT;
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
@@ -303,19 +247,17 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     memcpy(buffer, payload, bufferSize);
     RssiValue = rssi;
     SnrValue = snr;
-    State = RX;
+    
+    hasNewPacket = true;
 }
 
 void OnRxTimeout(void)
 {
-    printf("[Main] rx timeout\n\r");
-    Radio.Sleep();
-    State = RX_TIMEOUT;
+    Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
 void OnRxError(void)
 {
     printf("[Main] error\n\r");
-    Radio.Sleep();
-    State = RX_ERROR;
+    Radio.Rx(RX_TIMEOUT_VALUE);
 }
