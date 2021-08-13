@@ -213,11 +213,35 @@ void OnTxDone(void)
     {
         // Listen for next radio packet
         Radio.Rx(RX_TIMEOUT_VALUE);
+    }else{
+	    ApplyConfigIfPending();
+	    Radio.Sleep();
+	}
+
+    printf("[Main] tx done\n\r");
+}
+
+
+void OnTxTimeout(void)
+{
+	if (isGateway == true)
+    {
+        // Listen for next radio packet
+        Radio.Rx(RX_TIMEOUT_VALUE);
     }
+    printf("[Main] tx timeout\n\r");
+    ApplyConfigIfPending();
+    Radio.Sleep();
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
+    if (IsSpreadingFactorConfig((const char *)payload))
+    {
+        LoRaProcessMode((const char *)payload);
+    }
+
+    printf("[Main] rx done\n\r");
     Radio.Sleep();
     bufferSize = size;
     memcpy(buffer, payload, bufferSize);
@@ -227,9 +251,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     hasNewPacket = true;
 }
 
-void OnTxTimeout(void)
-{
-    Radio.Rx(RX_TIMEOUT_VALUE);
+    State = RX;
 }
 
 void OnRxTimeout(void)

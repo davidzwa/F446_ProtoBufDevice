@@ -7,7 +7,7 @@ uint8_t buffer[BUFFER_SIZE];
 
 void TxBuffer()
 {
-    printf("TX: %s\n\r", buffer);
+    printf("[TX] '%s'\n\r", buffer);
     Radio.Send(buffer, bufferSize);
     DelayMs(1);
 }
@@ -19,6 +19,7 @@ void TxPing()
     buffer[1] = 'I';
     buffer[2] = 'N';
     buffer[3] = 'G';
+    
     // We fill the buffer with numbers for the payload
     for (int i = 4; i < bufferSize; i++)
     {
@@ -44,14 +45,14 @@ void TxPong()
     TxBuffer();
 }
 
-void TxSpreadingFactor(uint8_t value) {
+void TxSpreadingFactor(uint8_t unicodeValue) {
     // Send the next PING frame
     buffer[0] = 'S';
-    buffer[1] = value;
-    // We fill the buffer with numbers for the payload
-    for (int i = 4; i < bufferSize; i++)
+    buffer[1] = unicodeValue;
+    // We fill the buffer with zeroes for the payload
+    for (int i = 2; i < bufferSize; i++)
     {
-        buffer[i] = i - 4;
+        buffer[i] = 0;
     }
 
     TxBuffer();

@@ -3,85 +3,120 @@
 #ifndef CONFIG_H__
 #define CONFIG_H__
 
-    #if defined(REGION_AS923)
+typedef struct RadioTXConfig_s
+{
+    RadioModems_t Modem;
+    int8_t Power;
+    uint32_t Fdev;  // FSK
+    uint32_t Bandwidth;
+    uint32_t SpreadingFactor;
+    uint8_t CodeRate;
+    uint16_t PreambleLen;
+    bool FixLen;
+    bool CrcOn;
+    bool FreqHopOn;
+    uint8_t HopPeriod;
+    bool IqInverted;
+    uint32_t Timeout;
+} RadioTXConfig_t;
 
-    #define RF_FREQUENCY 923000000 // Hz
+typedef struct RadioRXConfig_s
+{
+    RadioModems_t Modem;
+    uint32_t Bandwidth;
+    uint32_t SpreadingFactor;
+    uint8_t CodeRate;
+    uint32_t BandwidthAfc; // FSK
+    uint16_t PreambleLen;
+    uint16_t SymbTimeout; // (FSK: bytes, LoRa: symbols)
+    bool FixLen;
+    uint8_t PayloadLen;
+    bool CrcOn;
+    bool FreqHopOn;
+    uint8_t HopPeriod;
+    bool IqInverted;
+    bool RxContinuous;
+} RadioRXConfig_t;
 
-    #elif defined(REGION_AU915)
+#if defined(REGION_AS923)
 
-    #define RF_FREQUENCY 915000000 // Hz
+#define RF_FREQUENCY 923000000 // Hz
 
-    #elif defined(REGION_CN470)
+#elif defined(REGION_AU915)
 
-    #define RF_FREQUENCY 470000000 // Hz
+#define RF_FREQUENCY 915000000 // Hz
 
-    #elif defined(REGION_CN779)
+#elif defined(REGION_CN470)
 
-    #define RF_FREQUENCY 779000000 // Hz
+#define RF_FREQUENCY 470000000 // Hz
 
-    #elif defined(REGION_EU433)
+#elif defined(REGION_CN779)
 
-    #define RF_FREQUENCY 433000000 // Hz
+#define RF_FREQUENCY 779000000 // Hz
 
-    #elif defined(REGION_EU868)
+#elif defined(REGION_EU433)
 
-    #define RF_FREQUENCY 868000000 // Hz
+#define RF_FREQUENCY 433000000 // Hz
 
-    #elif defined(REGION_KR920)
+#elif defined(REGION_EU868)
 
-    #define RF_FREQUENCY 920000000 // Hz
+#define RF_FREQUENCY 868000000 // Hz
 
-    #elif defined(REGION_IN865)
+#elif defined(REGION_KR920)
 
-    #define RF_FREQUENCY 865000000 // Hz
+#define RF_FREQUENCY 920000000 // Hz
 
-    #elif defined(REGION_US915)
+#elif defined(REGION_IN865)
 
-    #define RF_FREQUENCY 915000000 // Hz
+#define RF_FREQUENCY 865000000 // Hz
 
-    #elif defined(REGION_RU864)
+#elif defined(REGION_US915)
 
-    #define RF_FREQUENCY 864000000 // Hz
+#define RF_FREQUENCY 915000000 // Hz
 
-    #else
-    #error "Please define a frequency band in the compiler options."
-    #endif
+#elif defined(REGION_RU864)
 
-    #define TX_OUTPUT_POWER 14 // dBm
+#define RF_FREQUENCY 864000000 // Hz
 
-    #if defined(USE_MODEM_LORA)
+#else
+#error "Please define a frequency band in the compiler options."
+#endif
 
-    #define LORA_BANDWIDTH 0        // [0: 125 kHz, \
+#define TX_OUTPUT_POWER 14 // dBm
+
+#if defined(USE_MODEM_LORA)
+
+#define LORA_BANDWIDTH 0        // [0: 125 kHz, \
                                     //  1: 250 kHz, \
                                     //  2: 500 kHz, \
                                     //  3: Reserved]
-    #define LORA_SPREADING_FACTOR 7 // [SF7..SF12]
-    #define LORA_CODINGRATE 2       // [1: 4/5, \
+#define LORA_SPREADING_FACTOR 7 // [SF7..SF12]
+#define LORA_CODINGRATE 2       // [1: 4/5, \
                                     //  2: 4/6, \
                                     //  3: 4/7, \
                                     //  4: 4/8]
-    #define LORA_PREAMBLE_LENGTH 8  // Same for Tx and Rx
-    #define LORA_SYMBOL_TIMEOUT 5   // Symbols
-    #define LORA_FIX_LENGTH_PAYLOAD_ON false
-    #define LORA_IQ_INVERSION_ON false
+#define LORA_PREAMBLE_LENGTH 8  // Same for Tx and Rx
+#define LORA_SYMBOL_TIMEOUT 5   // Symbols
+#define LORA_FIX_LENGTH_PAYLOAD_ON false
+#define LORA_IQ_INVERSION_ON false
 
-    #elif defined(USE_MODEM_FSK)
+#elif defined(USE_MODEM_FSK)
 
-    #define FSK_FDEV 25000          // Hz
-    #define FSK_DATARATE 50000      // bps
-    #define FSK_BANDWIDTH 50000     // Hz
-    #define FSK_AFC_BANDWIDTH 83333 // Hz
-    #define FSK_PREAMBLE_LENGTH 5   // Same for Tx and Rx
-    #define FSK_FIX_LENGTH_PAYLOAD_ON false
+#define FSK_FDEV 25000          // Hz
+#define FSK_DATARATE 50000      // bps
+#define FSK_BANDWIDTH 50000     // Hz
+#define FSK_AFC_BANDWIDTH 83333 // Hz
+#define FSK_PREAMBLE_LENGTH 5   // Same for Tx and Rx
+#define FSK_FIX_LENGTH_PAYLOAD_ON false
 
-    #else
-    #error "Please define a modem in the compiler options."
-    #endif
+#else
+#error "Please define a modem in the compiler options."
+#endif
 
-    #define RX_TIMEOUT_VALUE 1
-    #define BUFFER_SIZE 64 // Define the payload size here
+#define RX_TIMEOUT_VALUE 1
+#define BUFFER_SIZE 64 // Define the payload size here
 
-    #define FIRMWARE_VERSION 0x01020000 // 1.2.0.0
+#define FIRMWARE_VERSION 0x01020000 // 1.2.0.0
 
-    #define GITHUB_VERSION 0x05000000 // 5.0.0.0
+#define GITHUB_VERSION 0x05000000 // 5.0.0.0
 #endif
