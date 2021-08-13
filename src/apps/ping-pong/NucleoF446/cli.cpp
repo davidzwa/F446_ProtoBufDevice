@@ -5,7 +5,14 @@
 #include "cli.h"
 #include "tx.h"
 
+#define SERIAL_BUFSIZE 256
+
+char serialBuf[SERIAL_BUFSIZE];
+uint8_t bytesRead = 0;
+uint8_t msgSize;
+
 bool pendingConfigChange = false;
+
 RadioTXConfig_t txConfig = {
     .Modem = MODEM_LORA,
     .Power = TX_OUTPUT_POWER,
@@ -136,24 +143,70 @@ void ApplyConfigIfPending()
 
 void CliProcess(Uart_t *uart)
 {
-    uint8_t value = 0;
+    uint8_t byte;
 
-    if (UartGetChar(uart, &value) == 0)
+    if (UartGetChar(uart, &byte) == 0)
     {
-        if (value == 'S')
-        {
-            // S character has been received for Spreading Facto
-            value = 0;
-            while (UartGetChar(uart, &value) != 0)
-            {
+        printf("Byte: %d, BytesRead: %d, msgSize %d\n", byte, bytesRead, msgSize);
+
+        // Look for startbyte 'S'
+         if(bytesRead == 0 && byte == 'S'){
+             serialBuf[0] = 'S';
+             bytesRead = 1;
+         }
+         
+
+        // Look for msg size 'S'
+         else if (bytesRead == 1){
+             msgSize = byte;
+             serialBuf[1] = byte;
+             bytesRead = 2;
+         }
+        
+        // Read remaining data bytes
+        else if (bytesRead >= 2 && bytesRead < msgSize + 2){
+             serialBuf[bytesRead++] = byte;
+        }
+
+        // Message complete parse cmd
+        if (bytesRead >= 2 && bytesRead == msgSize + 2){
+            //TODO parseCMD
+            for(int i=0; i<bytesRead; i++){
+                printf("0x%02X ", serialBuf[i] );
             }
 
-            ProcessSpreadingFactorMessage(value, true);
+            printf("\n");
+
+            // Reset serial buffer
+            bytesRead = 0;
         }
 
-        if (value == 'P')
-        {
-            TxPing();
-        }
+
+        // if (value == 'S')
+        // {
+        //     // S character has been received for Spreading Facto
+        //     value = 0;
+        //     while (UartGetChar(uart, &value) != 0)
+        //     {
+        //     }
+
+        //     ProcessSpreadingFactorMessage(value, true);
+        // }
+
+        // if (value == 'P')
+        // {
+        //     TxPing();
+        // }
+
+        // if (value == 'T')
+        // {
+        //     char serialBuf[256];
+        //     uint8_t bytesRead = 0;
+            
+        //     while(bytesRead < 2){
+
+        //     }
+
+        // }
     }
 }
