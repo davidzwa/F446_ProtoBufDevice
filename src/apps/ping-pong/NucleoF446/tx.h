@@ -11,5 +11,6 @@ void TxBuffer();
 void TxPing();
 void TxPong();
 void TxSpreadingFactor(uint8_t value);
+void TxSequenceCommand(uint8_t messageCount, uint32_t deviceUuid0);
 
 #endif // TX_H__

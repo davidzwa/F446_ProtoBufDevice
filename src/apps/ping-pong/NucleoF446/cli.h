@@ -37,6 +37,7 @@
 
 int MapSpreadingFactor(uint8_t value);
 void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
+void ProcessSequenceCommand(const char* buffer);
 void ApplyConfigIfPending();
 void CliProcess( Uart_t* uart );
 

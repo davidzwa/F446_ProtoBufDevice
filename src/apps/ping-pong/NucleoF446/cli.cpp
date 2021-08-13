@@ -110,11 +110,12 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
         {
             TxSpreadingFactor(unicodeValue);
             printf("[CLI] Broadcasting SF %d\n\r", spreadingFactor);
-            
+
             pendingConfigChange = true;
             UpdateRadioSpreadingFactor(spreadingFactor, false);
         }
-        else {
+        else
+        {
             UpdateRadioSpreadingFactor(spreadingFactor, true);
         }
 
@@ -125,6 +126,13 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
         printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: '%c'\n\r", unicodeValue);
     }
 }
+
+void ProcessSequenceCommand(const char* buffer) {
+    // TODO test print, not processing the command yet
+    // TODO check if end-device or not
+    // TODO check device UUID0
+    printf("%c %c\n\r", buffer[0], buffer[1]);
+} 
 
 void ApplyConfigIfPending()
 {
@@ -142,13 +150,19 @@ void CliProcess(Uart_t *uart)
     {
         if (value == 'S')
         {
-            // S character has been received for Spreading Facto
+            // S character has been received for Spreading Factor
             value = 0;
             while (UartGetChar(uart, &value) != 0)
             {
             }
 
             ProcessSpreadingFactorMessage(value, true);
+        }
+
+        if (value == 'T')
+        {
+            // T character has been received for TX x packets command
+            TxSequenceCommand(10, 4456526);
         }
 
         if (value == 'P')
