@@ -126,7 +126,8 @@
         "functional": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "stm32f446xx.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

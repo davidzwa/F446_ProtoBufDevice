@@ -106,6 +106,11 @@ uint32_t BoardGetRandomSeed( void );
  */
 void BoardGetUniqueId( uint8_t *id );
 
+// Temporary hack to get HAL UID
+uint32_t BoardGetHwUUID0();
+uint32_t BoardGetHwUUID1();
+uint32_t BoardGetHwUUID2();
+
 /*!
  * \brief Manages the entry into ARM cortex deep-sleep mode
  */

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "utils.h"
 #include "delay.h"
 #include "cli.h"
 #include "tx.h"
@@ -12,6 +13,8 @@ uint8_t bytesRead = 0;
 uint8_t msgSize;
 
 bool pendingConfigChange = false;
+int testMessageLeftOverCount = -1;
+SequenceCommand_t lastSequenceCommand;
 
 RadioTXConfig_t txConfig = {
     .Modem = MODEM_LORA,
@@ -22,7 +25,7 @@ RadioTXConfig_t txConfig = {
     .CodeRate = LORA_CODINGRATE,
     .PreambleLen = LORA_PREAMBLE_LENGTH,
     .FixLen = LORA_FIX_LENGTH_PAYLOAD_ON,
-    .CrcOn = true,
+    .CrcOn = false, // true,
     .FreqHopOn = 0,
     .HopPeriod = 0,
     .IqInverted = LORA_IQ_INVERSION_ON,
@@ -37,7 +40,7 @@ RadioRXConfig_t rxConfig = {
     .PreambleLen = LORA_PREAMBLE_LENGTH,
     .FixLen = LORA_FIX_LENGTH_PAYLOAD_ON,
     .PayloadLen = 0,
-    .CrcOn = true,
+    .CrcOn = false, // true,
     .FreqHopOn = 0,
     .HopPeriod = 0,
     .IqInverted = LORA_IQ_INVERSION_ON,
@@ -78,36 +81,6 @@ void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect)
     }
 }
 
-int MapSpreadingFactor(uint8_t value)
-{
-    if (value == '7')
-    {
-        return 7;
-    }
-    else if (value == '8')
-    {
-        return 8;
-    }
-    else if (value == '9')
-    {
-        return 9;
-    }
-    else if (value == '0')
-    {
-        return 10;
-    }
-    else if (value == '1')
-    {
-        return 11;
-    }
-    else if (value == '2')
-    {
-        return 12;
-    }
-
-    return -1;
-}
-
 void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
 {
     int spreadingFactor = MapSpreadingFactor(unicodeValue);
@@ -132,6 +105,41 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
     {
         printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: '%c'\n\r", unicodeValue);
     }
+}
+
+SequenceCommand_t ProcessSequenceCommand(const char *buffer)
+{
+    int offset = 1;
+    uint16_t messageCount = (buffer[offset + 1] << 8) + buffer[offset];
+    offset += 2;
+    uint16_t intervalMs = (buffer[offset + 1] << 8) + buffer[offset];
+    offset += 2;
+    uint32_t deviceId = (buffer[offset + 3] << 24) + (buffer[offset + 2] << 16) + (buffer[offset + 1] << 8) + buffer[offset];
+
+    DeviceId_t currentDeviceId = GetDeviceId();
+
+    if (currentDeviceId.id0 != deviceId)
+    {
+        printf("Device id0 %lu was not equal to %lu! Command ignored.\n\r", currentDeviceId.id0, deviceId);
+    }
+    else
+    {
+        if (intervalMs < 150)
+        {
+            printf("Device ID recognized, but intervalMS %d was too low (<150). Ignoring command", intervalMs);
+        }
+        else
+        {
+            testMessageLeftOverCount = messageCount;
+            lastSequenceCommand = {
+                .messageCount = messageCount,
+                .intervalMs = intervalMs,
+                .deviceId = deviceId};
+            printf("Device id %lu recognized. Test Packets: %d, interval: %d ms\n\r", deviceId, messageCount, intervalMs);
+        }
+    }
+
+    return lastSequenceCommand;
 }
 
 void ApplyConfigIfPending()
@@ -164,6 +172,11 @@ void ParseCliCMD()
         if(bytesRead > 1){
             ProcessSpreadingFactorMessage(serialBuf[1], true);
         }
+        SequenceCommand_t command = {
+                .messageCount = 1,
+                .intervalMs = 1500,
+                .deviceId = 4456526};
+        TxSequenceCommand(command);
         break;
 
     default:
