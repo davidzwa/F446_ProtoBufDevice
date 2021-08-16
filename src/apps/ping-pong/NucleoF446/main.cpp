@@ -24,20 +24,20 @@
 #define CRLF 1
 
 #include <string.h>
-#include "stdio.h"
-#include "board.h"
-#include "gpio.h"
-#include "delay.h"
-#include "timer.h"
-#include "uart.h"
 
-#include "utils.h"
-#include "radio.h"
-#include "tx.h"
-#include "rx.h"
-#include "config.h" // Radio config shared with CLI
-#include "config_personal.h"
+#include "board.h"
 #include "cli.h"
+#include "config.h"  // Radio config shared with CLI
+#include "config_personal.h"
+#include "delay.h"
+#include "gpio.h"
+#include "radio.h"
+#include "rx.h"
+#include "stdio.h"
+#include "timer.h"
+#include "tx.h"
+#include "uart.h"
+#include "utils.h"
 
 bool isGateway = true;
 bool hasNewPacket = false;
@@ -73,8 +73,7 @@ void OnTxTimeout(void);
 void OnRxTimeout(void);
 void OnRxError(void);
 
-void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion)
-{
+void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion) {
     printf("\n###### ===================================== ######\n\n\r");
     printf("Application name   : %s\n\r", appName);
     printf("Application version: %d.%d.%d\n\r", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
@@ -85,8 +84,7 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
 /**
  * Main application entry point.
  */
-int main(void)
-{
+int main(void) {
     // Target board initialization
     BoardInitMcu();
     BoardInitPeriph();
@@ -100,12 +98,9 @@ int main(void)
                    &appVersion,
                    &gitHubVersion);
 
-    if (isGateway == true)
-    {
+    if (isGateway == true) {
         printf("I'm a gateway\n\r");
-    }
-    else
-    {
+    } else {
         printf("I'm a endNode\n\r");
     }
 
@@ -167,17 +162,13 @@ int main(void)
 
     Radio.Rx(RX_TIMEOUT_VALUE);
 
-    while (1)
-    {
-        if (hasNewPacket)
-        {
-            if (isGateway == true)
-            {
+    while (1) {
+        if (hasNewPacket) {
+            if (isGateway == true) {
                 printf("[Gateway] Received packet:\n\r");
                 // TODO Send received data to pc
 
-                for (int i = 0; i < bufferSize; i++)
-                {
+                for (int i = 0; i < bufferSize; i++) {
                     printf("0x%02X ", buffer[i]);
                 }
 
@@ -198,23 +189,18 @@ int main(void)
         BoardLowPowerHandler();
 
         // Process Radio IRQ
-        if (Radio.IrqProcess != NULL)
-        {
+        if (Radio.IrqProcess != NULL) {
             Radio.IrqProcess();
         }
     }
 }
 
-void OnTxDone(void)
-{
+void OnTxDone(void) {
     // TODO Why listen? After TX done?
-    if (isGateway == true)
-    {
+    if (isGateway == true) {
         // Listen for next radio packet
         Radio.Rx(RX_TIMEOUT_VALUE);
-    }
-    else
-    {
+    } else {
         ApplyConfigIfPending();
         Radio.Sleep();
     }
@@ -222,11 +208,9 @@ void OnTxDone(void)
     printf("[Main] tx done\n\r");
 }
 
-void OnTxTimeout(void)
-{
+void OnTxTimeout(void) {
     // TODO Why listen? After TX timeout?
-    if (isGateway == true)
-    {
+    if (isGateway == true) {
         // Listen for next radio packet
         Radio.Rx(RX_TIMEOUT_VALUE);
     }
@@ -236,8 +220,7 @@ void OnTxTimeout(void)
     printf("[Main] tx timeout\n\r");
 }
 
-void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
-{
+void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     // if (!isGateway) {
     LoRaProcessMode((const char *)payload);
     // }
@@ -253,13 +236,11 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     printf("[Main] rx done\n\r");
 }
 
-void OnRxTimeout(void)
-{
+void OnRxTimeout(void) {
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
-void OnRxError(void)
-{
+void OnRxError(void) {
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     printf("[Main] error\n\r");
