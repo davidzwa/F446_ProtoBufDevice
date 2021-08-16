@@ -156,6 +156,9 @@ int main(void)
 #endif
 
     printf("Started radio listening\n\r");
+
+    printf("blahblasdfjlsdafjsdk");
+
     Radio.Rx(RX_TIMEOUT_VALUE);
  
     while (1)
@@ -236,11 +239,6 @@ void OnTxTimeout(void)
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    if (IsSpreadingFactorConfig((const char *)payload))
-    {
-        LoRaProcessMode((const char *)payload);
-    }
-
     printf("[Main] rx done\n\r");
     Radio.Sleep();
     bufferSize = size;

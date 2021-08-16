@@ -117,11 +117,12 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa)
         {
             TxSpreadingFactor(unicodeValue);
             printf("[CLI] Broadcasting SF %d\n\r", spreadingFactor);
-            
+
             pendingConfigChange = true;
             UpdateRadioSpreadingFactor(spreadingFactor, false);
         }
-        else {
+        else
+        {
             UpdateRadioSpreadingFactor(spreadingFactor, true);
         }
 
@@ -141,72 +142,84 @@ void ApplyConfigIfPending()
     ApplyRadioConfig();
 }
 
+void ParseCliCMD()
+{
+
+    switch (serialBuf[0])
+    {
+    // Set Spreading factor
+    case 'S':
+        if(bytesRead > 1){
+            ProcessSpreadingFactorMessage(serialBuf[1], true);
+        }
+        break;
+
+    // Ping
+    case 'P':
+        TxPing();
+        break;
+
+        // Set Spreading factor
+    case 'T':
+        if(bytesRead > 1){
+            ProcessSpreadingFactorMessage(serialBuf[1], true);
+        }
+        break;
+
+    default:
+        break;
+    }
+
+
+    // if (value == 'P')
+    // {
+    //     TxPing();
+    // }
+
+    // if (value == 'T')
+    // {
+    //     char serialBuf[256];
+    //     uint8_t bytesRead = 0;
+
+    //     while(bytesRead < 2){
+
+    //     }
+
+    // }
+}
+
+#define SERIAL_END_BYTE '\n'
+
 void CliProcess(Uart_t *uart)
 {
     uint8_t byte;
 
     if (UartGetChar(uart, &byte) == 0)
     {
-        printf("Byte: %d, BytesRead: %d, msgSize %d\n", byte, bytesRead, msgSize);
 
-        // Look for startbyte 'S'
-         if(bytesRead == 0 && byte == 'S'){
-             serialBuf[0] = 'S';
-             bytesRead = 1;
-         }
-         
+        if (bytesRead < SERIAL_BUFSIZE)
+        {
+            // Add new byte to buffer
+            serialBuf[bytesRead++] = byte;
 
-        // Look for msg size 'S'
-         else if (bytesRead == 1){
-             msgSize = byte;
-             serialBuf[1] = byte;
-             bytesRead = 2;
-         }
-        
-        // Read remaining data bytes
-        else if (bytesRead >= 2 && bytesRead < msgSize + 2){
-             serialBuf[bytesRead++] = byte;
-        }
+            // Look for end byte
+            if (byte == SERIAL_END_BYTE)
+            {
 
-        // Message complete parse cmd
-        if (bytesRead >= 2 && bytesRead == msgSize + 2){
-            //TODO parseCMD
-            for(int i=0; i<bytesRead; i++){
-                printf("0x%02X ", serialBuf[i] );
+                // Parse msg
+                if (bytesRead > 1)
+                {
+                    ParseCliCMD();
+                }
+
+                // Reset serial buffer
+                bytesRead = 0;
             }
-
-            printf("\n");
-
-            // Reset serial buffer
+        }
+        else
+        {
+            // ERROR serial overflow
             bytesRead = 0;
         }
-
-
-        // if (value == 'S')
-        // {
-        //     // S character has been received for Spreading Facto
-        //     value = 0;
-        //     while (UartGetChar(uart, &value) != 0)
-        //     {
-        //     }
-
-        //     ProcessSpreadingFactorMessage(value, true);
-        // }
-
-        // if (value == 'P')
-        // {
-        //     TxPing();
-        // }
-
-        // if (value == 'T')
-        // {
-        //     char serialBuf[256];
-        //     uint8_t bytesRead = 0;
-            
-        //     while(bytesRead < 2){
-
-        //     }
-
-        // }
     }
 }
