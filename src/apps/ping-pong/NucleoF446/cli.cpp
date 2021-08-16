@@ -132,7 +132,10 @@ void ApplyConfigIfPending() {
     ApplyRadioConfig();
 }
 
-SequenceCommand_t command = {.messageCount = 1, .intervalMs = 1500, .deviceId = 4456526};
+SequenceCommand_t command = {
+    .messageCount = 1,
+    .intervalMs = 1500,
+    .deviceId = 4456526};
 
 void ParseCliCMD() {
     switch (serialBuf[0]) {
@@ -158,7 +161,7 @@ void ParseCliCMD() {
     }
 }
 
-#define SERIAL_END_BYTE '\n'
+#define SERIAL_END_BYTE '\r'
 
 void CliProcess(Uart_t *uart) {
     uint8_t byte;
@@ -168,6 +171,8 @@ void CliProcess(Uart_t *uart) {
         if (bytesRead < SERIAL_BUFSIZE) {
             // Add new byte to buffer
             serialBuf[bytesRead++] = byte;
+
+            // printf("[UART] received: %d\n\r", byte);
 
             // Look for end byte
             if (byte == SERIAL_END_BYTE) {

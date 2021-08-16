@@ -8,7 +8,7 @@
 extern uint16_t bufferSize;
 extern uint8_t buffer[BUFFER_SIZE];
 
-void TxBuffer();
+void TxBuffer(int16_t dataSize);
 void TxPing();
 void TxPong();
 void TxSpreadingFactor(uint8_t value);

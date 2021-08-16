@@ -158,8 +158,6 @@ int main(void) {
 
     printf("Started radio listening\n\r");
 
-    printf("blahblasdfjlsdafjsdk");
-
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     while (1) {
@@ -222,7 +220,7 @@ void OnTxTimeout(void) {
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     // if (!isGateway) {
-    LoRaProcessMode((const char *)payload);
+    // LoRaProcessMode((const char *)payload);
     // }
 
     Radio.Sleep();
