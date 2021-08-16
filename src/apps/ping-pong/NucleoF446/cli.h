@@ -19,15 +19,17 @@
 
 #include "uart.h"
 #include "config.h"
+#include "cli_commands.h"
 
 #ifndef CLI_H
 #define CLI_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C"
+{
 #endif
 
-/*!
+    /*!
  * Process characters received on the serial interface
  * \remark Characters sequence 'ESC' + 'N' execute a NVM factory reset
  *         All other sequences are ignored
@@ -35,11 +37,10 @@
  * \param [IN] uart UART interface object used by the command line interface
  */
 
-int MapSpreadingFactor(uint8_t value);
-void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
-void ProcessSequenceCommand(const char* buffer);
-void ApplyConfigIfPending();
-void CliProcess( Uart_t* uart );
+    void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
+    SequenceCommand_t ProcessSequenceCommand(const char *buffer);
+    void ApplyConfigIfPending();
+    void CliProcess(Uart_t *uart);
 
 #ifdef __cplusplus
 }

@@ -31,6 +31,7 @@
 #include "timer.h"
 #include "uart.h"
 
+#include "utils.h"
 #include "radio.h"
 #include "tx.h"
 #include "rx.h"
@@ -90,19 +91,8 @@ int main(void)
     BoardInitMcu();
     BoardInitPeriph();
 
-    uint8_t id[8];
-
-    BoardGetUniqueId(id);
-    uint32_t id0 = BoardGetHwUUID0();
-    uint32_t id1 = BoardGetHwUUID1();
-    uint32_t id2 = BoardGetHwUUID2();
-    printf("id %lu %lu %lu\n\r", id0, id1, id2);
-
-    for (int i = 0; i < 8; i++)
-    {
-        printf("0x%02X ", id[i]);
-    }
-    printf("\n\r");
+    DeviceId_t deviceId = GetDeviceId();
+    printf("id %lu %lu %lu\n\r", deviceId.id0, deviceId.id1, deviceId.id2);
 
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
@@ -214,6 +204,7 @@ int main(void)
 
 void OnTxDone(void)
 {
+    // TODO Why listen? After TX done?
     if (isGateway == true)
     {
         // Listen for next radio packet
@@ -230,22 +221,24 @@ void OnTxDone(void)
 
 void OnTxTimeout(void)
 {
+    // TODO Why listen? After TX timeout?
     if (isGateway == true)
     {
         // Listen for next radio packet
         Radio.Rx(RX_TIMEOUT_VALUE);
     }
-    printf("[Main] tx timeout\n\r");
     ApplyConfigIfPending();
     Radio.Sleep();
+
+    printf("[Main] tx timeout\n\r");
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
 {
-    if (!isGateway) {
-        LoRaProcessMode((const char *)payload);
-    }
-    printf("[Main] rx done\n\r");
+    // if (!isGateway) {
+    LoRaProcessMode((const char *)payload);
+    // }
+
     Radio.Sleep();
     bufferSize = size;
     memcpy(buffer, payload, bufferSize);
@@ -253,6 +246,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     SnrValue = snr;
 
     hasNewPacket = true;
+
+    printf("[Main] rx done\n\r");
 }
 
 void OnRxTimeout(void)
@@ -262,6 +257,7 @@ void OnRxTimeout(void)
 
 void OnRxError(void)
 {
-    printf("[Main] error\n\r");
     Radio.Rx(RX_TIMEOUT_VALUE);
+
+    printf("[Main] error\n\r");
 }

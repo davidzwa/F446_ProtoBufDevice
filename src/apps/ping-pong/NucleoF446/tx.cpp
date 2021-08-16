@@ -19,7 +19,7 @@ void TxPing()
     buffer[1] = 'I';
     buffer[2] = 'N';
     buffer[3] = 'G';
-    
+
     // We fill the buffer with numbers for the payload
     for (int i = 4; i < bufferSize; i++)
     {
@@ -45,7 +45,8 @@ void TxPong()
     TxBuffer();
 }
 
-void TxSpreadingFactor(uint8_t unicodeValue) {
+void TxSpreadingFactor(uint8_t unicodeValue)
+{
     // Send the next SF frame
     buffer[0] = 'S';
     buffer[1] = unicodeValue;
@@ -58,18 +59,24 @@ void TxSpreadingFactor(uint8_t unicodeValue) {
     TxBuffer();
 }
 
-void TxSequenceCommand(uint8_t messageCount, uint32_t deviceUuid0) {
-    // Send the next T1000 frame
-    buffer[0] = 'T';
-    buffer[1] = messageCount;
-    buffer[2] = (deviceUuid0) & 0xff;
-    buffer[3] = (deviceUuid0>>8) & 0xff;
-    buffer[4] = (deviceUuid0>>16) & 0xff;
-    buffer[5] = (deviceUuid0>>24) & 0xff;
+void TxSequenceCommand(SequenceCommand_t cmd)
+{
+    int i = 0;
+    // Send the next sequence TX command
+    buffer[i++] = 'T'; // 0x54
+    buffer[i++] = cmd.messageCount & 0xff;
+    buffer[i++] = (cmd.messageCount >> 8) & 0xff;
+    buffer[i++] = cmd.intervalMs & 0xff;
+    buffer[i++] = (cmd.intervalMs >> 8) & 0xff;
+    buffer[i++] = cmd.deviceId & 0xff;
+    buffer[i++] = (cmd.deviceId >> 8) & 0xff;
+    buffer[i++] = (cmd.deviceId >> 16) & 0xff;
+    buffer[i++] = (cmd.deviceId >> 24) & 0xff;
+
     // We fill the buffer with zeroes for the payload
-    for (int i = 6; i < bufferSize; i++)
+    for (int j = ++i; i < bufferSize; j++)
     {
-        buffer[i] = 0;
+        buffer[j] = 0;
     }
 
     TxBuffer();
