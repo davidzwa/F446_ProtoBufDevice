@@ -9,7 +9,7 @@ typedef struct RadioTXConfig_s
     int8_t Power;
     uint32_t Fdev;  // FSK
     uint32_t Bandwidth;
-    uint32_t SpreadingFactor;
+    uint32_t DataRate;
     uint8_t CodeRate;
     uint16_t PreambleLen;
     bool FixLen;
@@ -24,7 +24,7 @@ typedef struct RadioRXConfig_s
 {
     RadioModems_t Modem;
     uint32_t Bandwidth;
-    uint32_t SpreadingFactor;
+    uint32_t DataRate;
     uint8_t CodeRate;
     uint32_t BandwidthAfc; // FSK
     uint16_t PreambleLen;
