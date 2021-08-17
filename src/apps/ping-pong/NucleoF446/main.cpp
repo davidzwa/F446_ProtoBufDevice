@@ -95,7 +95,6 @@ int main(void) {
                    &appVersion,
                    &gitHubVersion);
 
-
     printf("Radio initializing\n\r");
 
     // Radio initialization
@@ -169,9 +168,9 @@ void OnTxDone(void) {
 
     ApplyConfigIfPending();
 
-    if(!isExecutingCMD){
+    if (!isExecutingCMD) {
         Radio.Rx(RX_TIMEOUT_VALUE);
-    }else{
+    } else {
         Radio.Sleep();
     }
 }
@@ -181,15 +180,14 @@ void OnTxTimeout(void) {
 
     ApplyConfigIfPending();
 
-    if(!isExecutingCMD){
+    if (!isExecutingCMD) {
         Radio.Rx(RX_TIMEOUT_VALUE);
-    }else{
+    } else {
         Radio.Sleep();
     }
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
-
     printf("[Main] rx done\n\r");
 
     MsgSize = size;
@@ -203,12 +201,10 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
     printf("\n\r[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n\r", MsgSize, RssiValue, SnrValue);
 
-
     parseMsg(buffer, MsgSize);
 
     // Listen for next radio packet
     Radio.Rx(RX_TIMEOUT_VALUE);
-
 }
 
 void OnRxTimeout(void) {
