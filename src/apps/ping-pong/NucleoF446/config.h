@@ -9,7 +9,7 @@ typedef struct RadioTXConfig_s
     int8_t Power;
     uint32_t Fdev;  // FSK
     uint32_t Bandwidth;
-    uint32_t SpreadingFactor;
+    uint32_t DataRate;
     uint8_t CodeRate;
     uint16_t PreambleLen;
     bool FixLen;
@@ -24,7 +24,7 @@ typedef struct RadioRXConfig_s
 {
     RadioModems_t Modem;
     uint32_t Bandwidth;
-    uint32_t SpreadingFactor;
+    uint32_t DataRate;
     uint8_t CodeRate;
     uint32_t BandwidthAfc; // FSK
     uint16_t PreambleLen;
@@ -113,7 +113,7 @@ typedef struct RadioRXConfig_s
 #error "Please define a modem in the compiler options."
 #endif
 
-#define RX_TIMEOUT_VALUE 1000
+#define RX_TIMEOUT_VALUE 1
 #define BUFFER_SIZE 64 // Define the payload size here
 
 #define FIRMWARE_VERSION 0x01020000 // 1.2.0.0

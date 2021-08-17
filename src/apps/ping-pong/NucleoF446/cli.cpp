@@ -17,12 +17,13 @@ bool pendingConfigChange = false;
 int testMessageLeftOverCount = -1;
 SequenceCommand_t lastSequenceCommand;
 
+#if defined(USE_MODEM_LORA)
 RadioTXConfig_t txConfig = {
     .Modem = MODEM_LORA,
     .Power = TX_OUTPUT_POWER,
     .Fdev = 0,
     .Bandwidth = LORA_BANDWIDTH,
-    .SpreadingFactor = LORA_SPREADING_FACTOR,
+    .DataRate = LORA_SPREADING_FACTOR,
     .CodeRate = LORA_CODINGRATE,
     .PreambleLen = LORA_PREAMBLE_LENGTH,
     .FixLen = LORA_FIX_LENGTH_PAYLOAD_ON,
@@ -35,7 +36,7 @@ RadioTXConfig_t txConfig = {
 RadioRXConfig_t rxConfig = {
     .Modem = MODEM_LORA,
     .Bandwidth = LORA_BANDWIDTH,
-    .SpreadingFactor = LORA_SPREADING_FACTOR,
+    .DataRate = LORA_SPREADING_FACTOR,
     .CodeRate = LORA_CODINGRATE,
     .BandwidthAfc = 0,
     .PreambleLen = LORA_PREAMBLE_LENGTH,
@@ -47,15 +48,50 @@ RadioRXConfig_t rxConfig = {
     .IqInverted = LORA_IQ_INVERSION_ON,
     .RxContinuous = true};
 
+#elif defined(USE_MODEM_FSK)
+RadioTXConfig_t txConfig = {
+    .Modem = MODEM_FSK,
+    .Power = TX_OUTPUT_POWER,
+    .Fdev = FSK_FDEV,
+    .Bandwidth = FSK_BANDWIDTH,
+    .DataRate = FSK_DATARATE,
+    .CodeRate = 0,
+    .PreambleLen = FSK_PREAMBLE_LENGTH,
+    .FixLen = FSK_FIX_LENGTH_PAYLOAD_ON,
+    .CrcOn = false,  // true,
+    .FreqHopOn = 0,
+    .HopPeriod = 0,
+    .IqInverted = 0,
+    .Timeout = true};
+
+RadioRXConfig_t rxConfig = {
+    .Modem = MODEM_FSK,
+    .Bandwidth = FSK_BANDWIDTH,
+    .DataRate = FSK_DATARATE,
+    .CodeRate = 0,
+    .BandwidthAfc = FSK_AFC_BANDWIDTH,
+    .PreambleLen = FSK_PREAMBLE_LENGTH,
+    .FixLen = FSK_FIX_LENGTH_PAYLOAD_ON,
+    .PayloadLen = 0,
+    .CrcOn = false,  // true,
+    .FreqHopOn = 0,
+    .HopPeriod = 0,
+    .IqInverted = false,
+    .RxContinuous = true};
+
+#else
+#error "Please define a modem FSK or LORA in the compiler options."
+#endif
+
 void ApplyRadioTXConfig() {
     Radio.SetTxConfig(txConfig.Modem, txConfig.Power, txConfig.Fdev, txConfig.Bandwidth,
-                      txConfig.SpreadingFactor, txConfig.CodeRate,
+                      txConfig.DataRate, txConfig.CodeRate,
                       txConfig.PreambleLen, txConfig.FixLen,
                       txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout);
 }
 
 void ApplyRadioRXConfig() {
-    Radio.SetRxConfig(rxConfig.Modem, rxConfig.Bandwidth, txConfig.SpreadingFactor, txConfig.CodeRate,
+    Radio.SetRxConfig(rxConfig.Modem, rxConfig.Bandwidth, txConfig.DataRate, txConfig.CodeRate,
                       rxConfig.BandwidthAfc, rxConfig.PreambleLen,
                       rxConfig.SymbTimeout, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn,
                       rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
@@ -69,8 +105,8 @@ void ApplyRadioConfig() {
 }
 
 void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect) {
-    txConfig.SpreadingFactor = spreadingFactor;
-    rxConfig.SpreadingFactor = spreadingFactor;
+    txConfig.DataRate = spreadingFactor;
+    rxConfig.DataRate = spreadingFactor;
 
     if (reconnect) {
         ApplyRadioConfig();
@@ -119,7 +155,7 @@ void ParseCliCMD() {
 
         // Send sequence test cmd
         case 'T':
-            TxSequenceCommand((uint8_t *) serialBuf, bytesRead);
+            TxSequenceCommand((uint8_t *)serialBuf, bytesRead);
             break;
 
         default:
@@ -138,7 +174,7 @@ void CliProcess(Uart_t *uart) {
             // Add new byte to buffer
             serialBuf[bytesRead++] = byte;
 
-            // printf("[cli] uart received: %d\n\r", byte);
+            printf("[cli] uart received: %d\n\r", byte);
 
             // Look for end byte
             if (byte == SERIAL_END_BYTE) {
