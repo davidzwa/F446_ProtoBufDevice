@@ -214,6 +214,5 @@ void OnRxTimeout(void) {
 
 void OnRxError(void) {
     printf("[Main] error\n\r");
-
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
