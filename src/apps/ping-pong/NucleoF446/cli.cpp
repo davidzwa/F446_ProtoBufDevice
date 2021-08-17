@@ -10,9 +10,8 @@
 
 #define SERIAL_BUFSIZE 256
 
-char serialBuf[SERIAL_BUFSIZE];
+uint8_t serialBuf[SERIAL_BUFSIZE];
 uint8_t bytesRead = 0;
-uint8_t msgSize;
 
 bool pendingConfigChange = false;
 int testMessageLeftOverCount = -1;
@@ -97,45 +96,12 @@ void ProcessSpreadingFactorMessage(uint8_t unicodeValue, bool broadcastLoRa) {
     }
 }
 
-SequenceCommand_t ProcessSequenceCommand(const char *buffer) {
-    int offset = 1;
-    uint16_t messageCount = (buffer[offset + 1] << 8) + buffer[offset];
-    offset += 2;
-    uint16_t intervalMs = (buffer[offset + 1] << 8) + buffer[offset];
-    offset += 2;
-    uint32_t deviceId = (buffer[offset + 3] << 24) + (buffer[offset + 2] << 16) + (buffer[offset + 1] << 8) + buffer[offset];
-
-    DeviceId_t currentDeviceId = GetDeviceId();
-
-    if (currentDeviceId.id0 != deviceId) {
-        printf("Device id0 %lu was not equal to %lu! Command ignored.\n\r", currentDeviceId.id0, deviceId);
-    } else {
-        if (intervalMs < 150) {
-            printf("Device ID recognized, but intervalMS %d was too low (<150). Ignoring command", intervalMs);
-        } else {
-            testMessageLeftOverCount = messageCount;
-            lastSequenceCommand = {
-                .messageCount = messageCount,
-                .intervalMs = intervalMs,
-                .deviceId = deviceId};
-            printf("Device id %lu recognized. Test Packets: %d, interval: %d ms\n\r", deviceId, messageCount, intervalMs);
-        }
-    }
-
-    return lastSequenceCommand;
-}
-
 void ApplyConfigIfPending() {
     if (!pendingConfigChange)
         return;
     pendingConfigChange = false;
     ApplyRadioConfig();
 }
-
-SequenceCommand_t command = {
-    .messageCount = 1,
-    .intervalMs = 1500,
-    .deviceId = 4456526};
 
 void ParseCliCMD() {
     switch (serialBuf[0]) {
@@ -151,9 +117,9 @@ void ParseCliCMD() {
             TxPing();
             break;
 
-        // Set Spreading factor
+        // Send sequence test cmd
         case 'T':
-            TxSequenceCommand(command);
+            TxSequenceCommand((uint8_t *) serialBuf, bytesRead);
             break;
 
         default:
@@ -172,7 +138,7 @@ void CliProcess(Uart_t *uart) {
             // Add new byte to buffer
             serialBuf[bytesRead++] = byte;
 
-            // printf("[UART] received: %d\n\r", byte);
+            // printf("[cli] uart received: %d\n\r", byte);
 
             // Look for end byte
             if (byte == SERIAL_END_BYTE) {

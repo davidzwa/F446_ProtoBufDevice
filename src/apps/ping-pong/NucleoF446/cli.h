@@ -38,7 +38,6 @@ extern "C"
  */
 
     void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
-    SequenceCommand_t ProcessSequenceCommand(const char *buffer);
     void ApplyConfigIfPending();
     void CliProcess(Uart_t *uart);
 
