@@ -1,59 +1,115 @@
-#include "delay.h"
-#include "stdio.h"
 #include "tx.h"
+#include "rtc-board.h"
 
-uint16_t bufferSize = BUFFER_SIZE;
+TimerEvent_t timerHandle;
+
+uint16_t testMessageCounter = 0;
+uint16_t testmessageCount = 0;
+uint16_t testIntervalMs = 0;
+
+uint16_t MsgSize = BUFFER_SIZE;
 uint8_t buffer[BUFFER_SIZE];
 
-void TxBuffer()
-{
-    printf("[TX] '%s'\n\r", buffer);
-    Radio.Send(buffer, bufferSize);
+bool TestRunning = false;
+
+void TxBuffer(int16_t dataSize) {
+    if(dataSize < 0){
+        dataSize = BUFFER_SIZE;
+    }
+
+    // Print msg in hex
+    printf("[TX]");
+    for (int i = 0; i < dataSize; i++) {
+         printf("0x%02X ", buffer[i] );
+    }
+    printf("\n\r");
+
+    // Goodbye msg
+    Radio.Send(buffer, dataSize);
     DelayMs(1);
 }
 
-void TxPing()
-{
+void TxPing() {
     // Send the next PING frame
     buffer[0] = 'P';
     buffer[1] = 'I';
     buffer[2] = 'N';
     buffer[3] = 'G';
-    
-    // We fill the buffer with numbers for the payload
-    for (int i = 4; i < bufferSize; i++)
-    {
-        buffer[i] = i - 4;
-    }
 
-    TxBuffer();
+    TxBuffer(4);
 }
 
-void TxPong()
-{
+void TxPong() {
     // Send the next PING frame
     buffer[0] = 'P';
     buffer[1] = 'O';
     buffer[2] = 'N';
     buffer[3] = 'G';
-    // We fill the buffer with numbers for the payload
-    for (int i = 4; i < bufferSize; i++)
-    {
-        buffer[i] = i - 4;
-    }
 
-    TxBuffer();
+    TxBuffer(4);
 }
 
 void TxSpreadingFactor(uint8_t unicodeValue) {
-    // Send the next PING frame
+    // Send the next SF frame
     buffer[0] = 'S';
     buffer[1] = unicodeValue;
-    // We fill the buffer with zeroes for the payload
-    for (int i = 2; i < bufferSize; i++)
-    {
-        buffer[i] = 0;
+
+    TxBuffer(2);
+}
+
+void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
+
+    if(bufSize > 8){
+
+        memcpy(buffer, serialBuf, 9);
+
+    }else{
+        uint16_t messageCount = 5;
+        uint16_t intervalMs = 500;
+        uint32_t deviceId = 0x00;
+
+        printf("[tx] DefaultSequenceCMD: messageCount %d, intervalMs %d, deviceId %d\n\r", messageCount, intervalMs, deviceId);
+
+        buffer[0] = 'T';
+        buffer[1] = (messageCount >> 8) & 0xff;
+        buffer[2] = messageCount & 0xff;
+        buffer[3] = (intervalMs >> 8) & 0xff;
+        buffer[4] = intervalMs & 0xff;
+        buffer[5] = (deviceId >> 24) & 0xff;
+        buffer[6] = (deviceId >> 16) & 0xff;
+        buffer[7] = (deviceId >> 8) & 0xff;
+        buffer[8] = deviceId & 0xff;
     }
 
-    TxBuffer();
+    TxBuffer(9);
+}
+
+void TxTestProcess(){
+
+    if(TestRunning){
+        if(testMessageCounter++ < testmessageCount){
+            printf("[tx] SequenceTest %d from %d\n\r", testMessageCounter, testmessageCount);
+            TxPing();
+            DelayMs(testIntervalMs);
+        }else{
+            TestRunning = false;
+            printf("[tx] SequenceTest Done\n\r");
+        }
+    }
+}
+
+void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs){
+
+    printf("[tx] TxStartSequenceTest\n\r");
+
+    // if(TestRunning){
+    //     printf("[tx] test already running %d msg left\n\r", testMessageLeft);
+    //     return;
+    // }
+
+    testMessageCounter = 0;
+    testIntervalMs = intervalMs;
+    testmessageCount = messageCount;
+
+    TestRunning = true;
 }

@@ -126,7 +126,8 @@
         "functional": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "stm32f446xx.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",
@@ -134,5 +135,6 @@
         "src\\boards\\NucleoF446\\cmsis\\arm-gcc\\stm32f446retx_flash.ld",
         "src\\boards\\NucleoF446\\cmsis\\stm32f4xx_hal_conf.h",
         "src\\system\\nvmm.c"
-    ]
+    ],
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0}"
 }

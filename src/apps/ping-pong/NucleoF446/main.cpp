@@ -24,28 +24,26 @@
 #define CRLF 1
 
 #include <string.h>
-#include "stdio.h"
+
 #include "board.h"
-#include "gpio.h"
-#include "delay.h"
-#include "timer.h"
-#include "uart.h"
-
-#include "radio.h"
-#include "tx.h"
-#include "rx.h"
-#include "config.h" // Radio config shared with CLI
-#include "config_personal.h"
 #include "cli.h"
-
-bool isGateway = true;
-bool hasNewPacket = false;
+#include "config.h"  // Radio config shared with CLI
+#include "config_personal.h"
+#include "delay.h"
+#include "gpio.h"
+#include "radio.h"
+#include "rx.h"
+#include "stdio.h"
+#include "uart.h"
+#include "utils.h"
 
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
 
-extern uint16_t BufferSize;
-extern uint8_t Buffer[BUFFER_SIZE];
+bool isExecutingCMD = false;
+
+extern uint16_t MsgSize;
+extern uint8_t buffer[BUFFER_SIZE];
 
 /*!
  * Radio events function pointer
@@ -72,9 +70,7 @@ void OnTxTimeout(void);
 void OnRxTimeout(void);
 void OnRxError(void);
 
-
-void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion)
-{
+void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion) {
     printf("\n###### ===================================== ######\n\n\r");
     printf("Application name   : %s\n\r", appName);
     printf("Application version: %d.%d.%d\n\r", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
@@ -85,11 +81,13 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
 /**
  * Main application entry point.
  */
-int main(void)
-{
+int main(void) {
     // Target board initialization
     BoardInitMcu();
     BoardInitPeriph();
+
+    DeviceId_t deviceId = GetDeviceId();
+    printf("id %lu %lu %lu\n\r", deviceId.id0, deviceId.id1, deviceId.id2);
 
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
@@ -97,11 +95,6 @@ int main(void)
                    &appVersion,
                    &gitHubVersion);
 
-    if (isGateway == true){
-        printf("I'm a gateway\n\r");
-    }else{
-        printf("I'm a endNode\n\r");
-    }
 
     printf("Radio initializing\n\r");
 
@@ -156,108 +149,75 @@ int main(void)
 #endif
 
     printf("Started radio listening\n\r");
+
     Radio.Rx(RX_TIMEOUT_VALUE);
- 
-    while (1)
-    {
-        if(hasNewPacket){
-            if (isGateway == true)
-            {
-                printf("[Gateway] Received packet:\n\r");
-                //TODO Send received data to pc
 
-                for(int i=0; i<bufferSize; i++){
-                    printf("0x%02X ", buffer[i] );
-                }
-
-                printf("\n\rbufferSize: %d\n\r", bufferSize);
-                printf("RssiValue: %d\n\r", RssiValue);
-                printf("SnrValue: %d\n\r\n\r", SnrValue);
-
-                // Listen for next radio packet
-                Radio.Rx(RX_TIMEOUT_VALUE);
-            }
-            else
-            {
-                if (bufferSize > 0)
-                {
-                    if (IsSpreadingFactorConfig((const char *)buffer))
-                    {
-                        LoRaProcessMode((const char *)buffer);
-                    }
-                    else // valid reception but not config as expected
-                    {
-                        Radio.Rx(RX_TIMEOUT_VALUE);
-                    }
-                }
-            }
-            // Reset has new packet flag
-            hasNewPacket = false;
-        }
-        
-
+    while (1) {
         CliProcess(&Uart2);
 
-        BoardLowPowerHandler();
+        TxTestProcess();
+
         // Process Radio IRQ
-        if (Radio.IrqProcess != NULL)
-        {
+        if (Radio.IrqProcess != NULL) {
             Radio.IrqProcess();
         }
     }
 }
 
-void OnTxDone(void)
-{
-    if (isGateway == true)
-    {
-        // Listen for next radio packet
+void OnTxDone(void) {
+    printf("[Main] tx done\n\r");
+
+    ApplyConfigIfPending();
+
+    if(!isExecutingCMD){
         Radio.Rx(RX_TIMEOUT_VALUE);
     }else{
-	    ApplyConfigIfPending();
-	    Radio.Sleep();
-	}
-
-    printf("[Main] tx done\n\r");
+        Radio.Sleep();
+    }
 }
 
-
-void OnTxTimeout(void)
-{
-	if (isGateway == true)
-    {
-        // Listen for next radio packet
-        Radio.Rx(RX_TIMEOUT_VALUE);
-    }
+void OnTxTimeout(void) {
     printf("[Main] tx timeout\n\r");
+
     ApplyConfigIfPending();
-    Radio.Sleep();
+
+    if(!isExecutingCMD){
+        Radio.Rx(RX_TIMEOUT_VALUE);
+    }else{
+        Radio.Sleep();
+    }
 }
 
-void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
-{
-    if (IsSpreadingFactorConfig((const char *)payload))
-    {
-        LoRaProcessMode((const char *)payload);
-    }
+void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     printf("[Main] rx done\n\r");
-    Radio.Sleep();
-    bufferSize = size;
-    memcpy(buffer, payload, bufferSize);
+
+    MsgSize = size;
+    memcpy(buffer, payload, MsgSize);
     RssiValue = rssi;
     SnrValue = snr;
-    
-    hasNewPacket = true;
+
+    printf("[Main]");
+    for (int i = 0; i < MsgSize; i++) {
+        printf("0x%02X ", buffer[i]);
+    }
+    printf("\n\r[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n\r", MsgSize, RssiValue, SnrValue);
+
+
+    parseMsg(buffer, MsgSize);
+
+    // Listen for next radio packet
+    Radio.Rx(RX_TIMEOUT_VALUE);
+
 }
 
-void OnRxTimeout(void)
-{
+void OnRxTimeout(void) {
+    printf("[Main] OnRxTimeout\n\r");
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
-void OnRxError(void)
-{
+void OnRxError(void) {
     printf("[Main] error\n\r");
+
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
