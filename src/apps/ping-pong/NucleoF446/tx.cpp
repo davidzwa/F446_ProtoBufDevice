@@ -57,6 +57,11 @@ void TxSpreadingFactor(uint8_t unicodeValue) {
     TxBuffer(2);
 }
 
+void TxNewRFSettings(uint8_t *serialBuf, uint8_t bufSize){
+    memcpy(buffer, serialBuf, bufSize);
+    TxBuffer(bufSize);
+}
+
 void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
 
     if(bufSize > 8){

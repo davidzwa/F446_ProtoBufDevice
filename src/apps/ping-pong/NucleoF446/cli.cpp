@@ -9,6 +9,7 @@
 #include "utils.h"
 
 #define SERIAL_BUFSIZE 256
+#define SERIAL_END_BYTE '\r'
 
 uint8_t serialBuf[SERIAL_BUFSIZE];
 uint8_t bytesRead = 0;
@@ -47,11 +48,45 @@ RadioRXConfig_t rxConfig = {
     .IqInverted = LORA_IQ_INVERSION_ON,
     .RxContinuous = true};
 
+void InitRadioTXConfigLoRaDefault(RadioTXConfig_t* txConfig_p){
+    txConfig_p->Modem = MODEM_LORA;
+    txConfig_p->Power = TX_OUTPUT_POWER;
+    txConfig_p->Fdev = 0;
+    txConfig_p->Bandwidth = LORA_BANDWIDTH;
+    txConfig_p->SpreadingFactor = LORA_SPREADING_FACTOR;
+    txConfig_p->CodeRate = LORA_CODINGRATE;
+    txConfig_p->PreambleLen = LORA_PREAMBLE_LENGTH;
+    txConfig_p->FixLen = LORA_FIX_LENGTH_PAYLOAD_ON;
+    txConfig_p->CrcOn = false,  // true;
+    txConfig_p->FreqHopOn = 0;
+    txConfig_p->HopPeriod = 0;
+    txConfig_p->IqInverted = LORA_IQ_INVERSION_ON;
+    txConfig_p->Timeout = true;
+}
+
+void InitRadioRXConfigLoRaDefault(RadioRXConfig_t* rxConfig_p){
+    rxConfig_p->Modem = MODEM_LORA;
+    rxConfig_p->Bandwidth = LORA_BANDWIDTH;
+    rxConfig_p->SpreadingFactor = LORA_SPREADING_FACTOR;
+    rxConfig_p->CodeRate = LORA_CODINGRATE;
+    rxConfig_p->BandwidthAfc = 0;
+    rxConfig_p->PreambleLen = LORA_PREAMBLE_LENGTH;
+    rxConfig_p->FixLen = LORA_FIX_LENGTH_PAYLOAD_ON;
+    rxConfig_p->PayloadLen = 0;
+    rxConfig_p->CrcOn = false,  // true;
+    rxConfig_p->FreqHopOn = 0;
+    rxConfig_p->HopPeriod = 0;
+    rxConfig_p->IqInverted = LORA_IQ_INVERSION_ON;
+    rxConfig_p->RxContinuous = true;
+}
+
 void ApplyRadioTXConfig() {
     Radio.SetTxConfig(txConfig.Modem, txConfig.Power, txConfig.Fdev, txConfig.Bandwidth,
                       txConfig.SpreadingFactor, txConfig.CodeRate,
                       txConfig.PreambleLen, txConfig.FixLen,
                       txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout);
+
+    //   Radio.SetChannel(RF_FREQUENCY);
 }
 
 void ApplyRadioRXConfig() {
@@ -66,6 +101,42 @@ void ApplyRadioConfig() {
     ApplyRadioRXConfig();
 
     Radio.Rx(RX_TIMEOUT_VALUE);
+}
+
+void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead){
+
+    uint8_t i = 1;
+
+    txConfig.Modem           = (RadioModems_t) serialBuf[i++];
+    txConfig.Power           = serialBuf[i++];
+    txConfig.Fdev            = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+    txConfig.Bandwidth       = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+    txConfig.SpreadingFactor = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+    txConfig.CodeRate        = serialBuf[i++];
+    txConfig.PreambleLen     = serialBuf[i++] << 8 + serialBuf[i++];
+    txConfig.FixLen          = serialBuf[i++] > 0;
+    txConfig.CrcOn           = serialBuf[i++] > 0;
+    txConfig.FreqHopOn       = serialBuf[i++] > 0;
+    txConfig.HopPeriod       = serialBuf[i++];
+    txConfig.IqInverted      = serialBuf[i++] > 0;
+    txConfig.Timeout         = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+
+    rxConfig.Modem           = (RadioModems_t) serialBuf[i++];
+    rxConfig.Bandwidth       = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+    rxConfig.SpreadingFactor = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+    rxConfig.CodeRate        = serialBuf[i++];
+    rxConfig.BandwidthAfc    = serialBuf[i++] << 24 + serialBuf[i++] << 16 + serialBuf[i++] << 8 + serialBuf[i++];
+    rxConfig.PreambleLen     = serialBuf[i++] << 8 + serialBuf[i++];
+    rxConfig.FixLen          = serialBuf[i++] > 0;
+    rxConfig.PayloadLen      = serialBuf[i++];
+    rxConfig.CrcOn           = serialBuf[i++] > 0;
+    rxConfig.FreqHopOn       = serialBuf[i++] > 0;
+    rxConfig.HopPeriod       = serialBuf[i++];
+    rxConfig.IqInverted      = serialBuf[i++] > 0;
+    rxConfig.RxContinuous    = serialBuf[i++] > 0;
+
+    ApplyRadioConfig();
+
 }
 
 void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect) {
@@ -122,12 +193,20 @@ void ParseCliCMD() {
             TxSequenceCommand((uint8_t *) serialBuf, bytesRead);
             break;
 
+        // Send RF config packet
+        case 'F':
+            TxNewRFSettings((uint8_t *) serialBuf, bytesRead);
+            break;
+
+        case 'G':
+            SetNewRFSettings((uint8_t *) serialBuf, bytesRead);
+            break;
+
         default:
+            printf("[cli] %c New command who this??", serialBuf[0]);
             break;
     }
 }
-
-#define SERIAL_END_BYTE '\r'
 
 void CliProcess(Uart_t *uart) {
     uint8_t byte;
