@@ -1,4 +1,5 @@
 #include "tx.h"
+
 #include "rtc-board.h"
 
 TimerEvent_t timerHandle;
@@ -13,14 +14,14 @@ uint8_t buffer[BUFFER_SIZE];
 bool TestRunning = false;
 
 void TxBuffer(int16_t dataSize) {
-    if(dataSize < 0){
+    if (dataSize < 0) {
         dataSize = BUFFER_SIZE;
     }
 
     // Print msg in hex
     printf("[TX]");
     for (int i = 0; i < dataSize; i++) {
-         printf("0x%02X ", buffer[i] );
+        printf("0x%02X ", buffer[i]);
     }
     printf("\n\r");
 
@@ -35,6 +36,17 @@ void TxPing() {
     buffer[1] = 'I';
     buffer[2] = 'N';
     buffer[3] = 'G';
+
+    TxBuffer(4);
+}
+
+void TxDeviceId() {
+    DeviceId_t deviceId = GetDeviceId();
+    // Send the next PING frame
+    buffer[0] = (deviceId.id0 >> 24) & 0xff;
+    buffer[1] = (deviceId.id0 >> 16) & 0xff;
+    buffer[2] = (deviceId.id0 >> 8) & 0xff;
+    buffer[3] = deviceId.id0 & 0xff;
 
     TxBuffer(4);
 }
@@ -63,12 +75,9 @@ void TxNewRFSettings(uint8_t *serialBuf, uint8_t bufSize){
 }
 
 void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
-
-    if(bufSize > 8){
-
+    if (bufSize > 8) {
         memcpy(buffer, serialBuf, 9);
-
-    }else{
+    } else {
         uint16_t messageCount = 5;
         uint16_t intervalMs = 500;
         uint32_t deviceId = 0x00;
@@ -89,28 +98,20 @@ void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
     TxBuffer(9);
 }
 
-void TxTestMessage(){
-    
-
-    TxBuffer(2);
-}
-
-void TxTestProcess(){
-
-    if(TestRunning){
-        if(testMessageCounter++ < testmessageCount){
+void TxTestProcess() {
+    if (TestRunning) {
+        if (testMessageCounter++ < testmessageCount) {
             printf("[tx] SequenceTest %d from %d\n\r", testMessageCounter, testmessageCount);
-            TxTestMessage();
+            TxDeviceId();
             DelayMs(testIntervalMs);
-        }else{
+        } else {
             TestRunning = false;
             printf("[tx] SequenceTest Done\n\r");
         }
     }
 }
 
-void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs){
-
+void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs) {
     printf("[tx] TxStartSequenceTest\n\r");
 
     // if(TestRunning){
