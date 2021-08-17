@@ -135,5 +135,6 @@
         "src\\boards\\NucleoF446\\cmsis\\arm-gcc\\stm32f446retx_flash.ld",
         "src\\boards\\NucleoF446\\cmsis\\stm32f4xx_hal_conf.h",
         "src\\system\\nvmm.c"
-    ]
+    ],
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0}"
 }

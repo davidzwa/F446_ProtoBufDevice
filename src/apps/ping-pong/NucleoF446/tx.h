@@ -1,17 +1,21 @@
 #include "radio.h"
 #include "config.h"
 #include "cli_commands.h"
+#include "rx.h"
+#include "delay.h"
+#include "stdio.h"
+#include "timer.h"
 
 #ifndef TX_H__
 #define TX_H__
 
-extern uint16_t bufferSize;
-extern uint8_t buffer[BUFFER_SIZE];
-
-void TxBuffer();
+void TxBuffer(int16_t dataSize);
 void TxPing();
 void TxPong();
 void TxSpreadingFactor(uint8_t value);
-void TxSequenceCommand(SequenceCommand_t command);
+void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize);
+void TxSequenceTestTimerCallback( void* context);
+void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs);
+void TxTestProcess();
 
 #endif // TX_H__
