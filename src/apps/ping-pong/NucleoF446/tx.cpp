@@ -82,7 +82,7 @@ void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
         uint16_t intervalMs = 500;
         uint32_t deviceId = 0x00;
 
-        printf("[tx] DefaultSequenceCMD: messageCount %d, intervalMs %d, deviceId %d\n\r", messageCount, intervalMs, deviceId);
+        printf("[tx] DefaultSequenceCMD: messageCount %d, intervalMs %d, deviceId %lu\n\r", messageCount, intervalMs, deviceId);
 
         buffer[0] = 'T';
         buffer[1] = (messageCount >> 8) & 0xff;
