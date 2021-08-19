@@ -103,7 +103,7 @@ typedef struct RadioRXConfig_s
 #elif defined(USE_MODEM_FSK)
 
 #define FSK_FDEV 25000          // Hz
-#define FSK_DATARATE 1800       // bps
+#define FSK_DATARATE 5000       // bps
 #define FSK_BANDWIDTH 50000     // Hz
 #define FSK_AFC_BANDWIDTH 83333 // Hz
 #define FSK_PREAMBLE_LENGTH 5   // Same for Tx and Rx

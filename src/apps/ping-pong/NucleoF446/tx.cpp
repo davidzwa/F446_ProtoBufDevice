@@ -8,10 +8,10 @@ uint16_t testMessageCounter = 0;
 uint16_t testmessageCount = 0;
 uint16_t testIntervalMs = 0;
 
-uint16_t MsgSize = BUFFER_SIZE;
+uint16_t msgSize = BUFFER_SIZE;
 uint8_t buffer[BUFFER_SIZE];
 
-bool TestRunning = false;
+bool testRunning = false;
 
 void TxBuffer(int16_t dataSize) {
     if (dataSize < 0) {
@@ -48,7 +48,7 @@ void TxDeviceId() {
     buffer[2] = (deviceId.id0 >> 8) & 0xff;
     buffer[3] = deviceId.id0 & 0xff;
 
-    TxBuffer(4);
+    TxBuffer(msgSize);
 }
 
 void TxPong() {
@@ -93,19 +93,23 @@ void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
         buffer[6] = (deviceId >> 16) & 0xff;
         buffer[7] = (deviceId >> 8) & 0xff;
         buffer[8] = deviceId & 0xff;
+
+        for (int i = 9; i < msgSize; i++) {
+            buffer[i] = i % 2;
+        }
     }
 
-    TxBuffer(9);
+    TxBuffer(msgSize);
 }
 
 void TxTestProcess() {
-    if (TestRunning) {
+    if (testRunning) {
         if (testMessageCounter++ < testmessageCount) {
             printf("[tx] SequenceTest %d from %d\n\r", testMessageCounter, testmessageCount);
             TxDeviceId();
             DelayMs(testIntervalMs);
         } else {
-            TestRunning = false;
+            testRunning = false;
             printf("[tx] SequenceTest Done\n\r");
         }
     }
@@ -123,5 +127,5 @@ void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs) {
     testIntervalMs = intervalMs;
     testmessageCount = messageCount;
 
-    TestRunning = true;
+    testRunning = true;
 }
