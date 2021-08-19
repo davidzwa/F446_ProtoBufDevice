@@ -140,6 +140,8 @@ void ApplyConfigIfPending() {
 }
 
 void ParseCliCMD() {
+    printf("[CLI] command %c\n\r", serialBuf[0]);
+
     switch (serialBuf[0]) {
         // Set Spreading factor
         case 'S':
@@ -174,7 +176,7 @@ void CliProcess(Uart_t *uart) {
             // Add new byte to buffer
             serialBuf[bytesRead++] = byte;
 
-            printf("[cli] uart received: %d\n\r", byte);
+            // printf("[cli] uart received: %d\n\r", byte);
 
             // Look for end byte
             if (byte == SERIAL_END_BYTE) {
