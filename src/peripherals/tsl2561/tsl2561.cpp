@@ -2,8 +2,6 @@
 #include "i2c.h"
 #include "delay.h"
 
-#pragma message("Compiled2")
-
 int TSL2561::init(I2c_t* _I2C_hdle) {
     // Optional
     this->i2c_h = _I2C_hdle;
@@ -22,10 +20,10 @@ uint8_t TSL2561::readRegister(int deviceAddress, uint8_t address) {
     uint8_t value;
 
     // i2c_h->write(deviceAddress, (char*) &address, 1, true);
-    I2cWriteBuffer(&i2c_h, deviceAddress,(uint8_t*) &address, 1);
+    I2cWriteBuffer(i2c_h, deviceAddress,(uint8_t*) &address, 1);
         
     // i2c_h->read(deviceAddress, (char*) &value, 1);
-    I2cReadBuffer(&i2c_h, deviceAddress,(uint8_t*) &value, 1);
+    I2cReadBuffer(i2c_h, deviceAddress,(uint8_t*) &value, 1);
 
     return value;
 }
@@ -34,7 +32,7 @@ int TSL2561::writeRegister(int deviceAddress, uint8_t address, uint8_t val) {
     uint8_t data[2] = {address, val};
     
     // return i2c_h->write(deviceAddress, (char*) &data, 2);
-    return I2cWriteBuffer(&i2c_h, deviceAddress, (uint8_t*) &data, 2);
+    return I2cWriteBuffer(i2c_h, deviceAddress, (uint8_t*) &data, 2);
 }
 
 void TSL2561::getLux(void) {
