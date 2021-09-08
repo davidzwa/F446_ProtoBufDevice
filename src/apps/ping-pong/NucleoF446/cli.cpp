@@ -180,6 +180,8 @@ void ApplyConfigIfPending() {
 }
 
 void ParseCliCMD() {
+    printf("[CLI] command %c\n\r", serialBuf[0]);
+
     switch (serialBuf[0]) {
         // Set Spreading factor
         case 'S':
