@@ -12,7 +12,11 @@
 void TxBuffer(int16_t dataSize);
 void TxPing();
 void TxPong();
+
+void TxNewRFSettings(uint8_t *serialBuf, uint8_t bufSize);
+
 void TxSpreadingFactor(uint8_t value);
+
 void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize);
 void TxSequenceTestTimerCallback( void* context);
 void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs);

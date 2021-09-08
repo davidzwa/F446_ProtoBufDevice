@@ -1,7 +1,6 @@
 #include "rx.h"
 
 void ProcessSequenceCommand(uint8_t *buffer) {
-
     uint16_t messageCount = (buffer[1] << 8) + buffer[2];
     uint16_t intervalMs = (buffer[3] << 8) + buffer[4];
     uint32_t deviceId = (buffer[5] << 24) + (buffer[6] << 16) + (buffer[7] << 8) + buffer[8];
@@ -26,7 +25,7 @@ void ProcessSequenceCommand(uint8_t *buffer) {
     }
 }
 
-void parseMsg(uint8_t *RfBuffer, uint8_t msgSize){
+void parseMsg(uint8_t *RfBuffer, uint8_t msgSize) {
     switch (RfBuffer[0]) {
         // Set Spreading factor
         case 'S':
@@ -45,6 +44,11 @@ void parseMsg(uint8_t *RfBuffer, uint8_t msgSize){
             if (msgSize > 8) {
                 ProcessSequenceCommand(RfBuffer);
             }
+            break;
+
+        // parse RF config packet
+        case 'F':
+            SetNewRFSettings((uint8_t *) RfBuffer, msgSize);
             break;
 
         default:
