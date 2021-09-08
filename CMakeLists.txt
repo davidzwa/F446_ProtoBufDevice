@@ -18,4 +18,12 @@
 project(loramac-node)
 cmake_minimum_required(VERSION 3.6)
 
+# TODO make use of better practices 
+if (BME_68X)
+    add_definitions(-DUSE_BME_68X)
+endif()
+if (TSL_2561)
+    add_definitions(-DUSE_TSL_2561)
+endif()
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)

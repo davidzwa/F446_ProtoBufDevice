@@ -42,7 +42,7 @@
  * C++ instances for I2C sensors
  */
 #if defined(USE_TSL_2561)
-#include "TSL2561.h"
+#include "tsl2561.h"
 TSL2561_CalculateLux *TSL2561;
 #pragma warning("TSL included")
 #else
@@ -135,12 +135,12 @@ void BoardInitPeriph(void)
 {
     // Initialize the I2C sensors here
 
-#if defined(USE_BME_68X)
+#ifdef USE_BME_68X
     bme688 = new BME688();
     bme688->init(&I2c);
 #endif
 
-#if defined(USE_TSL_2561)
+#ifdef USE_TSL_2561
     TSL2561 = new TSL2561_CalculateLux();
     TSL2561->init(/*&I2c*/);
 #endif
