@@ -42,7 +42,7 @@ int8_t SnrValue = 0;
 
 bool isExecutingCMD = false;
 
-extern uint16_t msgSize;
+extern uint16_t MsgSize;
 extern uint8_t buffer[BUFFER_SIZE];
 
 /*!
@@ -190,18 +190,18 @@ void OnTxTimeout(void) {
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     printf("[Main] rx done\n\r");
 
-    msgSize = size;
-    memcpy(buffer, payload, msgSize);
+    MsgSize = size;
+    memcpy(buffer, payload, MsgSize);
     RssiValue = rssi;
     SnrValue = snr;
 
     printf("[Main]");
-    for (int i = 0; i < msgSize; i++) {
+    for (int i = 0; i < MsgSize; i++) {
         printf("0x%02X ", buffer[i]);
     }
-    printf("\n\r[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n\r", msgSize, rssi, snr);
+    printf("\n\r[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n\r", MsgSize, RssiValue, SnrValue);
 
-    parseMsg(buffer, msgSize);
+    parseMsg(buffer, MsgSize);
 
     // Listen for next radio packet
     Radio.Rx(RX_TIMEOUT_VALUE);
