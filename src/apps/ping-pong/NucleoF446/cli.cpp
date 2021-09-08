@@ -19,12 +19,13 @@ bool pendingConfigChange = false;
 int testMessageLeftOverCount = -1;
 SequenceCommand_t lastSequenceCommand;
 
+#if defined(USE_MODEM_LORA)
 RadioTXConfig_t txConfig = {
     .Modem = MODEM_LORA,
     .Power = TX_OUTPUT_POWER,
     .Fdev = 0,
     .Bandwidth = LORA_BANDWIDTH,
-    .SpreadingFactor = LORA_SPREADING_FACTOR,
+    .DataRate = LORA_SPREADING_FACTOR,
     .CodeRate = LORA_CODINGRATE,
     .PreambleLen = LORA_PREAMBLE_LENGTH,
     .FixLen = LORA_FIX_LENGTH_PAYLOAD_ON,
@@ -37,7 +38,7 @@ RadioTXConfig_t txConfig = {
 RadioRXConfig_t rxConfig = {
     .Modem = MODEM_LORA,
     .Bandwidth = LORA_BANDWIDTH,
-    .SpreadingFactor = LORA_SPREADING_FACTOR,
+    .DataRate = LORA_SPREADING_FACTOR,
     .CodeRate = LORA_CODINGRATE,
     .BandwidthAfc = 0,
     .PreambleLen = LORA_PREAMBLE_LENGTH,
@@ -83,7 +84,7 @@ void InitRadioRXConfigLoRaDefault(RadioRXConfig_t* rxConfig_p){
 
 void ApplyRadioTXConfig() {
     Radio.SetTxConfig(txConfig.Modem, txConfig.Power, txConfig.Fdev, txConfig.Bandwidth,
-                      txConfig.SpreadingFactor, txConfig.CodeRate,
+                      txConfig.DataRate, txConfig.CodeRate,
                       txConfig.PreambleLen, txConfig.FixLen,
                       txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout);
 
@@ -91,7 +92,7 @@ void ApplyRadioTXConfig() {
 }
 
 void ApplyRadioRXConfig() {
-    Radio.SetRxConfig(rxConfig.Modem, rxConfig.Bandwidth, txConfig.SpreadingFactor, txConfig.CodeRate,
+    Radio.SetRxConfig(rxConfig.Modem, rxConfig.Bandwidth, txConfig.DataRate, txConfig.CodeRate,
                       rxConfig.BandwidthAfc, rxConfig.PreambleLen,
                       rxConfig.SymbTimeout, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn,
                       rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
@@ -144,8 +145,8 @@ txConfig.Power, txConfig.Fdev, txConfig.Bandwidth, txConfig.SpreadingFactor, txC
 }
 
 void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect) {
-    txConfig.SpreadingFactor = spreadingFactor;
-    rxConfig.SpreadingFactor = spreadingFactor;
+    txConfig.DataRate = spreadingFactor;
+    rxConfig.DataRate = spreadingFactor;
 
     if (reconnect) {
         ApplyRadioConfig();
@@ -194,7 +195,7 @@ void ParseCliCMD() {
 
         // Send sequence test cmd
         case 'T':
-            TxSequenceCommand((uint8_t *) serialBuf, bytesRead);
+            TxSequenceCommand((uint8_t *)serialBuf, bytesRead);
             break;
 
         // Send RF config packet
@@ -230,6 +231,7 @@ void CliProcess(Uart_t *uart) {
             // printf("[cli] uart received: %d, %d\n\r", byte, fixedMsgSize);
             // printf("[cli] uart received: %d\n\r", byte);
             printf("[cli] fixedMsgSize: 0x%02X\n\r", fixedMsgSize);
+
 
             // Look for end byte
             if ((fixedMsgSize == -1 && byte == SERIAL_END_BYTE) || fixedMsgSize == 0) {

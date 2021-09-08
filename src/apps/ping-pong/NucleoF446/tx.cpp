@@ -31,7 +31,7 @@ void TxBuffer(int16_t dataSize) {
 
 void TxPing() {
     // Send the next PING frame
-    buffer[0] = 'P';
+    buffer[0] = '\0';
     buffer[1] = 'I';
     buffer[2] = 'N';
     buffer[3] = 'G';
@@ -41,7 +41,7 @@ void TxPing() {
 
 void TxPong() {
     // Send the next PING frame
-    buffer[0] = 'P';
+    buffer[0] = '\0';
     buffer[1] = 'O';
     buffer[2] = 'N';
     buffer[3] = 'G';
