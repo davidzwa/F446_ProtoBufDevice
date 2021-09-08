@@ -22,79 +22,32 @@ cmake_minimum_required(VERSION 3.6)
 # Target
 #---------------------------------------------------------------------------------------
 
-if(${SECURE_ELEMENT} MATCHES SOFT_SE)
-    file(GLOB ${PROJECT_NAME}_SOURCES "*.c" "soft-se/*.c")
-else()
-    if(${SECURE_ELEMENT} MATCHES LR1110_SE)
-        if (${RADIO} MATCHES lr1110)
-            file(GLOB ${PROJECT_NAME}_SOURCES "*.c" "lr1110-se/*.c")
-        else()
-            message(FATAL_ERROR "LR1110_SE secure elemeent can only be used when LR1110 radio is selected.")
-        endif()
-    elseif((${SECURE_ELEMENT} MATCHES ATECC608A_TNGLORA_SE))
-        file(GLOB ${PROJECT_NAME}_SOURCES "*.c"
-            "atecc608a-tnglora-se/*.c"
-            "atecc608a-tnglora-se/cryptoauthlib/lib/*.c"
-            "atecc608a-tnglora-se/cryptoauthlib/lib/basic/*.c"
-            "atecc608a-tnglora-se/cryptoauthlib/lib/crypto/*.c"
-            "atecc608a-tnglora-se/cryptoauthlib/lib/crypto/hashes/*.c"
-            "atecc608a-tnglora-se/cryptoauthlib/lib/hal/atca_hal.c"
-            "atecc608a-tnglora-se/cryptoauthlib/lib/host/*.c"
-        )
-    else()
-        message(FATAL_ERROR "No secure-element selected.")
-    endif()
-endif()
-
-if(TSL_2561)
-    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "TSL2561/*.cpp")
-    message(STATUS "Added ZED tsl2561 I2C peripheral (C++)")
-else()
-    message(STATUS "Did not add ZED tsl2561 I2C peripheral (C++)")
-endif()
+file (GLOB ${PROJECT_NAME}_SOURCES "*.cpp")
 
 if(BME_68X) 
-    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
+    file (GLOB BME_LIB "bme68x/*.cpp")
+    list(APPEND ${PROJECT_NAME}_SOURCES ${BME_LIB})
     message(STATUS "Added ZED bme68x I2C peripheral (C++)")
 else()
     message(STATUS "Did not add ZED bme68x I2C peripheral (C++)")    
 endif()
 
+if(TSL_2561)
+    file (GLOB TSL_LIB "tsl2561/*.cpp")
+    list(APPEND ${PROJECT_NAME}_SOURCES ${TSL_LIB})
+    message(STATUS "Added ZED tsl2561 I2C peripheral (C++)")
+else()
+    message(STATUS "Did not add ZED tsl2561 I2C peripheral (C++)")
+endif()
+
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
 if(TSL_2561)
-    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/TSL2561)    
-    target_compile_definitions(${PROJECT_NAME} PUBLIC -DUSE_TSL_2561)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tsl2561)
 endif()
 
 if(BME_68X) 
-    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)    
-    target_compile_definitions(${PROJECT_NAME} PUBLIC -DUSE_BME_68X)
-endif()
-
-if(${SECURE_ELEMENT_PRE_PROVISIONED} MATCHES ON)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE -DSECURE_ELEMENT_PRE_PROVISIONED)
-endif()
-
-if(${SECURE_ELEMENT} MATCHES SOFT_SE)
-    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/soft-se)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE -DSOFT_SE)
-else()
-    if(${SECURE_ELEMENT} MATCHES LR1110_SE)
-        if(${RADIO} MATCHES lr1110)
-            target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lr1110-se)
-        endif()
-    elseif((${SECURE_ELEMENT} MATCHES ATECC608A_TNGLORA_SE))
-        target_include_directories( ${PROJECT_NAME} PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se/cryptoauthlib/lib
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se/cryptoauthlib/lib/basic
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se/cryptoauthlib/lib/crypto
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se/cryptoauthlib/lib/crypto/hashes
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se/cryptoauthlib/lib/hal
-            ${CMAKE_CURRENT_SOURCE_DIR}/atecc608a-tnglora-se/cryptoauthlib/lib/host
-        )
-    endif()
+    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)    
 endif()
 
 target_include_directories( ${PROJECT_NAME} PUBLIC

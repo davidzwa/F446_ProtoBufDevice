@@ -64,10 +64,10 @@
         "MBED_RADIO_SHIELD":"SX1261MBXBAS",
         
         // ZED enabled/disabled sensor true/false
-        "BME_68X": false,
+        "BME_68X": true,
 
         // ZED enabled/disabled I2C sensor true/false
-        "TSL_2561": false,
+        "TSL_2561": true,
 
         // Secure element type selection the following are supported
         // SOFT_SE(Default), LR1110_SE, ATECC608A_TNGLORA_SE

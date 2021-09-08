@@ -76,7 +76,7 @@ endif()
 # Add compile time definition for the mbed shield if set.
 target_compile_definitions(${PROJECT_NAME} PUBLIC -D${MBED_RADIO_SHIELD})
 
-target_compile_definitions(${PROJECT_NAME}  PUBLIC
+target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:mac,INTERFACE_COMPILE_DEFINITIONS>>
 )
 
