@@ -52,7 +52,7 @@
         // Select the type of modulation, applicable to the ping-pong or
         // rx-sensi applications. You can choose between:
         // LORA or FSK
-        "MODULATION":"FSK",
+        "MODULATION":"LORA",
 
         // Target board, the following boards are supported:
         // NAMote72, NucleoL073, NucleoF446 (Default), NucleoL152, NucleoL476, SAMR34, SKiM880B, SKiM980A, SKiM881AXL, B-L072Z-LRWAN1.
