@@ -8,7 +8,7 @@
 #include "tx.h"
 #include "utils.h"
 
-#define SERIAL_BUFSIZE 256
+#define SERIAL_BUFSIZE 255
 #define SERIAL_END_BYTE '\r'
 
 uint8_t serialBuf[SERIAL_BUFSIZE];
@@ -108,8 +108,7 @@ void ApplyRadioConfig() {
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
-void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead){
-
+void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead) {
     uint8_t i = 1;
 
     txConfig.Modem           = (RadioModems_t) serialBuf[i++];
@@ -142,7 +141,7 @@ void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead){
 
     ApplyRadioConfig();
 
-    printf("[CLI] %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",txConfig.Modem,       
+    printf("[CLI] %d, %d, %lu, %lu, %lu, %d, %d, %d, %d, %d, %d, %d, %lu, %d, %ld, %ld, %d, %ld, %d, %d, %d, %d, %d, %d, %d, %d",txConfig.Modem,       
 txConfig.Power, txConfig.Fdev, txConfig.Bandwidth, txConfig.DataRate, txConfig.CodeRate, txConfig.PreambleLen, txConfig.FixLen, txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout, rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
 
 }

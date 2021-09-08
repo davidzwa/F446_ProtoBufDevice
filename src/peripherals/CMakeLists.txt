@@ -21,20 +21,28 @@ cmake_minimum_required(VERSION 3.6)
 #---------------------------------------------------------------------------------------
 # Target
 #---------------------------------------------------------------------------------------
-if(TSL_2561)
-    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "tsl2561/*.cpp")
-    message(STATUS "Added ZED tsl2561 I2C peripheral (C++)")
-else()
-    message(STATUS "Did not add ZED tsl2561 I2C peripheral (C++)")
-endif()
+set(source_folders "*.cpp ")
 
 if(BME_68X) 
-    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
+    file (GLOB files "path/to/files/*")
+
+    list(APPEND source_folders "bme68x/*.cpp ")
+    # file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "bme68x/*.cpp")
     message(STATUS "Added ZED bme68x I2C peripheral (C++)")
 else()
     message(STATUS "Did not add ZED bme68x I2C peripheral (C++)")    
 endif()
 
+if(TSL_2561)
+    file (GLOB files2 "path/to/files2*")
+    list (APPEND files ${files2})
+    list(APPEND source_folders "tsl2561/*.cpp ")
+    message(STATUS "Added ZED tsl2561 I2C peripheral (C++)")
+else()
+    message(STATUS "Did not add ZED tsl2561 I2C peripheral (C++)")
+endif()
+
+file(GLOB ${PROJECT_NAME}_SOURCES ${source_folders})
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
 if(TSL_2561)

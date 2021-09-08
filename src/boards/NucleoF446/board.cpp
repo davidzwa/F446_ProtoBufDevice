@@ -20,22 +20,23 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#include "stm32f4xx.h"
-#include "utilities.h"
-#include "gpio.h"
 #include "adc.h"
-#include "spi.h"
-#include "i2c.h"
-#include "uart.h"
-#include "timer.h"
-#include "sysIrqHandlers.h"
 #include "board-config.h"
+#include "gpio.h"
+#include "i2c.h"
 #include "lpm-board.h"
 #include "rtc-board.h"
+#include "spi.h"
+#include "stm32f4xx.h"
+#include "sysIrqHandlers.h"
+#include "timer.h"
+#include "uart.h"
+#include "utilities.h"
 
 #if defined(SX1261MBXBAS)
 #include "sx126x-board.h"
 #endif
+
 #include "board.h"
 
 /**
@@ -43,8 +44,8 @@
  */
 #if defined(USE_TSL_2561)
 #include "tsl2561.h"
-TSL2561_CalculateLux *TSL2561;
-#pragma warning("TSL included")
+TSL2561 *tsl2561;
+#pragma message("TSL included")
 #else
 #pragma warning("TSL not included")
 #endif
@@ -52,9 +53,9 @@ TSL2561_CalculateLux *TSL2561;
 #if defined(USE_BME_68X)
 #include "bme688.h"
 BME688 *bme688;
-#pragma error("BME included")
+#pragma message("BME included")
 #else
-#pragma error("BME not included")
+#pragma warning("BME not included")
 #endif
 
 /*!
@@ -120,19 +121,16 @@ static bool UsbIsConnected = false;
 uint8_t Uart2TxBuffer[UART2_FIFO_TX_SIZE];
 uint8_t Uart2RxBuffer[UART2_FIFO_RX_SIZE];
 
-void BoardCriticalSectionBegin(uint32_t *mask)
-{
+void BoardCriticalSectionBegin(uint32_t *mask) {
     *mask = __get_PRIMASK();
     __disable_irq();
 }
 
-void BoardCriticalSectionEnd(uint32_t *mask)
-{
+void BoardCriticalSectionEnd(uint32_t *mask) {
     __set_PRIMASK(*mask);
 }
 
-void BoardInitPeriph(void)
-{
+void BoardInitPeriph(void) {
     // Initialize the I2C sensors here
 
 #ifdef USE_BME_68X
@@ -141,15 +139,13 @@ void BoardInitPeriph(void)
 #endif
 
 #ifdef USE_TSL_2561
-    TSL2561 = new TSL2561_CalculateLux();
-    TSL2561->init(/*&I2c*/);
+    tsl2561 = new TSL2561();
+    tsl2561->init(&I2c);
 #endif
 }
 
-void BoardInitMcu(void)
-{
-    if (McuInitialized == false)
-    {
+void BoardInitMcu(void) {
+    if (McuInitialized == false) {
         HAL_Init();
 
         InitFlashMemoryOperations();
@@ -174,18 +170,15 @@ void BoardInitMcu(void)
 
         I2cInit(&I2c, I2C_1, I2C_SCL, I2C_SDA);
 
-        if (GetBoardPowerSource() == BATTERY_POWER)
-        {
+        if (GetBoardPowerSource() == BATTERY_POWER) {
             // Disables OFF mode - Enables lowest power mode (STOP)
             LpmSetOffMode(LPM_APPLI_ID, LPM_DISABLE);
         }
-    }
-    else
-    {
+    } else {
         SystemClockReConfig();
     }
 
-    AdcInit(&Adc, NC); // Just initialize ADC
+    AdcInit(&Adc, NC);  // Just initialize ADC
 
 #if defined(SX1261MBXBAS) || defined(SX1262MBXCAS) || defined(SX1262MBXDAS)
     SpiInit(&SX126x.Spi, SPI_1, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC);
@@ -201,8 +194,7 @@ void BoardInitMcu(void)
     SX1276IoInit();
 #endif
 
-    if (McuInitialized == false)
-    {
+    if (McuInitialized == false) {
         McuInitialized = true;
 #if defined(SX1261MBXBAS) || defined(SX1262MBXCAS) || defined(SX1262MBXDAS)
         SX126xIoDbgInit();
@@ -220,16 +212,14 @@ void BoardInitMcu(void)
     }
 }
 
-void BoardResetMcu(void)
-{
+void BoardResetMcu(void) {
     CRITICAL_SECTION_BEGIN();
 
     //Restart system
     NVIC_SystemReset();
 }
 
-void BoardDeInitMcu(void)
-{
+void BoardDeInitMcu(void) {
     AdcDeInit(&Adc);
 
 #if defined(SX1261MBXBAS) || defined(SX1262MBXCAS) || defined(SX1262MBXDAS)
@@ -247,13 +237,11 @@ void BoardDeInitMcu(void)
 #endif
 }
 
-uint32_t BoardGetRandomSeed(void)
-{
+uint32_t BoardGetRandomSeed(void) {
     return ((*(uint32_t *)ID1) ^ (*(uint32_t *)ID2) ^ (*(uint32_t *)ID3));
 }
 
-void BoardGetUniqueId(uint8_t *id)
-{
+void BoardGetUniqueId(uint8_t *id) {
     id[7] = ((*(uint32_t *)ID1) + (*(uint32_t *)ID3)) >> 24;
     id[6] = ((*(uint32_t *)ID1) + (*(uint32_t *)ID3)) >> 16;
     id[5] = ((*(uint32_t *)ID1) + (*(uint32_t *)ID3)) >> 8;
@@ -265,23 +253,20 @@ void BoardGetUniqueId(uint8_t *id)
 }
 
 // Temporary hack to get HAL UID
-uint32_t BoardGetHwUUID0()
-{
+uint32_t BoardGetHwUUID0() {
     return HAL_GetUIDw0();
 }
-uint32_t BoardGetHwUUID1()
-{
+uint32_t BoardGetHwUUID1() {
     return HAL_GetUIDw1();
 }
-uint32_t BoardGetHwUUID2()
-{
+uint32_t BoardGetHwUUID2() {
     return HAL_GetUIDw2();
 }
 
 /*!
  * Factory power supply
  */
-#define VDDA_VREFINT_CAL ((uint32_t)3000) // mV
+#define VDDA_VREFINT_CAL ((uint32_t)3000)  // mV
 
 /*!
  * VREF calibration value
@@ -305,9 +290,9 @@ uint32_t BoardGetHwUUID2()
 /*!
  * Battery thresholds
  */
-#define BATTERY_MAX_LEVEL 3000      // mV
-#define BATTERY_MIN_LEVEL 2400      // mV
-#define BATTERY_SHUTDOWN_LEVEL 2300 // mV
+#define BATTERY_MAX_LEVEL 3000       // mV
+#define BATTERY_MIN_LEVEL 2400       // mV
+#define BATTERY_SHUTDOWN_LEVEL 2300  // mV
 
 #define BATTERY_LORAWAN_UNKNOWN_LEVEL 255
 #define BATTERY_LORAWAN_MAX_LEVEL 254
@@ -323,8 +308,7 @@ uint32_t BoardGetHwUUID2()
 
 static uint16_t BatteryVoltage = BATTERY_MAX_LEVEL;
 
-uint16_t BoardBatteryMeasureVoltage(void)
-{
+uint16_t BoardBatteryMeasureVoltage(void) {
     uint16_t vref = 0;
 
     // Read the current Voltage
@@ -334,37 +318,26 @@ uint16_t BoardBatteryMeasureVoltage(void)
     return (((uint32_t)VDDA_VREFINT_CAL * VREFINT_CAL) / vref);
 }
 
-uint32_t BoardGetBatteryVoltage(void)
-{
+uint32_t BoardGetBatteryVoltage(void) {
     return BatteryVoltage;
 }
 
-uint8_t BoardGetBatteryLevel(void)
-{
+uint8_t BoardGetBatteryLevel(void) {
     uint8_t batteryLevel = 0;
 
     BatteryVoltage = BoardBatteryMeasureVoltage();
 
-    if (GetBoardPowerSource() == USB_POWER)
-    {
+    if (GetBoardPowerSource() == USB_POWER) {
         batteryLevel = BATTERY_LORAWAN_EXT_PWR;
-    }
-    else
-    {
-        if (BatteryVoltage >= BATTERY_MAX_LEVEL)
-        {
+    } else {
+        if (BatteryVoltage >= BATTERY_MAX_LEVEL) {
             batteryLevel = BATTERY_LORAWAN_MAX_LEVEL;
-        }
-        else if ((BatteryVoltage > BATTERY_MIN_LEVEL) && (BatteryVoltage < BATTERY_MAX_LEVEL))
-        {
+        } else if ((BatteryVoltage > BATTERY_MIN_LEVEL) && (BatteryVoltage < BATTERY_MAX_LEVEL)) {
             batteryLevel =
                 ((253 * (BatteryVoltage - BATTERY_MIN_LEVEL)) / (BATTERY_MAX_LEVEL - BATTERY_MIN_LEVEL)) + 1;
-        }
-        else if ((BatteryVoltage > BATTERY_SHUTDOWN_LEVEL) && (BatteryVoltage <= BATTERY_MIN_LEVEL))
-        {
+        } else if ((BatteryVoltage > BATTERY_SHUTDOWN_LEVEL) && (BatteryVoltage <= BATTERY_MIN_LEVEL)) {
             batteryLevel = 1;
-        }
-        else // if( BatteryVoltage <= BATTERY_SHUTDOWN_LEVEL )
+        } else  // if( BatteryVoltage <= BATTERY_SHUTDOWN_LEVEL )
         {
             batteryLevel = BATTERY_LORAWAN_UNKNOWN_LEVEL;
         }
@@ -372,8 +345,7 @@ uint8_t BoardGetBatteryLevel(void)
     return batteryLevel;
 }
 
-int16_t BoardGetTemperature(void)
-{
+int16_t BoardGetTemperature(void) {
     uint16_t tempRaw = 0;
 
     BatteryVoltage = BoardBatteryMeasureVoltage();
@@ -384,15 +356,13 @@ int16_t BoardGetTemperature(void)
     return (int16_t)COMPUTE_TEMPERATURE(tempRaw, BatteryVoltage);
 }
 
-static void BoardUnusedIoInit(void)
-{
+static void BoardUnusedIoInit(void) {
     HAL_DBGMCU_EnableDBGSleepMode();
     HAL_DBGMCU_EnableDBGStopMode();
     HAL_DBGMCU_EnableDBGStandbyMode();
 }
 
-void SystemClockConfig(void)
-{
+void SystemClockConfig(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
@@ -424,8 +394,7 @@ void SystemClockConfig(void)
     RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
     RCC_OscInitStruct.PLL.PLLQ = 7;
     RCC_OscInitStruct.PLL.PLLR = 6;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-    {
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
         assert_param(LMN_STATUS_ERROR);
     }
 
@@ -434,15 +403,13 @@ void SystemClockConfig(void)
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
-    {
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
         assert_param(LMN_STATUS_ERROR);
     }
 
     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-    {
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
         assert_param(LMN_STATUS_ERROR);
     }
 
@@ -460,8 +427,7 @@ void SystemClockConfig(void)
  * \param  None
  * \retval None
  */
-static void PVD_Config(void)
-{
+static void PVD_Config(void) {
     PWR_PVDTypeDef sConfigPVD;
     sConfigPVD.PVDLevel = PWR_PVDLEVEL_6;
     sConfigPVD.Mode = PWR_PVD_MODE_IT_RISING;
@@ -486,8 +452,7 @@ static void PVD_Config(void)
  */
 void EepromMcuInit(void);
 
-static void InitFlashMemoryOperations(void)
-{
+static void InitFlashMemoryOperations(void) {
     // Enable and set FLASH Interrupt priority
     // FLASH interrupt is used for the purpose of pages clean up under interrupt
     HAL_NVIC_SetPriority(FLASH_IRQn, 0, 0);
@@ -498,13 +463,11 @@ static void InitFlashMemoryOperations(void)
 
 #if defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
     // Clear OPTVERR bit and PEMPTY flag if set
-    if (__HAL_FLASH_GET_FLAG(FLASH_FLAG_OPTVERR) != RESET)
-    {
+    if (__HAL_FLASH_GET_FLAG(FLASH_FLAG_OPTVERR) != RESET) {
         __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPTVERR);
     }
 
-    if (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PEMPTY) != RESET)
-    {
+    if (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PEMPTY) != RESET) {
         __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_PEMPTY);
     }
 #endif /* defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx) */
@@ -528,8 +491,7 @@ static void InitFlashMemoryOperations(void)
     HAL_FLASH_Lock();
 }
 
-void SystemClockReConfig(void)
-{
+void SystemClockReConfig(void) {
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     uint32_t pFLatency = 0;
@@ -539,8 +501,7 @@ void SystemClockReConfig(void)
     // In case nvic had a pending IT, the arm doesn't enter stop mode
     // Hence the pll is not switched off and will cause HAL_RCC_OscConfig return
     // an error
-    if (__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_CFGR_SWS_PLL)
-    {
+    if (__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_CFGR_SWS_PLL) {
         // Enable Power Control clock
         __HAL_RCC_PWR_CLK_ENABLE();
 
@@ -550,8 +511,7 @@ void SystemClockReConfig(void)
         // Enable PLL
         RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_NONE;
         RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-        if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-        {
+        if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
             while (1)
                 ;
         }
@@ -562,34 +522,26 @@ void SystemClockReConfig(void)
         /* Select PLL as system clock source and keep HCLK, PCLK1 and PCLK2 clocks dividers as before */
         RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_SYSCLK;
         RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-        if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, pFLatency) != HAL_OK)
-        {
+        if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, pFLatency) != HAL_OK) {
             while (1)
                 ;
         }
-    }
-    else
-    {
+    } else {
         // MCU did not enter stop mode beacuse NVIC had a pending IT
     }
 
     CRITICAL_SECTION_END();
 }
 
-void SysTick_Handler(void)
-{
+void SysTick_Handler(void) {
     HAL_IncTick();
     HAL_SYSTICK_IRQHandler();
 }
 
-uint8_t GetBoardPowerSource(void)
-{
-    if (UsbIsConnected == false)
-    {
+uint8_t GetBoardPowerSource(void) {
+    if (UsbIsConnected == false) {
         return BATTERY_POWER;
-    }
-    else
-    {
+    } else {
         return USB_POWER;
     }
 }
@@ -599,8 +551,7 @@ uint8_t GetBoardPowerSource(void)
   *
   * \note ARM exists the function when waking up
   */
-void LpmEnterStopMode(void)
-{
+void LpmEnterStopMode(void) {
     CRITICAL_SECTION_BEGIN();
 
     BoardDeInitMcu();
@@ -614,8 +565,7 @@ void LpmEnterStopMode(void)
 /*!
  * \brief Exists Low Power Stop Mode
  */
-void LpmExitStopMode(void)
-{
+void LpmExitStopMode(void) {
     // Disable IRQ while the MCU is not running on HSI
     CRITICAL_SECTION_BEGIN();
 
@@ -630,8 +580,7 @@ void LpmExitStopMode(void)
  *
  * \note ARM exits the function when waking up
  */
-void LpmEnterSleepMode(void)
-{
+void LpmEnterSleepMode(void) {
     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 }
 
@@ -644,8 +593,7 @@ void LpmEnterSleepMode(void)
  */
 bool EepromMcuIsErasingOnGoing(void);
 
-void BoardLowPowerHandler(void)
-{
+void BoardLowPowerHandler(void) {
     // Wait for any cleanup to complete before entering standby/shutdown mode
     // while( EepromMcuIsErasingOnGoing( ) == true ){ }
 
@@ -665,10 +613,8 @@ void BoardLowPowerHandler(void)
 /*
  * Function to be used by stdout for printf etc
  */
-int _write(int fd, const void *buf, size_t count)
-{
-    while (UartPutBuffer(&Uart2, (uint8_t *)buf, (uint16_t)count) != 0)
-    {
+int _write(int fd, const void *buf, size_t count) {
+    while (UartPutBuffer(&Uart2, (uint8_t *)buf, (uint16_t)count) != 0) {
     };
     return count;
 }
@@ -676,15 +622,12 @@ int _write(int fd, const void *buf, size_t count)
 /*
  * Function to be used by stdin for scanf etc
  */
-int _read(int fd, const void *buf, size_t count)
-{
+int _read(int fd, const void *buf, size_t count) {
     size_t bytesRead = 0;
-    while (UartGetBuffer(&Uart2, (uint8_t *)buf, count, (uint16_t *)&bytesRead) != 0)
-    {
+    while (UartGetBuffer(&Uart2, (uint8_t *)buf, count, (uint16_t *)&bytesRead) != 0) {
     };
     // Echo back the character
-    while (UartPutBuffer(&Uart2, (uint8_t *)buf, (uint16_t)bytesRead) != 0)
-    {
+    while (UartPutBuffer(&Uart2, (uint8_t *)buf, (uint16_t)bytesRead) != 0) {
     };
     return bytesRead;
 }
@@ -694,15 +637,13 @@ int _read(int fd, const void *buf, size_t count)
 #include <stdio.h>
 
 // Keil compiler
-int fputc(int c, FILE *stream)
-{
+int fputc(int c, FILE *stream) {
     while (UartPutChar(&Uart2, (uint8_t)c) != 0)
         ;
     return c;
 }
 
-int fgetc(FILE *stream)
-{
+int fgetc(FILE *stream) {
     uint8_t c = 0;
     while (UartGetChar(&Uart2, &c) != 0)
         ;
@@ -727,15 +668,13 @@ int fgetc(FILE *stream)
  * Output         : None
  * Return         : None
  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
+void assert_failed(uint8_t *file, uint32_t line) {
     /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %lu\n", file, line) */
 
     printf("Wrong parameters value: file %s on line %lu\n", (const char *)file, line);
     /* Infinite loop */
-    while (1)
-    {
+    while (1) {
     }
 }
 #endif

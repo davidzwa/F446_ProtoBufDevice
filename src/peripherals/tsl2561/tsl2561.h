@@ -71,9 +71,10 @@
 #include "stdio.h"
 #include "i2c.h"
 
-class TSL2561_CalculateLux {
+class TSL2561 {
   public:
-    int init(/*I2c_t* _I2C_hdle*/);
+    TSL2561(void){};
+    int init(I2c_t* _I2C_hdle);
     signed long readVisibleLux();
     uint16_t readIRLuminosity();
     uint16_t readFSpecLuminosity();
@@ -82,7 +83,7 @@ class TSL2561_CalculateLux {
     uint8_t readRegister(int deviceAddress, uint8_t address);
     int writeRegister(int deviceAddress, uint8_t address, uint8_t val);
   private:
-    // I2c_t *i2c_h;
+    I2c_t *i2c_h;
     uint8_t CH0_LOW, CH0_HIGH, CH1_LOW, CH1_HIGH;
     uint16_t ch0, ch1;
     unsigned long chScale;
