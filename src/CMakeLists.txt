@@ -228,9 +228,9 @@ if(APPLICATION STREQUAL LoRaMac)
 
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/apps/LoRaMac)
 
-elseif(APPLICATION STREQUAL ping-pong)
+elseif(APPLICATION STREQUAL RFTest)
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/apps/ping-pong)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/apps/RFTest)
 
 elseif(APPLICATION STREQUAL rx-sensi)
 

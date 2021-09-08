@@ -29,8 +29,8 @@
         "CMAKE_TOOLCHAIN_FILE":"cmake/toolchain-arm-none-eabi.cmake",
 
         // Determines the application. You can choose between:
-        // LoRaMac (Default), ping-pong, rx-sensi, tx-cw.
-        "APPLICATION": "ping-pong",
+        // LoRaMac (Default), LoRaTest, rx-sensi, tx-cw.
+        "APPLICATION": "RFTest",
 
         // Select LoRaMac sub project. You can choose between:
         // periodic-uplink-lpp, fuota-test-01.
