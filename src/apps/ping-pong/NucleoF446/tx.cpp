@@ -57,6 +57,11 @@ void TxSpreadingFactor(uint8_t unicodeValue) {
     TxBuffer(2);
 }
 
+void TxNewRFSettings(uint8_t *serialBuf, uint8_t bufSize){
+    memcpy(buffer, serialBuf, bufSize);
+    TxBuffer(bufSize);
+}
+
 void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
 
     if(bufSize > 8){
@@ -84,12 +89,18 @@ void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
     TxBuffer(9);
 }
 
+void TxTestMessage(){
+    
+
+    TxBuffer(2);
+}
+
 void TxTestProcess(){
 
     if(TestRunning){
         if(testMessageCounter++ < testmessageCount){
             printf("[tx] SequenceTest %d from %d\n\r", testMessageCounter, testmessageCount);
-            TxPing();
+            TxTestMessage();
             DelayMs(testIntervalMs);
         }else{
             TestRunning = false;

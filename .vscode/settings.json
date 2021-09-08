@@ -127,7 +127,8 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "stm32f446xx.h": "c"
+        "stm32f446xx.h": "c",
+        "timer.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

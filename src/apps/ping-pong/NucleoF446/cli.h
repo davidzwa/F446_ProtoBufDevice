@@ -40,6 +40,7 @@ extern "C"
     void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
     void ApplyConfigIfPending();
     void CliProcess(Uart_t *uart);
+    void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead);
 
 #ifdef __cplusplus
 }
