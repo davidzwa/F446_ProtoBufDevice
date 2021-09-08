@@ -49,13 +49,16 @@ RadioRXConfig_t rxConfig = {
     .HopPeriod = 0,
     .IqInverted = LORA_IQ_INVERSION_ON,
     .RxContinuous = true};
+#else  
+    #error "FSK is not yet working"
+#endif 
 
 void InitRadioTXConfigLoRaDefault(RadioTXConfig_t* txConfig_p){
     txConfig_p->Modem = MODEM_LORA;
     txConfig_p->Power = TX_OUTPUT_POWER;
     txConfig_p->Fdev = 0;
     txConfig_p->Bandwidth = LORA_BANDWIDTH;
-    txConfig_p->SpreadingFactor = LORA_SPREADING_FACTOR;
+    txConfig_p->DataRate = LORA_SPREADING_FACTOR;
     txConfig_p->CodeRate = LORA_CODINGRATE;
     txConfig_p->PreambleLen = LORA_PREAMBLE_LENGTH;
     txConfig_p->FixLen = LORA_FIX_LENGTH_PAYLOAD_ON;
@@ -69,7 +72,7 @@ void InitRadioTXConfigLoRaDefault(RadioTXConfig_t* txConfig_p){
 void InitRadioRXConfigLoRaDefault(RadioRXConfig_t* rxConfig_p){
     rxConfig_p->Modem = MODEM_LORA;
     rxConfig_p->Bandwidth = LORA_BANDWIDTH;
-    rxConfig_p->SpreadingFactor = LORA_SPREADING_FACTOR;
+    rxConfig_p->DataRate = LORA_SPREADING_FACTOR;
     rxConfig_p->CodeRate = LORA_CODINGRATE;
     rxConfig_p->BandwidthAfc = 0;
     rxConfig_p->PreambleLen = LORA_PREAMBLE_LENGTH;
@@ -113,7 +116,7 @@ void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead){
     txConfig.Power           = serialBuf[i++];
     txConfig.Fdev            = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
     txConfig.Bandwidth       = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    txConfig.SpreadingFactor = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    txConfig.DataRate        = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
     txConfig.CodeRate        = serialBuf[i++];
     txConfig.PreambleLen     = (serialBuf[i++] << 8) + (serialBuf[i++]);
     txConfig.FixLen          = serialBuf[i++] > 0;
@@ -125,7 +128,7 @@ void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead){
 
     rxConfig.Modem           = (RadioModems_t) serialBuf[i++];
     rxConfig.Bandwidth       = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    rxConfig.SpreadingFactor = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    rxConfig.DataRate        = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
     rxConfig.CodeRate        = serialBuf[i++];
     rxConfig.BandwidthAfc    = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
     rxConfig.PreambleLen     = (serialBuf[i++] << 8) + (serialBuf[i++]);
@@ -140,7 +143,7 @@ void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead){
     ApplyRadioConfig();
 
     printf("[CLI] %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",txConfig.Modem,       
-txConfig.Power, txConfig.Fdev, txConfig.Bandwidth, txConfig.SpreadingFactor, txConfig.CodeRate, txConfig.PreambleLen, txConfig.FixLen, txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout, rxConfig.Modem, rxConfig.Bandwidth, rxConfig.SpreadingFactor, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
+txConfig.Power, txConfig.Fdev, txConfig.Bandwidth, txConfig.DataRate, txConfig.CodeRate, txConfig.PreambleLen, txConfig.FixLen, txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout, rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
 
 }
 
