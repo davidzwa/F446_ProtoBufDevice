@@ -24,7 +24,7 @@
  */
 #include <math.h>
 #include <time.h>
-#include "stm32f4xx.h"
+#include "stm32wl55xx.h"
 #include "utilities.h"
 #include "delay.h"
 #include "board.h"

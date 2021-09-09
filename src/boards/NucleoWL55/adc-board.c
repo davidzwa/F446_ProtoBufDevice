@@ -23,15 +23,15 @@
 #include "adc-board.h"
 
 #include "board-config.h"
-#include "stm32wl55xx.h"
+#include "stm32wlxx.h"
 
 ADC_HandleTypeDef AdcHandle;
 
 void AdcMcuInit(Adc_t *obj, PinNames adcInput) {
-    AdcHandle.Instance = ADC1;
+    AdcHandle.Instance = ADC;
 
     // EEEEHHH
-    // __ADC_CLK_ENABLE();
+    __ADC_CLK_ENABLE();
 
     HAL_ADC_DeInit(&AdcHandle);
 
@@ -52,13 +52,13 @@ void AdcMcuConfig(void) {
     AdcHandle.Init.DMAContinuousRequests = DISABLE;
     AdcHandle.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
     AdcHandle.Init.NbrOfConversion = 1;
-    // AdcHandle.Init.LowPowerAutoWait      = DISABLE;
+    AdcHandle.Init.LowPowerAutoWait = DISABLE;
     HAL_ADC_Init(&AdcHandle);
 }
 
 uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel) {
     ADC_ChannelConfTypeDef adcConf = {0};
-    // uint16_t adcData = 0;
+    uint16_t adcData = 0;
 
     // Enable HSI
     __HAL_RCC_HSI_ENABLE();
@@ -68,14 +68,14 @@ uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel) {
     }
 
     // EEHHHHH
-    // __ADC_CLK_ENABLE();
+    __ADC_CLK_ENABLE();
 
     // Calibrate ADC if any calibraiton hardware
-    // HAL_ADCEx_Calibration_Start( &AdcHandle, ADC_SINGLE_ENDED );
+    // HAL_ADCEx_Calibration_Start( &AdcHandle, ADC_DOUBLE );
 
     adcConf.Channel = channel;
     adcConf.Rank = LL_ADC_REG_RANK_1;
-    adcConf.SamplingTime = ADC_SAMPLETIME_84CYCLES;
+    adcConf.SamplingTime = ADC_SAMPLETIME_79CYCLES_5;
 
     HAL_ADC_ConfigChannel(&AdcHandle, &adcConf);
 
@@ -84,12 +84,13 @@ uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel) {
 
     HAL_ADC_PollForConversion(&AdcHandle, HAL_MAX_DELAY);
 
-    // adcData = HAL_ADC_GetValue( &AdcHandle );
+    adcData = HAL_ADC_GetValue( &AdcHandle );
 
-    __HAL_ADC_DISABLE(&AdcHandle);
+    // __HAL_ADC_DISABLE(&AdcHandle);
+    __HAL_ADC_DISABLE();
 
     // EEHHHH
-    // __HAL_RCC_ADC_CLK_DISABLE( );
+    __HAL_RCC_ADC_CLK_DISABLE( );
 
     // Disable HSI
     __HAL_RCC_HSI_DISABLE();

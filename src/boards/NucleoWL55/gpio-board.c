@@ -20,7 +20,7 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#include "stm32f4xx.h"
+#include "stm32wlxx.h"
 #include "utilities.h"
 #include "sysIrqHandlers.h"
 #include "board-config.h"
@@ -62,11 +62,12 @@ void GpioMcuInit( Gpio_t *obj, PinNames pin, PinModes mode, PinConfigs config, P
             obj->port = GPIOC;
             __HAL_RCC_GPIOC_CLK_ENABLE( );
         }
-        else if( ( obj->pin & 0xF0 ) == 0x30 )
-        {
-            obj->port = GPIOD;
-            __HAL_RCC_GPIOD_CLK_ENABLE( );
-        }
+        // TODO clock config Port D not available on WL55 family
+        // else if( ( obj->pin & 0xF0 ) == 0x30 )
+        // {
+        //     obj->port = GPIOD;
+        //     __HAL_RCC_GPIOD_CLK_ENABLE( );
+        // }
         else
         {
             obj->port = GPIOH;

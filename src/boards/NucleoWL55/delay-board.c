@@ -22,7 +22,7 @@
  *
  * \author    Johannes Bruder ( STACKFORCE )
  */
-#include "stm32f4xx.h"
+#include "stm32wlxx.h"
 #include "delay-board.h"
 
 void DelayMsMcu( uint32_t ms )

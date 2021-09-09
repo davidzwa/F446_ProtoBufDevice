@@ -113,15 +113,9 @@ list(APPEND ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_ll_utils.c"
 )
 
-# if(MBED_RADIO_SHIELD STREQUAL SX1261MBXBAS)
-#     list(APPEND ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sx1261mbxbas-board.c")
-# else()
-#     message(STATUS " Please specify the MBED_RADIO_SHIELD !\nPossible values are: SX1261MBXBAS.")
-# endif()
-
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC -DUSE_HAL_DRIVER -DSTM32WL55)
+target_compile_definitions(${PROJECT_NAME} PUBLIC -DUSE_HAL_DRIVER -DSTM32WL55xx)
 
 # Add define if debbuger support is enabled
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<BOOL:${USE_DEBUGGER}>:USE_DEBUGGER>)

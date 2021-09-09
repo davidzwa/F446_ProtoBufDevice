@@ -29,3 +29,4 @@ ipch/
 
 **/*.o
 **/*.obj
+src/apps/ping-pong/NucleoF446/config_personal.h
