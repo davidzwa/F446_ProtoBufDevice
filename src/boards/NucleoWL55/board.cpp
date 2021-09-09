@@ -27,7 +27,7 @@
 #include "lpm-board.h"
 #include "rtc-board.h"
 #include "spi.h"
-#include "stm32f4xx.h"
+#include "stm32wl55xx.h"
 #include "sysIrqHandlers.h"
 #include "timer.h"
 #include "uart.h"
