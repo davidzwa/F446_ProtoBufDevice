@@ -23,12 +23,12 @@ cmake_minimum_required(VERSION 3.6)
 #---------------------------------------------------------------------------------------
 
 # Allow switching of target platform
-set(BOARD_LIST NAMote72 NucleoL073 NucleoL152 NucleoF446 NucleoL476 SAMR34 SKiM880B SKiM980A SKiM881AXL B-L072Z-LRWAN1)
+set(BOARD_LIST NAMote72 NucleoL073 NucleoL152 NucleoF446 NucleoL476 NucleoWL55 SAMR34 SKiM880B SKiM980A SKiM881AXL B-L072Z-LRWAN1)
 set(BOARD NucleoF446 CACHE STRING "Default target platform is NucleoF446")
 set_property(CACHE BOARD PROPERTY STRINGS ${BOARD_LIST})
 
 # Allow switching of MBED shields
-set(MBED_RADIO_SHIELD_LIST SX1272MB2DAS SX1276MB1LAS SX1276MB1MAS SX1261MBXBAS SX1262MBXCAS SX1262MBXDAS )
+set(MBED_RADIO_SHIELD_LIST SX1272MB2DAS SX1276MB1LAS SX1276MB1MAS SX1261MBXBAS SX1262MBXCAS SX1262MBXDAS WL55INTERNAL)
 set(MBED_RADIO_SHIELD SX1261MBXBAS CACHE STRING "Default MBED radio shield is SX1261MBXBAS")
 set_property(CACHE MBED_RADIO_SHIELD PROPERTY STRINGS ${MBED_RADIO_SHIELD_LIST})
 
@@ -38,7 +38,7 @@ set(SECURE_ELEMENT SOFT_SE CACHE STRING "Default secure element is SOFT_SE")
 set_property(CACHE SECURE_ELEMENT PROPERTY STRINGS ${SECURE_ELEMENT_LIST})
 
 # Allow switching of Applications
-set(APPLICATION_LIST LoRaMac ping-pong rx-sensi tx-cw )
+set(APPLICATION_LIST LoRaMac RFTest rx-sensi tx-cw )
 set(APPLICATION LoRaMac CACHE STRING "Default Application is LoRaMac")
 set_property(CACHE APPLICATION PROPERTY STRINGS ${APPLICATION_LIST})
 
@@ -55,7 +55,19 @@ option(CLASSB_ENABLED "Class B support of LoRaMac" OFF)
 # Target Boards
 #---------------------------------------------------------------------------------------
 
-if(BOARD STREQUAL NAMote72)
+
+if(BOARD STREQUAL NucleoWL55)
+    # Configure toolchain for NucleoWL55
+    set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}targets/STM32WL/Drivers/CMSIS/Device/ST/STM32WLxx/Source/Templates/gcc/linker/STM32WL55XX_FLASH_CM4.ld)
+    include(stm32wl55)
+
+    # Configure radio
+    set(RADIO WL55INTERNAL CACHE INTERNAL "Radio WL55INTERNAL selected")
+
+    # Build platform specific board implementation
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/boards/NucleoWL55)
+
+elseif(BOARD STREQUAL NAMote72)
     # Configure toolchain for NAMote72
     set(LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/boards/NAMote72/cmsis/arm-gcc/stm32l152xc_flash.ld)
     include(stm32l1)

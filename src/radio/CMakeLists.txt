@@ -53,6 +53,12 @@ foreach( R ${RADIO_LIST} )
     endif()
 endforeach()
 
+if(RADIO STREQUAL WL55INTERNAL)
+    file(GLOB ${PROJECT_NAME}_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../targets/STM32WL/Middlewares/Third_Party/SubGHz_Phy/stm32_radio_driver/*.c
+    )
+endif()
+
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
 add_dependencies(${PROJECT_NAME} board)
@@ -69,6 +75,12 @@ foreach( R ${RADIO_LIST} )
         )
     endif()
 endforeach()
+
+if(RADIO STREQUAL WL55INTERNAL)
+    list(APPEND ${PROJECT_NAME}_INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../targets/STM32WL/Middlewares/Third_Party/SubGHz_Phy/stm32_radio_driver/
+    )
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
