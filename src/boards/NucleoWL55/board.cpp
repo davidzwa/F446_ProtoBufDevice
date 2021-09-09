@@ -28,6 +28,7 @@
 #include "rtc-board.h"
 #include "spi.h"
 #include "stm32wlxx.h"
+// #include "stm32wlxx_nucleo.h"
 #include "sysIrqHandlers.h"
 #include "timer.h"
 #include "uart.h"
@@ -151,8 +152,8 @@ void BoardInitMcu(void) {
         InitFlashMemoryOperations();
 
         // LEDs
-        GpioInit(&Led1, LED1_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
-        GpioInit(&Led2, LED2_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
+        GpioInit(&Led1, PB_15, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
+        GpioInit(&Led2, PB_9, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
 
         SystemClockConfig();
 
@@ -367,7 +368,7 @@ void SystemClockConfig(void) {
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-    __HAL_RCC_PWR_CLK_ENABLE();
+    // __HAL_RCC_PWR_CLK_ENABLE();
 
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
@@ -403,7 +404,7 @@ void SystemClockConfig(void) {
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK) {
         assert_param(LMN_STATUS_ERROR);
     }
 
@@ -441,8 +442,8 @@ static void PVD_Config(void) {
     HAL_PWR_EnablePVD();
 
     // Enable and set PVD Interrupt priority
-    HAL_NVIC_SetPriority(PVD_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(PVD_IRQn);
+    HAL_NVIC_SetPriority(PVD_PVM_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(PVD_PVM_IRQn);
 }
 
 /*!
@@ -473,7 +474,7 @@ static void InitFlashMemoryOperations(void) {
 #endif /* defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx) || defined (STM32L4S7xx) || defined (STM32L4S9xx) */
 
     // Enable Power Control clock
-    __HAL_RCC_PWR_CLK_ENABLE();
+    // __HAL_RCC_PWR_CLK_ENABLE();
 #if defined(USE_STM32L4XX_NUCLEO_144)
     HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN2);
 #endif /* defined (USE_STM32L4XX_NUCLEO_144) */
@@ -501,9 +502,9 @@ void SystemClockReConfig(void) {
     // In case nvic had a pending IT, the arm doesn't enter stop mode
     // Hence the pll is not switched off and will cause HAL_RCC_OscConfig return
     // an error
-    if (__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_CFGR_SWS_PLL) {
+    if (__HAL_RCC_GET_SYSCLK_SOURCE() != RCC_SYSCLKSOURCE_STATUS_PLLCLK) {
         // Enable Power Control clock
-        __HAL_RCC_PWR_CLK_ENABLE();
+        // __HAL_RCC_PWR_CLK_ENABLE();
 
         // Get the Oscillators configuration according to the internal RCC registers */
         HAL_RCC_GetOscConfig(&RCC_OscInitStruct);

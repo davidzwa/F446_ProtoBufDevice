@@ -53,7 +53,7 @@ void I2cMcuFormat( I2c_t *obj, I2cMode mode, I2cDutyCycle dutyCycle, bool I2cAck
 {
     __HAL_RCC_I2C1_CLK_ENABLE( );
 
-    I2cHandle.Init.ClockSpeed = I2cFrequency;
+    // I2cHandle.Init.ClockSpeed = I2cFrequency;
     // if( I2cFrequency == 100000 )
     // {
     //     I2cHandle.Init.Timing = 0x00707CBB;

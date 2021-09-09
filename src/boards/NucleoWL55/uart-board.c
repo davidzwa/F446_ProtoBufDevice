@@ -20,7 +20,7 @@
  *
  * \author    Gregory Cristian ( Semtech )
  */
-#include "stm32wl55xx.h"
+#include "stm32wlxx.h"
 #include "utilities.h"
 #include "board.h"
 #include "sysIrqHandlers.h"
