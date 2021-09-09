@@ -87,7 +87,7 @@ uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel) {
     adcData = HAL_ADC_GetValue( &AdcHandle );
 
     // __HAL_ADC_DISABLE(&AdcHandle);
-    __HAL_ADC_DISABLE();
+    // __HAL_ADC_DISABLE();
 
     // EEHHHH
     __HAL_RCC_ADC_CLK_DISABLE( );
@@ -95,5 +95,5 @@ uint16_t AdcMcuReadChannel(Adc_t *obj, uint32_t channel) {
     // Disable HSI
     __HAL_RCC_HSI_DISABLE();
 
-    return 0x00;  // adcData;
+    return adcData;
 }

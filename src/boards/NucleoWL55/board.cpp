@@ -151,8 +151,8 @@ void BoardInitMcu(void) {
         InitFlashMemoryOperations();
 
         // LEDs
-        GpioInit(&Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
-        GpioInit(&Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
+        GpioInit(&Led1, LED1_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
+        GpioInit(&Led2, LED2_PIN, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
 
         SystemClockConfig();
 

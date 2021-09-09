@@ -36,9 +36,17 @@ list(APPEND ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/sysIrqHandlers.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/uart-board.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../stm32/utilities.c"
+
+    ## CMSIS
     "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Device/ST/STM32WLxx/Source/Templates/gcc/startup_stm32wl55xx_cm4.s"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Device/ST/STM32WLxx/Source/Templates/system_stm32wlxx.c"
 
+    ## BSP generics
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/BSP/STM32WLxx_Nucleo/stm32wlxx_nucleo.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/BSP/STM32WLxx_Nucleo/stm32wlxx_nucleo_radio.c"
+    
+
+    ## HAL
     "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal_adc.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/STM32WLxx_HAL_Driver/Src/stm32wlxx_hal_adc_ex.c"
@@ -128,10 +136,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/STM32WLxx_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Device/ST/STM32WLxx/Include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/BSP/STM32WLxx_Nucleo
 
     # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32
     # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32/cmsis
-    # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32/STM32F4xx_HAL_Driver/Inc
     # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32/EEPROM_Emul/Core
     # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32/EEPROM_Emul/Porting/STM32F4
     $<TARGET_PROPERTY:board,INTERFACE_INCLUDE_DIRECTORIES>
