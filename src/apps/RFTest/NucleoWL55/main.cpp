@@ -37,6 +37,8 @@
 #include "uart.h"
 #include "utils.h"
 
+#include "main.h"
+
 int8_t RssiValue = 0;
 int8_t SnrValue = 0;
 

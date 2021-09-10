@@ -129,7 +129,6 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<BOOL:${USE_RADIO_DEBUG}>:U
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/conf
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/STM32WLxx_HAL_Driver/Inc
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Device/ST/STM32WLxx/Include

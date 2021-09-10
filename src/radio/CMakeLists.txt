@@ -79,6 +79,7 @@ endforeach()
 if(RADIO STREQUAL WL55INTERNAL)
     list(APPEND ${PROJECT_NAME}_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/../targets/STM32WL/Middlewares/Third_Party/SubGHz_Phy/stm32_radio_driver/
+        ${CMAKE_CURRENT_SOURCE_DIR}/../targets/STM32WL/Middlewares/Third_Party/SubGHz_Phy/
     )
 endif()
 
