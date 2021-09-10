@@ -134,7 +134,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/CMSIS/Device/ST/STM32WLxx/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Drivers/BSP/STM32WLxx_Nucleo
+
     ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Utilities/trace/adv_trace
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../targets/STM32WL/Utilities/misc
 
     # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32
     # ${CMAKE_CURRENT_SOURCE_DIR}/../stm32/cmsis
