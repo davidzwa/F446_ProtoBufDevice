@@ -40,6 +40,7 @@ else()
     message(STATUS "Did not add ZED tsl2561 I2C peripheral (C++)")
 endif()
 
+
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
 if(TSL_2561)
@@ -49,6 +50,7 @@ endif()
 if(BME_68X) 
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)    
 endif()
+
 
 target_include_directories( ${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
