@@ -21,7 +21,6 @@
 # Get the path of this module
 set(CURRENT_MODULE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-
 #---------------------------------------------------------------------------------------
 # Set tools
 #---------------------------------------------------------------------------------------
@@ -98,7 +97,6 @@ function(generate_vscode_launch_openocd TARGET)
         set(OPENOCD_INTERFACE cmsis-dap.cfg)
         set(OPENOCD_TARGET at91samdXX.cfg)
     endif()
-
 
     configure_file(${CURRENT_MODULE_DIR}/launch.json.in ${CMAKE_SOURCE_DIR}/.vscode/launch.json @ONLY)
 endfunction()

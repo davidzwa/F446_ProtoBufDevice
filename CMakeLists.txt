@@ -18,6 +18,8 @@
 project(loramac-node)
 cmake_minimum_required(VERSION 3.6)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/settings/settings-generator.cmake)
+
 # TODO make use of better practices 
 if (BME_68X)
     add_definitions(-DUSE_BME_68X)
