@@ -46,12 +46,6 @@ set_property(CACHE MODULATION PROPERTY STRINGS ${MODEM_LIST})
 
 file(GLOB ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_LIST_DIR}/${BOARD}/*")
 
-# Debug c++ features
-# get_property(known_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
-# foreach(i ${known_features})
-#   message("${i}")
-# endforeach()
-
 add_executable(${PROJECT_NAME}
                             ${${PROJECT_NAME}_SOURCES}
                             $<TARGET_OBJECTS:system>
@@ -78,6 +72,11 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC -D${MBED_RADIO_SHIELD})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:mac,INTERFACE_COMPILE_DEFINITIONS>>
+)
+
+# Local folder
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${PROJECT_NAME} PRIVATE Serial
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

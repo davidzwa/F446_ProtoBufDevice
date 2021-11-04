@@ -1,30 +1,24 @@
-/*!
- * \file      main.c
- *
- * \brief     Ping-Pong implementation
- *
- * \copyright Revised BSD License, see section \ref LICENSE.
- *
- * \code
- *                ______                              _
- *               / _____)             _              | |
- *              ( (____  _____ ____ _| |_ _____  ____| |__
- *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- *               _____) ) ____| | | || |_| ____( (___| | | |
- *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
- *              (C)2013-2017 Semtech
- *
- * \endcode
- *
- * \author    Miguel Luis ( Semtech )
- *
- * \author    Gregory Cristian ( Semtech )
- */
-
-#define CRLF 1
+/*
+*    __________ ____
+*   |__  / ____|  _ \ 
+*     / /|  _| | | | |
+*    / /_| |___| |_| |
+*   /____|_____|____/ 
+*  Copyright (C) 2020 - 2021
+* 
+*  License:  Revised BSD License, see LICENSE.TXT file included in the project
+*  Authors:  David Zwart (ZED), Niels Hokke (ZED)
+*  Version: 0.1.1
+*  Date 20 Sept 2021
+* 
+*  Description:
+*   Ping pong application for experimenting with LoRa
+*   Includes a UART CLI
+*/
 
 #include <string.h>
 
+#include "Serial/COBS.h"
 #include "board.h"
 #include "cli.h"
 #include "config.h"  // Radio config shared with CLI
