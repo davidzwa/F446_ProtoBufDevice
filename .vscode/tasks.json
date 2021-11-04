@@ -9,7 +9,7 @@
                 "cwd": "${workspaceFolder}"
             },
             "windows": {
-                "command": "${cwd}\\flash.bat"
+                "command": "${cwd}\\tools\\flash.bat"
             }
         }
     ]
