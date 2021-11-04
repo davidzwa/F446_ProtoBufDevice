@@ -613,7 +613,7 @@ void BoardLowPowerHandler(void) {
 /*
  * Function to be used by stdout for printf etc
  */
-int _write(int fd, const void *buf, size_t count) {
+extern "C" int _write(int fd, const void *buf, size_t count) {
     while (UartPutBuffer(&Uart2, (uint8_t *)buf, (uint16_t)count) != 0) {
     };
     return count;
@@ -622,7 +622,7 @@ int _write(int fd, const void *buf, size_t count) {
 /*
  * Function to be used by stdin for scanf etc
  */
-int _read(int fd, const void *buf, size_t count) {
+extern "C" int _read(int fd, const void *buf, size_t count) {
     size_t bytesRead = 0;
     while (UartGetBuffer(&Uart2, (uint8_t *)buf, count, (uint16_t *)&bytesRead) != 0) {
     };
@@ -637,13 +637,13 @@ int _read(int fd, const void *buf, size_t count) {
 #include <stdio.h>
 
 // Keil compiler
-int fputc(int c, FILE *stream) {
+extern "C" int fputc(int c, FILE *stream) {
     while (UartPutChar(&Uart2, (uint8_t)c) != 0)
         ;
     return c;
 }
 
-int fgetc(FILE *stream) {
+extern "C" int fgetc(FILE *stream) {
     uint8_t c = 0;
     while (UartGetChar(&Uart2, &c) != 0)
         ;
