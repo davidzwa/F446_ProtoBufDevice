@@ -10,7 +10,7 @@
 #include "uart.h"
 #include "utils.h"
 
-uint8_t packetEndMarker = 0x00;
+uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
 SequenceCommand_t lastSequenceCommand;
 
@@ -24,6 +24,14 @@ void InitCli(bool withISR = true) {
     }
 }
 
+uint8_t GetFifoRxLength() {
+    return uart->FifoRx.End - uart->FifoRx.Begin;
+}
+
+uint8_t GetLastChar() {
+    return uart->FifoRx.Data[uart->FifoRx.End];
+}
+
 void UartISR(UartNotifyId_t id) {
     if (id == UART_NOTIFY_TX) {
         return;
@@ -34,24 +42,17 @@ void UartISR(UartNotifyId_t id) {
         return;
     }
 
-    // uint16_t length = uart->FifoRx.End;
-    while (!IsFifoEmpty(&uart->FifoRx)) {
-        printf("%c", FifoPop(&uart->FifoRx));
-    }
-    printf("\n");
-        // printf("UART Buffer char: %s\n\r", uart->FifoRx.Data + 1);
-    // FifoFlush(&uart->FifoRx);
+    if (GetLastChar() == packetEndMarker) {
+        uint16_t length = GetFifoRxLength();
+        uint8_t decodedBuffer[length];
+        size_t newSize = COBS::decode(uart->FifoRx.Data + uart->FifoRx.Begin + 1, GetFifoRxLength(), decodedBuffer);
+        uint8_t reencodedBuffer[newSize * 2];
+        size_t encodedSize = COBS::encode(decodedBuffer, newSize, reencodedBuffer);
+        reencodedBuffer[encodedSize] = 0x00;
 
-    // if (uart->FifoRx.Data[length-1] == packetEndMarker) {
-    //     uint8_t decodeBuffer[length];
-        
-    //     COBS::decode(uart->FifoRx.Data+1, length, decodeBuffer);
-    //     FifoFlush(&uart->FifoRx);
-    //     printf("Decoded COBS packet (size: %d) %s\n\r", uart->FifoRx.End, decodeBuffer);
-    // }
-    // else {
-        
-    // }
+        printf("%s\n", reencodedBuffer);
+        FifoFlush(&uart->FifoRx);
+    }
 }
 
 #if defined(USE_MODEM_LORA)

@@ -1,0 +1,4 @@
+asyncio==3.4.3
+aioconsole==0.3.2
+cobs==1.1.4
+pyserial-asyncio==0.6.0

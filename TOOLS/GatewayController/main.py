@@ -1,8 +1,9 @@
-from cobs import cobs
-import time
-from gateway import Gateway
-from radio_config import RadioConfig
-import keyboard
+import asyncio
+from serial_protocol import OutputProtocol, list_ports
+import serial_asyncio
+from cli import CliParser
+
+# # rfSettings = RadioConfig.getDefaultLoRaConfig()
 
 def setNewRFsettings(gateway, rfSettings, broadcast=True):
     if broadcast:
@@ -14,19 +15,28 @@ def setNewRFsettings(gateway, rfSettings, broadcast=True):
     gateway.write(cmd)
 
 
-if __name__ == '__main__':
+async def reader(port, baudrate):
+    transport, protocol = await serial_asyncio.create_serial_connection(loop, OutputProtocol, port, baudrate=921600)
 
-    localGateway = Gateway('COM3', 921600)
-    localGateway.openSerial()
-
-    # rfSettings = RadioConfig.getDefaultLoRaConfig()
-
-    # encoded = cobs.encode(bytearray(b'Hello world\x00This is a test\x00'))
-    encoded = cobs.encode(bytearray(b'Hello world\x00This is a test'))
-    # print("COBS data", encoded)
-
-    # localGateway.write(encoded)
-    localGateway.write(bytes("ABCDEF\n\r", "utf-8"))
+    cli = CliParser()
+    cli_routine = cli.get_cli(protocol)
+    task = asyncio.create_task(cli_routine.interact())
 
     while True:
-        print(localGateway.readLine())
+        await asyncio.sleep(0.3)
+
+if __name__ == '__main__':
+    port = 'COM6'
+    baudrate = 921600
+
+    loop = asyncio.get_event_loop()
+    
+    try:
+        loop.run_until_complete(reader(port,baudrate))
+    except FileNotFoundError as e:
+        list_ports()
+        exit(-1)
+
+
+    loop.run_forever()
+    loop.close()

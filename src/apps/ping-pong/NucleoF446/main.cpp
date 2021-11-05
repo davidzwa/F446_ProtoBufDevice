@@ -52,11 +52,11 @@ void OnRxTimeout(void);
 void OnRxError(void);
 
 void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion) {
-    printf("\n###### ===================================== ######\n\n\r");
-    printf("Application name   : %s\n\r", appName);
-    printf("Application version: %d.%d.%d\n\r", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
-    printf("GitHub base version: %d.%d.%d\n\r", gitHubVersion->Fields.Major, gitHubVersion->Fields.Minor, gitHubVersion->Fields.Patch);
-    printf("\n###### ===================================== ######\n\n\r");
+    printf("\n###### ===================================== ######\n\n");
+    printf("Application name   : %s\n", appName);
+    printf("Application version: %d.%d.%d\n", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
+    printf("GitHub base version: %d.%d.%d\n", gitHubVersion->Fields.Major, gitHubVersion->Fields.Minor, gitHubVersion->Fields.Patch);
+    printf("\n###### ===================================== ######\n\n");
 }
 
 /**
@@ -70,7 +70,7 @@ int main(void) {
     InitCli(true);
 
     DeviceId_t deviceId = GetDeviceId();
-    printf("id %lu %lu %lu\n\r", deviceId.id0, deviceId.id1, deviceId.id2);
+    printf("id %lu %lu %lu\n", deviceId.id0, deviceId.id1, deviceId.id2);
 
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
@@ -78,7 +78,7 @@ int main(void) {
                    &appVersion,
                    &gitHubVersion);
 
-    printf("Radio initializing\n\r");
+    printf("Radio initializing\n");
 
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
@@ -90,13 +90,13 @@ int main(void) {
     Radio.Init(&RadioEvents);
 
     RadioState_t state = Radio.GetStatus();
-    printf("Radio state %d\n\r", state);
-    printf("Radio init done\n\r");
+    printf("Radio state %d\n", state);
+    printf("Radio init done\n");
 
     Radio.SetChannel(RF_FREQUENCY);
     state = Radio.GetStatus();
-    printf("Radio state %d\n\r", state);
-    printf("Radio set channel to %d done\n\r", RF_FREQUENCY);
+    printf("Radio state %d\n", state);
+    printf("Radio set channel to %d done\n", RF_FREQUENCY);
 
 #if defined(USE_MODEM_LORA)
 
@@ -130,12 +130,10 @@ int main(void) {
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Started radio listening\n\r");
+    printf("Started radio listening\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     while (1) {
-        // TxTestProcess();
-
         // Process Radio IRQ
         if (Radio.IrqProcess != NULL) {
             Radio.IrqProcess();
@@ -144,7 +142,7 @@ int main(void) {
 }
 
 void OnTxDone(void) {
-    printf("[Main] tx done\n\r");
+    printf("[Main] tx done\n");
 
     ApplyConfigIfPending();
 
@@ -156,7 +154,7 @@ void OnTxDone(void) {
 }
 
 void OnTxTimeout(void) {
-    printf("[Main] tx timeout\n\r");
+    printf("[Main] tx timeout\n");
 
     ApplyConfigIfPending();
 
@@ -168,7 +166,7 @@ void OnTxTimeout(void) {
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
-    printf("[Main] rx done\n\r");
+    printf("[Main] rx done\n");
 
     msgSize = size;
     memcpy(buffer, payload, msgSize);
@@ -179,7 +177,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     for (int i = 0; i < msgSize; i++) {
         printf("0x%02X ", buffer[i]);
     }
-    printf("\n\r[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n\r", msgSize, rssi, snr);
+    printf("\n[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n", msgSize, rssi, snr);
 
     parseMsg(buffer, msgSize);
 
@@ -188,11 +186,11 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 }
 
 void OnRxTimeout(void) {
-    printf("[Main] OnRxTimeout\n\r");
+    printf("[Main] OnRxTimeout\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
 void OnRxError(void) {
-    printf("[Main] error\n\r");
+    printf("[Main] error\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 }

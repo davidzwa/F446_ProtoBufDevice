@@ -2,6 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/GatewayController/main.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Debug-@TARGET_NAME@",
             "type": "cppdbg",
             "request": "launch",
