@@ -18,7 +18,6 @@
 
 #include <string.h>
 
-#include "Serial/COBS.h"
 #include "board.h"
 #include "cli.h"
 #include "config.h"  // Radio config shared with CLI
@@ -28,11 +27,10 @@
 #include "radio.h"
 #include "rx.h"
 #include "stdio.h"
-#include "uart.h"
 #include "utils.h"
 
-int8_t RssiValue = 0;
-int8_t SnrValue = 0;
+int8_t lastRssiValue = 0;
+int8_t lastSnrValue = 0;
 
 bool isExecutingCMD = false;
 
@@ -43,17 +41,6 @@ extern uint8_t buffer[BUFFER_SIZE];
  * Radio events function pointer
  */
 static RadioEvents_t RadioEvents;
-
-/*!
- * LED GPIO pins objects
- */
-extern Gpio_t Led1;
-extern Gpio_t Led2;
-
-/*!
- * UART object used for command line interface handling
- */
-extern Uart_t Uart2;
 
 /*!
  * \brief Radio interupts
@@ -79,6 +66,8 @@ int main(void) {
     // Target board initialization
     BoardInitMcu();
     BoardInitPeriph();
+
+    InitCli(true);
 
     DeviceId_t deviceId = GetDeviceId();
     printf("id %lu %lu %lu\n\r", deviceId.id0, deviceId.id1, deviceId.id2);
@@ -142,13 +131,10 @@ int main(void) {
 #endif
 
     printf("Started radio listening\n\r");
-
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     while (1) {
-        CliProcess(&Uart2);
-
-        TxTestProcess();
+        // TxTestProcess();
 
         // Process Radio IRQ
         if (Radio.IrqProcess != NULL) {
@@ -186,8 +172,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     msgSize = size;
     memcpy(buffer, payload, msgSize);
-    RssiValue = rssi;
-    SnrValue = snr;
+    lastRssiValue = rssi;
+    lastSnrValue = snr;
 
     printf("[Main]");
     for (int i = 0; i < msgSize; i++) {

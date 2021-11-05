@@ -118,7 +118,7 @@ void TxTestProcess() {
 void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs) {
     printf("[tx] TxStartSequenceTest\n\r");
 
-    // if(TestRunning){
+    // if(testRunning){
     //     printf("[tx] test already running %d msg left\n\r", testMessageLeft);
     //     return;
     // }

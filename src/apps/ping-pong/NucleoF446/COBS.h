@@ -1,10 +1,9 @@
-//
 // Copyright (c) 2011 Christopher Baker <https://christopherbaker.net>
 // Copyright (c) 2011 Jacques Fortier <https://github.com/jacquesf/COBS-Consistent-Overhead-Byte-Stuffing>
 //
 // SPDX-License-Identifier: MIT
-//
 
+#include <stddef.h>
 #include <stdint.h>
 
 /// \brief A Consistent Overhead Byte Stuffing (COBS) Encoder.
