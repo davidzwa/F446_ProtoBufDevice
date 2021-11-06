@@ -10,6 +10,9 @@
 #include "uart.h"
 #include "utils.h"
 
+#define PACKET_SIZE_LIMIT 256
+uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
+uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
 SequenceCommand_t lastSequenceCommand;
@@ -43,15 +46,17 @@ void UartISR(UartNotifyId_t id) {
     }
 
     if (GetLastChar() == packetEndMarker) {
-        uint16_t length = GetFifoRxLength();
-        uint8_t decodedBuffer[length];
-        size_t newSize = COBS::decode(uart->FifoRx.Data + uart->FifoRx.Begin + 1, GetFifoRxLength(), decodedBuffer);
+        bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
+        if (result == 1) {
+            return;  // Error occurred
+        }
+
+        uint8_t packetSize = actualSize - 1;
+        uint8_t decodedBuffer[actualSize];
+        size_t newSize = COBS::decode(encodedBuffer, packetSize, decodedBuffer);
         uint8_t reencodedBuffer[newSize * 2];
         size_t encodedSize = COBS::encode(decodedBuffer, newSize, reencodedBuffer);
-        reencodedBuffer[encodedSize] = 0x00;
-
-        printf("%s\n", reencodedBuffer);
-        FifoFlush(&uart->FifoRx);
+        UartPutBuffer(uart, reencodedBuffer, encodedSize);
     }
 }
 

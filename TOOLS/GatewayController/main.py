@@ -31,8 +31,9 @@ async def reader(port, baudrate):
         await asyncio.sleep(0.3)
 
 if __name__ == '__main__':
-    ports = list_ports(debug=False)
-    filtered_ports = list(filter(lambda port: "STMicroelectronics" in port.description, ports))
+    filtered_ports = list_ports(
+        debug=False, vendor_filter="STMicroelectronics")
+    
     if len(filtered_ports) == 0:
         print("No STM device COM ports found")
         exit(-1)
