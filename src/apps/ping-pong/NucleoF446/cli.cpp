@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "radio_config.h"
 #include "COBS.h"
 #include "delay.h"
 #include "tx.h"
@@ -27,7 +28,7 @@ void InitCli(bool withISR = true) {
     }
 }
 
-uint8_t GetFifoRxLength() {
+uint16_t GetFifoRxLength() {
     return uart->FifoRx.End - uart->FifoRx.Begin;
 }
 
@@ -45,6 +46,11 @@ void UartISR(UartNotifyId_t id) {
         return;
     }
 
+    if (GetFifoRxLength() > PACKET_SIZE_LIMIT) {
+        // Erroneous scenario
+        FifoFlush(&uart->FifoRx);
+    }
+
     if (GetLastChar() == packetEndMarker) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {
@@ -54,10 +60,16 @@ void UartISR(UartNotifyId_t id) {
         uint8_t packetSize = actualSize - 1;
         uint8_t decodedBuffer[actualSize];
         size_t newSize = COBS::decode(encodedBuffer, packetSize, decodedBuffer);
-        uint8_t reencodedBuffer[newSize * 2];
-        size_t encodedSize = COBS::encode(decodedBuffer, newSize, reencodedBuffer);
-        UartPutBuffer(uart, reencodedBuffer, encodedSize);
+
+        RadioRXConfig_t* rxConfig = (RadioRXConfig_t*)decodedBuffer;
+        printf("%ld\n", rxConfig->DataRate);
     }
+}
+
+void UartSend(uint8_t *buffer, size_t length) {
+    uint8_t encodedBuffer[length * 2];
+    size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
+    UartPutBuffer(uart, encodedBuffer, encodedSize);
 }
 
 #if defined(USE_MODEM_LORA)

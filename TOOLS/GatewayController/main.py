@@ -1,25 +1,12 @@
 import asyncio
-from serial_protocol import OutputProtocol, list_ports
-import serial_asyncio
+from serial_protocol import list_ports, create_connection
 from cli import CliParser
-
-# # rfSettings = RadioConfig.getDefaultLoRaConfig()
-
-
-def setNewRFsettings(gateway, rfSettings, broadcast=True):
-    if broadcast:
-        cmd = b'F' + bytes(rfSettings) + b'\r'
-    else:
-        cmd = b'G' + bytes(rfSettings) + b'\r'
-
-    print(cmd)
-    gateway.write(cmd)
-
 
 async def reader(port, baudrate):
     try:
-        transport, protocol = await serial_asyncio.create_serial_connection(loop, OutputProtocol, port, baudrate=921600)
+        transport, protocol = await create_connection(loop, port, baudrate)
     except FileNotFoundError as e:
+        print("Port not found. Devices:")
         list_ports()
         exit(-1)
 

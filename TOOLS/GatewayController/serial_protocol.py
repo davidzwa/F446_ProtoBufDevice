@@ -16,6 +16,8 @@ def list_ports(debug=True, vendor_filter="STMicroelectronics"):
 
     return vendor_ports
 
+async def create_connection(loop, port, baudrate):
+    return await serial_asyncio.create_serial_connection(loop, OutputProtocol, port, baudrate)
 
 class OutputProtocol(aio.Protocol):
     end_character = b'\0'
@@ -29,12 +31,12 @@ class OutputProtocol(aio.Protocol):
         self.transport.write(self.end_character)
 
     def data_received(self, data):
-        print('RX', data)
-        # print(cobs.decode(data))
-        # if (data[0] == '\x0c'):
-
-        # else:
-        #     print('RX', str(data))
+        try:
+            print('COBS decoded', cobs.decode(data))
+        except cobs.DecodeError:
+            print(data)
+            pass
+            
 
     def connection_lost(self, exc):
         print('serial - port closed')

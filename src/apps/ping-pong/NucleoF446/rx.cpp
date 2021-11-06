@@ -34,11 +34,6 @@ void parseMsg(uint8_t *RfBuffer, uint8_t msgSize) {
             }
             break;
 
-        // Ping
-        case 'P':
-            TxPing();
-            break;
-
         // Execute sequence cmd
         case 'T':
             if (msgSize > 8) {

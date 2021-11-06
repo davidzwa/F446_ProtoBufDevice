@@ -3,26 +3,46 @@
 import random
 import asyncio
 import argparse
+import time
 
 from cobs import cobs
 from aioconsole import AsynchronousCli
 from serial_protocol import list_ports
+from radio_config import RadioRXConfig, RadioTXConfig
 
 
 class CliParser(object):
     serial_protocol = None
 
+    def __send(self, buffer):
+        self.serial_protocol.write_buffer(buffer)
+
     async def gateway(self, reader, writer, port, device):
         print(port, device)
         encoded = cobs.encode(bytearray(b'Test'))
-        self.serial_protocol.write_buffer(encoded)
+        self.__send(encoded)
 
     async def transmit(self, reader, writer):
         encoded = cobs.encode(bytearray(b'Test2'))
-        self.serial_protocol.write_buffer(encoded)
+        self.__send(encoded)
 
     async def list_serial_ports(self, reader, writer):
         list_ports()
+
+    async def send_radio_config(self, reader, writer):
+        rx_settings = RadioRXConfig.getDefaultLoRaConfig()
+        print(rx_settings)
+        byte_data = bytes(rx_settings)
+        encoded_data = cobs.encode(byte_data)
+        print(
+            f"Configuring RX settings ({len(byte_data)} bytes, {len(encoded_data)} encoded)")
+
+        self.__send(encoded_data)
+
+        # time.sleep(1)
+        # print("\nConfiguring TX settings")
+        # radioTransmitSettings = RadioTXConfig.getDefaultLoRaConfig()
+        # self.__send(cobs.encode(radioTransmitSettings))
 
     async def switch_serial_port(self, reader, writer, port, device):
         print("switching")
@@ -46,6 +66,7 @@ class CliParser(object):
                 "g": (self.gateway, parser),
                 "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
+                "R": (self.send_radio_config, self.get_parser()),
                 "p": (self.switch_serial_port, parser)
             },
             prog="gateway"

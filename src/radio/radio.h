@@ -37,7 +37,7 @@ extern "C"
 typedef enum
 {
     MODEM_FSK = 0,
-    MODEM_LORA,
+    MODEM_LORA = 1,
 }RadioModems_t;
 
 /*!
