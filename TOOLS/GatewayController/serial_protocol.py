@@ -3,11 +3,12 @@ import serial_asyncio
 import serial.tools.list_ports
 from cobs import cobs
 
-def list_ports(self):
+def list_ports(debug=True):
     ports = serial.tools.list_ports.comports()
 
-    for port, desc, hwid in sorted(ports):
-        print("{}: {} [{}]".format(port, desc, hwid))
+    if debug:
+        for port, desc, hwid in sorted(ports):
+            print("{}: {} [{}]".format(port, desc, hwid))
 
     return ports
 
