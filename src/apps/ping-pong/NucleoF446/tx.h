@@ -1,6 +1,5 @@
 #include "radio.h"
 #include "config.h"
-#include "cli_commands.h"
 #include "rx.h"
 #include "delay.h"
 #include "stdio.h"

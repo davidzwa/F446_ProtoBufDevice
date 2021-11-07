@@ -34,7 +34,7 @@ class OutputProtocol(aio.Protocol):
         try:
             print('COBS decoded', cobs.decode(data))
         except cobs.DecodeError:
-            print(data)
+            print("Non COBS", data)
             pass
             
 

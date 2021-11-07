@@ -1,23 +1,20 @@
-/*!
- * \file      cli.h
- *
- * \brief     Command Line Interface handling definition
- *
- * \copyright Revised BSD License, see section \ref LICENSE.
- *
- * \code
- *                ______                              _
- *               / _____)             _              | |
- *              ( (____  _____ ____ _| |_ _____  ____| |__
- *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- *               _____) ) ____| | | || |_| ____( (___| | | |
- *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
- *              (C)2013-2020 Semtech
- *
- * \endcode
- */
+/*
+*    __________ ____
+*   |__  / ____|  _ \ 
+*     / /|  _| | | | |
+*    / /_| |___| |_| |
+*   /____|_____|____/ 
+*  Copyright (C) 2020 - 2021
+* 
+*  License:  Revised BSD License, see LICENSE.TXT file included in the project
+*  Authors:  David Zwart (ZED), Niels Hokke (ZED)
+*  Version: 0.1.1
+*  Date 6 Nov 2021
+* 
+*  Description:
+*   CLI interface using UART
+*/
 
-#include "cli_commands.h"
 #include "config.h"
 #include "uart.h"
 

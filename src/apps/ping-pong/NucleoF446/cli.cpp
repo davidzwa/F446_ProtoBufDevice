@@ -4,9 +4,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "radio_config.h"
 #include "COBS.h"
+#include "UartReadBuffer.h"
 #include "delay.h"
+#include "radio_config.h"
+#include "uart_messages.h"
 #include "tx.h"
 #include "uart.h"
 #include "utils.h"
@@ -16,11 +18,14 @@ uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
-SequenceCommand_t lastSequenceCommand;
+
+UartReadBuffer read_buffer;
+Command received_command;
 
 extern Uart_t Uart2;
 Uart_t *uart = &Uart2;
 void UartISR(UartNotifyId_t id);
+void UartSend(uint8_t *buffer, size_t length);
 
 void InitCli(bool withISR = true) {
     if (withISR) {
@@ -61,8 +66,16 @@ void UartISR(UartNotifyId_t id) {
         uint8_t decodedBuffer[actualSize];
         size_t newSize = COBS::decode(encodedBuffer, packetSize, decodedBuffer);
 
-        RadioRXConfig_t* rxConfig = (RadioRXConfig_t*)decodedBuffer;
-        printf("%ld\n", rxConfig->DataRate);
+        uint8_t n_bytes = decodedBuffer[0];
+        for (size_t i = 1; i < n_bytes; i++) {
+            read_buffer.push(decodedBuffer[i]);
+        }
+
+        auto deserialize_status = received_command.deserialize(read_buffer);
+        if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
+            auto value = received_command.get_value();
+            UartSend(decodedBuffer, newSize);
+        }
     }
 }
 

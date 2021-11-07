@@ -9,7 +9,7 @@ from cobs import cobs
 from aioconsole import AsynchronousCli
 from serial_protocol import list_ports
 from radio_config import RadioRXConfig, RadioTXConfig
-
+from protobuf import uart_messages_pb2
 
 class CliParser(object):
     serial_protocol = None
@@ -25,6 +25,24 @@ class CliParser(object):
     async def transmit(self, reader, writer):
         encoded = cobs.encode(bytearray(b'Test2'))
         self.__send(encoded)
+
+    async def transmit_pb2(self, reader, writer):
+        message = uart_messages_pb2.Command()
+        message.value = 2
+        message.button = uart_messages_pb2.Command.Up
+
+        command_str = message.SerializeToString()
+        print("CMD", command_str)
+        l = len(command_str)
+        b = bytearray()
+        # Send the length byte
+        b.extend(l.to_bytes(1, byteorder='little'))
+        # Next send the actual data
+        b.extend(command_str)
+        print("PB", b)
+        safe_buffer = cobs.encode(b)
+        print("ENCODED", safe_buffer)
+        self.__send(safe_buffer)
 
     async def list_serial_ports(self, reader, writer):
         list_ports()
@@ -67,7 +85,8 @@ class CliParser(object):
                 "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
                 "R": (self.send_radio_config, self.get_parser()),
-                "p": (self.switch_serial_port, parser)
+                "p": (self.switch_serial_port, parser),
+                "T": (self.transmit_pb2, self.get_parser())
             },
             prog="gateway"
         )

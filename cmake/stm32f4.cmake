@@ -33,7 +33,7 @@ message("Linker script: ${LINKER_SCRIPT}")
 set(OBJECT_GEN_FLAGS "-Og -g -mthumb -g2 -fno-builtin -mcpu=cortex-m0plus -Wall -Wextra -Wno-sequence-point -Wno-pedantic -Wno-unused-parameter -Wno-comment -Wno-missing-field-initializers -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize")
 
 set(CMAKE_C_FLAGS "${OBJECT_GEN_FLAGS} -std=gnu99 " CACHE INTERNAL "C Compiler options")
-set(CMAKE_CXX_FLAGS "${OBJECT_GEN_FLAGS} -std=c++11 " CACHE INTERNAL "C++ Compiler options")
+set(CMAKE_CXX_FLAGS "${OBJECT_GEN_FLAGS} -std=c++14 " CACHE INTERNAL "C++ Compiler options")
 set(CMAKE_ASM_FLAGS "${OBJECT_GEN_FLAGS} -x assembler-with-cpp " CACHE INTERNAL "ASM Compiler options")
 
 # Linker flags

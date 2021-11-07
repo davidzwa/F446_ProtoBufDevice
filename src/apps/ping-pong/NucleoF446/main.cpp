@@ -20,8 +20,7 @@
 
 #include "board.h"
 #include "cli.h"
-#include "config.h"  // Radio config shared with CLI
-#include "config_personal.h"
+#include "config.h"
 #include "delay.h"
 #include "gpio.h"
 #include "radio.h"
