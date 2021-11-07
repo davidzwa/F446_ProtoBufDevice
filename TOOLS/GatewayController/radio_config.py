@@ -41,11 +41,31 @@ def serialize(pb_msg, encode_cobs=True, debug=False):
         return buffer
 
 
+class TransmitCommands(object):
+    @staticmethod
+    def sendMulticastCommand(groupId=0, debug=False):
+        command = uart_messages_pb2.UartCommand()
+        command.TransmitCmd.Payload = b'asd'
+        command.TransmitCmd.DeviceId = groupId
+        command.TransmitCmd.IsMulticast = True
+
+        return serialize(command, debug=debug)
+    
+    @staticmethod
+    def sendUnicastCommand(deviceId=0, debug=False):
+        command = uart_messages_pb2.UartCommand()
+        command.TransmitCmd.Payload = b'asd'
+        command.TransmitCmd.DeviceId = deviceId
+        command.TransmitCmd.IsMulticast = False
+
+        return serialize(command, debug=debug)
+
+
 class RadioConfig(object):
     @staticmethod
     def getTxConfig(debug=False):
-        command = uart_messages_pb2.Command()
-        
+        command = uart_messages_pb2.UartCommand()
+
         data = command.TxConfig
         data.Modem = MODEM_LORA
         data.Power = 14
@@ -65,7 +85,7 @@ class RadioConfig(object):
 
     @staticmethod
     def getRxConfig(debug=False):
-        command = uart_messages_pb2.Command()
+        command = uart_messages_pb2.UartCommand()
 
         data = command.RxConfig
         data.Modem = MODEM_LORA

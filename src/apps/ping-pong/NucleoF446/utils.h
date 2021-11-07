@@ -9,8 +9,11 @@ typedef struct DeviceId_s {
     uint32_t id2;
 } DeviceId_t;
 
-DeviceId_t GetDeviceId();
-int MapSpreadingFactor(uint8_t value);
+/**
+ * Check that the spreading factor is safe to use
+ **/
+bool IsValidSpreadingFactor(uint8_t spreadingFactor);
 
+DeviceId_t GetDeviceId();
 
 #endif // UTILS_H__

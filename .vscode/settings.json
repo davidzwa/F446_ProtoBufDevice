@@ -129,7 +129,9 @@
         "utility": "cpp",
         "stm32f446xx.h": "c",
         "timer.h": "c",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "memory": "cpp",
+        "cstdint": "cpp"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

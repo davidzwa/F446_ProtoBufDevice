@@ -29,9 +29,9 @@ void parseMsg(uint8_t *RfBuffer, uint8_t msgSize) {
     switch (RfBuffer[0]) {
         // Set Spreading factor
         case 'S':
-            if (msgSize > 1) {
-                ProcessSpreadingFactorMessage(RfBuffer[1], true);
-            }
+            // if (msgSize > 1) {
+            //     ProcessSpreadingFactorMessage(RfBuffer[1], true);
+            // }
             break;
 
         // Execute sequence cmd
@@ -43,7 +43,7 @@ void parseMsg(uint8_t *RfBuffer, uint8_t msgSize) {
 
         // parse RF config packet
         case 'F':
-            SetNewRFSettings((uint8_t *) RfBuffer, msgSize);
+            // SetNewRFSettings((uint8_t *) RfBuffer, msgSize);
             break;
 
         default:

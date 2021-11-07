@@ -9,9 +9,6 @@
 #define TX_H__
 
 void TxBuffer(int16_t dataSize);
-void TxPing();
-void TxPong();
-
 void TxNewRFSettings(uint8_t *serialBuf, uint8_t bufSize);
 
 void TxSpreadingFactor(uint8_t value);

@@ -62,22 +62,23 @@ void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Vers
  * Main application entry point.
  */
 int main(void) {
-    // Target board initialization
+    InitRadioConfig();
     BoardInitMcu();
-    BoardInitPeriph();
-
+    // BoardInitPeriph();
     InitCli(true);
+    PrintSettings();  
 
-    DeviceId_t deviceId = GetDeviceId();
-    printf("id %lu %lu %lu\n", deviceId.id0, deviceId.id1, deviceId.id2);
+    // DeviceId_t deviceId = GetDeviceId();
+    // printf("id %lu %lu %lu\n", deviceId.id0, deviceId.id1, deviceId.id2);
 
-    const Version_t appVersion = {.Value = FIRMWARE_VERSION};
-    const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
-    DisplayAppInfo("Tomato-potato",
-                   &appVersion,
-                   &gitHubVersion);
 
-    printf("Radio initializing\n");
+    // const Version_t appVersion = {.Value = FIRMWARE_VERSION};
+    // const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
+    // DisplayAppInfo("Tomato-potato",
+    //                &appVersion,
+    //                &gitHubVersion);
+
+    // printf("Radio initializing\n");
 
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
@@ -129,7 +130,7 @@ int main(void) {
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Started radio listening\n");
+    printf("Started RX radio\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     while (1) {

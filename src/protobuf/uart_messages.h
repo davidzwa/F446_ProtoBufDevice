@@ -877,11 +877,169 @@ class RadioTxConfig final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class Command final: public ::EmbeddedProto::MessageInterface
+template<uint32_t Payload_LENGTH>
+class TransmitCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    Command() = default;
-    Command(const Command& rhs )
+    TransmitCommand() = default;
+    TransmitCommand(const TransmitCommand& rhs )
+    {
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_Payload(rhs.get_Payload());
+    }
+
+    TransmitCommand(const TransmitCommand&& rhs ) noexcept
+    {
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_Payload(rhs.get_Payload());
+    }
+
+    ~TransmitCommand() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      ISMULTICAST = 1,
+      DEVICEID = 2,
+      PAYLOAD = 3
+    };
+
+    TransmitCommand& operator=(const TransmitCommand& rhs)
+    {
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    TransmitCommand& operator=(const TransmitCommand&& rhs) noexcept
+    {
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    inline void clear_IsMulticast() { IsMulticast_.clear(); }
+    inline void set_IsMulticast(const EmbeddedProto::boolean& value) { IsMulticast_ = value; }
+    inline void set_IsMulticast(const EmbeddedProto::boolean&& value) { IsMulticast_ = value; }
+    inline EmbeddedProto::boolean& mutable_IsMulticast() { return IsMulticast_; }
+    inline const EmbeddedProto::boolean& get_IsMulticast() const { return IsMulticast_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE IsMulticast() const { return IsMulticast_.get(); }
+
+    inline void clear_DeviceId() { DeviceId_.clear(); }
+    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
+    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
+    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
+    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != IsMulticast_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = IsMulticast_.serialize_with_id(static_cast<uint32_t>(id::ISMULTICAST), buffer, false);
+      }
+
+      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::ISMULTICAST:
+            return_value = IsMulticast_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEVICEID:
+            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PAYLOAD:
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_IsMulticast();
+      clear_DeviceId();
+      clear_Payload();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean IsMulticast_ = false;
+      EmbeddedProto::uint32 DeviceId_ = 0U;
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
+
+};
+
+template<uint32_t TransmitCmd_Payload_LENGTH>
+class UartCommand final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    UartCommand() = default;
+    UartCommand(const UartCommand& rhs )
     {
       if(rhs.get_which_Body() != which_Body_)
       {
@@ -899,13 +1057,17 @@ class Command final: public ::EmbeddedProto::MessageInterface
           set_TxConfig(rhs.get_TxConfig());
           break;
 
+        case id::TRANSMITCMD:
+          set_TransmitCmd(rhs.get_TransmitCmd());
+          break;
+
         default:
           break;
       }
 
     }
 
-    Command(const Command&& rhs ) noexcept
+    UartCommand(const UartCommand&& rhs ) noexcept
     {
       if(rhs.get_which_Body() != which_Body_)
       {
@@ -923,22 +1085,27 @@ class Command final: public ::EmbeddedProto::MessageInterface
           set_TxConfig(rhs.get_TxConfig());
           break;
 
+        case id::TRANSMITCMD:
+          set_TransmitCmd(rhs.get_TransmitCmd());
+          break;
+
         default:
           break;
       }
 
     }
 
-    ~Command() override = default;
+    ~UartCommand() override = default;
 
     enum class id : uint32_t
     {
       NOT_SET = 0,
       RXCONFIG = 1,
-      TXCONFIG = 2
+      TXCONFIG = 2,
+      TRANSMITCMD = 3
     };
 
-    Command& operator=(const Command& rhs)
+    UartCommand& operator=(const UartCommand& rhs)
     {
       if(rhs.get_which_Body() != which_Body_)
       {
@@ -954,6 +1121,10 @@ class Command final: public ::EmbeddedProto::MessageInterface
 
         case id::TXCONFIG:
           set_TxConfig(rhs.get_TxConfig());
+          break;
+
+        case id::TRANSMITCMD:
+          set_TransmitCmd(rhs.get_TransmitCmd());
           break;
 
         default:
@@ -963,7 +1134,7 @@ class Command final: public ::EmbeddedProto::MessageInterface
       return *this;
     }
 
-    Command& operator=(const Command&& rhs) noexcept
+    UartCommand& operator=(const UartCommand&& rhs) noexcept
     {
       if(rhs.get_which_Body() != which_Body_)
       {
@@ -979,6 +1150,10 @@ class Command final: public ::EmbeddedProto::MessageInterface
 
         case id::TXCONFIG:
           set_TxConfig(rhs.get_TxConfig());
+          break;
+
+        case id::TRANSMITCMD:
+          set_TransmitCmd(rhs.get_TransmitCmd());
           break;
 
         default:
@@ -1068,6 +1243,45 @@ class Command final: public ::EmbeddedProto::MessageInterface
     inline const RadioTxConfig& get_TxConfig() const { return Body_.TxConfig_; }
     inline const RadioTxConfig& TxConfig() const { return Body_.TxConfig_; }
 
+    inline bool has_TransmitCmd() const
+    {
+      return id::TRANSMITCMD == which_Body_;
+    }
+    inline void clear_TransmitCmd()
+    {
+      if(id::TRANSMITCMD == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.TransmitCmd_.~TransmitCommand<TransmitCmd_Payload_LENGTH>();
+      }
+    }
+    inline void set_TransmitCmd(const TransmitCommand<TransmitCmd_Payload_LENGTH>& value)
+    {
+      if(id::TRANSMITCMD != which_Body_)
+      {
+        init_Body(id::TRANSMITCMD);
+      }
+      Body_.TransmitCmd_ = value;
+    }
+    inline void set_TransmitCmd(const TransmitCommand<TransmitCmd_Payload_LENGTH>&& value)
+    {
+      if(id::TRANSMITCMD != which_Body_)
+      {
+        init_Body(id::TRANSMITCMD);
+      }
+      Body_.TransmitCmd_ = value;
+    }
+    inline TransmitCommand<TransmitCmd_Payload_LENGTH>& mutable_TransmitCmd()
+    {
+      if(id::TRANSMITCMD != which_Body_)
+      {
+        init_Body(id::TRANSMITCMD);
+      }
+      return Body_.TransmitCmd_;
+    }
+    inline const TransmitCommand<TransmitCmd_Payload_LENGTH>& get_TransmitCmd() const { return Body_.TransmitCmd_; }
+    inline const TransmitCommand<TransmitCmd_Payload_LENGTH>& TransmitCmd() const { return Body_.TransmitCmd_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1086,6 +1300,13 @@ class Command final: public ::EmbeddedProto::MessageInterface
           if(has_TxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.TxConfig_.serialize_with_id(static_cast<uint32_t>(id::TXCONFIG), buffer, true);
+          }
+          break;
+
+        case id::TRANSMITCMD:
+          if(has_TransmitCmd() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.TransmitCmd_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCMD), buffer, true);
           }
           break;
 
@@ -1116,6 +1337,11 @@ class Command final: public ::EmbeddedProto::MessageInterface
 
           case id::TXCONFIG:
             return_value = deserialize_Body(id::TXCONFIG, Body_.TxConfig_, buffer, wire_type);
+
+            break;
+
+          case id::TRANSMITCMD:
+            return_value = deserialize_Body(id::TRANSMITCMD, Body_.TransmitCmd_, buffer, wire_type);
 
             break;
 
@@ -1163,6 +1389,7 @@ class Command final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         RadioRxConfig RxConfig_;
         RadioTxConfig TxConfig_;
+        TransmitCommand<TransmitCmd_Payload_LENGTH> TransmitCmd_;
       };
       Body Body_;
 
@@ -1187,6 +1414,11 @@ class Command final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::TXCONFIG;
             break;
 
+          case id::TRANSMITCMD:
+            new(&Body_.TransmitCmd_) TransmitCommand<TransmitCmd_Payload_LENGTH>;
+            which_Body_ = id::TRANSMITCMD;
+            break;
+
           default:
             break;
          }
@@ -1203,6 +1435,9 @@ class Command final: public ::EmbeddedProto::MessageInterface
             break;
           case id::TXCONFIG:
             Body_.TxConfig_.~RadioTxConfig(); // NOSONAR Unions require this.
+            break;
+          case id::TRANSMITCMD:
+            Body_.TransmitCmd_.~TransmitCommand<TransmitCmd_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;
