@@ -67,13 +67,14 @@ void UartISR(UartNotifyId_t id) {
         size_t newSize = COBS::decode(encodedBuffer, packetSize, decodedBuffer);
 
         uint8_t n_bytes = decodedBuffer[0];
-        for (size_t i = 1; i < n_bytes; i++) {
+        for (size_t i = 1; i <= n_bytes; i++) {
             read_buffer.push(decodedBuffer[i]);
         }
 
         auto deserialize_status = received_command.deserialize(read_buffer);
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
             auto value = received_command.get_value();
+            auto button = received_command.get_button();
             UartSend(decodedBuffer, newSize);
         }
     }

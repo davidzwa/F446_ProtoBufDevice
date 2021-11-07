@@ -15,12 +15,16 @@
 *   Provide the reading interface for EmbeddedProto Protobuf
 */
 
-#ifndef INC_UARTREADBUFFER_H_
-#define INC_UARTREADBUFFER_H_
-
 #include <ReadBufferInterface.h>
 
 #include <cstdint>
+
+#ifndef INC_UARTREADBUFFER_H_
+#define INC_UARTREADBUFFER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 class UartReadBuffer : public ::EmbeddedProto::ReadBufferInterface {
     //! Store a maximum of MAX_SIZE bytes in the buffer
@@ -70,5 +74,9 @@ class UartReadBuffer : public ::EmbeddedProto::ReadBufferInterface {
     //! The number of bytes read from the data array.
     uint32_t read_index_;
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_UARTREADBUFFER_H_ */

@@ -50,6 +50,7 @@ add_executable(${PROJECT_NAME}
                             ${${PROJECT_NAME}_SOURCES}
                             $<TARGET_OBJECTS:system>
                             $<TARGET_OBJECTS:radio>
+                            $<TARGET_OBJECTS:protobuf>
                             $<TARGET_OBJECTS:peripherals>
                             $<TARGET_OBJECTS:${BOARD}>
 )
@@ -82,7 +83,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:${BOARD},INTERFACE_INCLUDE_DIRECTORIES>>
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
 
 target_link_libraries(${PROJECT_NAME} m)
