@@ -1,4 +1,5 @@
-import ctypes
+from protobuf import uart_messages_pb2
+from cobs import cobs
 
 ON = 1
 OFF = 0
@@ -16,79 +17,68 @@ LORA_CODINGRATE_7 = 3
 LORA_CODINGRATE_8 = 4
 
 
-class RadioTXConfig(ctypes.Structure):
-    _fields_ = (
-        ('tx_Modem', ctypes.c_uint8),
-        ('tx_Power', ctypes.c_int8),
-        ('tx_Fdev', ctypes.c_uint32),
-        ('tx_Bandwidth', ctypes.c_uint32),
-        ('tx_DataRate', ctypes.c_uint32),
-        ('tx_CodeRate', ctypes.c_uint8),
-        ('tx_PreambleLen', ctypes.c_uint16),
-        ('tx_FixLen', ctypes.c_uint8),
-        ('tx_CrcOn', ctypes.c_uint8),
-        ('tx_FreqHopOn', ctypes.c_uint8),
-        ('tx_HopPeriod', ctypes.c_uint8),
-        ('tx_IqInverted', ctypes.c_uint8),
-        ('tx_Timeout', ctypes.c_uint32),
-    )
+def print_buffer(prefix, buffer):
+    print(prefix, buffer.hex())
+
+
+class RadioConfig(object):
+    @staticmethod
+    def serialize(pb_msg, encode_cobs=True, debug=False):
+        command_str = pb_msg.SerializeToString()
+        l = len(command_str)
+        buffer = bytearray()
+        buffer.extend(l.to_bytes(1, byteorder='little'))
+        buffer.extend(command_str)
+
+        if encode_cobs:
+            if debug:
+                print_buffer("TX   ", buffer)
+            encoded_buffer = cobs.encode(buffer)
+            if debug:
+                print_buffer("TXe", encoded_buffer)
+            return encoded_buffer
+        else:
+            return buffer
 
     @staticmethod
-    def getDefaultLoRaConfig():
-        rfSettingsStruct = RadioTXConfig()
+    def getTxConfig():
+        config = uart_messages_pb2.SetConfig()
+        
+        data = config.TxConfig
+        data.Modem = MODEM_LORA
+        data.Power = 14
+        data.Fdev = 0
+        data.Bandwidth = LORA_BANDWIDTH_125KHZ
+        data.DataRate = 7
+        data.CodeRate = LORA_CODINGRATE_6
+        data.PreambleLen = 8
+        data.FixLen = OFF
+        data.CrcOn = OFF
+        data.FreqHopOn = OFF
+        data.HopPeriod = 0
+        data.IqInverted = OFF
+        data.Timeout = 0
 
-        rfSettingsStruct.tx_Modem = MODEM_LORA
-        rfSettingsStruct.tx_Power = 14
-        rfSettingsStruct.tx_Fdev = 0
-        rfSettingsStruct.tx_Bandwidth = LORA_BANDWIDTH_125KHZ
-        rfSettingsStruct.tx_DataRate = 7
-        rfSettingsStruct.tx_CodeRate = LORA_CODINGRATE_6
-        rfSettingsStruct.tx_PreambleLen = 8
-        rfSettingsStruct.tx_FixLen = OFF
-        rfSettingsStruct.tx_CrcOn = OFF
-        rfSettingsStruct.tx_FreqHopOn = OFF
-        rfSettingsStruct.tx_HopPeriod = 0
-        rfSettingsStruct.tx_IqInverted = OFF
-        rfSettingsStruct.tx_Timeout = 0
-
-        return rfSettingsStruct
-
-
-class RadioRXConfig(ctypes.Structure):
-    _fields_ = (
-        ('rx_Modem', ctypes.c_uint8),
-        ('rx_Bandwidth', ctypes.c_uint32),
-        ('rx_DataRate', ctypes.c_uint32),
-        ('rx_CodeRate', ctypes.c_uint8),
-        ('rx_BandwidthAfc', ctypes.c_uint32),
-        ('rx_PreambleLen', ctypes.c_uint16),
-        ('rx_SymbTimeout', ctypes.c_uint16),
-        ('rx_FixLen', ctypes.c_uint8),
-        ('rx_PayloadLen', ctypes.c_uint8),
-        ('rx_CrcOn', ctypes.c_uint8),
-        ('rx_FreqHopOn', ctypes.c_uint8),
-        ('rx_HopPeriod', ctypes.c_uint8),
-        ('rx_IqInverted', ctypes.c_uint8),
-        ('rx_RxContinuous', ctypes.c_uint8)
-    )
+        return config
 
     @staticmethod
-    def getDefaultLoRaConfig():
-        rfSettingsStruct = RadioRXConfig()
+    def getRxConfig():
+        config = uart_messages_pb2.SetConfig()
 
-        rfSettingsStruct.rx_Modem = MODEM_LORA
-        rfSettingsStruct.rx_Bandwidth = LORA_BANDWIDTH_125KHZ
-        rfSettingsStruct.rx_DataRate = 7
-        rfSettingsStruct.rx_CodeRate = LORA_CODINGRATE_6
-        rfSettingsStruct.rx_BandwidthAfc = 0
-        rfSettingsStruct.rx_PreambleLen = 8
-        rfSettingsStruct.rx_SymbTimeout = 5
-        rfSettingsStruct.rx_FixLen = OFF
-        rfSettingsStruct.rx_PayloadLen = 0
-        rfSettingsStruct.rx_CrcOn = OFF
-        rfSettingsStruct.rx_FreqHopOn = OFF
-        rfSettingsStruct.rx_HopPeriod = 0
-        rfSettingsStruct.rx_IqInverted = OFF
-        rfSettingsStruct.rx_RxContinuous = ON
+        data = config.RxConfig
+        data.Modem = MODEM_LORA
+        data.Bandwidth = LORA_BANDWIDTH_125KHZ
+        data.DataRate = 7
+        data.CodeRate = LORA_CODINGRATE_6
+        data.BandwidthAfc = 0
+        data.PreambleLen = 8
+        data.SymbTimeout = 5
+        data.FixLen = OFF
+        data.PayloadLen = 0
+        data.CrcOn = OFF
+        data.FreqHopOn = OFF
+        data.HopPeriod = 0
+        data.IqInverted = OFF
+        data.RxContinuous = ON
 
-        return rfSettingsStruct
+        return config

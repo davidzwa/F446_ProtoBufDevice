@@ -8,9 +8,9 @@
 #include "UartReadBuffer.h"
 #include "delay.h"
 #include "radio_config.h"
-#include "uart_messages.h"
 #include "tx.h"
 #include "uart.h"
+#include "uart_messages.h"
 #include "utils.h"
 
 #define PACKET_SIZE_LIMIT 256
@@ -19,8 +19,10 @@ uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
 
-UartReadBuffer read_buffer;
-Command received_command;
+UartReadBuffer readBuffer;
+SetConfig receivedConfig;
+RadioRxConfig radioRxConfig;
+RadioTxConfig radioTxConfig;
 
 extern Uart_t Uart2;
 Uart_t *uart = &Uart2;
@@ -68,13 +70,22 @@ void UartISR(UartNotifyId_t id) {
 
         uint8_t n_bytes = decodedBuffer[0];
         for (size_t i = 1; i <= n_bytes; i++) {
-            read_buffer.push(decodedBuffer[i]);
+            readBuffer.push(decodedBuffer[i]);
         }
 
-        auto deserialize_status = received_command.deserialize(read_buffer);
+        auto deserialize_status = receivedConfig.deserialize(readBuffer);
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            auto value = received_command.get_value();
-            auto button = received_command.get_button();
+            if (receivedConfig.has_RxConfig()) {
+                radioRxConfig = receivedConfig.get_RxConfig();
+            }
+
+            if (receivedConfig.has_TxConfig()) {
+                radioTxConfig = receivedConfig.get_TxConfig();
+            }
+
+            auto bw = radioTxConfig.get_Bandwidth();
+            auto dr = radioTxConfig.get_DataRate();
+
             UartSend(decodedBuffer, newSize);
         }
     }

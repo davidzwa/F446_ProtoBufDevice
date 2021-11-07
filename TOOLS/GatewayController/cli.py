@@ -8,8 +8,9 @@ import time
 from cobs import cobs
 from aioconsole import AsynchronousCli
 from serial_protocol import list_ports
-from radio_config import RadioRXConfig, RadioTXConfig
+from radio_config import RadioConfig
 from protobuf import uart_messages_pb2
+
 
 class CliParser(object):
     serial_protocol = None
@@ -26,41 +27,19 @@ class CliParser(object):
         encoded = cobs.encode(bytearray(b'Test2'))
         self.__send(encoded)
 
-    async def transmit_pb2(self, reader, writer):
-        message = uart_messages_pb2.Command()
-        message.value = 2
-        message.button = uart_messages_pb2.Command.Up
-
-        command_str = message.SerializeToString()
-        print("CMD", command_str)
-        l = len(command_str)
-        b = bytearray()
-        # Send the length byte
-        b.extend(l.to_bytes(1, byteorder='little'))
-        # Next send the actual data
-        b.extend(command_str)
-        print("PB", b)
-        safe_buffer = cobs.encode(b)
-        print("ENCODED", safe_buffer)
-        self.__send(safe_buffer)
-
     async def list_serial_ports(self, reader, writer):
         list_ports()
 
-    async def send_radio_config(self, reader, writer):
-        rx_settings = RadioRXConfig.getDefaultLoRaConfig()
-        print(rx_settings)
-        byte_data = bytes(rx_settings)
-        encoded_data = cobs.encode(byte_data)
-        print(
-            f"Configuring RX settings ({len(byte_data)} bytes, {len(encoded_data)} encoded)")
+    async def send_radio_tx_config(self, reader, writer):
+        payload = RadioConfig.getTxConfig()
+        encoded_buffer = RadioConfig.serialize(payload, True, True)
+        self.__send(encoded_buffer)
 
-        self.__send(encoded_data)
 
-        # time.sleep(1)
-        # print("\nConfiguring TX settings")
-        # radioTransmitSettings = RadioTXConfig.getDefaultLoRaConfig()
-        # self.__send(cobs.encode(radioTransmitSettings))
+    async def send_radio_rx_config(self, reader, writer):
+        payload = RadioConfig.getRxConfig()
+        encoded_buffer = RadioConfig.serialize(payload, True, True)
+        self.__send(encoded_buffer)
 
     async def switch_serial_port(self, reader, writer, port, device):
         print("switching")
@@ -84,9 +63,9 @@ class CliParser(object):
                 "g": (self.gateway, parser),
                 "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
-                "R": (self.send_radio_config, self.get_parser()),
                 "p": (self.switch_serial_port, parser),
-                "T": (self.transmit_pb2, self.get_parser())
+                "T": (self.send_radio_tx_config, self.get_parser()),
+                "R": (self.send_radio_rx_config, self.get_parser())
             },
             prog="gateway"
         )
