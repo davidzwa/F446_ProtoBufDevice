@@ -2,3 +2,7 @@ asyncio==3.4.3
 aioconsole==0.3.3
 cobs==1.1.4
 pyserial-asyncio==0.6.0
+
+protobuf==3.12.1
+pyserial==3.4
+six==1.15.0
