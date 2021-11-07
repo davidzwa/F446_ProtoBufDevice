@@ -60,6 +60,14 @@ void FifoInit( Fifo_t *fifo, uint8_t *buffer, uint16_t size );
 void FifoPush( Fifo_t *fifo, uint8_t data );
 
 /*!
+ * Peeks data from the FIFO
+ *
+ * \param [IN] fifo Pointer to the FIFO object
+ * \retval data     Data peeked from the FIFO
+ */
+uint8_t FifoPeek(Fifo_t *fifo);
+
+/*!
  * Pops data from the FIFO
  *
  * \param [IN] fifo Pointer to the FIFO object

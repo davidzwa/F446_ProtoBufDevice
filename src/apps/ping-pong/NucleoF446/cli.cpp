@@ -4,20 +4,98 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "COBS.h"
+#include "UartReadBuffer.h"
 #include "delay.h"
+#include "radio_config.h"
 #include "tx.h"
+#include "uart.h"
+#include "uart_messages.h"
 #include "utils.h"
 
-#define SERIAL_BUFSIZE 255
-#define SERIAL_END_BYTE '\r'
-
-uint8_t serialBuf[SERIAL_BUFSIZE];
-uint8_t bytesRead = 0;
-int8_t fixedMsgSize = -1;
-
+#define PACKET_SIZE_LIMIT 256
+uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
+uint16_t actualSize;
+uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
-int testMessageLeftOverCount = -1;
-SequenceCommand_t lastSequenceCommand;
+
+UartReadBuffer readBuffer;
+SetConfig receivedConfig;
+RadioRxConfig radioRxConfig;
+RadioTxConfig radioTxConfig;
+
+extern Uart_t Uart2;
+Uart_t *uart = &Uart2;
+void UartISR(UartNotifyId_t id);
+void UartSend(uint8_t *buffer, size_t length);
+
+void InitCli(bool withISR = true) {
+    if (withISR) {
+        Uart2.IrqNotify = UartISR;
+    }
+}
+
+uint16_t GetFifoRxLength() {
+    return uart->FifoRx.End - uart->FifoRx.Begin;
+}
+
+uint8_t GetLastChar() {
+    return uart->FifoRx.Data[uart->FifoRx.End];
+}
+
+void UartISR(UartNotifyId_t id) {
+    if (id == UART_NOTIFY_TX) {
+        return;
+    }
+
+    if (IsFifoEmpty(&uart->FifoRx)) {
+        // Illegal scenario
+        return;
+    }
+
+    if (GetFifoRxLength() > PACKET_SIZE_LIMIT) {
+        // Erroneous scenario
+        FifoFlush(&uart->FifoRx);
+    }
+
+    if (GetLastChar() == packetEndMarker) {
+        bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
+        if (result == 1) {
+            return;  // Error occurred
+        }
+
+        uint8_t packetSize = actualSize - 1;
+        uint8_t decodedBuffer[actualSize];
+        size_t newSize = COBS::decode(encodedBuffer, packetSize, decodedBuffer);
+
+        uint8_t n_bytes = decodedBuffer[0];
+        for (size_t i = 1; i <= n_bytes; i++) {
+            readBuffer.push(decodedBuffer[i]);
+        }
+
+        auto deserialize_status = receivedConfig.deserialize(readBuffer);
+        if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
+            if (receivedConfig.has_RxConfig()) {
+                radioRxConfig = receivedConfig.get_RxConfig();
+            }
+
+            if (receivedConfig.has_TxConfig()) {
+                radioTxConfig = receivedConfig.get_TxConfig();
+            }
+
+            auto bw = radioTxConfig.get_Bandwidth();
+            auto dr = radioTxConfig.get_DataRate();
+
+            UartSend(decodedBuffer, newSize);
+        }
+    }
+}
+
+void UartSend(uint8_t *buffer, size_t length) {
+    uint8_t encodedBuffer[length * 2];
+    size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
+    UartPutBuffer(uart, encodedBuffer, encodedSize);
+}
 
 #if defined(USE_MODEM_LORA)
 RadioTXConfig_t txConfig = {
@@ -49,11 +127,11 @@ RadioRXConfig_t rxConfig = {
     .HopPeriod = 0,
     .IqInverted = LORA_IQ_INVERSION_ON,
     .RxContinuous = true};
-#else  
-    #error "FSK is not yet working"
-#endif 
+#else
+#error "FSK is not yet working"
+#endif
 
-void InitRadioTXConfigLoRaDefault(RadioTXConfig_t* txConfig_p){
+void InitRadioTXConfigLoRaDefault(RadioTXConfig_t *txConfig_p) {
     txConfig_p->Modem = MODEM_LORA;
     txConfig_p->Power = TX_OUTPUT_POWER;
     txConfig_p->Fdev = 0;
@@ -63,13 +141,13 @@ void InitRadioTXConfigLoRaDefault(RadioTXConfig_t* txConfig_p){
     txConfig_p->PreambleLen = LORA_PREAMBLE_LENGTH;
     txConfig_p->FixLen = LORA_FIX_LENGTH_PAYLOAD_ON;
     txConfig_p->CrcOn = false,  // true;
-    txConfig_p->FreqHopOn = 0;
+        txConfig_p->FreqHopOn = 0;
     txConfig_p->HopPeriod = 0;
     txConfig_p->IqInverted = LORA_IQ_INVERSION_ON;
     txConfig_p->Timeout = true;
 }
 
-void InitRadioRXConfigLoRaDefault(RadioRXConfig_t* rxConfig_p){
+void InitRadioRXConfigLoRaDefault(RadioRXConfig_t *rxConfig_p) {
     rxConfig_p->Modem = MODEM_LORA;
     rxConfig_p->Bandwidth = LORA_BANDWIDTH;
     rxConfig_p->DataRate = LORA_SPREADING_FACTOR;
@@ -79,7 +157,7 @@ void InitRadioRXConfigLoRaDefault(RadioRXConfig_t* rxConfig_p){
     rxConfig_p->FixLen = LORA_FIX_LENGTH_PAYLOAD_ON;
     rxConfig_p->PayloadLen = 0;
     rxConfig_p->CrcOn = false,  // true;
-    rxConfig_p->FreqHopOn = 0;
+        rxConfig_p->FreqHopOn = 0;
     rxConfig_p->HopPeriod = 0;
     rxConfig_p->IqInverted = LORA_IQ_INVERSION_ON;
     rxConfig_p->RxContinuous = true;
@@ -111,39 +189,38 @@ void ApplyRadioConfig() {
 void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead) {
     uint8_t i = 1;
 
-    txConfig.Modem           = (RadioModems_t) serialBuf[i++];
-    txConfig.Power           = serialBuf[i++];
-    txConfig.Fdev            = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    txConfig.Bandwidth       = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    txConfig.DataRate        = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    txConfig.CodeRate        = serialBuf[i++];
-    txConfig.PreambleLen     = (serialBuf[i++] << 8) + (serialBuf[i++]);
-    txConfig.FixLen          = serialBuf[i++] > 0;
-    txConfig.CrcOn           = serialBuf[i++] > 0;
-    txConfig.FreqHopOn       = serialBuf[i++] > 0;
-    txConfig.HopPeriod       = serialBuf[i++];
-    txConfig.IqInverted      = serialBuf[i++] > 0;
-    txConfig.Timeout         = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    txConfig.Modem = (RadioModems_t)serialBuf[i++];
+    txConfig.Power = serialBuf[i++];
+    txConfig.Fdev = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    txConfig.Bandwidth = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    txConfig.DataRate = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    txConfig.CodeRate = serialBuf[i++];
+    txConfig.PreambleLen = (serialBuf[i++] << 8) + (serialBuf[i++]);
+    txConfig.FixLen = serialBuf[i++] > 0;
+    txConfig.CrcOn = serialBuf[i++] > 0;
+    txConfig.FreqHopOn = serialBuf[i++] > 0;
+    txConfig.HopPeriod = serialBuf[i++];
+    txConfig.IqInverted = serialBuf[i++] > 0;
+    txConfig.Timeout = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
 
-    rxConfig.Modem           = (RadioModems_t) serialBuf[i++];
-    rxConfig.Bandwidth       = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    rxConfig.DataRate        = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    rxConfig.CodeRate        = serialBuf[i++];
-    rxConfig.BandwidthAfc    = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
-    rxConfig.PreambleLen     = (serialBuf[i++] << 8) + (serialBuf[i++]);
-    rxConfig.FixLen          = serialBuf[i++] > 0;
-    rxConfig.PayloadLen      = serialBuf[i++];
-    rxConfig.CrcOn           = serialBuf[i++] > 0;
-    rxConfig.FreqHopOn       = serialBuf[i++] > 0;
-    rxConfig.HopPeriod       = serialBuf[i++];
-    rxConfig.IqInverted      = serialBuf[i++] > 0;
-    rxConfig.RxContinuous    = serialBuf[i++] > 0;
+    rxConfig.Modem = (RadioModems_t)serialBuf[i++];
+    rxConfig.Bandwidth = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    rxConfig.DataRate = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    rxConfig.CodeRate = serialBuf[i++];
+    rxConfig.BandwidthAfc = (serialBuf[i++] << 24) + (serialBuf[i++] << 16) + (serialBuf[i++] << 8) + (serialBuf[i++]);
+    rxConfig.PreambleLen = (serialBuf[i++] << 8) + (serialBuf[i++]);
+    rxConfig.FixLen = serialBuf[i++] > 0;
+    rxConfig.PayloadLen = serialBuf[i++];
+    rxConfig.CrcOn = serialBuf[i++] > 0;
+    rxConfig.FreqHopOn = serialBuf[i++] > 0;
+    rxConfig.HopPeriod = serialBuf[i++];
+    rxConfig.IqInverted = serialBuf[i++] > 0;
+    rxConfig.RxContinuous = serialBuf[i++] > 0;
 
     ApplyRadioConfig();
 
-    printf("[CLI] %d, %d, %lu, %lu, %lu, %d, %d, %d, %d, %d, %d, %d, %lu, %d, %ld, %ld, %d, %ld, %d, %d, %d, %d, %d, %d, %d, %d",txConfig.Modem,       
-txConfig.Power, txConfig.Fdev, txConfig.Bandwidth, txConfig.DataRate, txConfig.CodeRate, txConfig.PreambleLen, txConfig.FixLen, txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout, rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
-
+    printf("[CLI] %d, %d, %lu, %lu, %lu, %d, %d, %d, %d, %d, %d, %d, %lu, %d, %ld, %ld, %d, %ld, %d, %d, %d, %d, %d, %d, %d, %d", txConfig.Modem,
+           txConfig.Power, txConfig.Fdev, txConfig.Bandwidth, txConfig.DataRate, txConfig.CodeRate, txConfig.PreambleLen, txConfig.FixLen, txConfig.CrcOn, txConfig.FreqHopOn, txConfig.HopPeriod, txConfig.IqInverted, txConfig.Timeout, rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
 }
 
 void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect) {
@@ -182,75 +259,37 @@ void ApplyConfigIfPending() {
 }
 
 void ParseCliCMD() {
-    printf("[CLI] command %c\n\r", serialBuf[0]);
+    //     printf("[CLI] command %c\n\r", serialBuf[0]);
 
-    switch (serialBuf[0]) {
-        // Set Spreading factor
-        case 'S':
-            if (bytesRead > 1) {
-                ProcessSpreadingFactorMessage(serialBuf[1], true);
-            }
-            break;
+    //     switch (serialBuf[0]) {
+    //         // Set Spreading factor
+    //         case 'S':
+    //             if (bytesRead > 1) {
+    //                 ProcessSpreadingFactorMessage(serialBuf[1], true);
+    //             }
+    //             break;
 
-        // Ping
-        case 'P':
-            TxPing();
-            break;
+    //         // Ping
+    //         case 'P':
+    //             TxPing();
+    //             break;
 
-        // Send sequence test cmd
-        case 'T':
-            TxSequenceCommand((uint8_t *)serialBuf, bytesRead);
-            break;
+    //         // Send sequence test cmd
+    //         case 'T':
+    //             TxSequenceCommand((uint8_t *)serialBuf, bytesRead);
+    //             break;
 
-        // Send RF config packet
-        case 'F':
-            TxNewRFSettings((uint8_t *) serialBuf, bytesRead);
-            break;
+    //         // Send RF config packet
+    //         case 'F':
+    //             TxNewRFSettings((uint8_t *)serialBuf, bytesRead);
+    //             break;
 
-        case 'G':
-            SetNewRFSettings((uint8_t *) serialBuf, bytesRead);
-            break;
+    //         case 'G':
+    //             SetNewRFSettings((uint8_t *)serialBuf, bytesRead);
+    //             break;
 
-        default:
-            printf("[cli] %c New command who this??", serialBuf[0]);
-            break;
-    }
-}
-
-void CliProcess(Uart_t *uart) {
-    uint8_t byte;
-
-    // Try to get new byte from uart buffer
-    if (UartGetChar(uart, &byte) == 0) {
-        if (bytesRead < SERIAL_BUFSIZE) {
-            // Add new byte to buffer
-            serialBuf[bytesRead++] = byte;
-
-            if(bytesRead == 1 && serialBuf[0] == 'G'){
-                fixedMsgSize = 66;
-            }
-
-            fixedMsgSize--;
-
-            // printf("[cli] uart received: %d, %d\n\r", byte, fixedMsgSize);
-            // printf("[cli] uart received: %d\n\r", byte);
-            printf("[cli] fixedMsgSize: 0x%02X\n\r", fixedMsgSize);
-
-
-            // Look for end byte
-            if ((fixedMsgSize == -1 && byte == SERIAL_END_BYTE) || fixedMsgSize == 0) {
-                // Parse msg
-                if (bytesRead > 1) {
-                    ParseCliCMD();
-                }
-
-                // Reset serial buffer
-                bytesRead = 0;
-                fixedMsgSize = -1;
-            }
-        } else {
-            // ERROR serial overflow
-            bytesRead = 0;
-        }
-    }
+    //         default:
+    //             printf("[cli] %c New command who this??", serialBuf[0]);
+    //             break;
+    //     }
 }

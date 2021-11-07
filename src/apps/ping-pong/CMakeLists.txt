@@ -46,16 +46,11 @@ set_property(CACHE MODULATION PROPERTY STRINGS ${MODEM_LIST})
 
 file(GLOB ${PROJECT_NAME}_SOURCES "${CMAKE_CURRENT_LIST_DIR}/${BOARD}/*")
 
-# Debug c++ features
-# get_property(known_features GLOBAL PROPERTY CMAKE_CXX_KNOWN_FEATURES)
-# foreach(i ${known_features})
-#   message("${i}")
-# endforeach()
-
 add_executable(${PROJECT_NAME}
                             ${${PROJECT_NAME}_SOURCES}
                             $<TARGET_OBJECTS:system>
                             $<TARGET_OBJECTS:radio>
+                            $<TARGET_OBJECTS:protobuf>
                             $<TARGET_OBJECTS:peripherals>
                             $<TARGET_OBJECTS:${BOARD}>
 )
@@ -83,12 +78,13 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:system,INTERFACE_INCLUDE_DIRECTORIES>>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:radio,INTERFACE_INCLUDE_DIRECTORIES>>
+    $<BUILD_INTERFACE:$<TARGET_PROPERTY:protobuf,INTERFACE_INCLUDE_DIRECTORIES>>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:peripherals,INTERFACE_INCLUDE_DIRECTORIES>>
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:${BOARD},INTERFACE_INCLUDE_DIRECTORIES>>
 )
 
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 
 target_link_libraries(${PROJECT_NAME} m)
 

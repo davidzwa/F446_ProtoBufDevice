@@ -1,0 +1,49 @@
+// This file listes the protobuffer messages used in the example to make a simple uart communcation protocol.
+// Commands are send from the desktop to the microctontroller which in turn sends a reply.
+
+syntax = "proto3";
+
+enum RadioModems {
+    MODEM_FSK = 0;
+    MODEM_LORA = 1;
+}
+
+message RadioRxConfig 
+{
+  RadioModems Modem = 1;
+  uint32 Bandwidth = 2;
+  uint32 DataRate = 3;
+  uint32 CodeRate = 4;
+  uint32 BandwidthAfc = 5;
+  uint32 PreambleLen = 6;
+  uint32 SymbTimeout = 7;
+  bool FixLen = 8;
+  uint32 PayloadLen = 9;
+  bool CrcOn = 10;
+  bool FreqHopOn = 11;
+  uint32 HopPeriod = 12;
+  bool IqInverted = 13;
+  bool RxContinuous = 14;
+}
+
+message RadioTxConfig 
+{
+  RadioModems Modem = 1;
+  uint32 Power = 2;
+  uint32 Fdev = 3;
+  uint32 Bandwidth = 4;
+  uint32 DataRate = 5;
+  uint32 CodeRate = 6;
+  uint32 PreambleLen = 7;
+  bool FixLen = 8;
+  bool CrcOn = 9;
+  bool FreqHopOn = 10;
+  uint32 HopPeriod = 11;
+  bool IqInverted = 12;
+  uint32 Timeout = 13;
+}
+
+message SetConfig {
+  optional RadioRxConfig RxConfig = 1;
+  optional RadioTxConfig TxConfig = 2;
+}
