@@ -3,7 +3,7 @@
 #ifndef RADIO__H__
 #define RADIO__H__
 
-typedef struct __attribute__((__packed__)) RadioTXConfig_s {
+typedef struct RadioTXConfig_s {
     RadioModems_t Modem;
     int8_t Power;
     uint32_t Fdev;  // FSK
@@ -19,7 +19,7 @@ typedef struct __attribute__((__packed__)) RadioTXConfig_s {
     uint32_t Timeout;
 } RadioTXConfig_t;
 
-typedef struct __attribute__((__packed__)) RadioRXConfig_s {
+typedef struct RadioRXConfig_s {
     RadioModems_t Modem;
     uint32_t Bandwidth;
     uint32_t DataRate;
