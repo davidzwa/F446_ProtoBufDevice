@@ -18,9 +18,10 @@ uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
+const size_t offset = 1;
 
 UartReadBuffer readBuffer;
-SetConfig receivedConfig;
+Command command;
 RadioRxConfig radioRxConfig;
 RadioTxConfig radioTxConfig;
 
@@ -64,29 +65,26 @@ void UartISR(UartNotifyId_t id) {
             return;  // Error occurred
         }
 
-        uint8_t packetSize = actualSize - 1;
+        // Remove length and type bytes
+        uint8_t packetSize = actualSize - offset;
         uint8_t decodedBuffer[actualSize];
         size_t newSize = COBS::decode(encodedBuffer, packetSize, decodedBuffer);
 
         uint8_t n_bytes = decodedBuffer[0];
-        for (size_t i = 1; i <= n_bytes; i++) {
+        for (size_t i = offset; i <= n_bytes; i++) {
             readBuffer.push(decodedBuffer[i]);
         }
 
-        auto deserialize_status = receivedConfig.deserialize(readBuffer);
+        auto deserialize_status = command.deserialize(readBuffer);
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            if (receivedConfig.has_RxConfig()) {
-                radioRxConfig = receivedConfig.get_RxConfig();
+            if (command.has_RxConfig()) {
+                printf("RX%ld\n", (uint32_t)command.get_which_Body());
+                radioTxConfig = command.get_TxConfig();
             }
-
-            if (receivedConfig.has_TxConfig()) {
-                radioTxConfig = receivedConfig.get_TxConfig();
+            if (command.has_TxConfig()) {
+                printf("TX%ld\n", (uint32_t)command.get_which_Body());
+                radioRxConfig = command.get_RxConfig();
             }
-
-            auto bw = radioTxConfig.get_Bandwidth();
-            auto dr = radioTxConfig.get_DataRate();
-
-            UartSend(decodedBuffer, newSize);
         }
     }
 }

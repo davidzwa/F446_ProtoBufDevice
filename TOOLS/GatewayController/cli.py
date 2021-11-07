@@ -31,14 +31,11 @@ class CliParser(object):
         list_ports()
 
     async def send_radio_tx_config(self, reader, writer):
-        payload = RadioConfig.getTxConfig()
-        encoded_buffer = RadioConfig.serialize(payload, True, True)
+        encoded_buffer = RadioConfig.getTxConfig()
         self.__send(encoded_buffer)
 
-
     async def send_radio_rx_config(self, reader, writer):
-        payload = RadioConfig.getRxConfig()
-        encoded_buffer = RadioConfig.serialize(payload, True, True)
+        encoded_buffer = RadioConfig.getRxConfig()
         self.__send(encoded_buffer)
 
     async def switch_serial_port(self, reader, writer, port, device):

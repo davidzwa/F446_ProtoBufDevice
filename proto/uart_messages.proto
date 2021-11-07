@@ -43,7 +43,9 @@ message RadioTxConfig
   uint32 Timeout = 13;
 }
 
-message SetConfig {
-  optional RadioRxConfig RxConfig = 1;
-  optional RadioTxConfig TxConfig = 2;
+message Command {
+    oneof Body {
+        RadioRxConfig RxConfig = 1;
+        RadioTxConfig TxConfig = 2;
+    }
 }

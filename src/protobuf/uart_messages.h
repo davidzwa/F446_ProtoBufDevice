@@ -877,23 +877,59 @@ class RadioTxConfig final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class SetConfig final: public ::EmbeddedProto::MessageInterface
+class Command final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    SetConfig() = default;
-    SetConfig(const SetConfig& rhs )
+    Command() = default;
+    Command(const Command& rhs )
     {
-      set_RxConfig(rhs.get_RxConfig());
-      set_TxConfig(rhs.get_TxConfig());
+      if(rhs.get_which_Body() != which_Body_)
+      {
+        // First delete the old object in the oneof.
+        clear_Body();
+      }
+
+      switch(rhs.get_which_Body())
+      {
+        case id::RXCONFIG:
+          set_RxConfig(rhs.get_RxConfig());
+          break;
+
+        case id::TXCONFIG:
+          set_TxConfig(rhs.get_TxConfig());
+          break;
+
+        default:
+          break;
+      }
+
     }
 
-    SetConfig(const SetConfig&& rhs ) noexcept
+    Command(const Command&& rhs ) noexcept
     {
-      set_RxConfig(rhs.get_RxConfig());
-      set_TxConfig(rhs.get_TxConfig());
+      if(rhs.get_which_Body() != which_Body_)
+      {
+        // First delete the old object in the oneof.
+        clear_Body();
+      }
+
+      switch(rhs.get_which_Body())
+      {
+        case id::RXCONFIG:
+          set_RxConfig(rhs.get_RxConfig());
+          break;
+
+        case id::TXCONFIG:
+          set_TxConfig(rhs.get_TxConfig());
+          break;
+
+        default:
+          break;
+      }
+
     }
 
-    ~SetConfig() override = default;
+    ~Command() override = default;
 
     enum class id : uint32_t
     {
@@ -902,87 +938,159 @@ class SetConfig final: public ::EmbeddedProto::MessageInterface
       TXCONFIG = 2
     };
 
-    SetConfig& operator=(const SetConfig& rhs)
+    Command& operator=(const Command& rhs)
     {
-      set_RxConfig(rhs.get_RxConfig());
-      set_TxConfig(rhs.get_TxConfig());
+      if(rhs.get_which_Body() != which_Body_)
+      {
+        // First delete the old object in the oneof.
+        clear_Body();
+      }
+
+      switch(rhs.get_which_Body())
+      {
+        case id::RXCONFIG:
+          set_RxConfig(rhs.get_RxConfig());
+          break;
+
+        case id::TXCONFIG:
+          set_TxConfig(rhs.get_TxConfig());
+          break;
+
+        default:
+          break;
+      }
+
       return *this;
     }
 
-    SetConfig& operator=(const SetConfig&& rhs) noexcept
+    Command& operator=(const Command&& rhs) noexcept
     {
-      set_RxConfig(rhs.get_RxConfig());
-      set_TxConfig(rhs.get_TxConfig());
+      if(rhs.get_which_Body() != which_Body_)
+      {
+        // First delete the old object in the oneof.
+        clear_Body();
+      }
+
+      switch(rhs.get_which_Body())
+      {
+        case id::RXCONFIG:
+          set_RxConfig(rhs.get_RxConfig());
+          break;
+
+        case id::TXCONFIG:
+          set_TxConfig(rhs.get_TxConfig());
+          break;
+
+        default:
+          break;
+      }
+
       return *this;
     }
+
+    id get_which_Body() const { return which_Body_; }
 
     inline bool has_RxConfig() const
     {
-      return 0 != (presence::mask(presence::fields::RXCONFIG) & presence_[presence::index(presence::fields::RXCONFIG)]);
+      return id::RXCONFIG == which_Body_;
     }
     inline void clear_RxConfig()
     {
-      presence_[presence::index(presence::fields::RXCONFIG)] &= ~(presence::mask(presence::fields::RXCONFIG));
-      RxConfig_.clear();
+      if(id::RXCONFIG == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.RxConfig_.~RadioRxConfig();
+      }
     }
     inline void set_RxConfig(const RadioRxConfig& value)
     {
-      presence_[presence::index(presence::fields::RXCONFIG)] |= presence::mask(presence::fields::RXCONFIG);
-      RxConfig_ = value;
+      if(id::RXCONFIG != which_Body_)
+      {
+        init_Body(id::RXCONFIG);
+      }
+      Body_.RxConfig_ = value;
     }
     inline void set_RxConfig(const RadioRxConfig&& value)
     {
-      presence_[presence::index(presence::fields::RXCONFIG)] |= presence::mask(presence::fields::RXCONFIG);
-      RxConfig_ = value;
+      if(id::RXCONFIG != which_Body_)
+      {
+        init_Body(id::RXCONFIG);
+      }
+      Body_.RxConfig_ = value;
     }
     inline RadioRxConfig& mutable_RxConfig()
     {
-      presence_[presence::index(presence::fields::RXCONFIG)] |= presence::mask(presence::fields::RXCONFIG);
-      return RxConfig_;
+      if(id::RXCONFIG != which_Body_)
+      {
+        init_Body(id::RXCONFIG);
+      }
+      return Body_.RxConfig_;
     }
-    inline const RadioRxConfig& get_RxConfig() const { return RxConfig_; }
-    inline const RadioRxConfig& RxConfig() const { return RxConfig_; }
+    inline const RadioRxConfig& get_RxConfig() const { return Body_.RxConfig_; }
+    inline const RadioRxConfig& RxConfig() const { return Body_.RxConfig_; }
 
     inline bool has_TxConfig() const
     {
-      return 0 != (presence::mask(presence::fields::TXCONFIG) & presence_[presence::index(presence::fields::TXCONFIG)]);
+      return id::TXCONFIG == which_Body_;
     }
     inline void clear_TxConfig()
     {
-      presence_[presence::index(presence::fields::TXCONFIG)] &= ~(presence::mask(presence::fields::TXCONFIG));
-      TxConfig_.clear();
+      if(id::TXCONFIG == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.TxConfig_.~RadioTxConfig();
+      }
     }
     inline void set_TxConfig(const RadioTxConfig& value)
     {
-      presence_[presence::index(presence::fields::TXCONFIG)] |= presence::mask(presence::fields::TXCONFIG);
-      TxConfig_ = value;
+      if(id::TXCONFIG != which_Body_)
+      {
+        init_Body(id::TXCONFIG);
+      }
+      Body_.TxConfig_ = value;
     }
     inline void set_TxConfig(const RadioTxConfig&& value)
     {
-      presence_[presence::index(presence::fields::TXCONFIG)] |= presence::mask(presence::fields::TXCONFIG);
-      TxConfig_ = value;
+      if(id::TXCONFIG != which_Body_)
+      {
+        init_Body(id::TXCONFIG);
+      }
+      Body_.TxConfig_ = value;
     }
     inline RadioTxConfig& mutable_TxConfig()
     {
-      presence_[presence::index(presence::fields::TXCONFIG)] |= presence::mask(presence::fields::TXCONFIG);
-      return TxConfig_;
+      if(id::TXCONFIG != which_Body_)
+      {
+        init_Body(id::TXCONFIG);
+      }
+      return Body_.TxConfig_;
     }
-    inline const RadioTxConfig& get_TxConfig() const { return TxConfig_; }
-    inline const RadioTxConfig& TxConfig() const { return TxConfig_; }
+    inline const RadioTxConfig& get_TxConfig() const { return Body_.TxConfig_; }
+    inline const RadioTxConfig& TxConfig() const { return Body_.TxConfig_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if(has_RxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      switch(which_Body_)
       {
-        return_value = RxConfig_.serialize_with_id(static_cast<uint32_t>(id::RXCONFIG), buffer, true);
-      }
+        case id::RXCONFIG:
+          if(has_RxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.RxConfig_.serialize_with_id(static_cast<uint32_t>(id::RXCONFIG), buffer, true);
+          }
+          break;
 
-      if(has_TxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = TxConfig_.serialize_with_id(static_cast<uint32_t>(id::TXCONFIG), buffer, true);
+        case id::TXCONFIG:
+          if(has_TxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.TxConfig_.serialize_with_id(static_cast<uint32_t>(id::TXCONFIG), buffer, true);
+          }
+          break;
+
+        default:
+          break;
       }
 
       return return_value;
@@ -1002,13 +1110,13 @@ class SetConfig final: public ::EmbeddedProto::MessageInterface
         switch(id_tag)
         {
           case id::RXCONFIG:
-            presence_[presence::index(presence::fields::RXCONFIG)] |= presence::mask(presence::fields::RXCONFIG);
-            return_value = RxConfig_.deserialize_check_type(buffer, wire_type);
+            return_value = deserialize_Body(id::RXCONFIG, Body_.RxConfig_, buffer, wire_type);
+
             break;
 
           case id::TXCONFIG:
-            presence_[presence::index(presence::fields::TXCONFIG)] |= presence::mask(presence::fields::TXCONFIG);
-            return_value = TxConfig_.deserialize_check_type(buffer, wire_type);
+            return_value = deserialize_Body(id::TXCONFIG, Body_.TxConfig_, buffer, wire_type);
+
             break;
 
           case id::NOT_SET:
@@ -1040,51 +1148,83 @@ class SetConfig final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_RxConfig();
-      clear_TxConfig();
+      clear_Body();
 
     }
 
     private:
 
-      // Define constants for tracking the presence of fields.
-      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
-      struct presence
+
+
+      id which_Body_ = id::NOT_SET;
+      union Body
       {
-        // An enumeration with all the fields for which presence has to be tracked.
-        enum class fields : uint32_t
-        {
-          RXCONFIG,
-          TXCONFIG
-        };
-
-        // The number of fields for which presence has to be tracked.
-        static constexpr uint32_t N_FIELDS = 2;
-
-        // Which type are we using to track presence.
-        using TYPE = uint32_t;
-
-        // How many bits are there in the presence type.
-        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
-
-        // How many variables of TYPE do we need to bit mask all presence fields.
-        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
-
-        // Obtain the index of a given field in the presence array.
-        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
-
-        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
-        static constexpr TYPE mask(const fields& field)
-        {
-          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
-        }
+        Body() {}
+        ~Body() {}
+        RadioRxConfig RxConfig_;
+        RadioTxConfig TxConfig_;
       };
+      Body Body_;
 
-      // Create an array in which the presence flags are stored.
-      typename presence::TYPE presence_[presence::SIZE] = {0};
+      void init_Body(const id field_id)
+      {
+        if(id::NOT_SET != which_Body_)
+        {
+          // First delete the old object in the oneof.
+          clear_Body();
+        }
 
-      RadioRxConfig RxConfig_;
-      RadioTxConfig TxConfig_;
+        // C++11 unions only support nontrivial members when you explicitly call the placement new statement.
+        switch(field_id)
+        {
+          case id::RXCONFIG:
+            new(&Body_.RxConfig_) RadioRxConfig;
+            which_Body_ = id::RXCONFIG;
+            break;
+
+          case id::TXCONFIG:
+            new(&Body_.TxConfig_) RadioTxConfig;
+            which_Body_ = id::TXCONFIG;
+            break;
+
+          default:
+            break;
+         }
+
+         which_Body_ = field_id;
+      }
+
+      void clear_Body()
+      {
+        switch(which_Body_)
+        {
+          case id::RXCONFIG:
+            Body_.RxConfig_.~RadioRxConfig(); // NOSONAR Unions require this.
+            break;
+          case id::TXCONFIG:
+            Body_.TxConfig_.~RadioTxConfig(); // NOSONAR Unions require this.
+            break;
+          default:
+            break;
+        }
+        which_Body_ = id::NOT_SET;
+      }
+
+      ::EmbeddedProto::Error deserialize_Body(const id field_id, ::EmbeddedProto::Field& field,
+                                    ::EmbeddedProto::ReadBufferInterface& buffer,
+                                    const ::EmbeddedProto::WireFormatter::WireType wire_type)
+      {
+        if(field_id != which_Body_)
+        {
+          init_Body(field_id);
+        }
+        ::EmbeddedProto::Error return_value = field.deserialize_check_type(buffer, wire_type);
+        if(::EmbeddedProto::Error::NO_ERRORS != return_value)
+        {
+          clear_Body();
+        }
+        return return_value;
+      }
 
 };
 

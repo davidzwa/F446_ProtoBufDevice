@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13uart_messages.proto\"\xa6\x02\n\rRadioRxConfig\x12\x1b\n\x05Modem\x18\x01 \x01(\x0e\x32\x0c.RadioModems\x12\x11\n\tBandwidth\x18\x02 \x01(\r\x12\x10\n\x08\x44\x61taRate\x18\x03 \x01(\r\x12\x10\n\x08\x43odeRate\x18\x04 \x01(\r\x12\x14\n\x0c\x42\x61ndwidthAfc\x18\x05 \x01(\r\x12\x13\n\x0bPreambleLen\x18\x06 \x01(\r\x12\x13\n\x0bSymbTimeout\x18\x07 \x01(\r\x12\x0e\n\x06\x46ixLen\x18\x08 \x01(\x08\x12\x12\n\nPayloadLen\x18\t \x01(\r\x12\r\n\x05\x43rcOn\x18\n \x01(\x08\x12\x11\n\tFreqHopOn\x18\x0b \x01(\x08\x12\x11\n\tHopPeriod\x18\x0c \x01(\r\x12\x12\n\nIqInverted\x18\r \x01(\x08\x12\x14\n\x0cRxContinuous\x18\x0e \x01(\x08\"\xff\x01\n\rRadioTxConfig\x12\x1b\n\x05Modem\x18\x01 \x01(\x0e\x32\x0c.RadioModems\x12\r\n\x05Power\x18\x02 \x01(\r\x12\x0c\n\x04\x46\x64\x65v\x18\x03 \x01(\r\x12\x11\n\tBandwidth\x18\x04 \x01(\r\x12\x10\n\x08\x44\x61taRate\x18\x05 \x01(\r\x12\x10\n\x08\x43odeRate\x18\x06 \x01(\r\x12\x13\n\x0bPreambleLen\x18\x07 \x01(\r\x12\x0e\n\x06\x46ixLen\x18\x08 \x01(\x08\x12\r\n\x05\x43rcOn\x18\t \x01(\x08\x12\x11\n\tFreqHopOn\x18\n \x01(\x08\x12\x11\n\tHopPeriod\x18\x0b \x01(\r\x12\x12\n\nIqInverted\x18\x0c \x01(\x08\x12\x0f\n\x07Timeout\x18\r \x01(\r\"s\n\tSetConfig\x12%\n\x08RxConfig\x18\x01 \x01(\x0b\x32\x0e.RadioRxConfigH\x00\x88\x01\x01\x12%\n\x08TxConfig\x18\x02 \x01(\x0b\x32\x0e.RadioTxConfigH\x01\x88\x01\x01\x42\x0b\n\t_RxConfigB\x0b\n\t_TxConfig*,\n\x0bRadioModems\x12\r\n\tMODEM_FSK\x10\x00\x12\x0e\n\nMODEM_LORA\x10\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13uart_messages.proto\"\xa6\x02\n\rRadioRxConfig\x12\x1b\n\x05Modem\x18\x01 \x01(\x0e\x32\x0c.RadioModems\x12\x11\n\tBandwidth\x18\x02 \x01(\r\x12\x10\n\x08\x44\x61taRate\x18\x03 \x01(\r\x12\x10\n\x08\x43odeRate\x18\x04 \x01(\r\x12\x14\n\x0c\x42\x61ndwidthAfc\x18\x05 \x01(\r\x12\x13\n\x0bPreambleLen\x18\x06 \x01(\r\x12\x13\n\x0bSymbTimeout\x18\x07 \x01(\r\x12\x0e\n\x06\x46ixLen\x18\x08 \x01(\x08\x12\x12\n\nPayloadLen\x18\t \x01(\r\x12\r\n\x05\x43rcOn\x18\n \x01(\x08\x12\x11\n\tFreqHopOn\x18\x0b \x01(\x08\x12\x11\n\tHopPeriod\x18\x0c \x01(\r\x12\x12\n\nIqInverted\x18\r \x01(\x08\x12\x14\n\x0cRxContinuous\x18\x0e \x01(\x08\"\xff\x01\n\rRadioTxConfig\x12\x1b\n\x05Modem\x18\x01 \x01(\x0e\x32\x0c.RadioModems\x12\r\n\x05Power\x18\x02 \x01(\r\x12\x0c\n\x04\x46\x64\x65v\x18\x03 \x01(\r\x12\x11\n\tBandwidth\x18\x04 \x01(\r\x12\x10\n\x08\x44\x61taRate\x18\x05 \x01(\r\x12\x10\n\x08\x43odeRate\x18\x06 \x01(\r\x12\x13\n\x0bPreambleLen\x18\x07 \x01(\r\x12\x0e\n\x06\x46ixLen\x18\x08 \x01(\x08\x12\r\n\x05\x43rcOn\x18\t \x01(\x08\x12\x11\n\tFreqHopOn\x18\n \x01(\x08\x12\x11\n\tHopPeriod\x18\x0b \x01(\r\x12\x12\n\nIqInverted\x18\x0c \x01(\x08\x12\x0f\n\x07Timeout\x18\r \x01(\r\"Y\n\x07\x43ommand\x12\"\n\x08RxConfig\x18\x01 \x01(\x0b\x32\x0e.RadioRxConfigH\x00\x12\"\n\x08TxConfig\x18\x02 \x01(\x0b\x32\x0e.RadioTxConfigH\x00\x42\x06\n\x04\x42ody*,\n\x0bRadioModems\x12\r\n\tMODEM_FSK\x10\x00\x12\x0e\n\nMODEM_LORA\x10\x01\x62\x06proto3')
 
 _RADIOMODEMS = DESCRIPTOR.enum_types_by_name['RadioModems']
 RadioModems = enum_type_wrapper.EnumTypeWrapper(_RADIOMODEMS)
@@ -25,7 +25,7 @@ MODEM_LORA = 1
 
 _RADIORXCONFIG = DESCRIPTOR.message_types_by_name['RadioRxConfig']
 _RADIOTXCONFIG = DESCRIPTOR.message_types_by_name['RadioTxConfig']
-_SETCONFIG = DESCRIPTOR.message_types_by_name['SetConfig']
+_COMMAND = DESCRIPTOR.message_types_by_name['Command']
 RadioRxConfig = _reflection.GeneratedProtocolMessageType('RadioRxConfig', (_message.Message,), {
   'DESCRIPTOR' : _RADIORXCONFIG,
   '__module__' : 'uart_messages_pb2'
@@ -40,22 +40,22 @@ RadioTxConfig = _reflection.GeneratedProtocolMessageType('RadioTxConfig', (_mess
   })
 _sym_db.RegisterMessage(RadioTxConfig)
 
-SetConfig = _reflection.GeneratedProtocolMessageType('SetConfig', (_message.Message,), {
-  'DESCRIPTOR' : _SETCONFIG,
+Command = _reflection.GeneratedProtocolMessageType('Command', (_message.Message,), {
+  'DESCRIPTOR' : _COMMAND,
   '__module__' : 'uart_messages_pb2'
-  # @@protoc_insertion_point(class_scope:SetConfig)
+  # @@protoc_insertion_point(class_scope:Command)
   })
-_sym_db.RegisterMessage(SetConfig)
+_sym_db.RegisterMessage(Command)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _RADIOMODEMS._serialized_start=695
-  _RADIOMODEMS._serialized_end=739
+  _RADIOMODEMS._serialized_start=669
+  _RADIOMODEMS._serialized_end=713
   _RADIORXCONFIG._serialized_start=24
   _RADIORXCONFIG._serialized_end=318
   _RADIOTXCONFIG._serialized_start=321
   _RADIOTXCONFIG._serialized_end=576
-  _SETCONFIG._serialized_start=578
-  _SETCONFIG._serialized_end=693
+  _COMMAND._serialized_start=578
+  _COMMAND._serialized_end=667
 # @@protoc_insertion_point(module_scope)
