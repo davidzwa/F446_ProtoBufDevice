@@ -1,4 +1,4 @@
-"""Run a CLI to simulate dice throws."""
+"""Run a CLI to process commands for the gateway end device."""
 
 import random
 import asyncio
