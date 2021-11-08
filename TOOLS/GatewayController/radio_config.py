@@ -21,30 +21,56 @@ def print_buffer(prefix, buffer):
     print(prefix, buffer.hex())
 
 
+def serialize(pb_msg, encode_cobs=True, debug=False):
+    command_str = pb_msg.SerializeToString()
+    l = len(command_str)
+    buffer = bytearray()
+    # Length byte
+    buffer.extend(l.to_bytes(1, byteorder='little'))
+    # Payload
+    buffer.extend(command_str)
+
+    if encode_cobs:
+        if debug:
+            print_buffer("TX   ", buffer)
+        encoded_buffer = cobs.encode(buffer)
+        if debug:
+            print_buffer("TXe", encoded_buffer)
+        return encoded_buffer
+    else:
+        return buffer
+
+class BootInfoCommand(object):
+    @staticmethod
+    def request_boot_info(debug=False):
+        command = uart_messages_pb2.UartCommand()
+        command.requestBootInfo.Request = True
+        return serialize(command, debug=debug)
+
+class TransmitCommands(object):
+    @staticmethod
+    def sendMulticastCommand(groupId=0, debug=False):
+        command = uart_messages_pb2.UartCommand()
+        command.TransmitCmd.Payload = b'asd'
+        command.TransmitCmd.DeviceId = groupId
+        command.TransmitCmd.IsMulticast = True
+        return serialize(command, debug=debug)
+    
+    @staticmethod
+    def sendUnicastCommand(deviceId=0, debug=False):
+        command = uart_messages_pb2.UartCommand()
+        command.TransmitCmd.Payload = b'asd'
+        command.TransmitCmd.DeviceId = deviceId
+        command.TransmitCmd.IsMulticast = False
+        return serialize(command, debug=debug)
+
+
 class RadioConfig(object):
     @staticmethod
-    def serialize(pb_msg, encode_cobs=True, debug=False):
-        command_str = pb_msg.SerializeToString()
-        l = len(command_str)
-        buffer = bytearray()
-        buffer.extend(l.to_bytes(1, byteorder='little'))
-        buffer.extend(command_str)
+    def getTxConfig(debug=False):
+        command = uart_messages_pb2.UartCommand()
 
-        if encode_cobs:
-            if debug:
-                print_buffer("TX   ", buffer)
-            encoded_buffer = cobs.encode(buffer)
-            if debug:
-                print_buffer("TXe", encoded_buffer)
-            return encoded_buffer
-        else:
-            return buffer
-
-    @staticmethod
-    def getTxConfig():
-        config = uart_messages_pb2.SetConfig()
-        
-        data = config.TxConfig
+        data = command.TxConfig
         data.Modem = MODEM_LORA
         data.Power = 14
         data.Fdev = 0
@@ -59,13 +85,13 @@ class RadioConfig(object):
         data.IqInverted = OFF
         data.Timeout = 0
 
-        return config
+        return serialize(command, debug=debug)
 
     @staticmethod
-    def getRxConfig():
-        config = uart_messages_pb2.SetConfig()
+    def getRxConfig(debug=False):
+        command = uart_messages_pb2.UartCommand()
 
-        data = config.RxConfig
+        data = command.RxConfig
         data.Modem = MODEM_LORA
         data.Bandwidth = LORA_BANDWIDTH_125KHZ
         data.DataRate = 7
@@ -81,4 +107,4 @@ class RadioConfig(object):
         data.IqInverted = OFF
         data.RxContinuous = ON
 
-        return config
+        return serialize(command, debug=debug)

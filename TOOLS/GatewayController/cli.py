@@ -8,7 +8,7 @@ import time
 from cobs import cobs
 from aioconsole import AsynchronousCli
 from serial_protocol import list_ports
-from radio_config import RadioConfig
+from radio_config import RadioConfig, TransmitCommands, BootInfoCommand
 from protobuf import uart_messages_pb2
 
 
@@ -30,15 +30,24 @@ class CliParser(object):
     async def list_serial_ports(self, reader, writer):
         list_ports()
 
-    async def send_radio_tx_config(self, reader, writer):
-        payload = RadioConfig.getTxConfig()
-        encoded_buffer = RadioConfig.serialize(payload, True, True)
+    async def request_boot_info(self, reader, writer):
+        encoded_buffer = BootInfoCommand.request_boot_info()
         self.__send(encoded_buffer)
 
+    async def send_radio_tx_config(self, reader, writer):
+        encoded_buffer = RadioConfig.getTxConfig()
+        self.__send(encoded_buffer)
 
     async def send_radio_rx_config(self, reader, writer):
-        payload = RadioConfig.getRxConfig()
-        encoded_buffer = RadioConfig.serialize(payload, True, True)
+        encoded_buffer = RadioConfig.getRxConfig()
+        self.__send(encoded_buffer)
+
+    async def send_multicast_command(self, reader, writer):
+        encoded_buffer = TransmitCommands.sendMulticastCommand(groupId=12)
+        self.__send(encoded_buffer)
+
+    async def send_unicast_command(self, reader, writer):
+        encoded_buffer = TransmitCommands.sendUnicastCommand(deviceId=12)
         self.__send(encoded_buffer)
 
     async def switch_serial_port(self, reader, writer, port, device):
@@ -64,8 +73,11 @@ class CliParser(object):
                 "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
                 "p": (self.switch_serial_port, parser),
+                "boot": (self.request_boot_info, self.get_parser()),
                 "T": (self.send_radio_tx_config, self.get_parser()),
-                "R": (self.send_radio_rx_config, self.get_parser())
+                "R": (self.send_radio_rx_config, self.get_parser()),
+                "M": (self.send_multicast_command, self.get_parser()),
+                "U": (self.send_unicast_command, self.get_parser()),
             },
             prog="gateway"
         )

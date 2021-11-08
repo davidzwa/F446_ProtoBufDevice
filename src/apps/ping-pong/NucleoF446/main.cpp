@@ -50,34 +50,16 @@ void OnTxTimeout(void);
 void OnRxTimeout(void);
 void OnRxError(void);
 
-void DisplayAppInfo(const char *appName, const Version_t *appVersion, const Version_t *gitHubVersion) {
-    printf("\n###### ===================================== ######\n\n");
-    printf("Application name   : %s\n", appName);
-    printf("Application version: %d.%d.%d\n", appVersion->Fields.Major, appVersion->Fields.Minor, appVersion->Fields.Patch);
-    printf("GitHub base version: %d.%d.%d\n", gitHubVersion->Fields.Major, gitHubVersion->Fields.Minor, gitHubVersion->Fields.Patch);
-    printf("\n###### ===================================== ######\n\n");
-}
-
 /**
  * Main application entry point.
  */
 int main(void) {
-    // Target board initialization
+    InitRadioConfig();
     BoardInitMcu();
     BoardInitPeriph();
-
     InitCli(true);
 
-    DeviceId_t deviceId = GetDeviceId();
-    printf("id %lu %lu %lu\n", deviceId.id0, deviceId.id1, deviceId.id2);
-
-    const Version_t appVersion = {.Value = FIRMWARE_VERSION};
-    const Version_t gitHubVersion = {.Value = GITHUB_VERSION};
-    DisplayAppInfo("Tomato-potato",
-                   &appVersion,
-                   &gitHubVersion);
-
-    printf("Radio initializing\n");
+    UartSendBoot();
 
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
@@ -87,13 +69,12 @@ int main(void) {
     RadioEvents.RxError = OnRxError;
 
     Radio.Init(&RadioEvents);
-
-    RadioState_t state = Radio.GetStatus();
-    printf("Radio state %d\n", state);
+    DelayMs(500);
     printf("Radio init done\n");
+    PrintSettings();
 
     Radio.SetChannel(RF_FREQUENCY);
-    state = Radio.GetStatus();
+    RadioState_t state = Radio.GetStatus();
     printf("Radio state %d\n", state);
     printf("Radio set channel to %d done\n", RF_FREQUENCY);
 
@@ -129,7 +110,7 @@ int main(void) {
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Started radio listening\n");
+    printf("Started RX radio\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     while (1) {

@@ -2,7 +2,7 @@ import asyncio as aio
 import serial_asyncio
 import serial.tools.list_ports
 from cobs import cobs
-
+from protobuf import device_messages_pb2
 
 def list_ports(debug=True, vendor_filter="STMicroelectronics"):
     ports = serial.tools.list_ports.comports()
@@ -19,6 +19,9 @@ def list_ports(debug=True, vendor_filter="STMicroelectronics"):
 async def create_connection(loop, port, baudrate):
     return await serial_asyncio.create_serial_connection(loop, OutputProtocol, port, baudrate)
 
+def parse_firmware_version(spec):
+    return f"{spec.Major}.{spec.Minor}.{spec.Patch}.{spec.Revision}"
+
 class OutputProtocol(aio.Protocol):
     end_character = b'\0'
 
@@ -32,9 +35,16 @@ class OutputProtocol(aio.Protocol):
 
     def data_received(self, data):
         try:
-            print('COBS decoded', cobs.decode(data))
+            decoded_data = cobs.decode(data)[1:-1]
+            # print('COBS decoded', decoded_data[0], decoded_data)
+            uartResponse = device_messages_pb2.UartResponse()
+            uartResponse.ParseFromString(decoded_data)
+            if uartResponse.bootMessage is not None:
+                print("App name: ", uartResponse.bootMessage.AppName,
+                    "\nFirmware: ", parse_firmware_version(uartResponse.bootMessage.FirmwareVersion))
+
         except cobs.DecodeError:
-            print("Non COBS", data)
+            print("# ", data)
             pass
             
 

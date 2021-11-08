@@ -16,7 +16,6 @@
 */
 
 #include "config.h"
-#include "uart.h"
 
 #ifndef CLI_H
 #define CLI_H
@@ -25,18 +24,12 @@
 extern "C" {
 #endif
 
-/*!
- * Process characters received on the serial interface
- * \remark Characters sequence 'ESC' + 'N' execute a NVM factory reset
- *         All other sequences are ignored
- *
- * \param [IN] uart UART interface object used by the command line interface
- */
-
 void InitCli(bool withISR);
-void ProcessSpreadingFactorMessage(uint8_t value, bool broadcastLoRa);
+void InitRadioConfig();
+void UartSendBoot();
+
 void ApplyConfigIfPending();
-void SetNewRFSettings(uint8_t *serialBuf, uint8_t bytesRead);
+void PrintSettings();
 
 #ifdef __cplusplus
 }
