@@ -22,10 +22,9 @@
 #include "cli.h"
 #include "config.h"
 #include "delay.h"
-#include "gpio.h"
 #include "radio.h"
 #include "rx.h"
-#include "stdio.h"
+#include "tasks.h"
 #include "utils.h"
 
 int8_t lastRssiValue = 0;
@@ -58,6 +57,7 @@ int main(void) {
     BoardInitMcu();
     BoardInitPeriph();
     InitCli(true);
+    InitTimedTasks();
 
     UartSendBoot();
 
@@ -69,7 +69,6 @@ int main(void) {
     RadioEvents.RxError = OnRxError;
 
     Radio.Init(&RadioEvents);
-    DelayMs(500);
     printf("Radio init done\n");
     PrintSettings();
 
