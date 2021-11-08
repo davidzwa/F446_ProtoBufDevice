@@ -168,7 +168,7 @@ static void OnTxTimerEvent( void* context );
 /*!
  * Function executed on Led 1 Timeout event
  */
-static void OnLed1TimerEvent( void* context );
+static void OnBeaconEvent( void* context );
 
 /*!
  * Function executed on Led 2 Timeout event
@@ -304,7 +304,7 @@ int main( void )
     BoardInitMcu( );
     BoardInitPeriph( );
 
-    TimerInit( &Led1Timer, OnLed1TimerEvent );
+    TimerInit( &Led1Timer, OnBeaconEvent );
     TimerSetValue( &Led1Timer, 25 );
 
     TimerInit( &Led2Timer, OnLed2TimerEvent );
@@ -692,7 +692,7 @@ static void OnTxTimerEvent( void* context )
 /*!
  * Function executed on Led 1 Timeout event
  */
-static void OnLed1TimerEvent( void* context )
+static void OnBeaconEvent( void* context )
 {
     // TimerStop( &Led1Timer );
     // Switch LED 1 OFF

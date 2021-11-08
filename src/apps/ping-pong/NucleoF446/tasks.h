@@ -5,13 +5,17 @@
 #define TIMERS__H__
 
 static TimerEvent_t Led1Timer;
-static void OnLed1TimerEvent(void* context) {
-    UartSendBoot();
+static void OnBeaconEvent(void* context) {
+    
+
+    // TimerSetValue(&Led1Timer, 1000);
+    // TimerStart(&Led1Timer);
+    TimerReset(&Led1Timer);
 }
 
 void InitTimedTasks() {
-    TimerInit(&Led1Timer, OnLed1TimerEvent);
-    TimerSetValue(&Led1Timer, 1500);
+    TimerInit(&Led1Timer, OnBeaconEvent);
+    TimerSetValue(&Led1Timer, 128000);
     TimerStart(&Led1Timer);
 }
 

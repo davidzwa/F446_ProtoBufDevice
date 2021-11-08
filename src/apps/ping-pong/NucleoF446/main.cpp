@@ -53,13 +53,12 @@ void OnRxError(void);
  * Main application entry point.
  */
 int main(void) {
-    InitRadioConfig();
     BoardInitMcu();
     BoardInitPeriph();
     InitCli(true);
-    InitTimedTasks();
-
     UartSendBoot();
+    InitRadioConfig();
+    InitTimedTasks();
 
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
@@ -69,13 +68,12 @@ int main(void) {
     RadioEvents.RxError = OnRxError;
 
     Radio.Init(&RadioEvents);
-    printf("Radio init done\n");
-    PrintSettings();
+    // printf("Radio init done\n");
+    // PrintSettings();
 
     Radio.SetChannel(RF_FREQUENCY);
-    RadioState_t state = Radio.GetStatus();
-    printf("Radio state %d\n", state);
-    printf("Radio set channel to %d done\n", RF_FREQUENCY);
+    // RadioState_t state = Radio.GetStatus();
+    // printf("Radio channel %d - state %d\n", RF_FREQUENCY, state);
 
 #if defined(USE_MODEM_LORA)
 
@@ -109,7 +107,6 @@ int main(void) {
 #error "Please define a frequency band in the compiler options."
 #endif
 
-    printf("Started RX radio\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 
     while (1) {
@@ -165,7 +162,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 }
 
 void OnRxTimeout(void) {
-    printf("[Main] OnRxTimeout\n");
+    // printf("[Main] OnRxTimeout\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
