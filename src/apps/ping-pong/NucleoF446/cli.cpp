@@ -3,18 +3,23 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "COBS.h"
 #include "UartReadBuffer.h"
+#include "UartWriteBuffer.h"
 #include "delay.h"
+#include "device_messages.h"
 #include "radio_config.h"
 #include "tx.h"
 #include "uart.h"
 #include "uart_messages.h"
+#include "utilities.h"
 #include "utils.h"
 
 #define PACKET_SIZE_LIMIT 256
 #define MAX_PAYLOAD_LENGTH 22
+#define MAX_APPNAME_LENGTH 20
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
@@ -22,6 +27,7 @@ bool pendingConfigChange = false;
 const size_t offset = 1;
 
 UartReadBuffer readBuffer;
+UartWriteBuffer writeBuffer;
 RadioRxConfig rxConf;
 RadioTxConfig txConf;
 UartCommand<MAX_PAYLOAD_LENGTH> uartCommand;
@@ -91,6 +97,9 @@ void UartISR(UartNotifyId_t id) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_TransmitCmd();
                 printf("ID %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
             }
+            if (uartCommand.has_requestBootInfo()) {
+                UartSendBoot();
+            }
         }
     }
 }
@@ -99,6 +108,31 @@ void UartSend(uint8_t *buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
     UartPutBuffer(uart, encodedBuffer, encodedSize);
+}
+
+void UartSendBoot() {
+    UartResponse<MAX_APPNAME_LENGTH> uartResponse;
+    auto bootMessage = uartResponse.mutable_bootMessage();
+    bootMessage.mutable_AppName() = APP_NAME;
+    bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
+    const Version_t appVersion = {.Value = FIRMWARE_VERSION};
+    bootMessage.mutable_FirmwareVersion().set_Major(appVersion.Fields.Major);
+    bootMessage.mutable_FirmwareVersion().set_Minor(appVersion.Fields.Minor);
+    bootMessage.mutable_FirmwareVersion().set_Patch(appVersion.Fields.Patch);
+    bootMessage.mutable_FirmwareVersion().set_Revision(appVersion.Fields.Revision);
+    uartResponse.set_bootMessage(bootMessage);
+
+    writeBuffer.clear();
+    // First the length
+    writeBuffer.push((uint8_t)uartResponse.serialized_size());
+    // Push the data
+    auto result = uartResponse.serialize(writeBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        // Send the buffer in COBS encoded form
+        writeBuffer.push(packetEndMarker);
+        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+        // UartPutChar(uart, packetEndMarker);
+    }
 }
 
 void InitRadioTxConfigLoRa() {

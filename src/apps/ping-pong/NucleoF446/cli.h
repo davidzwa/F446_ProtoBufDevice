@@ -16,7 +16,6 @@
 */
 
 #include "config.h"
-#include "uart.h"
 
 #ifndef CLI_H
 #define CLI_H
@@ -27,6 +26,7 @@ extern "C" {
 
 void InitCli(bool withISR);
 void InitRadioConfig();
+void UartSendBoot();
 
 void ApplyConfigIfPending();
 void PrintSettings();

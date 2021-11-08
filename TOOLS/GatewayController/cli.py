@@ -8,7 +8,7 @@ import time
 from cobs import cobs
 from aioconsole import AsynchronousCli
 from serial_protocol import list_ports
-from radio_config import RadioConfig, TransmitCommands
+from radio_config import RadioConfig, TransmitCommands, BootInfoCommand
 from protobuf import uart_messages_pb2
 
 
@@ -29,6 +29,10 @@ class CliParser(object):
 
     async def list_serial_ports(self, reader, writer):
         list_ports()
+
+    async def request_boot_info(self, reader, writer):
+        encoded_buffer = BootInfoCommand.request_boot_info()
+        self.__send(encoded_buffer)
 
     async def send_radio_tx_config(self, reader, writer):
         encoded_buffer = RadioConfig.getTxConfig()
@@ -69,6 +73,7 @@ class CliParser(object):
                 "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
                 "p": (self.switch_serial_port, parser),
+                "boot": (self.request_boot_info, self.get_parser()),
                 "T": (self.send_radio_tx_config, self.get_parser()),
                 "R": (self.send_radio_rx_config, self.get_parser()),
                 "M": (self.send_multicast_command, self.get_parser()),

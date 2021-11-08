@@ -3,6 +3,8 @@
 #ifndef CONFIG_H__
 #define CONFIG_H__
 
+#define APP_NAME "LoRaMulticast"
+
 #if defined(REGION_AS923)
 
 #define RF_FREQUENCY 923000000 // Hz
@@ -82,6 +84,4 @@
 #define BUFFER_SIZE 64 // Define the payload size here
 
 #define FIRMWARE_VERSION 0x01020000 // 1.2.0.0
-
-#define GITHUB_VERSION 0x05000000 // 5.0.0.0
 #endif

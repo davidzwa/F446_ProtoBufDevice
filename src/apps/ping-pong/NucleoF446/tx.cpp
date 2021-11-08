@@ -31,13 +31,11 @@ void TxBuffer(int16_t dataSize) {
 }
 
 void TxDeviceId() {
-    DeviceId_t deviceId = GetDeviceId();
-    // Send the next PING frame
-    buffer[0] = (deviceId.id0 >> 24) & 0xff;
-    buffer[1] = (deviceId.id0 >> 16) & 0xff;
-    buffer[2] = (deviceId.id0 >> 8) & 0xff;
-    buffer[3] = deviceId.id0 & 0xff;
-
+    DeviceId deviceId = GetDeviceId();
+    buffer[0] = (deviceId.get_Id0() >> 24) & 0xff;
+    buffer[1] = (deviceId.get_Id0() >> 16) & 0xff;
+    buffer[2] = (deviceId.get_Id0() >> 8) & 0xff;
+    buffer[3] = deviceId.get_Id0() & 0xff;
     TxBuffer(msgSize);
 }
 

@@ -50,10 +50,15 @@ message TransmitCommand
     bytes Payload = 3;
 }
 
+message RequestBootInfo {
+    bool Request = 1;
+}
+
 message UartCommand {
     oneof Body {
         RadioRxConfig RxConfig = 1;
         RadioTxConfig TxConfig = 2;
         TransmitCommand TransmitCmd = 3;
+        RequestBootInfo requestBootInfo = 4;
     }
 }

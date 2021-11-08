@@ -40,6 +40,12 @@ def serialize(pb_msg, encode_cobs=True, debug=False):
     else:
         return buffer
 
+class BootInfoCommand(object):
+    @staticmethod
+    def request_boot_info(debug=False):
+        command = uart_messages_pb2.UartCommand()
+        command.requestBootInfo.Request = True
+        return serialize(command, debug=debug)
 
 class TransmitCommands(object):
     @staticmethod
@@ -48,7 +54,6 @@ class TransmitCommands(object):
         command.TransmitCmd.Payload = b'asd'
         command.TransmitCmd.DeviceId = groupId
         command.TransmitCmd.IsMulticast = True
-
         return serialize(command, debug=debug)
     
     @staticmethod
@@ -57,7 +62,6 @@ class TransmitCommands(object):
         command.TransmitCmd.Payload = b'asd'
         command.TransmitCmd.DeviceId = deviceId
         command.TransmitCmd.IsMulticast = False
-
         return serialize(command, debug=debug)
 
 
