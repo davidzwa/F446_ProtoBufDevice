@@ -11,7 +11,8 @@ static void OnLed1TimerEvent(void* context) {
 
 void InitTimedTasks() {
     TimerInit(&Led1Timer, OnLed1TimerEvent);
-    TimerSetValue(&Led1Timer, 1000);
+    TimerSetValue(&Led1Timer, 1500);
+    TimerStart(&Led1Timer);
 }
 
 #endif  // TIMERS__H__

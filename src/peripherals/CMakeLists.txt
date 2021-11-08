@@ -22,7 +22,12 @@ cmake_minimum_required(VERSION 3.6)
 # Target
 #---------------------------------------------------------------------------------------
 
-file (GLOB ${PROJECT_NAME}_SOURCES "*.cpp")
+if(${SECURE_ELEMENT} MATCHES SOFT_SE)
+    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "soft-se/*.c")
+    message(STATUS "Added Soft Secure-Element (C)")
+else() 
+    file (GLOB ${PROJECT_NAME}_SOURCES "*.cpp")
+endif()
 
 if(BME_68X) 
     file (GLOB BME_LIB "bme68x/*.cpp")
@@ -42,6 +47,11 @@ endif()
 
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
+
+if(${SECURE_ELEMENT} MATCHES SOFT_SE)
+    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/soft-se)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DSOFT_SE)
+endif()
 
 if(TSL_2561)
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tsl2561)

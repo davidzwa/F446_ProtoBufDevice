@@ -140,7 +140,7 @@ endif()
 if(${SECURE_ELEMENT} MATCHES SOFT_SE)
     target_compile_definitions(${PROJECT_NAME}-${SUB_PROJECT} PRIVATE -DSOFT_SE)
 endif()
-target_compile_definitions(${PROJECT_NAME}-${SUB_PROJECT}  PUBLIC
+target_compile_definitions(${PROJECT_NAME}-${SUB_PROJECT} PUBLIC
     $<BUILD_INTERFACE:$<TARGET_PROPERTY:mac,INTERFACE_COMPILE_DEFINITIONS>>
 )
 
