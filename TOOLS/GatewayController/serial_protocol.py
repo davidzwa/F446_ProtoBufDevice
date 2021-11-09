@@ -3,6 +3,9 @@ import serial_asyncio
 import serial.tools.list_ports
 from cobs import cobs
 from protobuf import device_messages_pb2
+from radio_config import BootInfoCommand
+from data_store import data_store
+
 
 def list_ports(debug=True, vendor_filter="STMicroelectronics"):
     ports = serial.tools.list_ports.comports()
@@ -16,18 +19,34 @@ def list_ports(debug=True, vendor_filter="STMicroelectronics"):
 
     return vendor_ports
 
+
 async def create_connection(loop, port, baudrate):
     return await serial_asyncio.create_serial_connection(loop, OutputProtocol, port, baudrate)
 
+
 def parse_firmware_version(spec):
     return f"{spec.Major}.{spec.Minor}.{spec.Patch}.{spec.Revision}"
+
+
+def convert_device_id_string(spec):
+    return str((spec.Id0 << 64) + (spec.Id1 << 32) + spec.Id2)
+
+
+def parse_device_id(spec):
+    return f"{hex(spec.Id0)}.{hex(spec.Id1)}.{hex(spec.Id2)}"
+
 
 class OutputProtocol(aio.Protocol):
     end_character = b'\0'
 
     def connection_made(self, transport):
         self.transport = transport
-        print('port opened', transport.serial.port)
+        print(f"Serial started on [{transport.serial.port}]")
+        self.send_boot_request_packet()
+
+    def send_boot_request_packet(self):
+        encoded_buffer = BootInfoCommand.request_boot_info()
+        self.write_buffer(encoded_buffer)
 
     def write_buffer(self, buffer):
         self.transport.write(buffer)
@@ -39,14 +58,21 @@ class OutputProtocol(aio.Protocol):
             # print('COBS decoded', decoded_data[0], decoded_data)
             uartResponse = device_messages_pb2.UartResponse()
             uartResponse.ParseFromString(decoded_data)
-            if uartResponse.bootMessage is not None:
+            if uartResponse.bootMessage:
+                device_id = convert_device_id_string(
+                    uartResponse.bootMessage.DeviceIdentifier)
                 print("App name: ", uartResponse.bootMessage.AppName,
-                    "\nFirmware: ", parse_firmware_version(uartResponse.bootMessage.FirmwareVersion))
+                      "\nFirmware: ", parse_firmware_version(
+                          uartResponse.bootMessage.FirmwareVersion),
+                      "\nDevice Id: ", hex(int(device_id)))
+
+                device = data_store.get_device(
+                    device_id, create_if_missing=True)
+                print(f"Device {device['nickname']}")
 
         except cobs.DecodeError:
             print("# ", data)
             pass
-            
 
     def connection_lost(self, exc):
         print('serial - port closed')

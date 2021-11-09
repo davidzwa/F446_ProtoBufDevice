@@ -371,29 +371,21 @@ void SystemClockConfig(void) {
 
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-    // RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI | RCC_OSCILLATORTYPE_LSE;
-    // RCC_OscInitStruct.MSIState            = RCC_MSI_ON;
-    // RCC_OscInitStruct.LSEState            = RCC_LSE_ON;
-    // RCC_OscInitStruct.MSIClockRange       = RCC_MSIRANGE_6;
-    // RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
-    // RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_ON;
-    // RCC_OscInitStruct.PLL.PLLSource       = RCC_PLLSOURCE_MSI;
-    // RCC_OscInitStruct.PLL.PLLM            = 1;
-    // RCC_OscInitStruct.PLL.PLLN            = 40;
-    // RCC_OscInitStruct.PLL.PLLP            = RCC_PLLP_DIV7;
-    // RCC_OscInitStruct.PLL.PLLQ            = RCC_PLLQ_DIV4;
-    // RCC_OscInitStruct.PLL.PLLR            = RCC_PLLR_DIV2;
     /* Enable HSI Oscillator and activate PLL with HSI as source */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+    // MSI from L series changed to HSI
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSE;
+    // The F4 series does not have a MSI ClockRange
+    // RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = 0x10;
+    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT; // Same as MSICALIBRATION_DEFAULT
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-    RCC_OscInitStruct.PLL.PLLM = 16;
-    RCC_OscInitStruct.PLL.PLLN = 360;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = 7;
-    RCC_OscInitStruct.PLL.PLLR = 6;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI; // HSI instead of MSI
+    RCC_OscInitStruct.PLL.PLLM = 16; // Was 1
+    RCC_OscInitStruct.PLL.PLLN = 360; // Was 40
+    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;  // Was RCC_PLLP_DIV7
+    RCC_OscInitStruct.PLL.PLLQ = 7;              // Was RCC_PLLQ_DIV4
+    RCC_OscInitStruct.PLL.PLLR = 6;              // Was RCC_PLLR_DIV2
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
         assert_param(LMN_STATUS_ERROR);
     }

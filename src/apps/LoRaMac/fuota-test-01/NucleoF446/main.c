@@ -19,7 +19,7 @@
  * \author    Miguel Luis ( Semtech )
  */
 
-/*! \file fuota-test-01/NucleoL476/main.c */
+/*! \file fuota-test-01/NucleoF446/main.c */
 
 #include <stdio.h>
 #include "../firmwareVersion.h"
@@ -328,6 +328,7 @@ int main( void )
         // Fatal error, endless loop.
         while ( 1 )
         {
+            TimerStart(&Led1Timer);
         }
     }
 
