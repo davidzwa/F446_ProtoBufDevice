@@ -5,8 +5,10 @@
 #define TIMERS__H__
 
 static TimerEvent_t BeaconTimer;
+uint16_t BeaconSequence;
 static void OnBeaconEvent(void* context) {
-    printf("Beacon sent\n");
+    BeaconSequence++;
+    printf("Beacon sent %d\n", BeaconSequence);
     TimerReset(&BeaconTimer);
 }
 
