@@ -1,11 +1,20 @@
 #include "radio_phy.h"
 
+#include <stdio.h>
+
+#include "ProtoReadBuffer.h"
+#include "ProtoWriteBuffer.h"
+#include "cli.h"
+#include "config.h"
+#include "tasks.h"
+#include "device_messages.h"
 
 uint16_t msgSize = BUFFER_SIZE;
-uint8_t buffer[BUFFER_SIZE];
+ProtoReadBuffer readLoraBuffer;
+ProtoWriteBuffer writeLoraBuffer;
+LoRaMessage loraMessage;
+LoRaAckMessage loraAckMessage;
 
-bool isExecutingCommand = false;
-bool testRunning = false;
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
 
@@ -70,195 +79,82 @@ void InitRadioPhy() {
 void OnTxDone(void) {
     ApplyConfigIfPending();
 
-    if (!isExecutingCommand) {
-        Radio.Rx(RX_TIMEOUT_VALUE);
-    } else {
-        Radio.Sleep();
-    }
+    // if (!isExecutingCommand) {
+    //     Radio.Rx(RX_TIMEOUT_VALUE);
+    // } else {
+    Radio.Sleep();
+    // }
 }
 
 void OnTxTimeout(void) {
     ApplyConfigIfPending();
 
-    if (!isExecutingCommand) {
-        Radio.Rx(RX_TIMEOUT_VALUE);
-    } else {
-        Radio.Sleep();
-    }
+    // if (!isExecutingCommand) {
+    //     Radio.Rx(RX_TIMEOUT_VALUE);
+    // } else {
+    Radio.Sleep();
+    // }
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
-    msgSize = size;
-    memcpy(buffer, payload, msgSize);
+    // Track RSSI and SNR
     lastRssiValue = rssi;
     lastSnrValue = snr;
 
-    printf("[Main]");
-    for (int i = 0; i < msgSize; i++) {
-        printf("0x%02X ", buffer[i]);
+    for (uint16_t i = 0; i < size; i++) {
+        readLoraBuffer.push(payload[i]);
     }
-    printf("\n[Main] MsgSize: %d RssiValue: %d SnrValue: %d\n", msgSize, rssi, snr);
 
-    parseMsg(buffer, msgSize);
+    auto result = loraMessage.deserialize(readLoraBuffer);
+    if (result != ::EmbeddedProto::Error::NO_ERRORS) {
+        return;
+    }
 
-    // Listen for next radio packet
+    if (loraMessage.get_command() == LoRaMessage::CommandType::Configuration) {
+        if (loraMessage.has_spreadingFactorConfig()) {
+            auto config = loraMessage.get_spreadingFactorConfig();
+            UpdateRadioSpreadingFactor(config.get_spreadingFactor(), true);
+        }
+        if (loraMessage.has_sequenceRequestConfig()) {
+            SetSequenceRequestConfig(loraMessage.get_sequenceRequestConfig());
+
+            // TODO send ACK if success
+        }
+    }
+
+    // Ensure that the message is not re-used
+    loraMessage.clear();
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
 void OnRxTimeout(void) {
-    // printf("[Main] OnRxTimeout\n");
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
 void OnRxError(void) {
-    printf("[Main] error\n");
+    // if (IsGateWay) {
+    //      printf("[Main] error\n");
+    // }
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
-void ProcessSequenceCommand(uint8_t *buffer) {
-    uint16_t messageCount = (buffer[1] << 8) + buffer[2];
-    uint16_t intervalMs = (buffer[3] << 8) + buffer[4];
-    uint32_t deviceId = (buffer[5] << 24) + (buffer[6] << 16) + (buffer[7] << 8) + buffer[8];
-
-    // DeviceId currentDeviceId = GetDeviceId();
-
-    // // deviceId = 0 => multicast
-    // if (deviceId && currentDeviceId.get_Id0() != deviceId) {
-    //     printf("[rx] Device id0 %lu was not equal to %lu! Command ignored.\n\r", currentDeviceId.id0, deviceId);
-    // } else {
-    //     if (intervalMs < 150) {
-    //         printf("[rx] Device ID recognized, but intervalMS %d was too low (<150). Ignoring command", intervalMs);
-    //     } else {
-    //         // testMessageLeft = messageCount;
-    //         // testmessageCount = messageCount;
-    //         // testintervalMs = intervalMs;
-
-    //         printf("[rx] Device id %lu recognized. Test Packets: %d, interval: %d ms\n\r", deviceId, messageCount, intervalMs);
-
-    //         TxStartSequenceTest(messageCount, intervalMs);
-    //     }
-    // }
+void TransmitProtoBuffer() {
+    Radio.Send(writeLoraBuffer.get_data(), writeLoraBuffer.get_size());
 }
 
-void parseMsg(uint8_t *RfBuffer, uint8_t msgSize) {
-    switch (RfBuffer[0]) {
-        // Set Spreading factor
-        case 'S':
-            // if (msgSize > 1) {
-            //     ProcessSpreadingFactorMessage(RfBuffer[1], true);
-            // }
-            break;
+void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
+    loraMessage.clear();
 
-        // Execute sequence cmd
-        case 'T':
-            if (msgSize > 8) {
-                ProcessSequenceCommand(RfBuffer);
-            }
-            break;
-
-        // parse RF config packet
-        case 'F':
-            // SetNewRFSettings((uint8_t *) RfBuffer, msgSize);
-            break;
-
-        default:
-            break;
-    }
+    loraMessage.mutable_spreadingFactorConfig().set_spreadingFactor(spreadingFactor);
+    TransmitProtoBuffer();
 }
 
-void TxBuffer(int16_t dataSize) {
-    if (dataSize < 0) {
-        dataSize = BUFFER_SIZE;
-    }
+void TransmitSequenceRequest() {
+    loraMessage.clear();
 
-    // Goodbye msg
-    Radio.Send(buffer, dataSize);
-    DelayMs(1);
-}
-
-void TxSpreadingFactor(uint8_t unicodeValue) {
-    // Send the next SF frame
-    buffer[0] = 'S';
-    buffer[1] = unicodeValue;
-
-    TxBuffer(2);
-}
-
-void TxNewRFSettings(uint8_t *serialBuf, uint8_t bufSize) {
-    memcpy(buffer, serialBuf, bufSize);
-    TxBuffer(bufSize);
-}
-
-void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize) {
-    if (bufSize > 8) {
-        memcpy(buffer, serialBuf, 9);
-    } else {
-        uint16_t messageCount = 5;
-        uint16_t intervalMs = 500;
-        uint32_t deviceId = 0x00;
-
-        printf("[tx] DefaultSequenceCMD: messageCount %d, intervalMs %d, deviceId %lu\n\r", messageCount, intervalMs, deviceId);
-
-        buffer[0] = 'T';
-        buffer[1] = (messageCount >> 8) & 0xff;
-        buffer[2] = messageCount & 0xff;
-        buffer[3] = (intervalMs >> 8) & 0xff;
-        buffer[4] = intervalMs & 0xff;
-        buffer[5] = (deviceId >> 24) & 0xff;
-        buffer[6] = (deviceId >> 16) & 0xff;
-        buffer[7] = (deviceId >> 8) & 0xff;
-        buffer[8] = deviceId & 0xff;
-
-        for (int i = 9; i < msgSize; i++) {
-            buffer[i] = i % 2;
-        }
-    }
-
-    TxBuffer(msgSize);
-}
-
-void TxTestProcess() {
-    if (testRunning) {
-        if (testMessageCounter++ < testmessageCount) {
-            printf("[tx] SequenceTest %d from %d\n\r", testMessageCounter, testmessageCount);
-            TxDeviceId();
-            DelayMs(testIntervalMs);
-        } else {
-            testRunning = false;
-            printf("[tx] SequenceTest Done\n\r");
-        }
-    }
-}
-
-void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs) {
-    printf("[tx] TxStartSequenceTest\n\r");
-
-    // if(testRunning){
-    //     printf("[tx] test already running %d msg left\n\r", testMessageLeft);
-    //     return;
-    // }
-
-    testMessageCounter = 0;
-    testIntervalMs = intervalMs;
-    testmessageCount = messageCount;
-
-    testRunning = true;
-}
-
-void ProcessSpreadingFactorMessage(uint8_t spreadingFactor, bool broadcastLoRa) {
-    if (IsValidSpreadingFactor(spreadingFactor)) {
-        if (broadcastLoRa) {
-            TxSpreadingFactor(spreadingFactor);
-            printf("[CLI] Broadcasting SF %d\n\r", spreadingFactor);
-
-            pendingConfigChange = true;
-            UpdateRadioSpreadingFactor(spreadingFactor, false);
-        } else {
-            UpdateRadioSpreadingFactor(spreadingFactor, true);
-        }
-
-        printf("[CLI] Set Radio SF '%d' \n\r", spreadingFactor);
-    } else {
-        printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: '%c'\n\r", spreadingFactor);
-    }
+    auto sequenceConfig = loraMessage.mutable_sequenceRequestConfig();
+    sequenceConfig.set_DeviceId(0x00);
+    sequenceConfig.set_Interval(500);
+    sequenceConfig.set_MessageCount(5);
+    TransmitProtoBuffer();
 }

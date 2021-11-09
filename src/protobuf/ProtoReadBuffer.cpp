@@ -15,23 +15,23 @@
 *   Implement the reading interface for EmbeddedProto Protobuf
 */
 
-#include "UartReadBuffer.h"
+#include "ProtoReadBuffer.h"
 
-UartReadBuffer::UartReadBuffer()
+ProtoReadBuffer::ProtoReadBuffer()
     : data_{0},
       write_index_(0),
       read_index_(0) {
 }
 
-uint32_t UartReadBuffer::get_size() const {
+uint32_t ProtoReadBuffer::get_size() const {
     return write_index_;
 }
 
-uint32_t UartReadBuffer::get_max_size() const {
+uint32_t ProtoReadBuffer::get_max_size() const {
     return MAX_SIZE;
 }
 
-bool UartReadBuffer::peek(uint8_t& byte) const {
+bool ProtoReadBuffer::peek(uint8_t& byte) const {
     bool return_value = write_index_ > read_index_;
     if (return_value) {
         byte = data_[read_index_];
@@ -39,15 +39,15 @@ bool UartReadBuffer::peek(uint8_t& byte) const {
     return return_value;
 }
 
-void UartReadBuffer::advance() {
+void ProtoReadBuffer::advance() {
     ++read_index_;
 }
 
-void UartReadBuffer::advance(const uint32_t N) {
+void ProtoReadBuffer::advance(const uint32_t N) {
     read_index_ += N;
 }
 
-bool UartReadBuffer::pop(uint8_t& byte) {
+bool ProtoReadBuffer::pop(uint8_t& byte) {
     bool return_value = write_index_ > read_index_;
     if (return_value) {
         byte = data_[read_index_];
@@ -56,20 +56,20 @@ bool UartReadBuffer::pop(uint8_t& byte) {
     return return_value;
 }
 
-uint8_t* UartReadBuffer::get_data_array() {
+uint8_t* ProtoReadBuffer::get_data_array() {
     return data_;
 }
 
-uint32_t& UartReadBuffer::get_bytes_written() {
+uint32_t& ProtoReadBuffer::get_bytes_written() {
     return write_index_;
 }
 
-void UartReadBuffer::clear() {
+void ProtoReadBuffer::clear() {
     read_index_ = 0;
     write_index_ = 0;
 }
 
-bool UartReadBuffer::push(uint8_t& byte) {
+bool ProtoReadBuffer::push(uint8_t& byte) {
     bool return_value = MAX_SIZE > write_index_;
     if (return_value) {
         data_[write_index_] = byte;

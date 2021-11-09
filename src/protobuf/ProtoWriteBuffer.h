@@ -39,13 +39,13 @@ extern "C" {
 
 #include <cstdint>
 
-class UartWriteBuffer : public ::EmbeddedProto::WriteBufferInterface {
+class ProtoWriteBuffer : public ::EmbeddedProto::WriteBufferInterface {
     //! Store a maximum of MAX_SIZE bytes in the buffer
     static constexpr uint32_t MAX_SIZE = 50;
 
    public:
-    UartWriteBuffer() = default;
-    ~UartWriteBuffer() override = default;
+    ProtoWriteBuffer() = default;
+    ~ProtoWriteBuffer() override = default;
 
     //! \see ::EmbeddedProto::WriteBufferInterface::clear()
     virtual void clear() override;
