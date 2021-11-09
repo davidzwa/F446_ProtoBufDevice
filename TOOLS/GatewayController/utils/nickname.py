@@ -1,7 +1,5 @@
 from random import choice, randint
 
-__version__ = '1.0.1'
-
 DEFAULT_LOCALE = 'en'
 LOCALES = ('en', 'ru')
 MIN_LENGTH = 6
