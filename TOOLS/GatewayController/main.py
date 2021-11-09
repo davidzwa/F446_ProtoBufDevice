@@ -1,6 +1,7 @@
 import asyncio
 from serial_protocol import list_ports, create_connection
 from cli import CliParser
+from data_store import DataStore
 
 async def reader(port, baudrate):
     try:
@@ -18,6 +19,9 @@ async def reader(port, baudrate):
         await asyncio.sleep(0.3)
 
 if __name__ == '__main__':
+    data_store = DataStore()
+    data_store.load_json()
+
     filtered_ports = list_ports(
         debug=False, vendor_filter="STMicroelectronics")
     

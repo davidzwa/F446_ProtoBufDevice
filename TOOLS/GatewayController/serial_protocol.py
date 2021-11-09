@@ -4,6 +4,7 @@ import serial.tools.list_ports
 from cobs import cobs
 from protobuf import device_messages_pb2
 
+
 def list_ports(debug=True, vendor_filter="STMicroelectronics"):
     ports = serial.tools.list_ports.comports()
 
@@ -16,11 +17,19 @@ def list_ports(debug=True, vendor_filter="STMicroelectronics"):
 
     return vendor_ports
 
+
 async def create_connection(loop, port, baudrate):
     return await serial_asyncio.create_serial_connection(loop, OutputProtocol, port, baudrate)
 
+
 def parse_firmware_version(spec):
     return f"{spec.Major}.{spec.Minor}.{spec.Patch}.{spec.Revision}"
+
+
+def parse_device_id(spec):
+    print(hex((spec.Id0 << 64) + (spec.Id1 << 32) + spec.Id2))
+    return f"{hex(spec.Id0)}.{hex(spec.Id1)}.{hex(spec.Id2)}"
+
 
 class OutputProtocol(aio.Protocol):
     end_character = b'\0'
@@ -41,12 +50,13 @@ class OutputProtocol(aio.Protocol):
             uartResponse.ParseFromString(decoded_data)
             if uartResponse.bootMessage is not None:
                 print("App name: ", uartResponse.bootMessage.AppName,
-                    "\nFirmware: ", parse_firmware_version(uartResponse.bootMessage.FirmwareVersion))
+                      "\nFirmware: ", parse_firmware_version(
+                          uartResponse.bootMessage.FirmwareVersion),
+                      "\nDevice Id: ", parse_device_id(uartResponse.bootMessage.DeviceIdentifier))
 
         except cobs.DecodeError:
             print("# ", data)
             pass
-            
 
     def connection_lost(self, exc):
         print('serial - port closed')

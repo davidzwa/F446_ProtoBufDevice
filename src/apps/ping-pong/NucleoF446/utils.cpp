@@ -10,7 +10,7 @@ DeviceId GetDeviceId() {
     DeviceId deviceId;
 
     deviceId.set_Id0(BoardGetHwUUID0());
-    deviceId.set_Id1(BoardGetHwUUID2());
+    deviceId.set_Id1(BoardGetHwUUID1());
     deviceId.set_Id2(BoardGetHwUUID2());
 
     return deviceId;
