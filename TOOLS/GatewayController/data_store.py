@@ -1,7 +1,9 @@
 import json
 import os
 import errno
+import time
 
+from utils.nickname import generate
 
 class DataStore(object):
     def __init__(self):
@@ -37,19 +39,39 @@ class DataStore(object):
     def set_devices(self):
         self.__devices = self.__data_cache["devices"]
 
+    def add_device(self, id, meta=None):
+        new_device = {
+            "id": id,
+            "nickname": generate(),
+            "registered_at": int(time.time()),
+            "meta": meta
+        }
+        self.__devices.append(new_device)
+        self.persist_json()
+
+        return new_device
+
     def get_devices(self):
         return self.__devices
 
-    def get_device(self, id):
-        return self.__devices[0]
+    def get_device(self, id, create_if_missing=False):
+        devices_found = [d for d in self.get_devices() if d["id"] == id]
+
+        if not len(devices_found) and create_if_missing:
+            return self.add_device(id, None)
+
+        return devices_found[0]
+
+    def persist_json(self):
+        serialized_data = json.dumps(self.__data_cache, indent=True)
+        self.__write_data_file(serialized_data)
 
     def load_json(self):
         if not os.path.exists(self.__data_file):
             self.ensure_folder_created()
-            self.__data_cache = self._get_default_json()
+            self.__data_cache = self.__get_default_json()
 
-            serialized_data = json.dumps(self.__device_cache)
-            self.__write_data_file(serialized_data)
+            self.persist_json()
         else:
             data_buffer = self.__read_data_file()
             self.__data_cache = json.loads(data_buffer)
@@ -57,3 +79,6 @@ class DataStore(object):
         self.set_devices()
 
     # def check_device_exists():
+
+
+data_store = DataStore()

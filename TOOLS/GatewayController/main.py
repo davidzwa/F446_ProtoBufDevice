@@ -2,7 +2,8 @@ import asyncio
 from serial_protocol import list_ports, create_connection
 from serial.serialutil import SerialException
 from cli import CliParser
-from data_store import DataStore
+from data_store import data_store
+
 
 async def reader(port, baudrate):
     try:
@@ -22,16 +23,15 @@ async def reader(port, baudrate):
         await asyncio.sleep(0.3)
 
 if __name__ == '__main__':
-    data_store = DataStore()
     data_store.load_json()
 
     filtered_ports = list_ports(
         debug=False, vendor_filter="STMicroelectronics")
-    
+
     if len(filtered_ports) == 0:
         print("No STM device COM ports found")
         exit(-1)
-    
+
     used_port = filtered_ports[0].device
     baudrate = 921600
 

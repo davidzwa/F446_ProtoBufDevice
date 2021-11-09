@@ -3,7 +3,7 @@ import serial_asyncio
 import serial.tools.list_ports
 from cobs import cobs
 from protobuf import device_messages_pb2
-
+from data_store import data_store
 
 def list_ports(debug=True, vendor_filter="STMicroelectronics"):
     ports = serial.tools.list_ports.comports()
@@ -26,8 +26,10 @@ def parse_firmware_version(spec):
     return f"{spec.Major}.{spec.Minor}.{spec.Patch}.{spec.Revision}"
 
 
+def convert_device_id_string(spec):
+    return str((spec.Id0 << 64) + (spec.Id1 << 32) + spec.Id2)
+
 def parse_device_id(spec):
-    print(hex((spec.Id0 << 64) + (spec.Id1 << 32) + spec.Id2))
     return f"{hex(spec.Id0)}.{hex(spec.Id1)}.{hex(spec.Id2)}"
 
 
@@ -48,11 +50,16 @@ class OutputProtocol(aio.Protocol):
             # print('COBS decoded', decoded_data[0], decoded_data)
             uartResponse = device_messages_pb2.UartResponse()
             uartResponse.ParseFromString(decoded_data)
-            if uartResponse.bootMessage is not None:
+            if uartResponse.bootMessage:
+                device_id = convert_device_id_string(
+                    uartResponse.bootMessage.DeviceIdentifier)
                 print("App name: ", uartResponse.bootMessage.AppName,
                       "\nFirmware: ", parse_firmware_version(
                           uartResponse.bootMessage.FirmwareVersion),
-                      "\nDevice Id: ", parse_device_id(uartResponse.bootMessage.DeviceIdentifier))
+                      "\nDevice Id: ", hex(int(device_id)))
+
+                device = data_store.get_device(device_id, create_if_missing=True)
+                print(f"Device {device['nickname']}")
 
         except cobs.DecodeError:
             print("# ", data)
