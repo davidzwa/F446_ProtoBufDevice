@@ -11,7 +11,6 @@
 #include "delay.h"
 #include "device_messages.h"
 #include "radio_config.h"
-#include "tx.h"
 #include "uart.h"
 #include "uart_messages.h"
 #include "utilities.h"
@@ -212,24 +211,6 @@ void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect) {
 
     if (reconnect) {
         ApplyRadioConfig();
-    }
-}
-
-void ProcessSpreadingFactorMessage(uint8_t spreadingFactor, bool broadcastLoRa) {
-    if (IsValidSpreadingFactor(spreadingFactor)) {
-        if (broadcastLoRa) {
-            TxSpreadingFactor(spreadingFactor);
-            printf("[CLI] Broadcasting SF %d\n\r", spreadingFactor);
-
-            pendingConfigChange = true;
-            UpdateRadioSpreadingFactor(spreadingFactor, false);
-        } else {
-            UpdateRadioSpreadingFactor(spreadingFactor, true);
-        }
-
-        printf("[CLI] Set Radio SF '%d' \n\r", spreadingFactor);
-    } else {
-        printf("[CLI] SF not 7,8,9,0,1,2(=12) skipped: '%c'\n\r", spreadingFactor);
     }
 }
 

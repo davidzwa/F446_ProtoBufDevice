@@ -44,6 +44,7 @@ class DataStore(object):
             "id": id,
             "nickname": generate(),
             "registered_at": int(time.time()),
+            "is_gateway": False,
             "meta": meta
         }
         self.__devices.append(new_device)

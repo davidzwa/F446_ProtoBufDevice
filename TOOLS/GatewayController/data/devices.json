@@ -4,6 +4,14 @@
    "id": "83416826100203816666413113",
    "nickname": "TheMothership",
    "registered_at": 1636461373,
+   "is_gateway": false,
+   "meta": null
+  },
+  {
+   "id": "82208398053008561507873586",
+   "nickname": "Anomyzeb",
+   "registered_at": 1636472505,
+   "is_gateway": false,
    "meta": null
   }
  ]
