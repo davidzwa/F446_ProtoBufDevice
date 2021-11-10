@@ -67,6 +67,14 @@ class TransmitCommands(object):
 
 class RadioConfig(object):
     @staticmethod
+    def setSpreadingFactorConfig(spreading_factor, debug=False):
+        command = uart_messages_pb2.UartCommand()
+
+        data = command.spreadingFactorConfig
+        data.spreadingFactor = spreading_factor
+        return serialize(command, debug=debug)
+        
+    @staticmethod
     def getTxConfig(debug=False):
         command = uart_messages_pb2.UartCommand()
 

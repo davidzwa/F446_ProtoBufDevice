@@ -21,6 +21,14 @@ class CliParser(object):
     async def list_serial_ports(self, reader, writer):
         list_ports()
 
+    async def send_spreading_factor(self, reader, writer, sf):
+        if sf < 7 or sf > 12:
+            print(f"Spreading factor {sf} was not in range (7-12)")
+            return
+
+        encoded_buffer = RadioConfig.setSpreadingFactorConfig(sf)
+        self.__send(encoded_buffer)
+
     async def request_boot_info(self, reader, writer):
         encoded_buffer = BootInfoCommand.request_boot_info()
         self.__send(encoded_buffer)
