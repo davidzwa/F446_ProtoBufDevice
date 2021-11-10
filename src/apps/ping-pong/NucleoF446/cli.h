@@ -15,7 +15,7 @@
 *   CLI interface using UART
 */
 
-#include "config.h"
+#include <stdio.h>
 
 #ifndef CLI_H
 #define CLI_H
@@ -26,9 +26,9 @@ extern "C" {
 
 void InitCli(bool withISR);
 void InitRadioConfig();
-void UartSendBoot();
-
+void UpdateRadioSpreadingFactor(uint8_t spreadingFactor, bool reconnect);
 void ApplyConfigIfPending();
+void UartSendBoot();
 void PrintSettings();
 
 #ifdef __cplusplus

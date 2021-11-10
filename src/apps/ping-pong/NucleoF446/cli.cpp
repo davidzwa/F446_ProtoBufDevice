@@ -8,6 +8,7 @@
 #include "COBS.h"
 #include "ProtoReadBuffer.h"
 #include "ProtoWriteBuffer.h"
+#include "config.h"
 #include "delay.h"
 #include "device_messages.h"
 #include "radio_config.h"
@@ -88,14 +89,17 @@ void UartISR(UartNotifyId_t id) {
             if (uartCommand.has_RxConfig()) {
                 printf("RX%ld\n", (uint32_t)uartCommand.get_which_Body());
                 txConf = uartCommand.get_TxConfig();
+                // TODO apply
             }
             if (uartCommand.has_TxConfig()) {
                 printf("TX%ld\n", (uint32_t)uartCommand.get_which_Body());
                 rxConf = uartCommand.get_RxConfig();
+                // TODO apply
             }
             if (uartCommand.has_transmitCommand()) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
                 printf("ID %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                // TODO apply
             }
             if (uartCommand.has_requestBootInfo()) {
                 UartSendBoot();
@@ -131,7 +135,6 @@ void UartSendBoot() {
         // Send the buffer in COBS encoded form
         writeBuffer.push(packetEndMarker);
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
-        // UartPutChar(uart, packetEndMarker);
     }
 }
 
@@ -202,11 +205,13 @@ void PrintSettings() {
     printf("--RADIO SETTINGS--\nModem:%d\n\tPower:%ld\n\tFdev:%lu\n\tBandwidth:%lu\n\tDataRate:%lu\n\tCodeRate:%lu\n\tPreambleLen:%lu\n\tFixLen:%d\n\tCrCOn:%d\n\tFreqHopOn:%d\n\tHopPeriod:%lu\n\tIqInverted:%d\n\tTimeout:%lu\n--END OF RADIO SETTINGS--\n",
            (int)txConf.Modem(), txConf.Power(), txConf.Fdev(), txConf.Bandwidth(), txConf.DataRate(), txConf.CodeRate(), txConf.PreambleLen(),
            txConf.FixLen(), txConf.CrcOn(), txConf.FreqHopOn(), txConf.HopPeriod(), txConf.IqInverted(), txConf.Timeout());
+
+    // TODO RX settings
     // , % ld, % ld, % d, % ld, % d, % d, % d, % d, % d, % d, % d, % d
     // printf("", rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
 }
 
-void UpdateRadioSpreadingFactor(uint spreadingFactor, bool reconnect) {
+void UpdateRadioSpreadingFactor(uint8_t spreadingFactor, bool reconnect) {
     txConf.set_DataRate(spreadingFactor);
     rxConf.set_DataRate(spreadingFactor);
 
