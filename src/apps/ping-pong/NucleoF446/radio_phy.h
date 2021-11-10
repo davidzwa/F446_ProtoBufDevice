@@ -1,4 +1,5 @@
 #include "stdint.h"
+#include "radio.h"
 
 #ifndef RADIO_PHY__H__
 #define RADIO_PHY__H__
