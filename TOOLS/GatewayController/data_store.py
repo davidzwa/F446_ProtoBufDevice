@@ -39,11 +39,12 @@ class DataStore(object):
     def set_devices(self):
         self.__devices = self.__data_cache["devices"]
 
-    def add_device(self, id, meta=None):
+    def add_device(self, id, meta={}):
         new_device = {
             "id": id,
             "nickname": generate(),
             "registered_at": int(time.time()),
+            "is_gateway": False,
             "meta": meta
         }
         self.__devices.append(new_device)

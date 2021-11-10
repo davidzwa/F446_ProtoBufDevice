@@ -58,7 +58,7 @@ message UartCommand {
     oneof Body {
         RadioRxConfig RxConfig = 1;
         RadioTxConfig TxConfig = 2;
-        TransmitCommand TransmitCmd = 3;
+        TransmitCommand transmitCommand = 3;
         RequestBootInfo requestBootInfo = 4;
     }
 }

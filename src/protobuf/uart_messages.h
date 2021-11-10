@@ -1145,7 +1145,7 @@ class RequestBootInfo final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t TransmitCmd_Payload_LENGTH>
+template<uint32_t transmitCommand_Payload_LENGTH>
 class UartCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -1168,8 +1168,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_TxConfig(rhs.get_TxConfig());
           break;
 
-        case id::TRANSMITCMD:
-          set_TransmitCmd(rhs.get_TransmitCmd());
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         case id::REQUESTBOOTINFO:
@@ -1200,8 +1200,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_TxConfig(rhs.get_TxConfig());
           break;
 
-        case id::TRANSMITCMD:
-          set_TransmitCmd(rhs.get_TransmitCmd());
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         case id::REQUESTBOOTINFO:
@@ -1221,7 +1221,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       RXCONFIG = 1,
       TXCONFIG = 2,
-      TRANSMITCMD = 3,
+      TRANSMITCOMMAND = 3,
       REQUESTBOOTINFO = 4
     };
 
@@ -1243,8 +1243,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_TxConfig(rhs.get_TxConfig());
           break;
 
-        case id::TRANSMITCMD:
-          set_TransmitCmd(rhs.get_TransmitCmd());
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         case id::REQUESTBOOTINFO:
@@ -1276,8 +1276,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_TxConfig(rhs.get_TxConfig());
           break;
 
-        case id::TRANSMITCMD:
-          set_TransmitCmd(rhs.get_TransmitCmd());
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         case id::REQUESTBOOTINFO:
@@ -1371,44 +1371,44 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     inline const RadioTxConfig& get_TxConfig() const { return Body_.TxConfig_; }
     inline const RadioTxConfig& TxConfig() const { return Body_.TxConfig_; }
 
-    inline bool has_TransmitCmd() const
+    inline bool has_transmitCommand() const
     {
-      return id::TRANSMITCMD == which_Body_;
+      return id::TRANSMITCOMMAND == which_Body_;
     }
-    inline void clear_TransmitCmd()
+    inline void clear_transmitCommand()
     {
-      if(id::TRANSMITCMD == which_Body_)
+      if(id::TRANSMITCOMMAND == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.TransmitCmd_.~TransmitCommand<TransmitCmd_Payload_LENGTH>();
+        Body_.transmitCommand_.~TransmitCommand<transmitCommand_Payload_LENGTH>();
       }
     }
-    inline void set_TransmitCmd(const TransmitCommand<TransmitCmd_Payload_LENGTH>& value)
+    inline void set_transmitCommand(const TransmitCommand<transmitCommand_Payload_LENGTH>& value)
     {
-      if(id::TRANSMITCMD != which_Body_)
+      if(id::TRANSMITCOMMAND != which_Body_)
       {
-        init_Body(id::TRANSMITCMD);
+        init_Body(id::TRANSMITCOMMAND);
       }
-      Body_.TransmitCmd_ = value;
+      Body_.transmitCommand_ = value;
     }
-    inline void set_TransmitCmd(const TransmitCommand<TransmitCmd_Payload_LENGTH>&& value)
+    inline void set_transmitCommand(const TransmitCommand<transmitCommand_Payload_LENGTH>&& value)
     {
-      if(id::TRANSMITCMD != which_Body_)
+      if(id::TRANSMITCOMMAND != which_Body_)
       {
-        init_Body(id::TRANSMITCMD);
+        init_Body(id::TRANSMITCOMMAND);
       }
-      Body_.TransmitCmd_ = value;
+      Body_.transmitCommand_ = value;
     }
-    inline TransmitCommand<TransmitCmd_Payload_LENGTH>& mutable_TransmitCmd()
+    inline TransmitCommand<transmitCommand_Payload_LENGTH>& mutable_transmitCommand()
     {
-      if(id::TRANSMITCMD != which_Body_)
+      if(id::TRANSMITCOMMAND != which_Body_)
       {
-        init_Body(id::TRANSMITCMD);
+        init_Body(id::TRANSMITCOMMAND);
       }
-      return Body_.TransmitCmd_;
+      return Body_.transmitCommand_;
     }
-    inline const TransmitCommand<TransmitCmd_Payload_LENGTH>& get_TransmitCmd() const { return Body_.TransmitCmd_; }
-    inline const TransmitCommand<TransmitCmd_Payload_LENGTH>& TransmitCmd() const { return Body_.TransmitCmd_; }
+    inline const TransmitCommand<transmitCommand_Payload_LENGTH>& get_transmitCommand() const { return Body_.transmitCommand_; }
+    inline const TransmitCommand<transmitCommand_Payload_LENGTH>& transmitCommand() const { return Body_.transmitCommand_; }
 
     inline bool has_requestBootInfo() const
     {
@@ -1470,10 +1470,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case id::TRANSMITCMD:
-          if(has_TransmitCmd() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case id::TRANSMITCOMMAND:
+          if(has_transmitCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.TransmitCmd_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCMD), buffer, true);
+            return_value = Body_.transmitCommand_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCOMMAND), buffer, true);
           }
           break;
 
@@ -1514,8 +1514,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
             break;
 
-          case id::TRANSMITCMD:
-            return_value = deserialize_Body(id::TRANSMITCMD, Body_.TransmitCmd_, buffer, wire_type);
+          case id::TRANSMITCOMMAND:
+            return_value = deserialize_Body(id::TRANSMITCOMMAND, Body_.transmitCommand_, buffer, wire_type);
 
             break;
 
@@ -1568,7 +1568,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         RadioRxConfig RxConfig_;
         RadioTxConfig TxConfig_;
-        TransmitCommand<TransmitCmd_Payload_LENGTH> TransmitCmd_;
+        TransmitCommand<transmitCommand_Payload_LENGTH> transmitCommand_;
         RequestBootInfo requestBootInfo_;
       };
       Body Body_;
@@ -1594,9 +1594,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::TXCONFIG;
             break;
 
-          case id::TRANSMITCMD:
-            new(&Body_.TransmitCmd_) TransmitCommand<TransmitCmd_Payload_LENGTH>;
-            which_Body_ = id::TRANSMITCMD;
+          case id::TRANSMITCOMMAND:
+            new(&Body_.transmitCommand_) TransmitCommand<transmitCommand_Payload_LENGTH>;
+            which_Body_ = id::TRANSMITCOMMAND;
             break;
 
           case id::REQUESTBOOTINFO:
@@ -1621,8 +1621,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           case id::TXCONFIG:
             Body_.TxConfig_.~RadioTxConfig(); // NOSONAR Unions require this.
             break;
-          case id::TRANSMITCMD:
-            Body_.TransmitCmd_.~TransmitCommand<TransmitCmd_Payload_LENGTH>(); // NOSONAR Unions require this.
+          case id::TRANSMITCOMMAND:
+            Body_.transmitCommand_.~TransmitCommand<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::REQUESTBOOTINFO:
             Body_.requestBootInfo_.~RequestBootInfo(); // NOSONAR Unions require this.
