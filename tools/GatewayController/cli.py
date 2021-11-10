@@ -18,15 +18,6 @@ class CliParser(object):
     def __send(self, buffer):
         self.serial_protocol.write_buffer(buffer)
 
-    async def gateway(self, reader, writer, port, device):
-        print(port, device)
-        encoded = cobs.encode(bytearray(b'Test'))
-        self.__send(encoded)
-
-    async def transmit(self, reader, writer):
-        encoded = cobs.encode(bytearray(b'Test2'))
-        self.__send(encoded)
-
     async def list_serial_ports(self, reader, writer):
         list_ports()
 
@@ -69,8 +60,6 @@ class CliParser(object):
 
         cli = AsynchronousCli(
             {
-                "g": (self.gateway, parser),
-                "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
                 "p": (self.switch_serial_port, parser),
                 "boot": (self.request_boot_info, self.get_parser()),
