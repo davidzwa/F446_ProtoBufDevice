@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x64\x65vice_messages.proto\"H\n\x07Version\x12\r\n\x05Major\x18\x01 \x01(\r\x12\r\n\x05Minor\x18\x02 \x01(\r\x12\r\n\x05Patch\x18\x03 \x01(\r\x12\x10\n\x08Revision\x18\x04 \x01(\r\"1\n\x08\x44\x65viceId\x12\x0b\n\x03Id0\x18\x01 \x01(\r\x12\x0b\n\x03Id1\x18\x02 \x01(\r\x12\x0b\n\x03Id2\x18\x03 \x01(\r\"f\n\x0b\x42ootMessage\x12#\n\x10\x44\x65viceIdentifier\x18\x01 \x01(\x0b\x32\t.DeviceId\x12!\n\x0f\x46irmwareVersion\x18\x02 \x01(\x0b\x32\x08.Version\x12\x0f\n\x07\x41ppName\x18\x03 \x01(\t\";\n\x0cUartResponse\x12#\n\x0b\x62ootMessage\x18\x01 \x01(\x0b\x32\x0c.BootMessageH\x00\x42\x06\n\x04\x42odyb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x64\x65vice_messages.proto\"H\n\x07Version\x12\r\n\x05Major\x18\x01 \x01(\r\x12\r\n\x05Minor\x18\x02 \x01(\r\x12\r\n\x05Patch\x18\x03 \x01(\r\x12\x10\n\x08Revision\x18\x04 \x01(\r\"1\n\x08\x44\x65viceId\x12\x0b\n\x03Id0\x18\x01 \x01(\r\x12\x0b\n\x03Id1\x18\x02 \x01(\r\x12\x0b\n\x03Id2\x18\x03 \x01(\r\"f\n\x0b\x42ootMessage\x12#\n\x10\x44\x65viceIdentifier\x18\x01 \x01(\x0b\x32\t.DeviceId\x12!\n\x0f\x46irmwareVersion\x18\x02 \x01(\x0b\x32\x08.Version\x12\x0f\n\x07\x41ppName\x18\x03 \x01(\t\";\n\x0cUartResponse\x12#\n\x0b\x62ootMessage\x18\x01 \x01(\x0b\x32\x0c.BootMessageH\x00\x42\x06\n\x04\x42ody\"0\n\x15SpreadingFactorConfig\x12\x17\n\x0fspreadingFactor\x18\x01 \x01(\r\"Q\n\x15SequenceRequestConfig\x12\x14\n\x0cMessageCount\x18\x01 \x01(\r\x12\x10\n\x08Interval\x18\x02 \x01(\r\x12\x10\n\x08\x44\x65viceId\x18\x03 \x01(\r\"\xb8\x02\n\x0bLoRaMessage\x12)\n\x07\x63ommand\x18\x01 \x01(\x0e\x32\x18.LoRaMessage.CommandType\x12\x16\n\x0eSequenceNumber\x18\x02 \x01(\r\x12\x37\n\x15spreadingFactorConfig\x18\x03 \x01(\x0b\x32\x16.SpreadingFactorConfigH\x00\x12\x37\n\x15sequenceRequestConfig\x18\x04 \x01(\x0b\x32\x16.SequenceRequestConfigH\x00\"l\n\x0b\x43ommandType\x12\x11\n\rConfiguration\x10\x00\x12\r\n\tMultiCast\x10\x01\x12\x10\n\x0cMultiCastAck\x10\x02\x12\x13\n\x0fSequenceRequest\x10\x03\x12\x14\n\x10SequenceResponse\x10\x04\x42\x06\n\x04\x42ody\"(\n\x0eLoRaAckMessage\x12\x16\n\x0eSequenceNumber\x18\x01 \x01(\rb\x06proto3')
 
 
 
@@ -22,6 +22,11 @@ _VERSION = DESCRIPTOR.message_types_by_name['Version']
 _DEVICEID = DESCRIPTOR.message_types_by_name['DeviceId']
 _BOOTMESSAGE = DESCRIPTOR.message_types_by_name['BootMessage']
 _UARTRESPONSE = DESCRIPTOR.message_types_by_name['UartResponse']
+_SPREADINGFACTORCONFIG = DESCRIPTOR.message_types_by_name['SpreadingFactorConfig']
+_SEQUENCEREQUESTCONFIG = DESCRIPTOR.message_types_by_name['SequenceRequestConfig']
+_LORAMESSAGE = DESCRIPTOR.message_types_by_name['LoRaMessage']
+_LORAACKMESSAGE = DESCRIPTOR.message_types_by_name['LoRaAckMessage']
+_LORAMESSAGE_COMMANDTYPE = _LORAMESSAGE.enum_types_by_name['CommandType']
 Version = _reflection.GeneratedProtocolMessageType('Version', (_message.Message,), {
   'DESCRIPTOR' : _VERSION,
   '__module__' : 'device_messages_pb2'
@@ -50,6 +55,34 @@ UartResponse = _reflection.GeneratedProtocolMessageType('UartResponse', (_messag
   })
 _sym_db.RegisterMessage(UartResponse)
 
+SpreadingFactorConfig = _reflection.GeneratedProtocolMessageType('SpreadingFactorConfig', (_message.Message,), {
+  'DESCRIPTOR' : _SPREADINGFACTORCONFIG,
+  '__module__' : 'device_messages_pb2'
+  # @@protoc_insertion_point(class_scope:SpreadingFactorConfig)
+  })
+_sym_db.RegisterMessage(SpreadingFactorConfig)
+
+SequenceRequestConfig = _reflection.GeneratedProtocolMessageType('SequenceRequestConfig', (_message.Message,), {
+  'DESCRIPTOR' : _SEQUENCEREQUESTCONFIG,
+  '__module__' : 'device_messages_pb2'
+  # @@protoc_insertion_point(class_scope:SequenceRequestConfig)
+  })
+_sym_db.RegisterMessage(SequenceRequestConfig)
+
+LoRaMessage = _reflection.GeneratedProtocolMessageType('LoRaMessage', (_message.Message,), {
+  'DESCRIPTOR' : _LORAMESSAGE,
+  '__module__' : 'device_messages_pb2'
+  # @@protoc_insertion_point(class_scope:LoRaMessage)
+  })
+_sym_db.RegisterMessage(LoRaMessage)
+
+LoRaAckMessage = _reflection.GeneratedProtocolMessageType('LoRaAckMessage', (_message.Message,), {
+  'DESCRIPTOR' : _LORAACKMESSAGE,
+  '__module__' : 'device_messages_pb2'
+  # @@protoc_insertion_point(class_scope:LoRaAckMessage)
+  })
+_sym_db.RegisterMessage(LoRaAckMessage)
+
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
@@ -61,4 +94,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _BOOTMESSAGE._serialized_end=252
   _UARTRESPONSE._serialized_start=254
   _UARTRESPONSE._serialized_end=313
+  _SPREADINGFACTORCONFIG._serialized_start=315
+  _SPREADINGFACTORCONFIG._serialized_end=363
+  _SEQUENCEREQUESTCONFIG._serialized_start=365
+  _SEQUENCEREQUESTCONFIG._serialized_end=446
+  _LORAMESSAGE._serialized_start=449
+  _LORAMESSAGE._serialized_end=761
+  _LORAMESSAGE_COMMANDTYPE._serialized_start=645
+  _LORAMESSAGE_COMMANDTYPE._serialized_end=753
+  _LORAACKMESSAGE._serialized_start=763
+  _LORAACKMESSAGE._serialized_end=803
 # @@protoc_insertion_point(module_scope)

@@ -18,17 +18,16 @@ class CliParser(object):
     def __send(self, buffer):
         self.serial_protocol.write_buffer(buffer)
 
-    async def gateway(self, reader, writer, port, device):
-        print(port, device)
-        encoded = cobs.encode(bytearray(b'Test'))
-        self.__send(encoded)
-
-    async def transmit(self, reader, writer):
-        encoded = cobs.encode(bytearray(b'Test2'))
-        self.__send(encoded)
-
     async def list_serial_ports(self, reader, writer):
         list_ports()
+
+    async def send_spreading_factor(self, reader, writer, sf):
+        if sf < 7 or sf > 12:
+            print(f"Spreading factor {sf} was not in range (7-12)")
+            return
+
+        encoded_buffer = RadioConfig.setSpreadingFactorConfig(sf)
+        self.__send(encoded_buffer)
 
     async def request_boot_info(self, reader, writer):
         encoded_buffer = BootInfoCommand.request_boot_info()
@@ -50,8 +49,8 @@ class CliParser(object):
         encoded_buffer = TransmitCommands.sendUnicastCommand(deviceId=12)
         self.__send(encoded_buffer)
 
-    async def switch_serial_port(self, reader, writer, port, device):
-        print("switching")
+    async def switch_serial_port(self, reader, writer, com):
+        print(f"switching to port {com}")
 
     def get_parser(self):
         return argparse.ArgumentParser(description="Control gateway device.")
@@ -67,13 +66,20 @@ class CliParser(object):
             "--device", "-d", metavar="N", type=int, default=0, help="Device ID"
         )
 
+        sf_parser = argparse.ArgumentParser(
+            description="Get spreading factor.")
+        sf_parser.add_argument("sf", type=int)
+
+        port_parser = argparse.ArgumentParser(
+            description="Change serial port.")
+        port_parser.add_argument("com", type=int)
+
         cli = AsynchronousCli(
             {
-                "g": (self.gateway, parser),
-                "t": (self.transmit, self.get_parser()),
                 "l": (self.list_serial_ports, self.get_parser()),
-                "p": (self.switch_serial_port, parser),
+                "port": (self.switch_serial_port, port_parser),
                 "boot": (self.request_boot_info, self.get_parser()),
+                "sf": (self.send_spreading_factor, sf_parser),
                 "T": (self.send_radio_tx_config, self.get_parser()),
                 "R": (self.send_radio_rx_config, self.get_parser()),
                 "M": (self.send_multicast_command, self.get_parser()),

@@ -1,10 +1,49 @@
 {
- "devices": [
-  {
-   "id": "83416826100203816666413113",
-   "nickname": "TheMothership",
-   "registered_at": 1636461373,
-   "meta": null
-  }
- ]
+    "devices": [
+        {
+            "id": "83416826100203816666413113",
+            "nickname": "TheMothership",
+            "registered_at": 1636461373,
+            "is_gateway": false,
+            "meta": {
+                "home": true
+            }
+        },
+        {
+            "id": "82208398053008561507873586",
+            "nickname": "Anomyzeb",
+            "registered_at": 1636472505,
+            "is_gateway": false,
+            "meta": {
+                "home": true
+            }
+        },
+        {
+            "id": "95506471677975656314058809",
+            "nickname": "Wywugykh",
+            "registered_at": 1636497045,
+            "is_gateway": false,
+            "meta": {
+                "home": true
+            }
+        },
+        {
+            "id": "93088269550608993188198457",
+            "nickname": "Ufagofo",
+            "registered_at": 1636540413,
+            "is_gateway": false,
+            "meta": {
+                "home": false
+            }
+        },
+        {
+            "id": "51984847023943822376843321",
+            "nickname": "Oshapov",
+            "registered_at": 1636552905,
+            "is_gateway": false,
+            "meta": {
+                "home": false
+            }
+        }
+    ]
 }

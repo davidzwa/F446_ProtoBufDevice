@@ -27,3 +27,34 @@ message UartResponse {
         BootMessage bootMessage = 1;
     }
 }
+
+message SpreadingFactorConfig {
+    uint32 spreadingFactor = 1;
+}
+
+message SequenceRequestConfig {
+    uint32 MessageCount = 1;
+    uint32 Interval = 2;
+    uint32 DeviceId = 3;
+}
+
+message LoRaMessage {
+    enum CommandType {
+        Configuration = 0;
+        MultiCast = 1;
+        MultiCastAck = 2;
+        SequenceRequest = 3;
+        SequenceResponse = 4;
+    }
+
+    CommandType command = 1;
+    uint32 SequenceNumber = 2;
+    oneof Body {
+        SpreadingFactorConfig spreadingFactorConfig = 3;
+        SequenceRequestConfig sequenceRequestConfig = 4;
+    }
+}
+
+message LoRaAckMessage {
+    uint32 SequenceNumber = 1;
+}

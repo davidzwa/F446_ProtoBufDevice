@@ -7,7 +7,7 @@ from data_store import data_store
 
 async def reader(port, baudrate):
     try:
-        transport, protocol = await create_connection(loop, port, baudrate)
+        transport, serial_protocol = await create_connection(loop, port, baudrate)
     except SerialException as e:
         print("Port closed")
     except FileNotFoundError as e:
@@ -16,12 +16,16 @@ async def reader(port, baudrate):
         exit(-1)
 
     cli = CliParser()
-    cli_routine = cli.get_cli(protocol)
-    task = asyncio.create_task(cli_routine.interact())
+    cli_routine = cli.get_cli(serial_protocol)
+    
+    await cli_routine.interact(stop=True)
 
+async def main():
+    # Loop forever
     while True:
-        await asyncio.sleep(0.3)
-
+        f1 = loop.create_task(reader(used_port, baudrate))
+        await asyncio.wait([f1])
+        
 if __name__ == '__main__':
     data_store.load_json()
 
@@ -36,10 +40,5 @@ if __name__ == '__main__':
     baudrate = 921600
 
     loop = asyncio.get_event_loop()
-    try:
-        loop.run_until_complete(reader(used_port, baudrate))
-    except RuntimeError as e:
-        print("Error occurred breaking")
-        exit(0)
-    loop.run_forever()
+    loop.run_until_complete(main())
     loop.close()

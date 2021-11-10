@@ -18,11 +18,9 @@
 mkdir .\src\protobuf
 
 cd EmbeddedProto
-protoc --plugin=protoc-gen-eams=protoc-gen-eams.bat -I..\proto --eams_out=..\src\protobuf ..\proto\uart_messages.proto
-protoc --plugin=protoc-gen-eams=protoc-gen-eams.bat -I..\proto --eams_out=..\src\protobuf ..\proto\device_messages.proto
+protoc --plugin=protoc-gen-eams=protoc-gen-eams.bat -I..\proto --eams_out=..\src\protobuf ..\proto\device_messages.proto ..\proto\uart_messages.proto 
 cd ..
 
 :: Generate the desktop source code.
 mkdir .\tools\GatewayController\protobuf
-protoc -I.\proto --python_out=.\tools\GatewayController\protobuf .\proto\uart_messages.proto
-protoc -I.\proto --python_out=.\tools\GatewayController\protobuf .\proto\device_messages.proto
+protoc -I.\proto --python_out=.\tools\GatewayController\protobuf .\proto\device_messages.proto .\proto\uart_messages.proto 
