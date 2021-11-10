@@ -6,8 +6,8 @@
 #include <string.h>
 
 #include "COBS.h"
-#include "UartReadBuffer.h"
-#include "UartWriteBuffer.h"
+#include "ProtoReadBuffer.h"
+#include "ProtoWriteBuffer.h"
 #include "delay.h"
 #include "device_messages.h"
 #include "radio_config.h"
@@ -26,8 +26,8 @@ uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
 const size_t offset = 1;
 
-UartReadBuffer readBuffer;
-UartWriteBuffer writeBuffer;
+ProtoReadBuffer readBuffer;
+ProtoWriteBuffer writeBuffer;
 RadioRxConfig rxConf;
 RadioTxConfig txConf;
 UartCommand<MAX_PAYLOAD_LENGTH> uartCommand;
@@ -93,8 +93,8 @@ void UartISR(UartNotifyId_t id) {
                 printf("TX%ld\n", (uint32_t)uartCommand.get_which_Body());
                 rxConf = uartCommand.get_RxConfig();
             }
-            if (uartCommand.has_TransmitCmd()) {
-                TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_TransmitCmd();
+            if (uartCommand.has_transmitCommand()) {
+                TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
                 printf("ID %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
             }
             if (uartCommand.has_requestBootInfo()) {
