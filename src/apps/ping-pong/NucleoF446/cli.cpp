@@ -95,8 +95,8 @@ void UartISR(UartNotifyId_t id) {
                 rxConf = uartCommand.get_RxConfig();
                 // TODO apply
             }
-            if (uartCommand.has_TransmitCmd()) {
-                TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_TransmitCmd();
+            if (uartCommand.has_transmitCommand()) {
+                TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
                 printf("ID %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
                 // TODO apply
             }

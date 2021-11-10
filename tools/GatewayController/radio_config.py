@@ -51,17 +51,17 @@ class TransmitCommands(object):
     @staticmethod
     def sendMulticastCommand(groupId=0, debug=False):
         command = uart_messages_pb2.UartCommand()
-        command.TransmitCmd.Payload = b'asd'
-        command.TransmitCmd.DeviceId = groupId
-        command.TransmitCmd.IsMulticast = True
+        command.transmitCommand.Payload = b'asd'
+        command.transmitCommand.DeviceId = groupId
+        command.transmitCommand.IsMulticast = True
         return serialize(command, debug=debug)
     
     @staticmethod
     def sendUnicastCommand(deviceId=0, debug=False):
         command = uart_messages_pb2.UartCommand()
-        command.TransmitCmd.Payload = b'asd'
-        command.TransmitCmd.DeviceId = deviceId
-        command.TransmitCmd.IsMulticast = False
+        command.transmitCommand.Payload = b'asd'
+        command.transmitCommand.DeviceId = deviceId
+        command.transmitCommand.IsMulticast = False
         return serialize(command, debug=debug)
 
 

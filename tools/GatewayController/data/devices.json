@@ -32,7 +32,9 @@
    "nickname": "Ufagofo",
    "registered_at": 1636540413,
    "is_gateway": false,
-   "meta": null
+   "meta": {
+        "home": false
+    }
   }
  ]
 }

@@ -11,6 +11,17 @@
             "windows": {
                 "command": "${cwd}\\tools\\flash.bat"
             }
+        },
+        {
+            "label": "Protoc",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "${cwd}\\generate_source_files.bat"
+            }
         }
     ]
 }

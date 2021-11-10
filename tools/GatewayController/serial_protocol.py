@@ -49,7 +49,6 @@ class OutputProtocol(aio.Protocol):
         self.write_buffer(encoded_buffer)
 
     def write_buffer(self, buffer):
-        print(len(buffer))
         self.transport.write(buffer)
         self.transport.write(self.end_character)
 
