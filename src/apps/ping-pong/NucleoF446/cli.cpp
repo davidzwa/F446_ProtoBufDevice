@@ -110,7 +110,11 @@ void UartISR(UartNotifyId_t id) {
 void UartSend(uint8_t *buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
+    UartPutChar(uart, 0xFF);
+    UartPutChar(uart, 0xFE);
+    UartPutChar(uart, encodedSize);
     UartPutBuffer(uart, encodedBuffer, encodedSize);
+    // UartPutChar(uart, packetEndMarker);
 }
 
 void UartSendBoot() {

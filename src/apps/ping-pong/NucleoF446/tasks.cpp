@@ -25,7 +25,8 @@ static void OnBeaconEvent(void* context) {
 }
 
 static void OnHeartbeatEvent(void* context) {
-    printf("Beat <3 (b:%d)\n", BeaconSequenceCount);
+    // printf("Beat <3 (b:%d)\n", BeaconSequenceCount);
+    UartSendBoot();
     TimerReset(&HeartBeatTimer);
 }
 
