@@ -57,7 +57,7 @@ void InitTimedTasks() {
     TimerInit(&SequenceTimer, OnSequenceEvent);
 
     TimerSetValue(&BeaconTimer, 128000);
-    TimerSetValue(&HeartBeatTimer, 2500);
+    TimerSetValue(&HeartBeatTimer, 30000);
 
     TimerStart(&BeaconTimer);
     TimerStart(&HeartBeatTimer);

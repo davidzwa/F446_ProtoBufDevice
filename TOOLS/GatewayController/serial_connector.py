@@ -32,7 +32,6 @@ class SerialConnection(object):
         return not not self.serial_reader
 
     def write_buffer(self, buffer):
-        print("Buffer:\n\t", buffer, self.end_character)
         self.serial_writer.write(buffer)
         self.serial_writer.write(self.end_character)
 
@@ -42,8 +41,6 @@ class SerialConnection(object):
         length_bytes = await reader.read(1)
         length = int.from_bytes(length_bytes, 'big')
         buffer = await reader.read(length)
-        
-        print(buffer)
         decode_message(buffer)
 
     def close(self):
