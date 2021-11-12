@@ -40,12 +40,17 @@ def serialize(pb_msg, encode_cobs=True, debug=False):
     else:
         return buffer
 
+
 class BootInfoCommand(object):
     @staticmethod
     def request_boot_info(debug=False):
         command = uart_messages_pb2.UartCommand()
         command.requestBootInfo.Request = True
+
+        assert command.HasField('requestBootInfo') == True
+
         return serialize(command, debug=debug)
+
 
 class TransmitCommands(object):
     @staticmethod
@@ -55,7 +60,7 @@ class TransmitCommands(object):
         command.transmitCommand.DeviceId = groupId
         command.transmitCommand.IsMulticast = True
         return serialize(command, debug=debug)
-    
+
     @staticmethod
     def sendUnicastCommand(deviceId=0, debug=False):
         command = uart_messages_pb2.UartCommand()
@@ -73,12 +78,12 @@ class RadioConfig(object):
         data = command.spreadingFactorConfig
         data.spreadingFactor = spreading_factor
         return serialize(command, debug=debug)
-        
+
     @staticmethod
     def getTxConfig(debug=False):
         command = uart_messages_pb2.UartCommand()
 
-        data = command.TxConfig
+        data = command.txConfig
         data.Modem = MODEM_LORA
         data.Power = 14
         data.Fdev = 0
@@ -93,13 +98,18 @@ class RadioConfig(object):
         data.IqInverted = OFF
         data.Timeout = 0
 
+        assert command.WhichOneof("Body") == "txConfig"
+        assert command.HasField('rxConfig') == False
+        assert command.HasField('txConfig') == True
+        assert command.HasField('requestBootInfo') == False
+
         return serialize(command, debug=debug)
 
     @staticmethod
     def getRxConfig(debug=False):
         command = uart_messages_pb2.UartCommand()
 
-        data = command.RxConfig
+        data = command.rxConfig
         data.Modem = MODEM_LORA
         data.Bandwidth = LORA_BANDWIDTH_125KHZ
         data.DataRate = 7
@@ -114,5 +124,10 @@ class RadioConfig(object):
         data.HopPeriod = 0
         data.IqInverted = OFF
         data.RxContinuous = ON
+
+        assert command.WhichOneof("Body") == "rxConfig"
+        assert command.HasField('rxConfig') == True
+        assert command.HasField('txConfig') == False
+        assert command.HasField('requestBootInfo') == False
 
         return serialize(command, debug=debug)

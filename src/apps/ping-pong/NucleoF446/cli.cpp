@@ -86,24 +86,23 @@ void UartISR(UartNotifyId_t id) {
 
         auto deserialize_status = uartCommand.deserialize(readBuffer);
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            if (uartCommand.has_RxConfig()) {
-                printf("RX%ld\n", (uint32_t)uartCommand.get_which_Body());
-                txConf = uartCommand.get_TxConfig();
+            if (uartCommand.has_rxConfig()) {
+                printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
+                rxConf = uartCommand.get_rxConfig();
                 // TODO apply
-            }
-            if (uartCommand.has_TxConfig()) {
-                printf("TX%ld\n", (uint32_t)uartCommand.get_which_Body());
-                rxConf = uartCommand.get_RxConfig();
+            } else if (uartCommand.has_txConfig()) {
+                printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
+                txConf = uartCommand.get_txConfig();
                 // TODO apply
-            }
-            if (uartCommand.has_transmitCommand()) {
+            } else if (uartCommand.has_transmitCommand()) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
-                printf("ID %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
                 // TODO apply
-            }
-            if (uartCommand.has_requestBootInfo()) {
+            } else if (uartCommand.has_requestBootInfo()) {
                 UartSendBoot();
             }
+
+            uartCommand.clear();
         }
     }
 }

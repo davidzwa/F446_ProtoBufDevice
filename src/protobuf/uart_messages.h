@@ -1161,11 +1161,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       switch(rhs.get_which_Body())
       {
         case id::RXCONFIG:
-          set_RxConfig(rhs.get_RxConfig());
+          set_rxConfig(rhs.get_rxConfig());
           break;
 
         case id::TXCONFIG:
-          set_TxConfig(rhs.get_TxConfig());
+          set_txConfig(rhs.get_txConfig());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1193,11 +1193,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       switch(rhs.get_which_Body())
       {
         case id::RXCONFIG:
-          set_RxConfig(rhs.get_RxConfig());
+          set_rxConfig(rhs.get_rxConfig());
           break;
 
         case id::TXCONFIG:
-          set_TxConfig(rhs.get_TxConfig());
+          set_txConfig(rhs.get_txConfig());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1236,11 +1236,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       switch(rhs.get_which_Body())
       {
         case id::RXCONFIG:
-          set_RxConfig(rhs.get_RxConfig());
+          set_rxConfig(rhs.get_rxConfig());
           break;
 
         case id::TXCONFIG:
-          set_TxConfig(rhs.get_TxConfig());
+          set_txConfig(rhs.get_txConfig());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1269,11 +1269,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       switch(rhs.get_which_Body())
       {
         case id::RXCONFIG:
-          set_RxConfig(rhs.get_RxConfig());
+          set_rxConfig(rhs.get_rxConfig());
           break;
 
         case id::TXCONFIG:
-          set_TxConfig(rhs.get_TxConfig());
+          set_txConfig(rhs.get_txConfig());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1293,83 +1293,83 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
     id get_which_Body() const { return which_Body_; }
 
-    inline bool has_RxConfig() const
+    inline bool has_rxConfig() const
     {
       return id::RXCONFIG == which_Body_;
     }
-    inline void clear_RxConfig()
+    inline void clear_rxConfig()
     {
       if(id::RXCONFIG == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.RxConfig_.~RadioRxConfig();
+        Body_.rxConfig_.~RadioRxConfig();
       }
     }
-    inline void set_RxConfig(const RadioRxConfig& value)
+    inline void set_rxConfig(const RadioRxConfig& value)
     {
       if(id::RXCONFIG != which_Body_)
       {
         init_Body(id::RXCONFIG);
       }
-      Body_.RxConfig_ = value;
+      Body_.rxConfig_ = value;
     }
-    inline void set_RxConfig(const RadioRxConfig&& value)
+    inline void set_rxConfig(const RadioRxConfig&& value)
     {
       if(id::RXCONFIG != which_Body_)
       {
         init_Body(id::RXCONFIG);
       }
-      Body_.RxConfig_ = value;
+      Body_.rxConfig_ = value;
     }
-    inline RadioRxConfig& mutable_RxConfig()
+    inline RadioRxConfig& mutable_rxConfig()
     {
       if(id::RXCONFIG != which_Body_)
       {
         init_Body(id::RXCONFIG);
       }
-      return Body_.RxConfig_;
+      return Body_.rxConfig_;
     }
-    inline const RadioRxConfig& get_RxConfig() const { return Body_.RxConfig_; }
-    inline const RadioRxConfig& RxConfig() const { return Body_.RxConfig_; }
+    inline const RadioRxConfig& get_rxConfig() const { return Body_.rxConfig_; }
+    inline const RadioRxConfig& rxConfig() const { return Body_.rxConfig_; }
 
-    inline bool has_TxConfig() const
+    inline bool has_txConfig() const
     {
       return id::TXCONFIG == which_Body_;
     }
-    inline void clear_TxConfig()
+    inline void clear_txConfig()
     {
       if(id::TXCONFIG == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.TxConfig_.~RadioTxConfig();
+        Body_.txConfig_.~RadioTxConfig();
       }
     }
-    inline void set_TxConfig(const RadioTxConfig& value)
+    inline void set_txConfig(const RadioTxConfig& value)
     {
       if(id::TXCONFIG != which_Body_)
       {
         init_Body(id::TXCONFIG);
       }
-      Body_.TxConfig_ = value;
+      Body_.txConfig_ = value;
     }
-    inline void set_TxConfig(const RadioTxConfig&& value)
+    inline void set_txConfig(const RadioTxConfig&& value)
     {
       if(id::TXCONFIG != which_Body_)
       {
         init_Body(id::TXCONFIG);
       }
-      Body_.TxConfig_ = value;
+      Body_.txConfig_ = value;
     }
-    inline RadioTxConfig& mutable_TxConfig()
+    inline RadioTxConfig& mutable_txConfig()
     {
       if(id::TXCONFIG != which_Body_)
       {
         init_Body(id::TXCONFIG);
       }
-      return Body_.TxConfig_;
+      return Body_.txConfig_;
     }
-    inline const RadioTxConfig& get_TxConfig() const { return Body_.TxConfig_; }
-    inline const RadioTxConfig& TxConfig() const { return Body_.TxConfig_; }
+    inline const RadioTxConfig& get_txConfig() const { return Body_.txConfig_; }
+    inline const RadioTxConfig& txConfig() const { return Body_.txConfig_; }
 
     inline bool has_transmitCommand() const
     {
@@ -1457,16 +1457,16 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       switch(which_Body_)
       {
         case id::RXCONFIG:
-          if(has_RxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          if(has_rxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.RxConfig_.serialize_with_id(static_cast<uint32_t>(id::RXCONFIG), buffer, true);
+            return_value = Body_.rxConfig_.serialize_with_id(static_cast<uint32_t>(id::RXCONFIG), buffer, true);
           }
           break;
 
         case id::TXCONFIG:
-          if(has_TxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          if(has_txConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.TxConfig_.serialize_with_id(static_cast<uint32_t>(id::TXCONFIG), buffer, true);
+            return_value = Body_.txConfig_.serialize_with_id(static_cast<uint32_t>(id::TXCONFIG), buffer, true);
           }
           break;
 
@@ -1505,12 +1505,12 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         switch(id_tag)
         {
           case id::RXCONFIG:
-            return_value = deserialize_Body(id::RXCONFIG, Body_.RxConfig_, buffer, wire_type);
+            return_value = deserialize_Body(id::RXCONFIG, Body_.rxConfig_, buffer, wire_type);
 
             break;
 
           case id::TXCONFIG:
-            return_value = deserialize_Body(id::TXCONFIG, Body_.TxConfig_, buffer, wire_type);
+            return_value = deserialize_Body(id::TXCONFIG, Body_.txConfig_, buffer, wire_type);
 
             break;
 
@@ -1566,8 +1566,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       {
         Body() {}
         ~Body() {}
-        RadioRxConfig RxConfig_;
-        RadioTxConfig TxConfig_;
+        RadioRxConfig rxConfig_;
+        RadioTxConfig txConfig_;
         TransmitCommand<transmitCommand_Payload_LENGTH> transmitCommand_;
         RequestBootInfo requestBootInfo_;
       };
@@ -1585,12 +1585,12 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         switch(field_id)
         {
           case id::RXCONFIG:
-            new(&Body_.RxConfig_) RadioRxConfig;
+            new(&Body_.rxConfig_) RadioRxConfig;
             which_Body_ = id::RXCONFIG;
             break;
 
           case id::TXCONFIG:
-            new(&Body_.TxConfig_) RadioTxConfig;
+            new(&Body_.txConfig_) RadioTxConfig;
             which_Body_ = id::TXCONFIG;
             break;
 
@@ -1616,10 +1616,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         switch(which_Body_)
         {
           case id::RXCONFIG:
-            Body_.RxConfig_.~RadioRxConfig(); // NOSONAR Unions require this.
+            Body_.rxConfig_.~RadioRxConfig(); // NOSONAR Unions require this.
             break;
           case id::TXCONFIG:
-            Body_.TxConfig_.~RadioTxConfig(); // NOSONAR Unions require this.
+            Body_.txConfig_.~RadioTxConfig(); // NOSONAR Unions require this.
             break;
           case id::TRANSMITCOMMAND:
             Body_.transmitCommand_.~TransmitCommand<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.
