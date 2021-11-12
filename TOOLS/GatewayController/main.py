@@ -1,32 +1,31 @@
 import asyncio
-from serial_protocol import list_ports, create_connection
+import serial
+from utils.protocol import list_ports
 from serial.serialutil import SerialException
 from cli import CliParser
 from data_store import data_store
+from serial_connector import get_connection
 
 
-async def reader(port, baudrate):
-    try:
-        transport, serial_protocol = await create_connection(loop, port, baudrate)
-    except SerialException as e:
-        print("Port closed")
-    except FileNotFoundError as e:
-        print("Port not found. Devices:")
-        list_ports()
-        exit(-1)
-
+async def cli_reader(port):
     cli = CliParser()
-    cli_routine = cli.get_cli(serial_protocol)
-    
+    cli_routine = cli.get_cli(port)
     await cli_routine.interact(stop=True)
 
-async def main():
-    # Loop forever
+
+async def serial_reader(connection):
+    await connection.open()
     while True:
-        f1 = loop.create_task(reader(used_port, baudrate))
-        await asyncio.wait([f1])
-        
-if __name__ == '__main__':
+        try:
+            await connection.process()
+        except Exception as e:
+            print("err", e)
+            await connection.open()
+            await asyncio.sleep(1)
+        await asyncio.sleep(0.001)
+
+
+async def main():
     data_store.load_json()
 
     filtered_ports = list_ports(
@@ -36,9 +35,18 @@ if __name__ == '__main__':
         print("No STM device COM ports found")
         exit(-1)
 
-    used_port = filtered_ports[0].device
+    serial_port_name = filtered_ports[0].device
     baudrate = 921600
 
+    connection = get_connection(serial_port_name, baudrate)
+
+    # Loop forever
+    while True:
+        f2 = loop.create_task(serial_reader(connection))
+        f3 = loop.create_task(cli_reader(serial_port_name))
+        await asyncio.wait([f2, f3])
+
+if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
     loop.close()

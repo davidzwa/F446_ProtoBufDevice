@@ -13,7 +13,6 @@
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
 LoRaMessage loraMessage;
-LoRaAckMessage loraAckMessage;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
@@ -97,7 +96,7 @@ void OnTxTimeout(void) {
 }
 
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
-    // Track RSSI and SNR
+    // Tracks RSSI and SNR
     lastRssiValue = rssi;
     lastSnrValue = snr;
 

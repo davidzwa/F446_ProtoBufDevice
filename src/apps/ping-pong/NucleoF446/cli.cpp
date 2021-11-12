@@ -21,10 +21,12 @@
 #define MAX_PAYLOAD_LENGTH 22
 #define MAX_APPNAME_LENGTH 20
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
+uint8_t packetBufferingLength = 0;
+uint8_t packetSize;
 uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
-const size_t offset = 1;
+const size_t offset = 1; // End byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
@@ -47,8 +49,8 @@ uint16_t GetFifoRxLength() {
     return uart->FifoRx.End - uart->FifoRx.Begin;
 }
 
-uint8_t GetLastChar() {
-    return uart->FifoRx.Data[uart->FifoRx.End];
+uint8_t GetLastChar(uint8_t offset) {
+    return uart->FifoRx.Data[uart->FifoRx.End - offset];
 }
 
 void UartISR(UartNotifyId_t id) {
@@ -66,7 +68,19 @@ void UartISR(UartNotifyId_t id) {
         FifoFlush(&uart->FifoRx);
     }
 
-    if (GetLastChar() == packetEndMarker) {
+    if (packetBufferingLength == 0 && GetLastChar(0) == 0xFF) {
+        FifoPop(&uart->FifoRx);
+        packetBufferingLength++;
+        return;
+    }
+
+    if (packetBufferingLength == 1) {
+        packetSize = FifoPop(&uart->FifoRx);
+    }
+    packetBufferingLength++;
+
+    // This is a very weak check
+    if (GetFifoRxLength() >= packetSize+1 || GetLastChar(0) == packetEndMarker) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {
             return;  // Error occurred
@@ -84,33 +98,62 @@ void UartISR(UartNotifyId_t id) {
         }
 
         auto deserialize_status = uartCommand.deserialize(readBuffer);
+
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            if (uartCommand.has_RxConfig()) {
-                printf("RX%ld\n", (uint32_t)uartCommand.get_which_Body());
-                txConf = uartCommand.get_TxConfig();
+            if (uartCommand.has_rxConfig()) {
+                printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
+                rxConf = uartCommand.get_rxConfig();
+                UartSendAck(1);
                 // TODO apply
-            }
-            if (uartCommand.has_TxConfig()) {
-                printf("TX%ld\n", (uint32_t)uartCommand.get_which_Body());
-                rxConf = uartCommand.get_RxConfig();
+            } else if (uartCommand.has_txConfig()) {
+                printf("ID %ld\n\0", (uint32_t)uartCommand.get_which_Body());
+                txConf = uartCommand.get_txConfig();
+                UartSendAck(1);
                 // TODO apply
-            }
-            if (uartCommand.has_transmitCommand()) {
+            } else if (uartCommand.has_transmitCommand()) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
-                printf("ID %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                UartSendAck(1);
                 // TODO apply
-            }
-            if (uartCommand.has_requestBootInfo()) {
+            } else if (uartCommand.has_requestBootInfo()) {
                 UartSendBoot();
+            } else {
+                UartSendAck(0);
             }
+
+            uartCommand.clear();
         }
+
+        packetSize = 0;
+        packetBufferingLength = 0;
     }
 }
 
 void UartSend(uint8_t *buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
+    UartPutChar(uart, 0xFF);
+    UartPutChar(uart, encodedSize);
     UartPutBuffer(uart, encodedBuffer, encodedSize);
+    // UartPutChar(uart, packetEndMarker);
+}
+
+void UartSendAck(uint8_t sequenceNumber) {
+    UartResponse<MAX_APPNAME_LENGTH> uartResponse;
+    auto ack = uartResponse.mutable_ackMessage();
+    ack.set_SequenceNumber(sequenceNumber);
+    uartResponse.set_ackMessage(ack);
+
+    // First the length
+    writeBuffer.push((uint8_t)uartResponse.serialized_size());
+    // Push the data
+    auto result = uartResponse.serialize(writeBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        // Send the buffer in COBS encoded form
+        writeBuffer.push(packetEndMarker);
+        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+    }
+    writeBuffer.clear();
 }
 
 void UartSendBoot() {
@@ -125,7 +168,6 @@ void UartSendBoot() {
     bootMessage.mutable_FirmwareVersion().set_Revision(appVersion.Fields.Revision);
     uartResponse.set_bootMessage(bootMessage);
 
-    writeBuffer.clear();
     // First the length
     writeBuffer.push((uint8_t)uartResponse.serialized_size());
     // Push the data
@@ -135,6 +177,7 @@ void UartSendBoot() {
         writeBuffer.push(packetEndMarker);
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
     }
+    writeBuffer.clear();
 }
 
 void InitRadioTxConfigLoRa() {

@@ -7,9 +7,10 @@ import time
 
 from cobs import cobs
 from aioconsole import AsynchronousCli
-from serial_protocol import list_ports
+from utils.protocol import list_ports
 from radio_config import RadioConfig, TransmitCommands, BootInfoCommand
 from protobuf import uart_messages_pb2
+from serial_connector import get_created_connection
 
 
 class CliParser(object):
@@ -26,8 +27,9 @@ class CliParser(object):
             print(f"Spreading factor {sf} was not in range (7-12)")
             return
 
-        encoded_buffer = RadioConfig.setSpreadingFactorConfig(sf)
-        self.__send(encoded_buffer)
+        # TODO not implemented
+        # encoded_buffer = RadioConfig.setSpreadingFactorConfig(sf)
+        # self.__send(encoded_buffer)
 
     async def request_boot_info(self, reader, writer):
         encoded_buffer = BootInfoCommand.request_boot_info()
@@ -55,9 +57,9 @@ class CliParser(object):
     def get_parser(self):
         return argparse.ArgumentParser(description="Control gateway device.")
 
-    def get_cli(self, new_serial_protocol):
+    def get_cli(self, serial_port_name):
         parser = self.get_parser()
-        self.serial_protocol = new_serial_protocol
+        self.serial_protocol = get_created_connection(serial_port_name)
         parser = argparse.ArgumentParser(description="Control gateway device.")
         parser.add_argument(
             "--port", "-p", metavar="N", type=int, default=4, help="Port"

@@ -29,6 +29,7 @@ void InitRadioConfig();
 void UpdateRadioSpreadingFactor(uint8_t spreadingFactor, bool reconnect);
 void ApplyConfigIfPending();
 void UartSendBoot();
+void UartSendAck(uint8_t sequenceNumber);
 void PrintSettings();
 
 #ifdef __cplusplus
