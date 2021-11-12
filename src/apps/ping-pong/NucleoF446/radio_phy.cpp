@@ -107,6 +107,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     auto result = loraMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
+        UartSendAck(3);
         Radio.Rx(RX_TIMEOUT_VALUE);
         return;
     }
