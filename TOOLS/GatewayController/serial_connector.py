@@ -32,7 +32,9 @@ class SerialConnection(object):
         return not not self.serial_reader
 
     def write_buffer(self, buffer):
+        print("Buffer:\n\t", buffer, self.end_character)
         self.serial_writer.write(buffer)
+        self.serial_writer.write(self.end_character)
 
     async def process(self):
         reader = self.get_reader()

@@ -540,6 +540,117 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class AckMessage final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    AckMessage() = default;
+    AckMessage(const AckMessage& rhs )
+    {
+      set_SequenceNumber(rhs.get_SequenceNumber());
+    }
+
+    AckMessage(const AckMessage&& rhs ) noexcept
+    {
+      set_SequenceNumber(rhs.get_SequenceNumber());
+    }
+
+    ~AckMessage() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      SEQUENCENUMBER = 1
+    };
+
+    AckMessage& operator=(const AckMessage& rhs)
+    {
+      set_SequenceNumber(rhs.get_SequenceNumber());
+      return *this;
+    }
+
+    AckMessage& operator=(const AckMessage&& rhs) noexcept
+    {
+      set_SequenceNumber(rhs.get_SequenceNumber());
+      return *this;
+    }
+
+    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
+    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
+    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
+    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::SEQUENCENUMBER:
+            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_SequenceNumber();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 SequenceNumber_ = 0U;
+
+};
+
 template<uint32_t bootMessage_AppName_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
@@ -557,6 +668,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       {
         case id::BOOTMESSAGE:
           set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::ACKMESSAGE:
+          set_ackMessage(rhs.get_ackMessage());
           break;
 
         default:
@@ -579,6 +694,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_bootMessage(rhs.get_bootMessage());
           break;
 
+        case id::ACKMESSAGE:
+          set_ackMessage(rhs.get_ackMessage());
+          break;
+
         default:
           break;
       }
@@ -590,7 +709,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      BOOTMESSAGE = 1
+      BOOTMESSAGE = 1,
+      ACKMESSAGE = 2
     };
 
     UartResponse& operator=(const UartResponse& rhs)
@@ -605,6 +725,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       {
         case id::BOOTMESSAGE:
           set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::ACKMESSAGE:
+          set_ackMessage(rhs.get_ackMessage());
           break;
 
         default:
@@ -626,6 +750,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       {
         case id::BOOTMESSAGE:
           set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::ACKMESSAGE:
+          set_ackMessage(rhs.get_ackMessage());
           break;
 
         default:
@@ -676,6 +804,45 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline const BootMessage<bootMessage_AppName_LENGTH>& get_bootMessage() const { return Body_.bootMessage_; }
     inline const BootMessage<bootMessage_AppName_LENGTH>& bootMessage() const { return Body_.bootMessage_; }
 
+    inline bool has_ackMessage() const
+    {
+      return id::ACKMESSAGE == which_Body_;
+    }
+    inline void clear_ackMessage()
+    {
+      if(id::ACKMESSAGE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.ackMessage_.~AckMessage();
+      }
+    }
+    inline void set_ackMessage(const AckMessage& value)
+    {
+      if(id::ACKMESSAGE != which_Body_)
+      {
+        init_Body(id::ACKMESSAGE);
+      }
+      Body_.ackMessage_ = value;
+    }
+    inline void set_ackMessage(const AckMessage&& value)
+    {
+      if(id::ACKMESSAGE != which_Body_)
+      {
+        init_Body(id::ACKMESSAGE);
+      }
+      Body_.ackMessage_ = value;
+    }
+    inline AckMessage& mutable_ackMessage()
+    {
+      if(id::ACKMESSAGE != which_Body_)
+      {
+        init_Body(id::ACKMESSAGE);
+      }
+      return Body_.ackMessage_;
+    }
+    inline const AckMessage& get_ackMessage() const { return Body_.ackMessage_; }
+    inline const AckMessage& ackMessage() const { return Body_.ackMessage_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -687,6 +854,13 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           if(has_bootMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.bootMessage_.serialize_with_id(static_cast<uint32_t>(id::BOOTMESSAGE), buffer, true);
+          }
+          break;
+
+        case id::ACKMESSAGE:
+          if(has_ackMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.ackMessage_.serialize_with_id(static_cast<uint32_t>(id::ACKMESSAGE), buffer, true);
           }
           break;
 
@@ -712,6 +886,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         {
           case id::BOOTMESSAGE:
             return_value = deserialize_Body(id::BOOTMESSAGE, Body_.bootMessage_, buffer, wire_type);
+
+            break;
+
+          case id::ACKMESSAGE:
+            return_value = deserialize_Body(id::ACKMESSAGE, Body_.ackMessage_, buffer, wire_type);
 
             break;
 
@@ -758,6 +937,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         Body() {}
         ~Body() {}
         BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
+        AckMessage ackMessage_;
       };
       Body Body_;
 
@@ -777,6 +957,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::BOOTMESSAGE;
             break;
 
+          case id::ACKMESSAGE:
+            new(&Body_.ackMessage_) AckMessage;
+            which_Body_ = id::ACKMESSAGE;
+            break;
+
           default:
             break;
          }
@@ -790,6 +975,9 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         {
           case id::BOOTMESSAGE:
             Body_.bootMessage_.~BootMessage<bootMessage_AppName_LENGTH>(); // NOSONAR Unions require this.
+            break;
+          case id::ACKMESSAGE:
+            Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
             break;
           default:
             break;
@@ -1500,117 +1688,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         }
         return return_value;
       }
-
-};
-
-class LoRaAckMessage final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    LoRaAckMessage() = default;
-    LoRaAckMessage(const LoRaAckMessage& rhs )
-    {
-      set_SequenceNumber(rhs.get_SequenceNumber());
-    }
-
-    LoRaAckMessage(const LoRaAckMessage&& rhs ) noexcept
-    {
-      set_SequenceNumber(rhs.get_SequenceNumber());
-    }
-
-    ~LoRaAckMessage() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      SEQUENCENUMBER = 1
-    };
-
-    LoRaAckMessage& operator=(const LoRaAckMessage& rhs)
-    {
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      return *this;
-    }
-
-    LoRaAckMessage& operator=(const LoRaAckMessage&& rhs) noexcept
-    {
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      return *this;
-    }
-
-    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
-    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::SEQUENCENUMBER:
-            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_SequenceNumber();
-
-    }
-
-    private:
-
-
-      EmbeddedProto::uint32 SequenceNumber_ = 0U;
 
 };
 

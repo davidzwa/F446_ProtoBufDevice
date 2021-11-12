@@ -22,9 +22,14 @@ message BootMessage {
     string AppName = 3;
 }
 
+message AckMessage {
+    uint32 SequenceNumber = 1;    
+}
+
 message UartResponse {
     oneof Body {
         BootMessage bootMessage = 1;
+        AckMessage ackMessage = 2;
     }
 }
 
@@ -53,8 +58,4 @@ message LoRaMessage {
         SpreadingFactorConfig spreadingFactorConfig = 3;
         SequenceRequestConfig sequenceRequestConfig = 4;
     }
-}
-
-message LoRaAckMessage {
-    uint32 SequenceNumber = 1;
 }

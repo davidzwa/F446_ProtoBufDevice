@@ -85,18 +85,22 @@ void UartISR(UartNotifyId_t id) {
         }
 
         auto deserialize_status = uartCommand.deserialize(readBuffer);
+
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
             if (uartCommand.has_rxConfig()) {
                 printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
                 rxConf = uartCommand.get_rxConfig();
+                UartSendAck(1);
                 // TODO apply
             } else if (uartCommand.has_txConfig()) {
-                printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
+                printf("ID %ld\n\0", (uint32_t)uartCommand.get_which_Body());
                 txConf = uartCommand.get_txConfig();
+                UartSendAck(1);
                 // TODO apply
             } else if (uartCommand.has_transmitCommand()) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
                 printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                UartSendAck(1);
                 // TODO apply
             } else if (uartCommand.has_requestBootInfo()) {
                 UartSendBoot();
@@ -117,6 +121,24 @@ void UartSend(uint8_t *buffer, size_t length) {
     // UartPutChar(uart, packetEndMarker);
 }
 
+void UartSendAck(uint8_t sequenceNumber) {
+    UartResponse<MAX_APPNAME_LENGTH> uartResponse;
+    auto ack = uartResponse.mutable_ackMessage();
+    ack.set_SequenceNumber(sequenceNumber);
+    uartResponse.set_ackMessage(ack);
+
+    // First the length
+    writeBuffer.push((uint8_t)uartResponse.serialized_size());
+    // Push the data
+    auto result = uartResponse.serialize(writeBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        // Send the buffer in COBS encoded form
+        writeBuffer.push(packetEndMarker);
+        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+    }
+    writeBuffer.clear();
+}
+
 void UartSendBoot() {
     UartResponse<MAX_APPNAME_LENGTH> uartResponse;
     auto bootMessage = uartResponse.mutable_bootMessage();
@@ -129,7 +151,6 @@ void UartSendBoot() {
     bootMessage.mutable_FirmwareVersion().set_Revision(appVersion.Fields.Revision);
     uartResponse.set_bootMessage(bootMessage);
 
-    writeBuffer.clear();
     // First the length
     writeBuffer.push((uint8_t)uartResponse.serialized_size());
     // Push the data
@@ -139,6 +160,7 @@ void UartSendBoot() {
         writeBuffer.push(packetEndMarker);
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
     }
+    writeBuffer.clear();
 }
 
 void InitRadioTxConfigLoRa() {

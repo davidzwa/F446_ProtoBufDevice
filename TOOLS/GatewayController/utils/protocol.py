@@ -46,8 +46,8 @@ def decode_message(data):
         decoded_data = cobs.decode(data)[1:-1]
         uart_packet = device_messages_pb2.UartResponse()
         uart_packet.ParseFromString(decoded_data)
-        if uart_packet.bootMessage:
-            print_boot_message(uart_packet.bootMessage)
+        # if uart_packet.bootMessage:
+        #     print_boot_message(uart_packet.bootMessage)
     except cobs.DecodeError as e:
         print("! ", data)
         pass
