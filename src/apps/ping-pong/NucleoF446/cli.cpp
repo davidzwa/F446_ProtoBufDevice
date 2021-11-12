@@ -21,10 +21,12 @@
 #define MAX_PAYLOAD_LENGTH 22
 #define MAX_APPNAME_LENGTH 20
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
+uint8_t packetBufferingLength = 0;
+uint8_t packetSize;
 uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
-const size_t offset = 1;
+const size_t offset = 1; // End byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
@@ -47,8 +49,8 @@ uint16_t GetFifoRxLength() {
     return uart->FifoRx.End - uart->FifoRx.Begin;
 }
 
-uint8_t GetLastChar() {
-    return uart->FifoRx.Data[uart->FifoRx.End];
+uint8_t GetLastChar(uint8_t offset) {
+    return uart->FifoRx.Data[uart->FifoRx.End - offset];
 }
 
 void UartISR(UartNotifyId_t id) {
@@ -66,8 +68,19 @@ void UartISR(UartNotifyId_t id) {
         FifoFlush(&uart->FifoRx);
     }
 
+    if (packetBufferingLength == 0 && GetLastChar(0) == 0xFF) {
+        FifoPop(&uart->FifoRx);
+        packetBufferingLength++;
+        return;
+    }
+
+    if (packetBufferingLength == 1) {
+        packetSize = FifoPop(&uart->FifoRx);
+    }
+    packetBufferingLength++;
+
     // This is a very weak check
-    if (GetLastChar() == packetEndMarker) {
+    if (GetFifoRxLength() >= packetSize+1 || GetLastChar(0) == packetEndMarker) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {
             return;  // Error occurred
@@ -104,10 +117,15 @@ void UartISR(UartNotifyId_t id) {
                 // TODO apply
             } else if (uartCommand.has_requestBootInfo()) {
                 UartSendBoot();
+            } else {
+                UartSendAck(0);
             }
 
             uartCommand.clear();
         }
+
+        packetSize = 0;
+        packetBufferingLength = 0;
     }
 }
 
@@ -115,7 +133,6 @@ void UartSend(uint8_t *buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
     UartPutChar(uart, 0xFF);
-    UartPutChar(uart, 0xFE);
     UartPutChar(uart, encodedSize);
     UartPutBuffer(uart, encodedBuffer, encodedSize);
     // UartPutChar(uart, packetEndMarker);

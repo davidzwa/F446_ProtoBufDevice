@@ -21,7 +21,7 @@ def print_buffer(prefix, buffer):
     print(prefix, buffer.hex())
 
 
-def serialize(pb_msg, encode_cobs=True, debug=False):
+def serialize(pb_msg, debug=False):
     command_str = pb_msg.SerializeToString()
     l = len(command_str)
     buffer = bytearray()
@@ -30,15 +30,15 @@ def serialize(pb_msg, encode_cobs=True, debug=False):
     # Payload
     buffer.extend(command_str)
 
-    if encode_cobs:
-        if debug:
-            print_buffer("TX   ", buffer)
-        encoded_buffer = cobs.encode(buffer)
-        if debug:
-            print_buffer("TXe", encoded_buffer)
-        return encoded_buffer
-    else:
-        return buffer
+
+    encoded_buffer = cobs.encode(buffer)
+
+    if debug:
+        print_buffer("TX   ", buffer)
+    if debug:
+        print_buffer("TX (enc)", encoded_buffer)
+
+    return encoded_buffer
 
 
 class BootInfoCommand(object):

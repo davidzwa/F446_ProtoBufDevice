@@ -11,7 +11,7 @@ class SerialConnection(object):
     def __init__(self, port, baudrate):
         self.serial_reader = None
         self.serial_writer = None
-        self.start_bytes = bytes([0xFF, 0xFF])
+        self.start_bytes = bytes([0xFF])
         self.end_character = b'\0'
         self.port = port
         self.baudrate = baudrate
@@ -32,15 +32,20 @@ class SerialConnection(object):
         return not not self.serial_reader
 
     def write_buffer(self, buffer):
+        self.serial_writer.write(self.start_bytes)
+        # print(len(buffer))
+        self.serial_writer.write(bytes([len(buffer)]))
+        # print('tx', buffer)
         self.serial_writer.write(buffer)
         self.serial_writer.write(self.end_character)
 
     async def process(self):
         reader = self.get_reader()
-        await reader.readuntil(bytes([0xFF, 0xFE]))
+        await reader.readuntil(self.start_bytes)
         length_bytes = await reader.read(1)
         length = int.from_bytes(length_bytes, 'big')
         buffer = await reader.read(length)
+        # print('rx', buffer)
         decode_message(buffer)
 
     def close(self):
