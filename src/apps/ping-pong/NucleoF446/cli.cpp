@@ -66,6 +66,7 @@ void UartISR(UartNotifyId_t id) {
         FifoFlush(&uart->FifoRx);
     }
 
+    // This is a very weak check
     if (GetLastChar() == packetEndMarker) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {

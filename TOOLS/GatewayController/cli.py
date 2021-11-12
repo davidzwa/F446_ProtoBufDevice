@@ -27,8 +27,9 @@ class CliParser(object):
             print(f"Spreading factor {sf} was not in range (7-12)")
             return
 
-        encoded_buffer = RadioConfig.setSpreadingFactorConfig(sf)
-        self.__send(encoded_buffer)
+        # TODO not implemented
+        # encoded_buffer = RadioConfig.setSpreadingFactorConfig(sf)
+        # self.__send(encoded_buffer)
 
     async def request_boot_info(self, reader, writer):
         encoded_buffer = BootInfoCommand.request_boot_info()
