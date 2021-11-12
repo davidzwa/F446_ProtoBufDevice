@@ -35,10 +35,9 @@ async def main():
         print("No STM device COM ports found")
         exit(-1)
 
+    
     serial_port_name = filtered_ports[0].device
-    baudrate = 921600
-
-    connection = get_connection(serial_port_name, baudrate)
+    connection = get_connection(serial_port_name, 921600)
 
     # Loop forever
     while True:

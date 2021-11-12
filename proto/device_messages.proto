@@ -34,7 +34,8 @@ message UartResponse {
 }
 
 message SpreadingFactorConfig {
-    uint32 spreadingFactor = 1;
+    uint32 spreadingFactorRx = 1;
+    uint32 spreadingFactorTx = 2;
 }
 
 message SequenceRequestConfig {
@@ -48,8 +49,10 @@ message LoRaMessage {
         Configuration = 0;
         MultiCast = 1;
         MultiCastAck = 2;
-        SequenceRequest = 3;
-        SequenceResponse = 4;
+        UniCast = 3;
+        UniCastAck = 4;
+        SequenceRequest = 5;
+        SequenceResponse = 6;
     }
 
     CommandType command = 1;
@@ -57,5 +60,6 @@ message LoRaMessage {
     oneof Body {
         SpreadingFactorConfig spreadingFactorConfig = 3;
         SequenceRequestConfig sequenceRequestConfig = 4;
+        bytes payload = 5;
     }
 }

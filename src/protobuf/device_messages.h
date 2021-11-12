@@ -1009,12 +1009,14 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
     SpreadingFactorConfig() = default;
     SpreadingFactorConfig(const SpreadingFactorConfig& rhs )
     {
-      set_spreadingFactor(rhs.get_spreadingFactor());
+      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
+      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
     }
 
     SpreadingFactorConfig(const SpreadingFactorConfig&& rhs ) noexcept
     {
-      set_spreadingFactor(rhs.get_spreadingFactor());
+      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
+      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
     }
 
     ~SpreadingFactorConfig() override = default;
@@ -1022,36 +1024,51 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      SPREADINGFACTOR = 1
+      SPREADINGFACTORRX = 1,
+      SPREADINGFACTORTX = 2
     };
 
     SpreadingFactorConfig& operator=(const SpreadingFactorConfig& rhs)
     {
-      set_spreadingFactor(rhs.get_spreadingFactor());
+      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
+      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
       return *this;
     }
 
     SpreadingFactorConfig& operator=(const SpreadingFactorConfig&& rhs) noexcept
     {
-      set_spreadingFactor(rhs.get_spreadingFactor());
+      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
+      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
       return *this;
     }
 
-    inline void clear_spreadingFactor() { spreadingFactor_.clear(); }
-    inline void set_spreadingFactor(const EmbeddedProto::uint32& value) { spreadingFactor_ = value; }
-    inline void set_spreadingFactor(const EmbeddedProto::uint32&& value) { spreadingFactor_ = value; }
-    inline EmbeddedProto::uint32& mutable_spreadingFactor() { return spreadingFactor_; }
-    inline const EmbeddedProto::uint32& get_spreadingFactor() const { return spreadingFactor_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactor() const { return spreadingFactor_.get(); }
+    inline void clear_spreadingFactorRx() { spreadingFactorRx_.clear(); }
+    inline void set_spreadingFactorRx(const EmbeddedProto::uint32& value) { spreadingFactorRx_ = value; }
+    inline void set_spreadingFactorRx(const EmbeddedProto::uint32&& value) { spreadingFactorRx_ = value; }
+    inline EmbeddedProto::uint32& mutable_spreadingFactorRx() { return spreadingFactorRx_; }
+    inline const EmbeddedProto::uint32& get_spreadingFactorRx() const { return spreadingFactorRx_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactorRx() const { return spreadingFactorRx_.get(); }
+
+    inline void clear_spreadingFactorTx() { spreadingFactorTx_.clear(); }
+    inline void set_spreadingFactorTx(const EmbeddedProto::uint32& value) { spreadingFactorTx_ = value; }
+    inline void set_spreadingFactorTx(const EmbeddedProto::uint32&& value) { spreadingFactorTx_ = value; }
+    inline EmbeddedProto::uint32& mutable_spreadingFactorTx() { return spreadingFactorTx_; }
+    inline const EmbeddedProto::uint32& get_spreadingFactorTx() const { return spreadingFactorTx_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactorTx() const { return spreadingFactorTx_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != spreadingFactor_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != spreadingFactorRx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = spreadingFactor_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTOR), buffer, false);
+        return_value = spreadingFactorRx_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORRX), buffer, false);
+      }
+
+      if((0U != spreadingFactorTx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = spreadingFactorTx_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORTX), buffer, false);
       }
 
       return return_value;
@@ -1070,8 +1087,12 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::SPREADINGFACTOR:
-            return_value = spreadingFactor_.deserialize_check_type(buffer, wire_type);
+          case id::SPREADINGFACTORRX:
+            return_value = spreadingFactorRx_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SPREADINGFACTORTX:
+            return_value = spreadingFactorTx_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -1103,14 +1124,16 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_spreadingFactor();
+      clear_spreadingFactorRx();
+      clear_spreadingFactorTx();
 
     }
 
     private:
 
 
-      EmbeddedProto::uint32 spreadingFactor_ = 0U;
+      EmbeddedProto::uint32 spreadingFactorRx_ = 0U;
+      EmbeddedProto::uint32 spreadingFactorTx_ = 0U;
 
 };
 
@@ -1271,6 +1294,7 @@ class SequenceRequestConfig final: public ::EmbeddedProto::MessageInterface
 
 };
 
+template<uint32_t payload_LENGTH>
 class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -1293,6 +1317,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::SEQUENCEREQUESTCONFIG:
           set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+          break;
+
+        case id::PAYLOAD:
+          set_payload(rhs.get_payload());
           break;
 
         default:
@@ -1321,6 +1349,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
           break;
 
+        case id::PAYLOAD:
+          set_payload(rhs.get_payload());
+          break;
+
         default:
           break;
       }
@@ -1334,8 +1366,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       Configuration = 0,
       MultiCast = 1,
       MultiCastAck = 2,
-      SequenceRequest = 3,
-      SequenceResponse = 4
+      UniCast = 3,
+      UniCastAck = 4,
+      SequenceRequest = 5,
+      SequenceResponse = 6
     };
 
     enum class id : uint32_t
@@ -1344,7 +1378,8 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       COMMAND = 1,
       SEQUENCENUMBER = 2,
       SPREADINGFACTORCONFIG = 3,
-      SEQUENCEREQUESTCONFIG = 4
+      SEQUENCEREQUESTCONFIG = 4,
+      PAYLOAD = 5
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -1365,6 +1400,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::SEQUENCEREQUESTCONFIG:
           set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+          break;
+
+        case id::PAYLOAD:
+          set_payload(rhs.get_payload());
           break;
 
         default:
@@ -1392,6 +1431,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::SEQUENCEREQUESTCONFIG:
           set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+          break;
+
+        case id::PAYLOAD:
+          set_payload(rhs.get_payload());
           break;
 
         default:
@@ -1494,6 +1537,37 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const SequenceRequestConfig& get_sequenceRequestConfig() const { return Body_.sequenceRequestConfig_; }
     inline const SequenceRequestConfig& sequenceRequestConfig() const { return Body_.sequenceRequestConfig_; }
 
+    inline bool has_payload() const
+    {
+      return id::PAYLOAD == which_Body_;
+    }
+    inline void clear_payload()
+    {
+      if(id::PAYLOAD == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.payload_.~FieldBytes();
+      }
+    }
+    inline ::EmbeddedProto::FieldBytes<payload_LENGTH>& mutable_payload()
+    {
+      if(id::PAYLOAD != which_Body_)
+      {
+        init_Body(id::PAYLOAD);
+      }
+      return Body_.payload_;
+    }
+    inline void set_payload(const ::EmbeddedProto::FieldBytes<payload_LENGTH>& rhs)
+    {
+      if(id::PAYLOAD != which_Body_)
+      {
+        init_Body(id::PAYLOAD);
+      }
+      Body_.payload_.set(rhs);
+    }
+    inline const ::EmbeddedProto::FieldBytes<payload_LENGTH>& get_payload() const { return Body_.payload_; }
+    inline const uint8_t* payload() const { return Body_.payload_.get_const(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1524,6 +1598,13 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           if(has_sequenceRequestConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.sequenceRequestConfig_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCEREQUESTCONFIG), buffer, true);
+          }
+          break;
+
+        case id::PAYLOAD:
+          if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+          {
+            return_value = Body_.payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, true);
           }
           break;
 
@@ -1578,6 +1659,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::PAYLOAD:
+            return_value = deserialize_Body(id::PAYLOAD, Body_.payload_, buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -1626,6 +1711,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         SpreadingFactorConfig spreadingFactorConfig_;
         SequenceRequestConfig sequenceRequestConfig_;
+        ::EmbeddedProto::FieldBytes<payload_LENGTH> payload_;
       };
       Body Body_;
 
@@ -1650,6 +1736,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::SEQUENCEREQUESTCONFIG;
             break;
 
+          case id::PAYLOAD:
+            new(&Body_.payload_) ::EmbeddedProto::FieldBytes<payload_LENGTH>;
+            which_Body_ = id::PAYLOAD;
+            break;
+
           default:
             break;
          }
@@ -1666,6 +1757,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::SEQUENCEREQUESTCONFIG:
             Body_.sequenceRequestConfig_.~SequenceRequestConfig(); // NOSONAR Unions require this.
+            break;
+          case id::PAYLOAD:
+            Body_.payload_.~FieldBytes(); // NOSONAR Unions require this.
             break;
           default:
             break;
