@@ -12,6 +12,7 @@
 #include "delay.h"
 #include "device_messages.h"
 #include "radio_config.h"
+#include "radio_phy.h"
 #include "uart.h"
 #include "uart_messages.h"
 #include "utilities.h"
@@ -111,6 +112,12 @@ void UartISR(UartNotifyId_t id) {
             } else if (uartCommand.has_transmitCommand()) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
                 printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                
+                if (command.IsMulticast()) {
+                    // TransmitMulticast(command);
+                } else {
+                    TransmitUnicast(command);
+                }
 
                 UartSendAck(1);
                 // TODO apply
