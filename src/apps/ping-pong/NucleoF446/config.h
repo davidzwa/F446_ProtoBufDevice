@@ -81,7 +81,9 @@
 #endif
 
 #define RX_TIMEOUT_VALUE 100
-#define BUFFER_SIZE 64 // Define the payload size here
+#define BUFFER_SIZE 64  // Define the payload size here
+#define MAX_APPNAME_LENGTH 20
+#define MAX_PAYLOAD_LENGTH 22
 
 #define FIRMWARE_VERSION 0x02000002 // 2.0.0.2
 #endif

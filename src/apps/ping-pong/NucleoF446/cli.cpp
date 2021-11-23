@@ -12,14 +12,13 @@
 #include "delay.h"
 #include "device_messages.h"
 #include "radio_config.h"
+#include "radio_phy.h"
 #include "uart.h"
 #include "uart_messages.h"
 #include "utilities.h"
 #include "utils.h"
 
 #define PACKET_SIZE_LIMIT 256
-#define MAX_PAYLOAD_LENGTH 22
-#define MAX_APPNAME_LENGTH 20
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
 uint8_t packetSize;
@@ -113,6 +112,13 @@ void UartISR(UartNotifyId_t id) {
             } else if (uartCommand.has_transmitCommand()) {
                 TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
                 printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+                
+                if (command.IsMulticast()) {
+                    // TransmitMulticast(command);
+                } else {
+                    TransmitUnicast(command);
+                }
+
                 UartSendAck(1);
                 // TODO apply
             } else if (uartCommand.has_requestBootInfo()) {
@@ -124,6 +130,7 @@ void UartISR(UartNotifyId_t id) {
             uartCommand.clear();
         }
 
+        readBuffer.clear();
         packetSize = 0;
         packetBufferingLength = 0;
     }
@@ -253,9 +260,9 @@ void PrintSettings() {
     // printf("", rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
 }
 
-void UpdateRadioSpreadingFactor(uint8_t spreadingFactor, bool reconnect) {
-    txConf.set_DataRate(spreadingFactor);
-    rxConf.set_DataRate(spreadingFactor);
+void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFactorTx, bool reconnect) {
+    txConf.set_DataRate(spreadingFactorTx);
+    rxConf.set_DataRate(spreadingFactorRx);
 
     if (reconnect) {
         ApplyRadioConfig();

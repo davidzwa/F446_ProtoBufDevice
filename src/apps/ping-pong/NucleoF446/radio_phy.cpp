@@ -6,13 +6,14 @@
 #include "ProtoWriteBuffer.h"
 #include "cli.h"
 #include "config.h"
-#include "tasks.h"
 #include "device_messages.h"
+#include "tasks.h"
+#include "uart_messages.h"
 
 // uint16_t msgSize = BUFFER_SIZE;
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
-LoRaMessage loraMessage;
+LoRaMessage<MAX_PAYLOAD_LENGTH> loraMessage;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
@@ -106,14 +107,15 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     auto result = loraMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
+        UartSendAck(3);
         Radio.Rx(RX_TIMEOUT_VALUE);
         return;
     }
 
-    if (loraMessage.get_command() == LoRaMessage::CommandType::Configuration) {
+    if (loraMessage.get_command() == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {
         if (loraMessage.has_spreadingFactorConfig()) {
             auto config = loraMessage.get_spreadingFactorConfig();
-            UpdateRadioSpreadingFactor(config.get_spreadingFactor(), true);
+            UpdateRadioSpreadingFactor(config.get_spreadingFactorRx(), config.get_spreadingFactorTx(), true);
         }
         if (loraMessage.has_sequenceRequestConfig()) {
             SetSequenceRequestConfig(loraMessage.get_sequenceRequestConfig());
@@ -123,6 +125,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Ensure that the message is not re-used
+    UartSendAck(2);
     loraMessage.clear();
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
@@ -142,10 +145,18 @@ void TransmitProtoBuffer() {
     Radio.Send(writeLoraBuffer.get_data(), writeLoraBuffer.get_size());
 }
 
+void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
+    loraMessage.clear();
+    loraMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
+    loraMessage.set_payload(command.get_Payload());
+    TransmitProtoBuffer();
+}
+
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
     loraMessage.clear();
 
-    loraMessage.mutable_spreadingFactorConfig().set_spreadingFactor(spreadingFactor);
+    loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
+    loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
     TransmitProtoBuffer();
 }
 

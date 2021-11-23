@@ -5,6 +5,7 @@ from serial.serialutil import SerialException
 from cli import CliParser
 from data_store import data_store
 from serial_connector import get_connection
+from radio_config import TransmitCommands
 
 
 async def cli_reader(port):
@@ -24,6 +25,13 @@ async def serial_reader(connection):
             await asyncio.sleep(1)
         await asyncio.sleep(0.001)
 
+async def unicast_worker(connection):
+    while True:
+        if connection.is_open():
+            encoded_buffer = TransmitCommands.sendUnicastCommand(deviceId=12)
+            connection.write_buffer(encoded_buffer)
+        await asyncio.sleep(0.1)
+
 
 async def main():
     data_store.load_json()
@@ -35,16 +43,16 @@ async def main():
         print("No STM device COM ports found")
         exit(-1)
 
+    
     serial_port_name = filtered_ports[0].device
-    baudrate = 921600
-
-    connection = get_connection(serial_port_name, baudrate)
+    connection = get_connection(serial_port_name, 921600)
 
     # Loop forever
     while True:
+        f1 = loop.create_task(unicast_worker(connection))
         f2 = loop.create_task(serial_reader(connection))
         f3 = loop.create_task(cli_reader(serial_port_name))
-        await asyncio.wait([f2, f3])
+        await asyncio.wait([f1, f2, f3])
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

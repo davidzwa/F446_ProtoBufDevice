@@ -26,7 +26,7 @@ extern "C" {
 
 void InitCli(bool withISR);
 void InitRadioConfig();
-void UpdateRadioSpreadingFactor(uint8_t spreadingFactor, bool reconnect);
+void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFactorTx, bool reconnect);
 void ApplyConfigIfPending();
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);

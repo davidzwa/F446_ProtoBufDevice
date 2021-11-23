@@ -5,15 +5,28 @@ import time
 
 from utils.nickname import generate
 
+
 class DataStore(object):
     def __init__(self):
         self.__data_cache = None
         self.__devices = None
         self.__data_file = "./data/devices.json"
+        self.__gateway_file = "./data/gateway.json"
 
     def __get_default_json(self):
         return {
-            "devices": []
+            "devices": [],
+            "gateway": self.__get_default_gateway_json()
+        }
+
+    def __get_default_gateway_json(self):
+        return {
+            "receive": {
+                "DataRate": 7
+            },
+            "transmit": {
+                "DataRate": 7
+            }
         }
 
     def ensure_folder_created(self):
