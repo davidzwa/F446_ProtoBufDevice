@@ -32,12 +32,18 @@ class SerialConnection(object):
         return not not self.serial_reader
 
     def write_buffer(self, buffer):
-        self.serial_writer.write(self.start_bytes)
-        # print(len(buffer))
-        self.serial_writer.write(bytes([len(buffer)]))
-        # print('tx', buffer)
-        self.serial_writer.write(buffer)
-        self.serial_writer.write(self.end_character)
+        joined_buffer = b"".join(
+            [
+                self.start_bytes,
+                bytes([len(buffer)]),
+                buffer,
+                self.end_character
+            ]
+        )
+        for byte in joined_buffer:
+            print('\{:02X}'.format(byte), end='')
+        print('')
+        self.serial_writer.write(joined_buffer)
 
     async def process(self):
         reader = self.get_reader()

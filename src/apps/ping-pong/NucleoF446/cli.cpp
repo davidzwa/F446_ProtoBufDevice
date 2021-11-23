@@ -130,6 +130,7 @@ void UartISR(UartNotifyId_t id) {
             uartCommand.clear();
         }
 
+        readBuffer.clear();
         packetSize = 0;
         packetBufferingLength = 0;
     }
