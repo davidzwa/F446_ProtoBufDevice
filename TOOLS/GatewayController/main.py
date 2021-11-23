@@ -30,7 +30,7 @@ async def unicast_worker(connection):
         if connection.is_open():
             encoded_buffer = TransmitCommands.sendUnicastCommand(deviceId=12)
             connection.write_buffer(encoded_buffer)
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(10)
 
 
 async def main():
