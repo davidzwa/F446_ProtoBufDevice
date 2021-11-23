@@ -5,6 +5,7 @@ from serial.serialutil import SerialException
 from cli import CliParser
 from data_store import data_store
 from serial_connector import get_connection
+from radio_config import TransmitCommands
 
 
 async def cli_reader(port):
@@ -24,6 +25,13 @@ async def serial_reader(connection):
             await asyncio.sleep(1)
         await asyncio.sleep(0.001)
 
+async def unicast_worker(connection):
+    while True:
+        if connection.is_open():
+            encoded_buffer = TransmitCommands.sendUnicastCommand(deviceId=12)
+            connection.write_buffer(encoded_buffer)
+        await asyncio.sleep(0.5)
+
 
 async def main():
     data_store.load_json()
@@ -41,6 +49,7 @@ async def main():
 
     # Loop forever
     while True:
+        f1 = loop.create_task(unicast_worker(connection))
         f2 = loop.create_task(serial_reader(connection))
         f3 = loop.create_task(cli_reader(serial_port_name))
         await asyncio.wait([f2, f3])
