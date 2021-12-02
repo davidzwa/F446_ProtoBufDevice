@@ -40,6 +40,7 @@ class SerialConnection(object):
                 self.end_character
             ]
         )
+        print('tx ', end='')
         for byte in joined_buffer:
             print('\{:02X}'.format(byte), end='')
         print('')

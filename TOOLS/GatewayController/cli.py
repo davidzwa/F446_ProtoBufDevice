@@ -42,6 +42,11 @@ class CliParser(object):
     async def send_radio_rx_config(self, reader, writer):
         encoded_buffer = RadioConfig.getRxConfig()
         self.__send(encoded_buffer)
+    
+    async def send_periodic_config(self, reader, writer, period, max_packet_count):
+        encoded_buffer = TransmitCommands.sendUnicastCommand(
+            deviceId=12, debug=False, period=period, max_packet_count=max_packet_count)
+        self.__send(encoded_buffer)
 
     async def send_multicast_command(self, reader, writer):
         encoded_buffer = TransmitCommands.sendMulticastCommand(groupId=12)
@@ -72,6 +77,11 @@ class CliParser(object):
             description="Get spreading factor.")
         sf_parser.add_argument("sf", type=int)
 
+        periodic_tx_parser = argparse.ArgumentParser(
+            description="Set device periodic tranmission")
+        periodic_tx_parser.add_argument("period", type=int)
+        periodic_tx_parser.add_argument("max_period_count", type=int)
+
         port_parser = argparse.ArgumentParser(
             description="Change serial port.")
         port_parser.add_argument("com", type=int)
@@ -82,6 +92,7 @@ class CliParser(object):
                 "port": (self.switch_serial_port, port_parser),
                 "boot": (self.request_boot_info, self.get_parser()),
                 "sf": (self.send_spreading_factor, sf_parser),
+                "P": (self.send_periodic_config, periodic_tx_parser),
                 "T": (self.send_radio_tx_config, self.get_parser()),
                 "R": (self.send_radio_rx_config, self.get_parser()),
                 "M": (self.send_multicast_command, self.get_parser()),

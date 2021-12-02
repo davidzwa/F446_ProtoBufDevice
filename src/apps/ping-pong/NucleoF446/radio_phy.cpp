@@ -125,7 +125,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Ensure that the message is not re-used
-    UartSendAck(2);
+    UartSendLoRaRx(loraMessage.get_payload(), rssi, snr);
     loraMessage.clear();
     Radio.Rx(RX_TIMEOUT_VALUE);
 }

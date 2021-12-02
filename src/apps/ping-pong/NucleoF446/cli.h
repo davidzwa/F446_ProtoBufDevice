@@ -16,6 +16,8 @@
 */
 
 #include <stdio.h>
+#include "config.h"
+#include "FieldStringBytes.h"
 
 #ifndef CLI_H
 #define CLI_H
@@ -30,6 +32,7 @@ void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFact
 void ApplyConfigIfPending();
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
+void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, int16_t rssi, int8_t snr);
 void PrintSettings();
 
 #ifdef __cplusplus

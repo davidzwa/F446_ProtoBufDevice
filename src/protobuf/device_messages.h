@@ -383,6 +383,186 @@ class DeviceId final: public ::EmbeddedProto::MessageInterface
 
 };
 
+template<uint32_t Payload_LENGTH>
+class LoraReceive final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    LoraReceive() = default;
+    LoraReceive(const LoraReceive& rhs )
+    {
+      set_Size(rhs.get_Size());
+      set_Rssi(rhs.get_Rssi());
+      set_Snr(rhs.get_Snr());
+      set_Payload(rhs.get_Payload());
+    }
+
+    LoraReceive(const LoraReceive&& rhs ) noexcept
+    {
+      set_Size(rhs.get_Size());
+      set_Rssi(rhs.get_Rssi());
+      set_Snr(rhs.get_Snr());
+      set_Payload(rhs.get_Payload());
+    }
+
+    ~LoraReceive() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      SIZE = 1,
+      RSSI = 2,
+      SNR = 3,
+      PAYLOAD = 4
+    };
+
+    LoraReceive& operator=(const LoraReceive& rhs)
+    {
+      set_Size(rhs.get_Size());
+      set_Rssi(rhs.get_Rssi());
+      set_Snr(rhs.get_Snr());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    LoraReceive& operator=(const LoraReceive&& rhs) noexcept
+    {
+      set_Size(rhs.get_Size());
+      set_Rssi(rhs.get_Rssi());
+      set_Snr(rhs.get_Snr());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    inline void clear_Size() { Size_.clear(); }
+    inline void set_Size(const EmbeddedProto::uint32& value) { Size_ = value; }
+    inline void set_Size(const EmbeddedProto::uint32&& value) { Size_ = value; }
+    inline EmbeddedProto::uint32& mutable_Size() { return Size_; }
+    inline const EmbeddedProto::uint32& get_Size() const { return Size_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Size() const { return Size_.get(); }
+
+    inline void clear_Rssi() { Rssi_.clear(); }
+    inline void set_Rssi(const EmbeddedProto::uint32& value) { Rssi_ = value; }
+    inline void set_Rssi(const EmbeddedProto::uint32&& value) { Rssi_ = value; }
+    inline EmbeddedProto::uint32& mutable_Rssi() { return Rssi_; }
+    inline const EmbeddedProto::uint32& get_Rssi() const { return Rssi_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Rssi() const { return Rssi_.get(); }
+
+    inline void clear_Snr() { Snr_.clear(); }
+    inline void set_Snr(const EmbeddedProto::uint32& value) { Snr_ = value; }
+    inline void set_Snr(const EmbeddedProto::uint32&& value) { Snr_ = value; }
+    inline EmbeddedProto::uint32& mutable_Snr() { return Snr_; }
+    inline const EmbeddedProto::uint32& get_Snr() const { return Snr_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Snr() const { return Snr_.get(); }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != Size_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Size_.serialize_with_id(static_cast<uint32_t>(id::SIZE), buffer, false);
+      }
+
+      if((0U != Rssi_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Rssi_.serialize_with_id(static_cast<uint32_t>(id::RSSI), buffer, false);
+      }
+
+      if((0U != Snr_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Snr_.serialize_with_id(static_cast<uint32_t>(id::SNR), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::SIZE:
+            return_value = Size_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RSSI:
+            return_value = Rssi_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SNR:
+            return_value = Snr_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PAYLOAD:
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Size();
+      clear_Rssi();
+      clear_Snr();
+      clear_Payload();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 Size_ = 0U;
+      EmbeddedProto::uint32 Rssi_ = 0U;
+      EmbeddedProto::uint32 Snr_ = 0U;
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
+
+};
+
 template<uint32_t AppName_LENGTH>
 class BootMessage final: public ::EmbeddedProto::MessageInterface
 {
@@ -651,7 +831,8 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t bootMessage_AppName_LENGTH>
+template<uint32_t bootMessage_AppName_LENGTH, 
+uint32_t loraMessage_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -672,6 +853,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::ACKMESSAGE:
           set_ackMessage(rhs.get_ackMessage());
+          break;
+
+        case id::LORAMESSAGE:
+          set_loraMessage(rhs.get_loraMessage());
           break;
 
         default:
@@ -698,6 +883,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
+        case id::LORAMESSAGE:
+          set_loraMessage(rhs.get_loraMessage());
+          break;
+
         default:
           break;
       }
@@ -710,7 +899,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       BOOTMESSAGE = 1,
-      ACKMESSAGE = 2
+      ACKMESSAGE = 2,
+      LORAMESSAGE = 3
     };
 
     UartResponse& operator=(const UartResponse& rhs)
@@ -729,6 +919,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::ACKMESSAGE:
           set_ackMessage(rhs.get_ackMessage());
+          break;
+
+        case id::LORAMESSAGE:
+          set_loraMessage(rhs.get_loraMessage());
           break;
 
         default:
@@ -754,6 +948,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::ACKMESSAGE:
           set_ackMessage(rhs.get_ackMessage());
+          break;
+
+        case id::LORAMESSAGE:
+          set_loraMessage(rhs.get_loraMessage());
           break;
 
         default:
@@ -843,6 +1041,45 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline const AckMessage& get_ackMessage() const { return Body_.ackMessage_; }
     inline const AckMessage& ackMessage() const { return Body_.ackMessage_; }
 
+    inline bool has_loraMessage() const
+    {
+      return id::LORAMESSAGE == which_Body_;
+    }
+    inline void clear_loraMessage()
+    {
+      if(id::LORAMESSAGE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.loraMessage_.~LoraReceive<loraMessage_Payload_LENGTH>();
+      }
+    }
+    inline void set_loraMessage(const LoraReceive<loraMessage_Payload_LENGTH>& value)
+    {
+      if(id::LORAMESSAGE != which_Body_)
+      {
+        init_Body(id::LORAMESSAGE);
+      }
+      Body_.loraMessage_ = value;
+    }
+    inline void set_loraMessage(const LoraReceive<loraMessage_Payload_LENGTH>&& value)
+    {
+      if(id::LORAMESSAGE != which_Body_)
+      {
+        init_Body(id::LORAMESSAGE);
+      }
+      Body_.loraMessage_ = value;
+    }
+    inline LoraReceive<loraMessage_Payload_LENGTH>& mutable_loraMessage()
+    {
+      if(id::LORAMESSAGE != which_Body_)
+      {
+        init_Body(id::LORAMESSAGE);
+      }
+      return Body_.loraMessage_;
+    }
+    inline const LoraReceive<loraMessage_Payload_LENGTH>& get_loraMessage() const { return Body_.loraMessage_; }
+    inline const LoraReceive<loraMessage_Payload_LENGTH>& loraMessage() const { return Body_.loraMessage_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -861,6 +1098,13 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           if(has_ackMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.ackMessage_.serialize_with_id(static_cast<uint32_t>(id::ACKMESSAGE), buffer, true);
+          }
+          break;
+
+        case id::LORAMESSAGE:
+          if(has_loraMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.loraMessage_.serialize_with_id(static_cast<uint32_t>(id::LORAMESSAGE), buffer, true);
           }
           break;
 
@@ -891,6 +1135,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
           case id::ACKMESSAGE:
             return_value = deserialize_Body(id::ACKMESSAGE, Body_.ackMessage_, buffer, wire_type);
+
+            break;
+
+          case id::LORAMESSAGE:
+            return_value = deserialize_Body(id::LORAMESSAGE, Body_.loraMessage_, buffer, wire_type);
 
             break;
 
@@ -938,6 +1187,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
         AckMessage ackMessage_;
+        LoraReceive<loraMessage_Payload_LENGTH> loraMessage_;
       };
       Body Body_;
 
@@ -962,6 +1212,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::ACKMESSAGE;
             break;
 
+          case id::LORAMESSAGE:
+            new(&Body_.loraMessage_) LoraReceive<loraMessage_Payload_LENGTH>;
+            which_Body_ = id::LORAMESSAGE;
+            break;
+
           default:
             break;
          }
@@ -978,6 +1233,9 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
           case id::ACKMESSAGE:
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
+            break;
+          case id::LORAMESSAGE:
+            Body_.loraMessage_.~LoraReceive<loraMessage_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;

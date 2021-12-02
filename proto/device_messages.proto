@@ -16,6 +16,14 @@ message DeviceId {
     uint32 Id2 = 3;
 }
 
+message LoraReceive 
+{
+    uint32 Size = 1;
+    uint32 Rssi = 2;
+    uint32 Snr = 3;
+    bytes Payload = 4;
+}
+
 message BootMessage {
     DeviceId DeviceIdentifier = 1;
     Version FirmwareVersion = 2;
@@ -30,6 +38,7 @@ message UartResponse {
     oneof Body {
         BootMessage bootMessage = 1;
         AckMessage ackMessage = 2;
+        LoraReceive loraMessage = 3;
     }
 }
 

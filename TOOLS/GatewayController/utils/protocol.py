@@ -30,6 +30,9 @@ def parse_device_id(spec):
     return f"{hex(spec.Id0)}.{hex(spec.Id1)}.{hex(spec.Id2)}"
 
 
+def print_lora_receive_message(lora_rx_message):
+    print(f"LoRa RX (RSSI: {lora_rx_message.Rssi}) (SNR: {lora_rx_message.Snr})")
+
 def print_ack_message(ack_message):
     print(f"ACK (sequence: {ack_message.SequenceNumber})")
 
@@ -56,6 +59,8 @@ def decode_message(data):
             print_boot_message(uart_packet.bootMessage)
         elif uart_packet.HasField("ackMessage"):
             print_ack_message(uart_packet.ackMessage)
+        elif uart_packet.HasField("loraReceive"):
+            print_ack_message(uart_packet.loraReceive)
         else:
             print("packet not recognized")
     except cobs.DecodeError as e:
