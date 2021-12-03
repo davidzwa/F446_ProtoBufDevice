@@ -49,10 +49,10 @@ async def main():
 
     # Loop forever
     while True:
-        f1 = loop.create_task(unicast_worker(connection))
+        # f1 = loop.create_task(unicast_worker(connection))
         f2 = loop.create_task(serial_reader(connection))
         f3 = loop.create_task(cli_reader(serial_port_name))
-        await asyncio.wait([f1, f2, f3])
+        await asyncio.wait([f2, f3])
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

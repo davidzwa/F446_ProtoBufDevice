@@ -43,9 +43,9 @@ class CliParser(object):
         encoded_buffer = RadioConfig.getRxConfig()
         self.__send(encoded_buffer)
     
-    async def send_periodic_config(self, reader, writer, period, max_packet_count):
+    async def send_periodic_config(self, reader, writer, period):
         encoded_buffer = TransmitCommands.sendUnicastCommand(
-            deviceId=12, debug=False, period=period, max_packet_count=max_packet_count)
+            deviceId=12, debug=False, period=period, max_packet_count=10)
         self.__send(encoded_buffer)
 
     async def send_multicast_command(self, reader, writer):
@@ -80,7 +80,7 @@ class CliParser(object):
         periodic_tx_parser = argparse.ArgumentParser(
             description="Set device periodic tranmission")
         periodic_tx_parser.add_argument("period", type=int)
-        periodic_tx_parser.add_argument("max_period_count", type=int)
+        # periodic_tx_parser.add_argument("max_period_count", type=int)
 
         port_parser = argparse.ArgumentParser(
             description="Change serial port.")

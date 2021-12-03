@@ -135,9 +135,6 @@ void OnRxTimeout(void) {
 }
 
 void OnRxError(void) {
-    // if (IsGateWay) {
-    //      printf("[Main] error\n");
-    // }
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
@@ -154,7 +151,6 @@ void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
 
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
     loraMessage.clear();
-
     loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
     loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
     TransmitProtoBuffer();
