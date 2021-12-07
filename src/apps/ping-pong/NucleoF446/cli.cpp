@@ -14,6 +14,7 @@
 #include "radio_config.h"
 #include "radio_phy.h"
 #include "uart.h"
+#include "tasks.h"
 #include "uart_messages.h"
 #include "utilities.h"
 #include "utils.h"
@@ -29,6 +30,7 @@ const size_t offset = 1; // End byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
+bool newCommandReady = false;
 RadioRxConfig rxConf;
 RadioTxConfig txConf;
 UartCommand<MAX_PAYLOAD_LENGTH> uartCommand;
@@ -97,43 +99,59 @@ void UartISR(UartNotifyId_t id) {
         }
 
         auto deserialize_status = uartCommand.deserialize(readBuffer);
-
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            if (uartCommand.has_rxConfig()) {
-                printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
-                rxConf = uartCommand.get_rxConfig();
-                UartSendAck(1);
-                // TODO apply
-            } else if (uartCommand.has_txConfig()) {
-                printf("ID %ld\n\0", (uint32_t)uartCommand.get_which_Body());
-                txConf = uartCommand.get_txConfig();
-                UartSendAck(1);
-                // TODO apply
-            } else if (uartCommand.has_transmitCommand()) {
-                TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
-                // printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
-                
-                if (command.IsMulticast()) {
-                    // TransmitMulticast(command);
-                } else {
-                    TransmitUnicast(command);
-                }
-
-                UartSendAck(1);
-                // TODO apply
-            } else if (uartCommand.has_requestBootInfo()) {
-                UartSendBoot();
-            } else {
-                UartSendAck(0);
-            }
-
-            uartCommand.clear();
+            // Let main loop pick it up
+            newCommandReady = true;
         }
 
         readBuffer.clear();
         packetSize = 0;
         packetBufferingLength = 0;
     }
+}
+
+bool IsCliCommandReady() {
+    return newCommandReady;
+}
+
+void ProcessCliCommand() {
+    if (newCommandReady == false) {
+        return;
+    }
+
+    // We dont want to process twice, so we immediately set it to false
+    newCommandReady = false;
+
+    if (uartCommand.has_rxConfig()) {
+        printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
+        rxConf = uartCommand.get_rxConfig();
+        UartSendAck(1);
+        // TODO apply
+    } else if (uartCommand.has_txConfig()) {
+        printf("ID %ld\n\0", (uint32_t)uartCommand.get_which_Body());
+        txConf = uartCommand.get_txConfig();
+        UartSendAck(1);
+        // TODO apply
+    } else if (uartCommand.has_transmitCommand()) {
+        // printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
+        TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
+        if (command.has_Period() && command.get_Period() > 50) {
+            TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
+        } else if (command.IsMulticast()) {
+            // TransmitMulticast(command);
+            TransmitUnicast(command);
+        } else {
+            TransmitUnicast(command);
+        }
+
+        UartSendAck(1);
+    } else if (uartCommand.has_requestBootInfo()) {
+        UartSendBoot();
+    } else {
+        UartSendAck(250);
+    }
+
+    uartCommand.clear();
 }
 
 void UartSend(uint8_t *buffer, size_t length) {
@@ -146,7 +164,7 @@ void UartSend(uint8_t *buffer, size_t length) {
 }
 
 void UartSendAck(uint8_t sequenceNumber) {
-    UartResponse<MAX_APPNAME_LENGTH> uartResponse;
+    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
     auto ack = uartResponse.mutable_ackMessage();
     ack.set_SequenceNumber(sequenceNumber);
     uartResponse.set_ackMessage(ack);
@@ -163,8 +181,27 @@ void UartSendAck(uint8_t sequenceNumber) {
     writeBuffer.clear();
 }
 
+void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, int16_t rssi, int8_t snr) {
+    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
+    auto loraMessage = uartResponse.mutable_loraMessage();
+    loraMessage.set_Payload(payload);
+    loraMessage.set_Rssi(rssi);
+    loraMessage.set_Snr(snr);
+
+    // First the length
+    writeBuffer.push((uint8_t)uartResponse.serialized_size());
+    // Push the data
+    auto result = uartResponse.serialize(writeBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        // Send the buffer in COBS encoded form
+        writeBuffer.push(packetEndMarker);
+        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+    }
+    writeBuffer.clear();
+}
+
 void UartSendBoot() {
-    UartResponse<MAX_APPNAME_LENGTH> uartResponse;
+    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
     auto bootMessage = uartResponse.mutable_bootMessage();
     bootMessage.mutable_AppName() = APP_NAME;
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();

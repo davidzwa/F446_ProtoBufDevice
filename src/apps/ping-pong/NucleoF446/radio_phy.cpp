@@ -125,7 +125,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Ensure that the message is not re-used
-    UartSendAck(2);
+    UartSendLoRaRx(loraMessage.get_payload(), rssi, snr);
     loraMessage.clear();
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
@@ -135,9 +135,6 @@ void OnRxTimeout(void) {
 }
 
 void OnRxError(void) {
-    // if (IsGateWay) {
-    //      printf("[Main] error\n");
-    // }
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
@@ -154,7 +151,6 @@ void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
 
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
     loraMessage.clear();
-
     loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
     loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
     TransmitProtoBuffer();

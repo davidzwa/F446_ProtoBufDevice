@@ -13,9 +13,12 @@ static TimerEvent_t HeartBeatTimer;
 // Normal operation
 static TimerEvent_t PingSlotTimer;
 static TimerEvent_t BeaconTimer;
-static TimerEvent_t ContTxTimer;
+static TimerEvent_t PeriodicTxTimer;
 ProtoWriteBuffer writeTransmitBuffer;
-uint16_t BeaconSequenceCount;
+uint16_t beaconSequenceCount;
+uint16_t periodicTransmissionMax;
+uint16_t periodicCurrentCounter;
+uint16_t periodicTxInterval = 1000;
 
 // Sequencer as test
 static TimerEvent_t SequenceTimer;
@@ -24,7 +27,7 @@ uint16_t sequenceMessageCount = 0;
 bool sequenceTestRunning = false;
 
 static void OnBeaconEvent(void* context) {
-    BeaconSequenceCount++;
+    beaconSequenceCount++;
     TimerReset(&BeaconTimer);
 }
 
@@ -37,7 +40,9 @@ static void OnHeartbeatEvent(void* context) {
 static void OnPeriodicTx(void* context) {
     TransmitCommand<MAX_PAYLOAD_LENGTH> command;
     command.set_IsMulticast(false);
-    uint8_t* buffer = (uint8_t*)"pong";
+    
+    // TODO REPLACE with useful payload
+    uint8_t* buffer = (uint8_t*)"ZEDdify me";
     writeTransmitBuffer.clear();
     writeTransmitBuffer.push(buffer, 3);
 
@@ -45,7 +50,28 @@ static void OnPeriodicTx(void* context) {
         .serialize(writeTransmitBuffer);
     TransmitUnicast(command);
 
-    TimerReset(&ContTxTimer);
+    periodicCurrentCounter++;
+    TimerReset(&PeriodicTxTimer);
+
+    if (periodicCurrentCounter > periodicTransmissionMax) {
+
+        TimerStop(&PeriodicTxTimer);
+    }
+}
+
+void TogglePeriodicTx(uint16_t timerPeriod, uint16_t maxPacketCount) {
+    periodicCurrentCounter = 0;
+
+    // Period < 50 Too fast (chance of radio overrun) and nice way to disable the periodic timer
+    if (timerPeriod < 50) {
+        periodicCurrentCounter = 0;
+        TimerStop(&PeriodicTxTimer);
+    } else {
+        periodicTransmissionMax = maxPacketCount;
+        periodicTxInterval = timerPeriod;
+        TimerSetValue(&PeriodicTxTimer, periodicTxInterval);
+        TimerReset(&PeriodicTxTimer);
+    }
 }
 
 static void OnPingSlotEvent(void* context) {
@@ -73,13 +99,12 @@ void InitTimedTasks() {
     TimerInit(&HeartBeatTimer, OnHeartbeatEvent);
     TimerInit(&PingSlotTimer, OnPingSlotEvent);
     TimerInit(&SequenceTimer, OnSequenceEvent);
-    TimerInit(&ContTxTimer, OnPeriodicTx);
+    TimerInit(&PeriodicTxTimer, OnPeriodicTx);
 
-    TimerSetValue(&ContTxTimer, 100);
+    TimerSetValue(&PeriodicTxTimer, periodicTxInterval);
     TimerSetValue(&BeaconTimer, 128000);
     TimerSetValue(&HeartBeatTimer, 30000);
 
-    TimerStart(&ContTxTimer);
     TimerStart(&BeaconTimer);
     TimerStart(&HeartBeatTimer);
 }

@@ -30,7 +30,6 @@ def serialize(pb_msg, debug=False):
     # Payload
     buffer.extend(command_str)
 
-
     encoded_buffer = cobs.encode(buffer)
 
     if debug:
@@ -54,18 +53,33 @@ class BootInfoCommand(object):
 
 class TransmitCommands(object):
     @staticmethod
-    def sendMulticastCommand(groupId=0, debug=False):
+    def sendMulticastCommand(groupId=0, debug=False, period=0, max_packet_count=10):
+        """Send multicast packet (period less than 50 will cause disabling of periodic sending)"""
         command = uart_messages_pb2.UartCommand()
         command.transmitCommand.Payload = b'asd'
         command.transmitCommand.DeviceId = groupId
         command.transmitCommand.IsMulticast = True
+        if period >= 50:
+            command.transmitCommand.Period = period
+            command.transmitCommand.MaxPacketCount = max_packet_count
+        else:
+            assert command.transmitCommand.HasField('Period') == False
+            assert command.transmitCommand.HasField('MaxPacketCount') == False
+            
         return serialize(command, debug=debug)
 
     @staticmethod
-    def sendUnicastCommand(deviceId=0, debug=False):
+    def sendUnicastCommand(deviceId=0, debug=False, period=0, max_packet_count=10):
+        """Send unicast packet (period less than 50 will cause disabling of periodic sending)"""
         command = uart_messages_pb2.UartCommand()
         command.transmitCommand.Payload = b'asd'
         command.transmitCommand.DeviceId = deviceId
+        if period >= 50:
+            command.transmitCommand.Period = period
+            command.transmitCommand.MaxPacketCount = max_packet_count
+        else:
+            assert command.transmitCommand.HasField('Period') == False
+            assert command.transmitCommand.HasField('MaxPacketCount') == False
         command.transmitCommand.IsMulticast = False
         return serialize(command, debug=debug)
 

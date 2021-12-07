@@ -886,6 +886,8 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_Period(rhs.get_Period());
+      set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
     }
 
@@ -893,6 +895,8 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_Period(rhs.get_Period());
+      set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
     }
 
@@ -903,13 +907,17 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       ISMULTICAST = 1,
       DEVICEID = 2,
-      PAYLOAD = 3
+      PERIOD = 3,
+      MAXPACKETCOUNT = 4,
+      PAYLOAD = 5
     };
 
     TransmitCommand& operator=(const TransmitCommand& rhs)
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_Period(rhs.get_Period());
+      set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
       return *this;
     }
@@ -918,6 +926,8 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_Period(rhs.get_Period());
+      set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
       return *this;
     }
@@ -935,6 +945,60 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
     inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
     inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+
+    inline bool has_Period() const
+    {
+      return 0 != (presence::mask(presence::fields::PERIOD) & presence_[presence::index(presence::fields::PERIOD)]);
+    }
+    inline void clear_Period()
+    {
+      presence_[presence::index(presence::fields::PERIOD)] &= ~(presence::mask(presence::fields::PERIOD));
+      Period_.clear();
+    }
+    inline void set_Period(const EmbeddedProto::uint32& value)
+    {
+      presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
+      Period_ = value;
+    }
+    inline void set_Period(const EmbeddedProto::uint32&& value)
+    {
+      presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
+      Period_ = value;
+    }
+    inline EmbeddedProto::uint32& mutable_Period()
+    {
+      presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
+      return Period_;
+    }
+    inline const EmbeddedProto::uint32& get_Period() const { return Period_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Period() const { return Period_.get(); }
+
+    inline bool has_MaxPacketCount() const
+    {
+      return 0 != (presence::mask(presence::fields::MAXPACKETCOUNT) & presence_[presence::index(presence::fields::MAXPACKETCOUNT)]);
+    }
+    inline void clear_MaxPacketCount()
+    {
+      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] &= ~(presence::mask(presence::fields::MAXPACKETCOUNT));
+      MaxPacketCount_.clear();
+    }
+    inline void set_MaxPacketCount(const EmbeddedProto::uint32& value)
+    {
+      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
+      MaxPacketCount_ = value;
+    }
+    inline void set_MaxPacketCount(const EmbeddedProto::uint32&& value)
+    {
+      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
+      MaxPacketCount_ = value;
+    }
+    inline EmbeddedProto::uint32& mutable_MaxPacketCount()
+    {
+      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
+      return MaxPacketCount_;
+    }
+    inline const EmbeddedProto::uint32& get_MaxPacketCount() const { return MaxPacketCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MaxPacketCount() const { return MaxPacketCount_.get(); }
 
     inline void clear_Payload() { Payload_.clear(); }
     inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
@@ -955,6 +1019,16 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
       if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
+      }
+
+      if(has_Period() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Period_.serialize_with_id(static_cast<uint32_t>(id::PERIOD), buffer, true);
+      }
+
+      if(has_MaxPacketCount() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MaxPacketCount_.serialize_with_id(static_cast<uint32_t>(id::MAXPACKETCOUNT), buffer, true);
       }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
@@ -984,6 +1058,16 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
 
           case id::DEVICEID:
             return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PERIOD:
+            presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
+            return_value = Period_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MAXPACKETCOUNT:
+            presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
+            return_value = MaxPacketCount_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::PAYLOAD:
@@ -1021,15 +1105,54 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       clear_IsMulticast();
       clear_DeviceId();
+      clear_Period();
+      clear_MaxPacketCount();
       clear_Payload();
 
     }
 
     private:
 
+      // Define constants for tracking the presence of fields.
+      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
+      struct presence
+      {
+        // An enumeration with all the fields for which presence has to be tracked.
+        enum class fields : uint32_t
+        {
+          PERIOD,
+          MAXPACKETCOUNT
+        };
+
+        // The number of fields for which presence has to be tracked.
+        static constexpr uint32_t N_FIELDS = 2;
+
+        // Which type are we using to track presence.
+        using TYPE = uint32_t;
+
+        // How many bits are there in the presence type.
+        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
+
+        // How many variables of TYPE do we need to bit mask all presence fields.
+        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
+
+        // Obtain the index of a given field in the presence array.
+        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
+
+        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
+        static constexpr TYPE mask(const fields& field)
+        {
+          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
+        }
+      };
+
+      // Create an array in which the presence flags are stored.
+      typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::boolean IsMulticast_ = false;
       EmbeddedProto::uint32 DeviceId_ = 0U;
+      EmbeddedProto::uint32 Period_ = 0U;
+      EmbeddedProto::uint32 MaxPacketCount_ = 0U;
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
 };

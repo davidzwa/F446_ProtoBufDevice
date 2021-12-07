@@ -25,6 +25,7 @@ async def serial_reader(connection):
             await asyncio.sleep(1)
         await asyncio.sleep(0.001)
 
+
 async def unicast_worker(connection):
     while True:
         if connection.is_open():
@@ -43,16 +44,15 @@ async def main():
         print("No STM device COM ports found")
         exit(-1)
 
-    
     serial_port_name = filtered_ports[0].device
     connection = get_connection(serial_port_name, 921600)
 
     # Loop forever
     while True:
-        f1 = loop.create_task(unicast_worker(connection))
+        # f1 = loop.create_task(unicast_worker(connection))
         f2 = loop.create_task(serial_reader(connection))
         f3 = loop.create_task(cli_reader(serial_port_name))
-        await asyncio.wait([f1, f2, f3])
+        await asyncio.wait([f2, f3])
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
