@@ -27,6 +27,10 @@ extern "C" {
 #endif
 
 void InitCli(bool withISR);
+
+bool IsCliCommandReady();
+void ProcessCliCommand();
+
 void InitRadioConfig();
 void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFactorTx, bool reconnect);
 void ApplyConfigIfPending();

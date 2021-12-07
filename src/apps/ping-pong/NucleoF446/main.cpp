@@ -44,5 +44,9 @@ int main(void) {
         if (Radio.IrqProcess != NULL) {
             Radio.IrqProcess();
         }
+
+        if (IsCliCommandReady()) {
+            ProcessCliCommand();
+        }
     }
 }
