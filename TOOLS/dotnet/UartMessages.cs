@@ -34,21 +34,23 @@ public static partial class UartMessagesReflection {
           "dGgYBCABKA0SEAoIRGF0YVJhdGUYBSABKA0SEAoIQ29kZVJhdGUYBiABKA0S",
           "EwoLUHJlYW1ibGVMZW4YByABKA0SDgoGRml4TGVuGAggASgIEg0KBUNyY09u",
           "GAkgASgIEhEKCUZyZXFIb3BPbhgKIAEoCBIRCglIb3BQZXJpb2QYCyABKA0S",
-          "EgoKSXFJbnZlcnRlZBgMIAEoCBIPCgdUaW1lb3V0GA0gASgNIkkKD1RyYW5z",
-          "bWl0Q29tbWFuZBITCgtJc011bHRpY2FzdBgBIAEoCBIQCghEZXZpY2VJZBgC",
-          "IAEoDRIPCgdQYXlsb2FkGAMgASgMIiIKD1JlcXVlc3RCb290SW5mbxIPCgdS",
-          "ZXF1ZXN0GAEgASgIIrcBCgtVYXJ0Q29tbWFuZBIiCghyeENvbmZpZxgBIAEo",
-          "CzIOLlJhZGlvUnhDb25maWdIABIiCgh0eENvbmZpZxgCIAEoCzIOLlJhZGlv",
-          "VHhDb25maWdIABIrCg90cmFuc21pdENvbW1hbmQYAyABKAsyEC5UcmFuc21p",
-          "dENvbW1hbmRIABIrCg9yZXF1ZXN0Qm9vdEluZm8YBCABKAsyEC5SZXF1ZXN0",
-          "Qm9vdEluZm9IAEIGCgRCb2R5KiwKC1JhZGlvTW9kZW1zEg0KCU1PREVNX0ZT",
-          "SxAAEg4KCk1PREVNX0xPUkEQAWIGcHJvdG8z"));
+          "EgoKSXFJbnZlcnRlZBgMIAEoCBIPCgdUaW1lb3V0GA0gASgNIpkBCg9UcmFu",
+          "c21pdENvbW1hbmQSEwoLSXNNdWx0aWNhc3QYASABKAgSEAoIRGV2aWNlSWQY",
+          "AiABKA0SEwoGUGVyaW9kGAMgASgNSACIAQESGwoOTWF4UGFja2V0Q291bnQY",
+          "BCABKA1IAYgBARIPCgdQYXlsb2FkGAUgASgMQgkKB19QZXJpb2RCEQoPX01h",
+          "eFBhY2tldENvdW50IiIKD1JlcXVlc3RCb290SW5mbxIPCgdSZXF1ZXN0GAEg",
+          "ASgIIrcBCgtVYXJ0Q29tbWFuZBIiCghyeENvbmZpZxgBIAEoCzIOLlJhZGlv",
+          "UnhDb25maWdIABIiCgh0eENvbmZpZxgCIAEoCzIOLlJhZGlvVHhDb25maWdI",
+          "ABIrCg90cmFuc21pdENvbW1hbmQYAyABKAsyEC5UcmFuc21pdENvbW1hbmRI",
+          "ABIrCg9yZXF1ZXN0Qm9vdEluZm8YBCABKAsyEC5SZXF1ZXN0Qm9vdEluZm9I",
+          "AEIGCgRCb2R5KiwKC1JhZGlvTW9kZW1zEg0KCU1PREVNX0ZTSxAAEg4KCk1P",
+          "REVNX0xPUkEQAWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::RadioModems), }, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::RadioRxConfig), global::RadioRxConfig.Parser, new[]{ "Modem", "Bandwidth", "DataRate", "CodeRate", "BandwidthAfc", "PreambleLen", "SymbTimeout", "FixLen", "PayloadLen", "CrcOn", "FreqHopOn", "HopPeriod", "IqInverted", "RxContinuous" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RadioTxConfig), global::RadioTxConfig.Parser, new[]{ "Modem", "Power", "Fdev", "Bandwidth", "DataRate", "CodeRate", "PreambleLen", "FixLen", "CrcOn", "FreqHopOn", "HopPeriod", "IqInverted", "Timeout" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::TransmitCommand), global::TransmitCommand.Parser, new[]{ "IsMulticast", "DeviceId", "Payload" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::TransmitCommand), global::TransmitCommand.Parser, new[]{ "IsMulticast", "DeviceId", "Period", "MaxPacketCount", "Payload" }, new[]{ "Period", "MaxPacketCount" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RequestBootInfo), global::RequestBootInfo.Parser, new[]{ "Request" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::UartCommand), global::UartCommand.Parser, new[]{ "RxConfig", "TxConfig", "TransmitCommand", "RequestBootInfo" }, new[]{ "Body" }, null, null, null)
         }));
@@ -1375,6 +1377,7 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
 {
   private static readonly pb::MessageParser<TransmitCommand> _parser = new pb::MessageParser<TransmitCommand>(() => new TransmitCommand());
   private pb::UnknownFieldSet _unknownFields;
+  private int _hasBits0;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pb::MessageParser<TransmitCommand> Parser { get { return _parser; } }
@@ -1402,8 +1405,11 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public TransmitCommand(TransmitCommand other) : this() {
+    _hasBits0 = other._hasBits0;
     isMulticast_ = other.isMulticast_;
     deviceId_ = other.deviceId_;
+    period_ = other.period_;
+    maxPacketCount_ = other.maxPacketCount_;
     payload_ = other.payload_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -1438,8 +1444,61 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
     }
   }
 
+  /// <summary>Field number for the "Period" field.</summary>
+  public const int PeriodFieldNumber = 3;
+  private uint period_;
+  /// <summary>
+  /// Period &lt;50 will disable it
+  /// </summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint Period {
+    get { if ((_hasBits0 & 1) != 0) { return period_; } else { return 0; } }
+    set {
+      _hasBits0 |= 1;
+      period_ = value;
+    }
+  }
+  /// <summary>Gets whether the "Period" field is set</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool HasPeriod {
+    get { return (_hasBits0 & 1) != 0; }
+  }
+  /// <summary>Clears the value of the "Period" field</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void ClearPeriod() {
+    _hasBits0 &= ~1;
+  }
+
+  /// <summary>Field number for the "MaxPacketCount" field.</summary>
+  public const int MaxPacketCountFieldNumber = 4;
+  private uint maxPacketCount_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint MaxPacketCount {
+    get { if ((_hasBits0 & 2) != 0) { return maxPacketCount_; } else { return 0; } }
+    set {
+      _hasBits0 |= 2;
+      maxPacketCount_ = value;
+    }
+  }
+  /// <summary>Gets whether the "MaxPacketCount" field is set</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool HasMaxPacketCount {
+    get { return (_hasBits0 & 2) != 0; }
+  }
+  /// <summary>Clears the value of the "MaxPacketCount" field</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void ClearMaxPacketCount() {
+    _hasBits0 &= ~2;
+  }
+
   /// <summary>Field number for the "Payload" field.</summary>
-  public const int PayloadFieldNumber = 3;
+  public const int PayloadFieldNumber = 5;
   private pb::ByteString payload_ = pb::ByteString.Empty;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1467,6 +1526,8 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
     }
     if (IsMulticast != other.IsMulticast) return false;
     if (DeviceId != other.DeviceId) return false;
+    if (Period != other.Period) return false;
+    if (MaxPacketCount != other.MaxPacketCount) return false;
     if (Payload != other.Payload) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -1477,6 +1538,8 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
     int hash = 1;
     if (IsMulticast != false) hash ^= IsMulticast.GetHashCode();
     if (DeviceId != 0) hash ^= DeviceId.GetHashCode();
+    if (HasPeriod) hash ^= Period.GetHashCode();
+    if (HasMaxPacketCount) hash ^= MaxPacketCount.GetHashCode();
     if (Payload.Length != 0) hash ^= Payload.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -1504,8 +1567,16 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
       output.WriteRawTag(16);
       output.WriteUInt32(DeviceId);
     }
+    if (HasPeriod) {
+      output.WriteRawTag(24);
+      output.WriteUInt32(Period);
+    }
+    if (HasMaxPacketCount) {
+      output.WriteRawTag(32);
+      output.WriteUInt32(MaxPacketCount);
+    }
     if (Payload.Length != 0) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(42);
       output.WriteBytes(Payload);
     }
     if (_unknownFields != null) {
@@ -1526,8 +1597,16 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
       output.WriteRawTag(16);
       output.WriteUInt32(DeviceId);
     }
+    if (HasPeriod) {
+      output.WriteRawTag(24);
+      output.WriteUInt32(Period);
+    }
+    if (HasMaxPacketCount) {
+      output.WriteRawTag(32);
+      output.WriteUInt32(MaxPacketCount);
+    }
     if (Payload.Length != 0) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(42);
       output.WriteBytes(Payload);
     }
     if (_unknownFields != null) {
@@ -1545,6 +1624,12 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
     }
     if (DeviceId != 0) {
       size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DeviceId);
+    }
+    if (HasPeriod) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Period);
+    }
+    if (HasMaxPacketCount) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MaxPacketCount);
     }
     if (Payload.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeBytesSize(Payload);
@@ -1566,6 +1651,12 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
     }
     if (other.DeviceId != 0) {
       DeviceId = other.DeviceId;
+    }
+    if (other.HasPeriod) {
+      Period = other.Period;
+    }
+    if (other.HasMaxPacketCount) {
+      MaxPacketCount = other.MaxPacketCount;
     }
     if (other.Payload.Length != 0) {
       Payload = other.Payload;
@@ -1593,7 +1684,15 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
           DeviceId = input.ReadUInt32();
           break;
         }
-        case 26: {
+        case 24: {
+          Period = input.ReadUInt32();
+          break;
+        }
+        case 32: {
+          MaxPacketCount = input.ReadUInt32();
+          break;
+        }
+        case 42: {
           Payload = input.ReadBytes();
           break;
         }
@@ -1620,7 +1719,15 @@ public sealed partial class TransmitCommand : pb::IMessage<TransmitCommand>
           DeviceId = input.ReadUInt32();
           break;
         }
-        case 26: {
+        case 24: {
+          Period = input.ReadUInt32();
+          break;
+        }
+        case 32: {
+          MaxPacketCount = input.ReadUInt32();
+          break;
+        }
+        case 42: {
           Payload = input.ReadBytes();
           break;
         }

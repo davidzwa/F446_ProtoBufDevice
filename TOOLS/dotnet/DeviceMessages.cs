@@ -25,32 +25,35 @@ public static partial class DeviceMessagesReflection {
           "ChVkZXZpY2VfbWVzc2FnZXMucHJvdG8iSAoHVmVyc2lvbhINCgVNYWpvchgB",
           "IAEoDRINCgVNaW5vchgCIAEoDRINCgVQYXRjaBgDIAEoDRIQCghSZXZpc2lv",
           "bhgEIAEoDSIxCghEZXZpY2VJZBILCgNJZDAYASABKA0SCwoDSWQxGAIgASgN",
-          "EgsKA0lkMhgDIAEoDSJmCgtCb290TWVzc2FnZRIjChBEZXZpY2VJZGVudGlm",
-          "aWVyGAEgASgLMgkuRGV2aWNlSWQSIQoPRmlybXdhcmVWZXJzaW9uGAIgASgL",
-          "MgguVmVyc2lvbhIPCgdBcHBOYW1lGAMgASgJIiQKCkFja01lc3NhZ2USFgoO",
-          "U2VxdWVuY2VOdW1iZXIYASABKA0iXgoMVWFydFJlc3BvbnNlEiMKC2Jvb3RN",
-          "ZXNzYWdlGAEgASgLMgwuQm9vdE1lc3NhZ2VIABIhCgphY2tNZXNzYWdlGAIg",
-          "ASgLMgsuQWNrTWVzc2FnZUgAQgYKBEJvZHkiTQoVU3ByZWFkaW5nRmFjdG9y",
-          "Q29uZmlnEhkKEXNwcmVhZGluZ0ZhY3RvclJ4GAEgASgNEhkKEXNwcmVhZGlu",
-          "Z0ZhY3RvclR4GAIgASgNIlEKFVNlcXVlbmNlUmVxdWVzdENvbmZpZxIUCgxN",
-          "ZXNzYWdlQ291bnQYASABKA0SEAoISW50ZXJ2YWwYAiABKA0SEAoIRGV2aWNl",
-          "SWQYAyABKA0i6QIKC0xvUmFNZXNzYWdlEikKB2NvbW1hbmQYASABKA4yGC5M",
-          "b1JhTWVzc2FnZS5Db21tYW5kVHlwZRIWCg5TZXF1ZW5jZU51bWJlchgCIAEo",
-          "DRI3ChVzcHJlYWRpbmdGYWN0b3JDb25maWcYAyABKAsyFi5TcHJlYWRpbmdG",
-          "YWN0b3JDb25maWdIABI3ChVzZXF1ZW5jZVJlcXVlc3RDb25maWcYBCABKAsy",
-          "Fi5TZXF1ZW5jZVJlcXVlc3RDb25maWdIABIRCgdwYXlsb2FkGAUgASgMSAAi",
-          "iQEKC0NvbW1hbmRUeXBlEhEKDUNvbmZpZ3VyYXRpb24QABINCglNdWx0aUNh",
-          "c3QQARIQCgxNdWx0aUNhc3RBY2sQAhILCgdVbmlDYXN0EAMSDgoKVW5pQ2Fz",
-          "dEFjaxAEEhMKD1NlcXVlbmNlUmVxdWVzdBAFEhQKEFNlcXVlbmNlUmVzcG9u",
-          "c2UQBkIGCgRCb2R5YgZwcm90bzM="));
+          "EgsKA0lkMhgDIAEoDSJHCgtMb3JhUmVjZWl2ZRIMCgRTaXplGAEgASgNEgwK",
+          "BFJzc2kYAiABKA0SCwoDU25yGAMgASgNEg8KB1BheWxvYWQYBCABKAwiZgoL",
+          "Qm9vdE1lc3NhZ2USIwoQRGV2aWNlSWRlbnRpZmllchgBIAEoCzIJLkRldmlj",
+          "ZUlkEiEKD0Zpcm13YXJlVmVyc2lvbhgCIAEoCzIILlZlcnNpb24SDwoHQXBw",
+          "TmFtZRgDIAEoCSIkCgpBY2tNZXNzYWdlEhYKDlNlcXVlbmNlTnVtYmVyGAEg",
+          "ASgNIoMBCgxVYXJ0UmVzcG9uc2USIwoLYm9vdE1lc3NhZ2UYASABKAsyDC5C",
+          "b290TWVzc2FnZUgAEiEKCmFja01lc3NhZ2UYAiABKAsyCy5BY2tNZXNzYWdl",
+          "SAASIwoLbG9yYU1lc3NhZ2UYAyABKAsyDC5Mb3JhUmVjZWl2ZUgAQgYKBEJv",
+          "ZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29uZmlnEhkKEXNwcmVhZGluZ0ZhY3Rv",
+          "clJ4GAEgASgNEhkKEXNwcmVhZGluZ0ZhY3RvclR4GAIgASgNIlEKFVNlcXVl",
+          "bmNlUmVxdWVzdENvbmZpZxIUCgxNZXNzYWdlQ291bnQYASABKA0SEAoISW50",
+          "ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQYAyABKA0i6QIKC0xvUmFNZXNzYWdl",
+          "EikKB2NvbW1hbmQYASABKA4yGC5Mb1JhTWVzc2FnZS5Db21tYW5kVHlwZRIW",
+          "Cg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3ChVzcHJlYWRpbmdGYWN0b3JDb25m",
+          "aWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0b3JDb25maWdIABI3ChVzZXF1ZW5j",
+          "ZVJlcXVlc3RDb25maWcYBCABKAsyFi5TZXF1ZW5jZVJlcXVlc3RDb25maWdI",
+          "ABIRCgdwYXlsb2FkGAUgASgMSAAiiQEKC0NvbW1hbmRUeXBlEhEKDUNvbmZp",
+          "Z3VyYXRpb24QABINCglNdWx0aUNhc3QQARIQCgxNdWx0aUNhc3RBY2sQAhIL",
+          "CgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFjaxAEEhMKD1NlcXVlbmNlUmVxdWVz",
+          "dBAFEhQKEFNlcXVlbmNlUmVzcG9uc2UQBkIGCgRCb2R5YgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Version), global::Version.Parser, new[]{ "Major", "Minor", "Patch", "Revision" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DeviceId), global::DeviceId.Parser, new[]{ "Id0", "Id1", "Id2" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "Payload" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BootMessage), global::BootMessage.Parser, new[]{ "DeviceIdentifier", "FirmwareVersion", "AppName" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AckMessage), global::AckMessage.Parser, new[]{ "SequenceNumber" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage" }, new[]{ "Body" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraMessage" }, new[]{ "Body" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SpreadingFactorConfig), global::SpreadingFactorConfig.Parser, new[]{ "SpreadingFactorRx", "SpreadingFactorTx" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SequenceRequestConfig), global::SequenceRequestConfig.Parser, new[]{ "MessageCount", "Interval", "DeviceId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::LoRaMessage), global::LoRaMessage.Parser, new[]{ "Command", "SequenceNumber", "SpreadingFactorConfig", "SequenceRequestConfig", "Payload" }, new[]{ "Body" }, new[]{ typeof(global::LoRaMessage.Types.CommandType) }, null, null)
@@ -623,6 +626,306 @@ public sealed partial class DeviceId : pb::IMessage<DeviceId>
 
 }
 
+public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<LoraReceive> _parser = new pb::MessageParser<LoraReceive>(() => new LoraReceive());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<LoraReceive> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[2]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public LoraReceive() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public LoraReceive(LoraReceive other) : this() {
+    size_ = other.size_;
+    rssi_ = other.rssi_;
+    snr_ = other.snr_;
+    payload_ = other.payload_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public LoraReceive Clone() {
+    return new LoraReceive(this);
+  }
+
+  /// <summary>Field number for the "Size" field.</summary>
+  public const int SizeFieldNumber = 1;
+  private uint size_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint Size {
+    get { return size_; }
+    set {
+      size_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "Rssi" field.</summary>
+  public const int RssiFieldNumber = 2;
+  private uint rssi_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint Rssi {
+    get { return rssi_; }
+    set {
+      rssi_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "Snr" field.</summary>
+  public const int SnrFieldNumber = 3;
+  private uint snr_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint Snr {
+    get { return snr_; }
+    set {
+      snr_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "Payload" field.</summary>
+  public const int PayloadFieldNumber = 4;
+  private pb::ByteString payload_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public pb::ByteString Payload {
+    get { return payload_; }
+    set {
+      payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as LoraReceive);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(LoraReceive other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Size != other.Size) return false;
+    if (Rssi != other.Rssi) return false;
+    if (Snr != other.Snr) return false;
+    if (Payload != other.Payload) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Size != 0) hash ^= Size.GetHashCode();
+    if (Rssi != 0) hash ^= Rssi.GetHashCode();
+    if (Snr != 0) hash ^= Snr.GetHashCode();
+    if (Payload.Length != 0) hash ^= Payload.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (Size != 0) {
+      output.WriteRawTag(8);
+      output.WriteUInt32(Size);
+    }
+    if (Rssi != 0) {
+      output.WriteRawTag(16);
+      output.WriteUInt32(Rssi);
+    }
+    if (Snr != 0) {
+      output.WriteRawTag(24);
+      output.WriteUInt32(Snr);
+    }
+    if (Payload.Length != 0) {
+      output.WriteRawTag(34);
+      output.WriteBytes(Payload);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (Size != 0) {
+      output.WriteRawTag(8);
+      output.WriteUInt32(Size);
+    }
+    if (Rssi != 0) {
+      output.WriteRawTag(16);
+      output.WriteUInt32(Rssi);
+    }
+    if (Snr != 0) {
+      output.WriteRawTag(24);
+      output.WriteUInt32(Snr);
+    }
+    if (Payload.Length != 0) {
+      output.WriteRawTag(34);
+      output.WriteBytes(Payload);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (Size != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Size);
+    }
+    if (Rssi != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rssi);
+    }
+    if (Snr != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Snr);
+    }
+    if (Payload.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Payload);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(LoraReceive other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Size != 0) {
+      Size = other.Size;
+    }
+    if (other.Rssi != 0) {
+      Rssi = other.Rssi;
+    }
+    if (other.Snr != 0) {
+      Snr = other.Snr;
+    }
+    if (other.Payload.Length != 0) {
+      Payload = other.Payload;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          Size = input.ReadUInt32();
+          break;
+        }
+        case 16: {
+          Rssi = input.ReadUInt32();
+          break;
+        }
+        case 24: {
+          Snr = input.ReadUInt32();
+          break;
+        }
+        case 34: {
+          Payload = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 8: {
+          Size = input.ReadUInt32();
+          break;
+        }
+        case 16: {
+          Rssi = input.ReadUInt32();
+          break;
+        }
+        case 24: {
+          Snr = input.ReadUInt32();
+          break;
+        }
+        case 34: {
+          Payload = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
 public sealed partial class BootMessage : pb::IMessage<BootMessage>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
@@ -637,7 +940,7 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[2]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[3]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -918,7 +1221,7 @@ public sealed partial class AckMessage : pb::IMessage<AckMessage>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[3]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[4]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1107,7 +1410,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[4]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[5]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1133,6 +1436,9 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
         break;
       case BodyOneofCase.AckMessage:
         AckMessage = other.AckMessage.Clone();
+        break;
+      case BodyOneofCase.LoraMessage:
+        LoraMessage = other.LoraMessage.Clone();
         break;
     }
 
@@ -1169,12 +1475,25 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
   }
 
+  /// <summary>Field number for the "loraMessage" field.</summary>
+  public const int LoraMessageFieldNumber = 3;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::LoraReceive LoraMessage {
+    get { return bodyCase_ == BodyOneofCase.LoraMessage ? (global::LoraReceive) body_ : null; }
+    set {
+      body_ = value;
+      bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.LoraMessage;
+    }
+  }
+
   private object body_;
   /// <summary>Enum of possible cases for the "Body" oneof.</summary>
   public enum BodyOneofCase {
     None = 0,
     BootMessage = 1,
     AckMessage = 2,
+    LoraMessage = 3,
   }
   private BodyOneofCase bodyCase_ = BodyOneofCase.None;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1207,6 +1526,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
     if (!object.Equals(BootMessage, other.BootMessage)) return false;
     if (!object.Equals(AckMessage, other.AckMessage)) return false;
+    if (!object.Equals(LoraMessage, other.LoraMessage)) return false;
     if (BodyCase != other.BodyCase) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -1217,6 +1537,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     int hash = 1;
     if (bodyCase_ == BodyOneofCase.BootMessage) hash ^= BootMessage.GetHashCode();
     if (bodyCase_ == BodyOneofCase.AckMessage) hash ^= AckMessage.GetHashCode();
+    if (bodyCase_ == BodyOneofCase.LoraMessage) hash ^= LoraMessage.GetHashCode();
     hash ^= (int) bodyCase_;
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -1244,6 +1565,10 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       output.WriteRawTag(18);
       output.WriteMessage(AckMessage);
     }
+    if (bodyCase_ == BodyOneofCase.LoraMessage) {
+      output.WriteRawTag(26);
+      output.WriteMessage(LoraMessage);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -1262,6 +1587,10 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       output.WriteRawTag(18);
       output.WriteMessage(AckMessage);
     }
+    if (bodyCase_ == BodyOneofCase.LoraMessage) {
+      output.WriteRawTag(26);
+      output.WriteMessage(LoraMessage);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -1277,6 +1606,9 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
     if (bodyCase_ == BodyOneofCase.AckMessage) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(AckMessage);
+    }
+    if (bodyCase_ == BodyOneofCase.LoraMessage) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(LoraMessage);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -1302,6 +1634,12 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
           AckMessage = new global::AckMessage();
         }
         AckMessage.MergeFrom(other.AckMessage);
+        break;
+      case BodyOneofCase.LoraMessage:
+        if (LoraMessage == null) {
+          LoraMessage = new global::LoraReceive();
+        }
+        LoraMessage.MergeFrom(other.LoraMessage);
         break;
     }
 
@@ -1338,6 +1676,15 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
           AckMessage = subBuilder;
           break;
         }
+        case 26: {
+          global::LoraReceive subBuilder = new global::LoraReceive();
+          if (bodyCase_ == BodyOneofCase.LoraMessage) {
+            subBuilder.MergeFrom(LoraMessage);
+          }
+          input.ReadMessage(subBuilder);
+          LoraMessage = subBuilder;
+          break;
+        }
       }
     }
   #endif
@@ -1371,6 +1718,15 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
           AckMessage = subBuilder;
           break;
         }
+        case 26: {
+          global::LoraReceive subBuilder = new global::LoraReceive();
+          if (bodyCase_ == BodyOneofCase.LoraMessage) {
+            subBuilder.MergeFrom(LoraMessage);
+          }
+          input.ReadMessage(subBuilder);
+          LoraMessage = subBuilder;
+          break;
+        }
       }
     }
   }
@@ -1392,7 +1748,7 @@ public sealed partial class SpreadingFactorConfig : pb::IMessage<SpreadingFactor
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[5]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[6]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1618,7 +1974,7 @@ public sealed partial class SequenceRequestConfig : pb::IMessage<SequenceRequest
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[6]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[7]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1881,7 +2237,7 @@ public sealed partial class LoRaMessage : pb::IMessage<LoRaMessage>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[7]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[8]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
