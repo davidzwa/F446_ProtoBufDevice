@@ -26,7 +26,7 @@ uint8_t packetSize;
 uint16_t actualSize;
 uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
-const size_t offset = 1; // End byte
+const size_t offset = 1;  // End byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
@@ -81,7 +81,7 @@ void UartISR(UartNotifyId_t id) {
     packetBufferingLength++;
 
     // This is a very weak check
-    if (GetFifoRxLength() >= packetSize+1 || GetLastChar(0) == packetEndMarker) {
+    if (GetFifoRxLength() >= packetSize + 1 || GetLastChar(0) == packetEndMarker) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {
             return;  // Error occurred

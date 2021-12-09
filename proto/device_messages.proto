@@ -31,7 +31,7 @@ message BootMessage {
 }
 
 message AckMessage {
-    uint32 SequenceNumber = 1;    
+    uint32 SequenceNumber = 1;
 }
 
 message UartResponse {

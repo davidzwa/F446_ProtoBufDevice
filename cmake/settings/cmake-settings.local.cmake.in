@@ -31,7 +31,7 @@ foreach(json_var ${JSON_PARSED})
 endforeach()
 
 # You can still set anything you want
-# set(TOOLCHAIN_PREFIX "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major")
+# set(TOOLCHAIN_PREFIX "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10")
 # set(APPLICATION "wl55-subghz-phy")
 
 # Clean up
