@@ -1,12 +1,12 @@
 // This file listes the protobuffer messages used in the example to make a simple uart communcation protocol. 
 // Commands are send from the desktop to the microctontroller which in turn sends a reply. 
- 
-syntax = "proto3"; 
- 
-enum RadioModems { 
-    MODEM_FSK = 0; 
-    MODEM_LORA = 1; 
-} 
+
+syntax = "proto3";
+
+enum RadioModems {
+    MODEM_FSK = 0;
+    MODEM_LORA = 1;
+}
  
 message RadioRxConfig  
 { 
