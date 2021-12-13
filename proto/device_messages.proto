@@ -21,7 +21,8 @@ message LoraReceive
     uint32 Size = 1;
     uint32 Rssi = 2;
     uint32 Snr = 3;
-    bytes Payload = 4;
+    bool Success = 4;
+    bytes Payload = 5;
 }
 
 message BootMessage {

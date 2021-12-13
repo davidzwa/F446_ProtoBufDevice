@@ -25,32 +25,33 @@ public static partial class DeviceMessagesReflection {
           "ChVkZXZpY2VfbWVzc2FnZXMucHJvdG8iSAoHVmVyc2lvbhINCgVNYWpvchgB",
           "IAEoDRINCgVNaW5vchgCIAEoDRINCgVQYXRjaBgDIAEoDRIQCghSZXZpc2lv",
           "bhgEIAEoDSIxCghEZXZpY2VJZBILCgNJZDAYASABKA0SCwoDSWQxGAIgASgN",
-          "EgsKA0lkMhgDIAEoDSJHCgtMb3JhUmVjZWl2ZRIMCgRTaXplGAEgASgNEgwK",
-          "BFJzc2kYAiABKA0SCwoDU25yGAMgASgNEg8KB1BheWxvYWQYBCABKAwiZgoL",
-          "Qm9vdE1lc3NhZ2USIwoQRGV2aWNlSWRlbnRpZmllchgBIAEoCzIJLkRldmlj",
-          "ZUlkEiEKD0Zpcm13YXJlVmVyc2lvbhgCIAEoCzIILlZlcnNpb24SDwoHQXBw",
-          "TmFtZRgDIAEoCSIkCgpBY2tNZXNzYWdlEhYKDlNlcXVlbmNlTnVtYmVyGAEg",
-          "ASgNIoMBCgxVYXJ0UmVzcG9uc2USIwoLYm9vdE1lc3NhZ2UYASABKAsyDC5C",
-          "b290TWVzc2FnZUgAEiEKCmFja01lc3NhZ2UYAiABKAsyCy5BY2tNZXNzYWdl",
-          "SAASIwoLbG9yYU1lc3NhZ2UYAyABKAsyDC5Mb3JhUmVjZWl2ZUgAQgYKBEJv",
-          "ZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29uZmlnEhkKEXNwcmVhZGluZ0ZhY3Rv",
-          "clJ4GAEgASgNEhkKEXNwcmVhZGluZ0ZhY3RvclR4GAIgASgNIlEKFVNlcXVl",
-          "bmNlUmVxdWVzdENvbmZpZxIUCgxNZXNzYWdlQ291bnQYASABKA0SEAoISW50",
-          "ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQYAyABKA0i6QIKC0xvUmFNZXNzYWdl",
-          "EikKB2NvbW1hbmQYASABKA4yGC5Mb1JhTWVzc2FnZS5Db21tYW5kVHlwZRIW",
-          "Cg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3ChVzcHJlYWRpbmdGYWN0b3JDb25m",
-          "aWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0b3JDb25maWdIABI3ChVzZXF1ZW5j",
-          "ZVJlcXVlc3RDb25maWcYBCABKAsyFi5TZXF1ZW5jZVJlcXVlc3RDb25maWdI",
-          "ABIRCgdwYXlsb2FkGAUgASgMSAAiiQEKC0NvbW1hbmRUeXBlEhEKDUNvbmZp",
-          "Z3VyYXRpb24QABINCglNdWx0aUNhc3QQARIQCgxNdWx0aUNhc3RBY2sQAhIL",
-          "CgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFjaxAEEhMKD1NlcXVlbmNlUmVxdWVz",
-          "dBAFEhQKEFNlcXVlbmNlUmVzcG9uc2UQBkIGCgRCb2R5YgZwcm90bzM="));
+          "EgsKA0lkMhgDIAEoDSJYCgtMb3JhUmVjZWl2ZRIMCgRTaXplGAEgASgNEgwK",
+          "BFJzc2kYAiABKA0SCwoDU25yGAMgASgNEg8KB1N1Y2Nlc3MYBCABKAgSDwoH",
+          "UGF5bG9hZBgFIAEoDCJmCgtCb290TWVzc2FnZRIjChBEZXZpY2VJZGVudGlm",
+          "aWVyGAEgASgLMgkuRGV2aWNlSWQSIQoPRmlybXdhcmVWZXJzaW9uGAIgASgL",
+          "MgguVmVyc2lvbhIPCgdBcHBOYW1lGAMgASgJIiQKCkFja01lc3NhZ2USFgoO",
+          "U2VxdWVuY2VOdW1iZXIYASABKA0igwEKDFVhcnRSZXNwb25zZRIjCgtib290",
+          "TWVzc2FnZRgBIAEoCzIMLkJvb3RNZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgC",
+          "IAEoCzILLkFja01lc3NhZ2VIABIjCgtsb3JhTWVzc2FnZRgDIAEoCzIMLkxv",
+          "cmFSZWNlaXZlSABCBgoEQm9keSJNChVTcHJlYWRpbmdGYWN0b3JDb25maWcS",
+          "GQoRc3ByZWFkaW5nRmFjdG9yUngYASABKA0SGQoRc3ByZWFkaW5nRmFjdG9y",
+          "VHgYAiABKA0iUQoVU2VxdWVuY2VSZXF1ZXN0Q29uZmlnEhQKDE1lc3NhZ2VD",
+          "b3VudBgBIAEoDRIQCghJbnRlcnZhbBgCIAEoDRIQCghEZXZpY2VJZBgDIAEo",
+          "DSLpAgoLTG9SYU1lc3NhZ2USKQoHY29tbWFuZBgBIAEoDjIYLkxvUmFNZXNz",
+          "YWdlLkNvbW1hbmRUeXBlEhYKDlNlcXVlbmNlTnVtYmVyGAIgASgNEjcKFXNw",
+          "cmVhZGluZ0ZhY3RvckNvbmZpZxgDIAEoCzIWLlNwcmVhZGluZ0ZhY3RvckNv",
+          "bmZpZ0gAEjcKFXNlcXVlbmNlUmVxdWVzdENvbmZpZxgEIAEoCzIWLlNlcXVl",
+          "bmNlUmVxdWVzdENvbmZpZ0gAEhEKB3BheWxvYWQYBSABKAxIACKJAQoLQ29t",
+          "bWFuZFR5cGUSEQoNQ29uZmlndXJhdGlvbhAAEg0KCU11bHRpQ2FzdBABEhAK",
+          "DE11bHRpQ2FzdEFjaxACEgsKB1VuaUNhc3QQAxIOCgpVbmlDYXN0QWNrEAQS",
+          "EwoPU2VxdWVuY2VSZXF1ZXN0EAUSFAoQU2VxdWVuY2VSZXNwb25zZRAGQgYK",
+          "BEJvZHliBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Version), global::Version.Parser, new[]{ "Major", "Minor", "Patch", "Revision" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DeviceId), global::DeviceId.Parser, new[]{ "Id0", "Id1", "Id2" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "Payload" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "Success", "Payload" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BootMessage), global::BootMessage.Parser, new[]{ "DeviceIdentifier", "FirmwareVersion", "AppName" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AckMessage), global::AckMessage.Parser, new[]{ "SequenceNumber" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraMessage" }, new[]{ "Body" }, null, null, null),
@@ -663,6 +664,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     size_ = other.size_;
     rssi_ = other.rssi_;
     snr_ = other.snr_;
+    success_ = other.success_;
     payload_ = other.payload_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -709,8 +711,20 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
   }
 
+  /// <summary>Field number for the "Success" field.</summary>
+  public const int SuccessFieldNumber = 4;
+  private bool success_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Success {
+    get { return success_; }
+    set {
+      success_ = value;
+    }
+  }
+
   /// <summary>Field number for the "Payload" field.</summary>
-  public const int PayloadFieldNumber = 4;
+  public const int PayloadFieldNumber = 5;
   private pb::ByteString payload_ = pb::ByteString.Empty;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -739,6 +753,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     if (Size != other.Size) return false;
     if (Rssi != other.Rssi) return false;
     if (Snr != other.Snr) return false;
+    if (Success != other.Success) return false;
     if (Payload != other.Payload) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -750,6 +765,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     if (Size != 0) hash ^= Size.GetHashCode();
     if (Rssi != 0) hash ^= Rssi.GetHashCode();
     if (Snr != 0) hash ^= Snr.GetHashCode();
+    if (Success != false) hash ^= Success.GetHashCode();
     if (Payload.Length != 0) hash ^= Payload.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -781,8 +797,12 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
       output.WriteRawTag(24);
       output.WriteUInt32(Snr);
     }
+    if (Success != false) {
+      output.WriteRawTag(32);
+      output.WriteBool(Success);
+    }
     if (Payload.Length != 0) {
-      output.WriteRawTag(34);
+      output.WriteRawTag(42);
       output.WriteBytes(Payload);
     }
     if (_unknownFields != null) {
@@ -807,8 +827,12 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
       output.WriteRawTag(24);
       output.WriteUInt32(Snr);
     }
+    if (Success != false) {
+      output.WriteRawTag(32);
+      output.WriteBool(Success);
+    }
     if (Payload.Length != 0) {
-      output.WriteRawTag(34);
+      output.WriteRawTag(42);
       output.WriteBytes(Payload);
     }
     if (_unknownFields != null) {
@@ -829,6 +853,9 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (Snr != 0) {
       size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Snr);
+    }
+    if (Success != false) {
+      size += 1 + 1;
     }
     if (Payload.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeBytesSize(Payload);
@@ -853,6 +880,9 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (other.Snr != 0) {
       Snr = other.Snr;
+    }
+    if (other.Success != false) {
+      Success = other.Success;
     }
     if (other.Payload.Length != 0) {
       Payload = other.Payload;
@@ -884,7 +914,11 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           Snr = input.ReadUInt32();
           break;
         }
-        case 34: {
+        case 32: {
+          Success = input.ReadBool();
+          break;
+        }
+        case 42: {
           Payload = input.ReadBytes();
           break;
         }
@@ -915,7 +949,11 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           Snr = input.ReadUInt32();
           break;
         }
-        case 34: {
+        case 32: {
+          Success = input.ReadBool();
+          break;
+        }
+        case 42: {
           Payload = input.ReadBytes();
           break;
         }

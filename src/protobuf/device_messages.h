@@ -393,6 +393,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
     }
 
@@ -401,6 +402,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
     }
 
@@ -412,7 +414,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       SIZE = 1,
       RSSI = 2,
       SNR = 3,
-      PAYLOAD = 4
+      SUCCESS = 4,
+      PAYLOAD = 5
     };
 
     LoraReceive& operator=(const LoraReceive& rhs)
@@ -420,6 +423,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
       return *this;
     }
@@ -429,6 +433,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
       return *this;
     }
@@ -454,6 +459,13 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_Snr() const { return Snr_; }
     inline EmbeddedProto::uint32::FIELD_TYPE Snr() const { return Snr_.get(); }
 
+    inline void clear_Success() { Success_.clear(); }
+    inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
+    inline void set_Success(const EmbeddedProto::boolean&& value) { Success_ = value; }
+    inline EmbeddedProto::boolean& mutable_Success() { return Success_; }
+    inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
+
     inline void clear_Payload() { Payload_.clear(); }
     inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
     inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
@@ -478,6 +490,11 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       if((0U != Snr_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Snr_.serialize_with_id(static_cast<uint32_t>(id::SNR), buffer, false);
+      }
+
+      if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
       }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
@@ -511,6 +528,10 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
 
           case id::SNR:
             return_value = Snr_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SUCCESS:
+            return_value = Success_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::PAYLOAD:
@@ -549,6 +570,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       clear_Size();
       clear_Rssi();
       clear_Snr();
+      clear_Success();
       clear_Payload();
 
     }
@@ -559,6 +581,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 Size_ = 0U;
       EmbeddedProto::uint32 Rssi_ = 0U;
       EmbeddedProto::uint32 Snr_ = 0U;
+      EmbeddedProto::boolean Success_ = false;
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
 };
