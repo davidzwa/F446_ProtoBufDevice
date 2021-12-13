@@ -188,6 +188,8 @@ void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload,
     loraMessage.set_Rssi(rssi);
     loraMessage.set_Snr(snr);
 
+    uartResponse.set_loraMessage(loraMessage);
+
     // First the length
     writeBuffer.push((uint8_t)uartResponse.serialized_size());
     // Push the data
