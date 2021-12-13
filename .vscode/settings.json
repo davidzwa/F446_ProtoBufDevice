@@ -24,7 +24,7 @@
         //     Linux   : /usr/bin/openocd
         //     OSX     : /usr/local/bin/openocd
         // Please uncomment the following line and fill it accordingly.
-        "OPENOCD_BIN":"C:/Program Files (x86)/openocd/bin/openocd.exe",
+        "OPENOCD_BIN":"C:/openocd/bin/openocd.exe",
 
         // Specifies the path to the CMAKE toolchain file.
         "CMAKE_TOOLCHAIN_FILE":"cmake/toolchain-arm-none-eabi.cmake",
