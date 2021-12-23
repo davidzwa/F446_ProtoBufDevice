@@ -393,6 +393,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
     }
 
@@ -401,6 +403,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
     }
 
@@ -412,7 +416,9 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       SIZE = 1,
       RSSI = 2,
       SNR = 3,
-      PAYLOAD = 4
+      SEQUENCENUMBER = 4,
+      SUCCESS = 5,
+      PAYLOAD = 6
     };
 
     LoraReceive& operator=(const LoraReceive& rhs)
@@ -420,6 +426,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
       return *this;
     }
@@ -429,6 +437,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
+      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
       return *this;
     }
@@ -454,6 +464,20 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_Snr() const { return Snr_; }
     inline EmbeddedProto::uint32::FIELD_TYPE Snr() const { return Snr_.get(); }
 
+    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
+    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
+    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
+    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
+
+    inline void clear_Success() { Success_.clear(); }
+    inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
+    inline void set_Success(const EmbeddedProto::boolean&& value) { Success_ = value; }
+    inline EmbeddedProto::boolean& mutable_Success() { return Success_; }
+    inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
+
     inline void clear_Payload() { Payload_.clear(); }
     inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
     inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
@@ -478,6 +502,16 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       if((0U != Snr_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Snr_.serialize_with_id(static_cast<uint32_t>(id::SNR), buffer, false);
+      }
+
+      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
+      }
+
+      if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
       }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
@@ -511,6 +545,14 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
 
           case id::SNR:
             return_value = Snr_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SEQUENCENUMBER:
+            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SUCCESS:
+            return_value = Success_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::PAYLOAD:
@@ -549,6 +591,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       clear_Size();
       clear_Rssi();
       clear_Snr();
+      clear_SequenceNumber();
+      clear_Success();
       clear_Payload();
 
     }
@@ -559,6 +603,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 Size_ = 0U;
       EmbeddedProto::uint32 Rssi_ = 0U;
       EmbeddedProto::uint32 Snr_ = 0U;
+      EmbeddedProto::uint32 SequenceNumber_ = 0U;
+      EmbeddedProto::boolean Success_ = false;
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
 };
@@ -832,7 +878,7 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
 };
 
 template<uint32_t bootMessage_AppName_LENGTH, 
-uint32_t loraMessage_Payload_LENGTH>
+uint32_t loraReceiveMessage_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -855,8 +901,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORAMESSAGE:
-          set_loraMessage(rhs.get_loraMessage());
+        case id::LORARECEIVEMESSAGE:
+          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
           break;
 
         default:
@@ -883,8 +929,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORAMESSAGE:
-          set_loraMessage(rhs.get_loraMessage());
+        case id::LORARECEIVEMESSAGE:
+          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
           break;
 
         default:
@@ -900,7 +946,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       BOOTMESSAGE = 1,
       ACKMESSAGE = 2,
-      LORAMESSAGE = 3
+      LORARECEIVEMESSAGE = 3
     };
 
     UartResponse& operator=(const UartResponse& rhs)
@@ -921,8 +967,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORAMESSAGE:
-          set_loraMessage(rhs.get_loraMessage());
+        case id::LORARECEIVEMESSAGE:
+          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
           break;
 
         default:
@@ -950,8 +996,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORAMESSAGE:
-          set_loraMessage(rhs.get_loraMessage());
+        case id::LORARECEIVEMESSAGE:
+          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
           break;
 
         default:
@@ -1041,44 +1087,44 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline const AckMessage& get_ackMessage() const { return Body_.ackMessage_; }
     inline const AckMessage& ackMessage() const { return Body_.ackMessage_; }
 
-    inline bool has_loraMessage() const
+    inline bool has_loraReceiveMessage() const
     {
-      return id::LORAMESSAGE == which_Body_;
+      return id::LORARECEIVEMESSAGE == which_Body_;
     }
-    inline void clear_loraMessage()
+    inline void clear_loraReceiveMessage()
     {
-      if(id::LORAMESSAGE == which_Body_)
+      if(id::LORARECEIVEMESSAGE == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.loraMessage_.~LoraReceive<loraMessage_Payload_LENGTH>();
+        Body_.loraReceiveMessage_.~LoraReceive<loraReceiveMessage_Payload_LENGTH>();
       }
     }
-    inline void set_loraMessage(const LoraReceive<loraMessage_Payload_LENGTH>& value)
+    inline void set_loraReceiveMessage(const LoraReceive<loraReceiveMessage_Payload_LENGTH>& value)
     {
-      if(id::LORAMESSAGE != which_Body_)
+      if(id::LORARECEIVEMESSAGE != which_Body_)
       {
-        init_Body(id::LORAMESSAGE);
+        init_Body(id::LORARECEIVEMESSAGE);
       }
-      Body_.loraMessage_ = value;
+      Body_.loraReceiveMessage_ = value;
     }
-    inline void set_loraMessage(const LoraReceive<loraMessage_Payload_LENGTH>&& value)
+    inline void set_loraReceiveMessage(const LoraReceive<loraReceiveMessage_Payload_LENGTH>&& value)
     {
-      if(id::LORAMESSAGE != which_Body_)
+      if(id::LORARECEIVEMESSAGE != which_Body_)
       {
-        init_Body(id::LORAMESSAGE);
+        init_Body(id::LORARECEIVEMESSAGE);
       }
-      Body_.loraMessage_ = value;
+      Body_.loraReceiveMessage_ = value;
     }
-    inline LoraReceive<loraMessage_Payload_LENGTH>& mutable_loraMessage()
+    inline LoraReceive<loraReceiveMessage_Payload_LENGTH>& mutable_loraReceiveMessage()
     {
-      if(id::LORAMESSAGE != which_Body_)
+      if(id::LORARECEIVEMESSAGE != which_Body_)
       {
-        init_Body(id::LORAMESSAGE);
+        init_Body(id::LORARECEIVEMESSAGE);
       }
-      return Body_.loraMessage_;
+      return Body_.loraReceiveMessage_;
     }
-    inline const LoraReceive<loraMessage_Payload_LENGTH>& get_loraMessage() const { return Body_.loraMessage_; }
-    inline const LoraReceive<loraMessage_Payload_LENGTH>& loraMessage() const { return Body_.loraMessage_; }
+    inline const LoraReceive<loraReceiveMessage_Payload_LENGTH>& get_loraReceiveMessage() const { return Body_.loraReceiveMessage_; }
+    inline const LoraReceive<loraReceiveMessage_Payload_LENGTH>& loraReceiveMessage() const { return Body_.loraReceiveMessage_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -1101,10 +1147,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case id::LORAMESSAGE:
-          if(has_loraMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case id::LORARECEIVEMESSAGE:
+          if(has_loraReceiveMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.loraMessage_.serialize_with_id(static_cast<uint32_t>(id::LORAMESSAGE), buffer, true);
+            return_value = Body_.loraReceiveMessage_.serialize_with_id(static_cast<uint32_t>(id::LORARECEIVEMESSAGE), buffer, true);
           }
           break;
 
@@ -1138,8 +1184,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
             break;
 
-          case id::LORAMESSAGE:
-            return_value = deserialize_Body(id::LORAMESSAGE, Body_.loraMessage_, buffer, wire_type);
+          case id::LORARECEIVEMESSAGE:
+            return_value = deserialize_Body(id::LORARECEIVEMESSAGE, Body_.loraReceiveMessage_, buffer, wire_type);
 
             break;
 
@@ -1187,7 +1233,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
         AckMessage ackMessage_;
-        LoraReceive<loraMessage_Payload_LENGTH> loraMessage_;
+        LoraReceive<loraReceiveMessage_Payload_LENGTH> loraReceiveMessage_;
       };
       Body Body_;
 
@@ -1212,9 +1258,9 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::ACKMESSAGE;
             break;
 
-          case id::LORAMESSAGE:
-            new(&Body_.loraMessage_) LoraReceive<loraMessage_Payload_LENGTH>;
-            which_Body_ = id::LORAMESSAGE;
+          case id::LORARECEIVEMESSAGE:
+            new(&Body_.loraReceiveMessage_) LoraReceive<loraReceiveMessage_Payload_LENGTH>;
+            which_Body_ = id::LORARECEIVEMESSAGE;
             break;
 
           default:
@@ -1234,8 +1280,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           case id::ACKMESSAGE:
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
             break;
-          case id::LORAMESSAGE:
-            Body_.loraMessage_.~LoraReceive<loraMessage_Payload_LENGTH>(); // NOSONAR Unions require this.
+          case id::LORARECEIVEMESSAGE:
+            Body_.loraReceiveMessage_.~LoraReceive<loraReceiveMessage_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;

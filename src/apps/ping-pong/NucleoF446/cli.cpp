@@ -181,14 +181,32 @@ void UartSendAck(uint8_t sequenceNumber) {
     writeBuffer.clear();
 }
 
-void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, int16_t rssi, int8_t snr) {
+void UartSendLoRaRxError() {
     UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
-    auto loraMessage = uartResponse.mutable_loraMessage();
+    auto loraMessage = uartResponse.mutable_loraReceiveMessage();
+    loraMessage.set_Success(false);
+
+    // First the length
+    writeBuffer.push((uint8_t)uartResponse.serialized_size());
+    // Push the data
+    auto result = uartResponse.serialize(writeBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        // Send the buffer in COBS encoded form
+        writeBuffer.push(packetEndMarker);
+        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+    }
+}
+
+void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr) {
+    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
+    auto loraMessage = uartResponse.mutable_loraReceiveMessage();
     loraMessage.set_Payload(payload);
     loraMessage.set_Rssi(rssi);
+    loraMessage.set_Success(true);
     loraMessage.set_Snr(snr);
+    loraMessage.set_SequenceNumber(sequenceNumber);
 
-    uartResponse.set_loraMessage(loraMessage);
+    uartResponse.set_loraReceiveMessage(loraMessage);
 
     // First the length
     writeBuffer.push((uint8_t)uartResponse.serialized_size());

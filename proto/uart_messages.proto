@@ -47,10 +47,11 @@ message TransmitCommand
 { 
     bool IsMulticast = 1; 
     uint32 DeviceId = 2; 
+    uint32 SequenceNumber = 3;
     // Period <50 will disable it
-    optional uint32 Period = 3;
-    optional uint32 MaxPacketCount = 4;
-    bytes Payload = 5;
+    optional uint32 Period = 4;
+    optional uint32 MaxPacketCount = 5;
+    bytes Payload = 6;
 }
  
 message RequestBootInfo { 
