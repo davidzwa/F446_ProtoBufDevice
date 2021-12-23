@@ -1,6 +1,0 @@
-{
-    "VERSION": "0.2.0",
-    "APPLICATION": "ping-pong",
-    "CMAKE_TOOLCHAIN_FILE": "cmake/toolchain-arm-none-eabi.cmake",
-    "TOOLCHAIN_PREFIX": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2021.10"
-}

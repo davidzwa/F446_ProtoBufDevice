@@ -46,8 +46,10 @@ static void OnPeriodicTx(void* context) {
     writeTransmitBuffer.clear();
     writeTransmitBuffer.push(buffer, 3);
 
+    command.set_SequenceNumber(periodicCurrentCounter);
     command.get_Payload()
         .serialize(writeTransmitBuffer);
+        
     TransmitUnicast(command);
 
     periodicCurrentCounter++;

@@ -13,7 +13,7 @@
 // uint16_t msgSize = BUFFER_SIZE;
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
-LoRaMessage<MAX_PAYLOAD_LENGTH> loraMessage;
+LoRaMessage<MAX_PAYLOAD_LENGTH> loraPhyMessage;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
@@ -105,28 +105,30 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
         readLoraBuffer.push(payload[i]);
     }
 
-    auto result = loraMessage.deserialize(readLoraBuffer);
+    auto result = loraPhyMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
         UartSendAck(3);
         Radio.Rx(RX_TIMEOUT_VALUE);
         return;
     }
 
-    if (loraMessage.get_command() == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {
-        if (loraMessage.has_spreadingFactorConfig()) {
-            auto config = loraMessage.get_spreadingFactorConfig();
+    if (loraPhyMessage.get_command() == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {
+        if (loraPhyMessage.has_spreadingFactorConfig()) {
+            auto config = loraPhyMessage.get_spreadingFactorConfig();
             UpdateRadioSpreadingFactor(config.get_spreadingFactorRx(), config.get_spreadingFactorTx(), true);
         }
-        if (loraMessage.has_sequenceRequestConfig()) {
-            SetSequenceRequestConfig(loraMessage.get_sequenceRequestConfig());
+        if (loraPhyMessage.has_sequenceRequestConfig()) {
+            SetSequenceRequestConfig(loraPhyMessage.get_sequenceRequestConfig());
 
             // TODO send ACK if success
         }
     }
 
     // Ensure that the message is not re-used
-    UartSendLoRaRx(loraMessage.get_payload(), rssi, snr);
-    loraMessage.clear();
+    auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
+    UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr);
+    readLoraBuffer.clear();
+    loraPhyMessage.clear();
     Radio.Rx(RX_TIMEOUT_VALUE);
 }
 
@@ -143,23 +145,24 @@ void TransmitProtoBuffer() {
 }
 
 void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
-    loraMessage.clear();
-    loraMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
-    loraMessage.set_payload(command.get_Payload());
+    loraPhyMessage.clear();
+    loraPhyMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
+    loraPhyMessage.set_payload(command.get_Payload());
+    loraPhyMessage.set_SequenceNumber(command.get_SequenceNumber());
     TransmitProtoBuffer();
 }
 
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
-    loraMessage.clear();
-    loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
-    loraMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
+    loraPhyMessage.clear();
+    loraPhyMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
+    loraPhyMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
     TransmitProtoBuffer();
 }
 
 void TransmitSequenceRequest() {
-    loraMessage.clear();
+    loraPhyMessage.clear();
 
-    auto sequenceConfig = loraMessage.mutable_sequenceRequestConfig();
+    auto sequenceConfig = loraPhyMessage.mutable_sequenceRequestConfig();
     sequenceConfig.set_DeviceId(0x00);
     sequenceConfig.set_Interval(500);
     sequenceConfig.set_MessageCount(5);

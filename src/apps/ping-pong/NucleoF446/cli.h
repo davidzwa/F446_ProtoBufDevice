@@ -37,7 +37,7 @@ void ApplyConfigIfPending();
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
 void UartSendLoRaRxError();
-void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, int16_t rssi, int8_t snr);
+void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr);
 void PrintSettings();
 
 #ifdef __cplusplus

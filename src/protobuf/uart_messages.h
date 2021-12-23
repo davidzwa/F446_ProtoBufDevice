@@ -886,6 +886,7 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_SequenceNumber(rhs.get_SequenceNumber());
       set_Period(rhs.get_Period());
       set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
@@ -895,6 +896,7 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_SequenceNumber(rhs.get_SequenceNumber());
       set_Period(rhs.get_Period());
       set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
@@ -907,15 +909,17 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       ISMULTICAST = 1,
       DEVICEID = 2,
-      PERIOD = 3,
-      MAXPACKETCOUNT = 4,
-      PAYLOAD = 5
+      SEQUENCENUMBER = 3,
+      PERIOD = 4,
+      MAXPACKETCOUNT = 5,
+      PAYLOAD = 6
     };
 
     TransmitCommand& operator=(const TransmitCommand& rhs)
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_SequenceNumber(rhs.get_SequenceNumber());
       set_Period(rhs.get_Period());
       set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
@@ -926,6 +930,7 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
+      set_SequenceNumber(rhs.get_SequenceNumber());
       set_Period(rhs.get_Period());
       set_MaxPacketCount(rhs.get_MaxPacketCount());
       set_Payload(rhs.get_Payload());
@@ -945,6 +950,13 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
     inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
     inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+
+    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
+    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
+    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
+    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
 
     inline bool has_Period() const
     {
@@ -1021,6 +1033,11 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
         return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
       }
 
+      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
+      }
+
       if(has_Period() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Period_.serialize_with_id(static_cast<uint32_t>(id::PERIOD), buffer, true);
@@ -1058,6 +1075,10 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
 
           case id::DEVICEID:
             return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SEQUENCENUMBER:
+            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::PERIOD:
@@ -1105,6 +1126,7 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
     {
       clear_IsMulticast();
       clear_DeviceId();
+      clear_SequenceNumber();
       clear_Period();
       clear_MaxPacketCount();
       clear_Payload();
@@ -1151,6 +1173,7 @@ class TransmitCommand final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::boolean IsMulticast_ = false;
       EmbeddedProto::uint32 DeviceId_ = 0U;
+      EmbeddedProto::uint32 SequenceNumber_ = 0U;
       EmbeddedProto::uint32 Period_ = 0U;
       EmbeddedProto::uint32 MaxPacketCount_ = 0U;
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;

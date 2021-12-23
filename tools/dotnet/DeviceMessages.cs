@@ -25,36 +25,36 @@ public static partial class DeviceMessagesReflection {
           "ChVkZXZpY2VfbWVzc2FnZXMucHJvdG8iSAoHVmVyc2lvbhINCgVNYWpvchgB",
           "IAEoDRINCgVNaW5vchgCIAEoDRINCgVQYXRjaBgDIAEoDRIQCghSZXZpc2lv",
           "bhgEIAEoDSIxCghEZXZpY2VJZBILCgNJZDAYASABKA0SCwoDSWQxGAIgASgN",
-          "EgsKA0lkMhgDIAEoDSJYCgtMb3JhUmVjZWl2ZRIMCgRTaXplGAEgASgNEgwK",
-          "BFJzc2kYAiABKA0SCwoDU25yGAMgASgNEg8KB1N1Y2Nlc3MYBCABKAgSDwoH",
-          "UGF5bG9hZBgFIAEoDCJmCgtCb290TWVzc2FnZRIjChBEZXZpY2VJZGVudGlm",
-          "aWVyGAEgASgLMgkuRGV2aWNlSWQSIQoPRmlybXdhcmVWZXJzaW9uGAIgASgL",
-          "MgguVmVyc2lvbhIPCgdBcHBOYW1lGAMgASgJIiQKCkFja01lc3NhZ2USFgoO",
-          "U2VxdWVuY2VOdW1iZXIYASABKA0igwEKDFVhcnRSZXNwb25zZRIjCgtib290",
-          "TWVzc2FnZRgBIAEoCzIMLkJvb3RNZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgC",
-          "IAEoCzILLkFja01lc3NhZ2VIABIjCgtsb3JhTWVzc2FnZRgDIAEoCzIMLkxv",
-          "cmFSZWNlaXZlSABCBgoEQm9keSJNChVTcHJlYWRpbmdGYWN0b3JDb25maWcS",
-          "GQoRc3ByZWFkaW5nRmFjdG9yUngYASABKA0SGQoRc3ByZWFkaW5nRmFjdG9y",
-          "VHgYAiABKA0iUQoVU2VxdWVuY2VSZXF1ZXN0Q29uZmlnEhQKDE1lc3NhZ2VD",
-          "b3VudBgBIAEoDRIQCghJbnRlcnZhbBgCIAEoDRIQCghEZXZpY2VJZBgDIAEo",
-          "DSLpAgoLTG9SYU1lc3NhZ2USKQoHY29tbWFuZBgBIAEoDjIYLkxvUmFNZXNz",
-          "YWdlLkNvbW1hbmRUeXBlEhYKDlNlcXVlbmNlTnVtYmVyGAIgASgNEjcKFXNw",
-          "cmVhZGluZ0ZhY3RvckNvbmZpZxgDIAEoCzIWLlNwcmVhZGluZ0ZhY3RvckNv",
-          "bmZpZ0gAEjcKFXNlcXVlbmNlUmVxdWVzdENvbmZpZxgEIAEoCzIWLlNlcXVl",
-          "bmNlUmVxdWVzdENvbmZpZ0gAEhEKB3BheWxvYWQYBSABKAxIACKJAQoLQ29t",
-          "bWFuZFR5cGUSEQoNQ29uZmlndXJhdGlvbhAAEg0KCU11bHRpQ2FzdBABEhAK",
-          "DE11bHRpQ2FzdEFjaxACEgsKB1VuaUNhc3QQAxIOCgpVbmlDYXN0QWNrEAQS",
-          "EwoPU2VxdWVuY2VSZXF1ZXN0EAUSFAoQU2VxdWVuY2VSZXNwb25zZRAGQgYK",
-          "BEJvZHliBnByb3RvMw=="));
+          "EgsKA0lkMhgDIAEoDSJwCgtMb3JhUmVjZWl2ZRIMCgRTaXplGAEgASgNEgwK",
+          "BFJzc2kYAiABKA0SCwoDU25yGAMgASgNEhYKDlNlcXVlbmNlTnVtYmVyGAQg",
+          "ASgNEg8KB1N1Y2Nlc3MYBSABKAgSDwoHUGF5bG9hZBgGIAEoDCJmCgtCb290",
+          "TWVzc2FnZRIjChBEZXZpY2VJZGVudGlmaWVyGAEgASgLMgkuRGV2aWNlSWQS",
+          "IQoPRmlybXdhcmVWZXJzaW9uGAIgASgLMgguVmVyc2lvbhIPCgdBcHBOYW1l",
+          "GAMgASgJIiQKCkFja01lc3NhZ2USFgoOU2VxdWVuY2VOdW1iZXIYASABKA0i",
+          "igEKDFVhcnRSZXNwb25zZRIjCgtib290TWVzc2FnZRgBIAEoCzIMLkJvb3RN",
+          "ZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgCIAEoCzILLkFja01lc3NhZ2VIABIq",
+          "ChJsb3JhUmVjZWl2ZU1lc3NhZ2UYAyABKAsyDC5Mb3JhUmVjZWl2ZUgAQgYK",
+          "BEJvZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29uZmlnEhkKEXNwcmVhZGluZ0Zh",
+          "Y3RvclJ4GAEgASgNEhkKEXNwcmVhZGluZ0ZhY3RvclR4GAIgASgNIlEKFVNl",
+          "cXVlbmNlUmVxdWVzdENvbmZpZxIUCgxNZXNzYWdlQ291bnQYASABKA0SEAoI",
+          "SW50ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQYAyABKA0i6QIKC0xvUmFNZXNz",
+          "YWdlEikKB2NvbW1hbmQYASABKA4yGC5Mb1JhTWVzc2FnZS5Db21tYW5kVHlw",
+          "ZRIWCg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3ChVzcHJlYWRpbmdGYWN0b3JD",
+          "b25maWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0b3JDb25maWdIABI3ChVzZXF1",
+          "ZW5jZVJlcXVlc3RDb25maWcYBCABKAsyFi5TZXF1ZW5jZVJlcXVlc3RDb25m",
+          "aWdIABIRCgdwYXlsb2FkGAUgASgMSAAiiQEKC0NvbW1hbmRUeXBlEhEKDUNv",
+          "bmZpZ3VyYXRpb24QABINCglNdWx0aUNhc3QQARIQCgxNdWx0aUNhc3RBY2sQ",
+          "AhILCgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFjaxAEEhMKD1NlcXVlbmNlUmVx",
+          "dWVzdBAFEhQKEFNlcXVlbmNlUmVzcG9uc2UQBkIGCgRCb2R5YgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Version), global::Version.Parser, new[]{ "Major", "Minor", "Patch", "Revision" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DeviceId), global::DeviceId.Parser, new[]{ "Id0", "Id1", "Id2" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "Success", "Payload" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "SequenceNumber", "Success", "Payload" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BootMessage), global::BootMessage.Parser, new[]{ "DeviceIdentifier", "FirmwareVersion", "AppName" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AckMessage), global::AckMessage.Parser, new[]{ "SequenceNumber" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraMessage" }, new[]{ "Body" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraReceiveMessage" }, new[]{ "Body" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SpreadingFactorConfig), global::SpreadingFactorConfig.Parser, new[]{ "SpreadingFactorRx", "SpreadingFactorTx" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SequenceRequestConfig), global::SequenceRequestConfig.Parser, new[]{ "MessageCount", "Interval", "DeviceId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::LoRaMessage), global::LoRaMessage.Parser, new[]{ "Command", "SequenceNumber", "SpreadingFactorConfig", "SequenceRequestConfig", "Payload" }, new[]{ "Body" }, new[]{ typeof(global::LoRaMessage.Types.CommandType) }, null, null)
@@ -664,6 +664,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     size_ = other.size_;
     rssi_ = other.rssi_;
     snr_ = other.snr_;
+    sequenceNumber_ = other.sequenceNumber_;
     success_ = other.success_;
     payload_ = other.payload_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -711,8 +712,20 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
   }
 
+  /// <summary>Field number for the "SequenceNumber" field.</summary>
+  public const int SequenceNumberFieldNumber = 4;
+  private uint sequenceNumber_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint SequenceNumber {
+    get { return sequenceNumber_; }
+    set {
+      sequenceNumber_ = value;
+    }
+  }
+
   /// <summary>Field number for the "Success" field.</summary>
-  public const int SuccessFieldNumber = 4;
+  public const int SuccessFieldNumber = 5;
   private bool success_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -724,7 +737,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
   }
 
   /// <summary>Field number for the "Payload" field.</summary>
-  public const int PayloadFieldNumber = 5;
+  public const int PayloadFieldNumber = 6;
   private pb::ByteString payload_ = pb::ByteString.Empty;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -753,6 +766,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     if (Size != other.Size) return false;
     if (Rssi != other.Rssi) return false;
     if (Snr != other.Snr) return false;
+    if (SequenceNumber != other.SequenceNumber) return false;
     if (Success != other.Success) return false;
     if (Payload != other.Payload) return false;
     return Equals(_unknownFields, other._unknownFields);
@@ -765,6 +779,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     if (Size != 0) hash ^= Size.GetHashCode();
     if (Rssi != 0) hash ^= Rssi.GetHashCode();
     if (Snr != 0) hash ^= Snr.GetHashCode();
+    if (SequenceNumber != 0) hash ^= SequenceNumber.GetHashCode();
     if (Success != false) hash ^= Success.GetHashCode();
     if (Payload.Length != 0) hash ^= Payload.GetHashCode();
     if (_unknownFields != null) {
@@ -797,12 +812,16 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
       output.WriteRawTag(24);
       output.WriteUInt32(Snr);
     }
-    if (Success != false) {
+    if (SequenceNumber != 0) {
       output.WriteRawTag(32);
+      output.WriteUInt32(SequenceNumber);
+    }
+    if (Success != false) {
+      output.WriteRawTag(40);
       output.WriteBool(Success);
     }
     if (Payload.Length != 0) {
-      output.WriteRawTag(42);
+      output.WriteRawTag(50);
       output.WriteBytes(Payload);
     }
     if (_unknownFields != null) {
@@ -827,12 +846,16 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
       output.WriteRawTag(24);
       output.WriteUInt32(Snr);
     }
-    if (Success != false) {
+    if (SequenceNumber != 0) {
       output.WriteRawTag(32);
+      output.WriteUInt32(SequenceNumber);
+    }
+    if (Success != false) {
+      output.WriteRawTag(40);
       output.WriteBool(Success);
     }
     if (Payload.Length != 0) {
-      output.WriteRawTag(42);
+      output.WriteRawTag(50);
       output.WriteBytes(Payload);
     }
     if (_unknownFields != null) {
@@ -853,6 +876,9 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (Snr != 0) {
       size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Snr);
+    }
+    if (SequenceNumber != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SequenceNumber);
     }
     if (Success != false) {
       size += 1 + 1;
@@ -880,6 +906,9 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (other.Snr != 0) {
       Snr = other.Snr;
+    }
+    if (other.SequenceNumber != 0) {
+      SequenceNumber = other.SequenceNumber;
     }
     if (other.Success != false) {
       Success = other.Success;
@@ -915,10 +944,14 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           break;
         }
         case 32: {
+          SequenceNumber = input.ReadUInt32();
+          break;
+        }
+        case 40: {
           Success = input.ReadBool();
           break;
         }
-        case 42: {
+        case 50: {
           Payload = input.ReadBytes();
           break;
         }
@@ -950,10 +983,14 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           break;
         }
         case 32: {
+          SequenceNumber = input.ReadUInt32();
+          break;
+        }
+        case 40: {
           Success = input.ReadBool();
           break;
         }
-        case 42: {
+        case 50: {
           Payload = input.ReadBytes();
           break;
         }
@@ -1475,8 +1512,8 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       case BodyOneofCase.AckMessage:
         AckMessage = other.AckMessage.Clone();
         break;
-      case BodyOneofCase.LoraMessage:
-        LoraMessage = other.LoraMessage.Clone();
+      case BodyOneofCase.LoraReceiveMessage:
+        LoraReceiveMessage = other.LoraReceiveMessage.Clone();
         break;
     }
 
@@ -1513,15 +1550,15 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
   }
 
-  /// <summary>Field number for the "loraMessage" field.</summary>
-  public const int LoraMessageFieldNumber = 3;
+  /// <summary>Field number for the "loraReceiveMessage" field.</summary>
+  public const int LoraReceiveMessageFieldNumber = 3;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public global::LoraReceive LoraMessage {
-    get { return bodyCase_ == BodyOneofCase.LoraMessage ? (global::LoraReceive) body_ : null; }
+  public global::LoraReceive LoraReceiveMessage {
+    get { return bodyCase_ == BodyOneofCase.LoraReceiveMessage ? (global::LoraReceive) body_ : null; }
     set {
       body_ = value;
-      bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.LoraMessage;
+      bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.LoraReceiveMessage;
     }
   }
 
@@ -1531,7 +1568,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     None = 0,
     BootMessage = 1,
     AckMessage = 2,
-    LoraMessage = 3,
+    LoraReceiveMessage = 3,
   }
   private BodyOneofCase bodyCase_ = BodyOneofCase.None;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1564,7 +1601,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
     if (!object.Equals(BootMessage, other.BootMessage)) return false;
     if (!object.Equals(AckMessage, other.AckMessage)) return false;
-    if (!object.Equals(LoraMessage, other.LoraMessage)) return false;
+    if (!object.Equals(LoraReceiveMessage, other.LoraReceiveMessage)) return false;
     if (BodyCase != other.BodyCase) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -1575,7 +1612,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     int hash = 1;
     if (bodyCase_ == BodyOneofCase.BootMessage) hash ^= BootMessage.GetHashCode();
     if (bodyCase_ == BodyOneofCase.AckMessage) hash ^= AckMessage.GetHashCode();
-    if (bodyCase_ == BodyOneofCase.LoraMessage) hash ^= LoraMessage.GetHashCode();
+    if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) hash ^= LoraReceiveMessage.GetHashCode();
     hash ^= (int) bodyCase_;
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -1603,9 +1640,9 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       output.WriteRawTag(18);
       output.WriteMessage(AckMessage);
     }
-    if (bodyCase_ == BodyOneofCase.LoraMessage) {
+    if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) {
       output.WriteRawTag(26);
-      output.WriteMessage(LoraMessage);
+      output.WriteMessage(LoraReceiveMessage);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -1625,9 +1662,9 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       output.WriteRawTag(18);
       output.WriteMessage(AckMessage);
     }
-    if (bodyCase_ == BodyOneofCase.LoraMessage) {
+    if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) {
       output.WriteRawTag(26);
-      output.WriteMessage(LoraMessage);
+      output.WriteMessage(LoraReceiveMessage);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
@@ -1645,8 +1682,8 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     if (bodyCase_ == BodyOneofCase.AckMessage) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(AckMessage);
     }
-    if (bodyCase_ == BodyOneofCase.LoraMessage) {
-      size += 1 + pb::CodedOutputStream.ComputeMessageSize(LoraMessage);
+    if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(LoraReceiveMessage);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -1673,11 +1710,11 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
         }
         AckMessage.MergeFrom(other.AckMessage);
         break;
-      case BodyOneofCase.LoraMessage:
-        if (LoraMessage == null) {
-          LoraMessage = new global::LoraReceive();
+      case BodyOneofCase.LoraReceiveMessage:
+        if (LoraReceiveMessage == null) {
+          LoraReceiveMessage = new global::LoraReceive();
         }
-        LoraMessage.MergeFrom(other.LoraMessage);
+        LoraReceiveMessage.MergeFrom(other.LoraReceiveMessage);
         break;
     }
 
@@ -1716,11 +1753,11 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
         }
         case 26: {
           global::LoraReceive subBuilder = new global::LoraReceive();
-          if (bodyCase_ == BodyOneofCase.LoraMessage) {
-            subBuilder.MergeFrom(LoraMessage);
+          if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) {
+            subBuilder.MergeFrom(LoraReceiveMessage);
           }
           input.ReadMessage(subBuilder);
-          LoraMessage = subBuilder;
+          LoraReceiveMessage = subBuilder;
           break;
         }
       }
@@ -1758,11 +1795,11 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
         }
         case 26: {
           global::LoraReceive subBuilder = new global::LoraReceive();
-          if (bodyCase_ == BodyOneofCase.LoraMessage) {
-            subBuilder.MergeFrom(LoraMessage);
+          if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) {
+            subBuilder.MergeFrom(LoraReceiveMessage);
           }
           input.ReadMessage(subBuilder);
-          LoraMessage = subBuilder;
+          LoraReceiveMessage = subBuilder;
           break;
         }
       }
