@@ -38,7 +38,7 @@ int main(void) {
     InitTimedTasks();
     InitRadioPhy();
 
-    Radio.Rx(RX_TIMEOUT_VALUE);
+    Radio.Rx(0);
     while (1) {
         // Process Radio IRQ
         if (Radio.IrqProcess != NULL) {

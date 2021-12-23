@@ -129,19 +129,21 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr);
     readLoraBuffer.clear();
     loraPhyMessage.clear();
-    Radio.Rx(RX_TIMEOUT_VALUE);
+
+    Radio.Rx(0);
 }
 
 void OnRxTimeout(void) {
-    Radio.Rx(RX_TIMEOUT_VALUE);
+    Radio.Sleep();
 }
 
 void OnRxError(void) {
-    Radio.Rx(RX_TIMEOUT_VALUE);
+    Radio.Sleep();
 }
 
 void TransmitProtoBuffer() {
     Radio.Send(writeLoraBuffer.get_data(), writeLoraBuffer.get_size());
+    writeLoraBuffer.clear();
 }
 
 void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
