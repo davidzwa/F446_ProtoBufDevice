@@ -38,6 +38,7 @@ static void OnHeartbeatEvent(void* context) {
 }
 
 static void OnPeriodicTx(void* context) {
+    // We generate a packet as if it came from PC/UART
     TransmitCommand<MAX_PAYLOAD_LENGTH> command;
     command.set_IsMulticast(false);
     
@@ -46,17 +47,15 @@ static void OnPeriodicTx(void* context) {
     writeTransmitBuffer.clear();
     writeTransmitBuffer.push(buffer, 3);
 
-    command.set_SequenceNumber(periodicCurrentCounter);
     command.get_Payload()
         .serialize(writeTransmitBuffer);
-        
-    TransmitUnicast(command);
+    command.set_SequenceNumber(periodicCurrentCounter);
 
+    TransmitUnicast(command);
     periodicCurrentCounter++;
     TimerReset(&PeriodicTxTimer);
 
-    if (periodicCurrentCounter > periodicTransmissionMax) {
-
+    if (periodicCurrentCounter >= periodicTransmissionMax) {
         TimerStop(&PeriodicTxTimer);
     }
 }
