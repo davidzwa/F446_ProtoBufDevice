@@ -149,14 +149,22 @@ void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
     loraPhyMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
     loraPhyMessage.set_payload(command.get_Payload());
     loraPhyMessage.set_SequenceNumber(command.get_SequenceNumber());
-    TransmitProtoBuffer();
+    
+    auto result = loraPhyMessage.serialize(writeLoraBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        TransmitProtoBuffer();
+    }
 }
 
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
     loraPhyMessage.clear();
     loraPhyMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
     loraPhyMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
-    TransmitProtoBuffer();
+
+    auto result = loraPhyMessage.serialize(writeLoraBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        TransmitProtoBuffer();
+    }
 }
 
 void TransmitSequenceRequest() {
@@ -166,5 +174,9 @@ void TransmitSequenceRequest() {
     sequenceConfig.set_DeviceId(0x00);
     sequenceConfig.set_Interval(500);
     sequenceConfig.set_MessageCount(5);
-    TransmitProtoBuffer();
+
+    auto result = sequenceConfig.serialize(writeLoraBuffer);
+    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+        TransmitProtoBuffer();
+    }
 }

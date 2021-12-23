@@ -80,7 +80,7 @@
 #error "Please define a modem in the compiler options."
 #endif
 
-#define RX_TIMEOUT_VALUE 50
+#define RX_TIMEOUT_VALUE 500
 #define BUFFER_SIZE 64  // Define the payload size here
 #define MAX_APPNAME_LENGTH 20
 #define MAX_PAYLOAD_LENGTH 22
