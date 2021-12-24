@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file      startup_stm32f446xx.s
   * @author    MCD Application Team
-  * @brief     STM32F446xx Devices vector table for GCC toolchain. 
+  * @brief     STM32F446xx Devices vector table for GCC based toolchains. 
   *            This module performs:
   *                - Set the initial SP
   *                - Set the initial PC == Reset_Handler,
@@ -224,15 +224,15 @@ g_pfnVectors:
   .word     0                                 /* Reserved                     */                   
   .word     0                                 /* Reserved                     */
   .word     FPU_IRQHandler                    /* FPU                          */
-  .word     0                                 /* Reserved                     */      
+  .word     0                                 /* Reserved                     */
   .word     0                                 /* Reserved                     */
   .word     SPI4_IRQHandler                   /* SPI4                         */
-  .word     0                                 /* Reserved 					          */
-  .word     0                                 /* Reserved					            */
-  .word     SAI1_IRQHandler                   /* SAI1						              */
-  .word     0                                 /* Reserved					            */
-  .word     0                                 /* Reserved					            */
-  .word     0                                 /* Reserved    				          */
+  .word     0                                 /* Reserved                     */
+  .word     0                                 /* Reserved                     */
+  .word     SAI1_IRQHandler                   /* SAI1                         */
+  .word     0                                 /* Reserved                     */
+  .word     0                                 /* Reserved                     */
+  .word     0                                 /* Reserved                     */
   .word     SAI2_IRQHandler                   /* SAI2                         */
   .word     QUADSPI_IRQHandler                /* QuadSPI                      */
   .word     CEC_IRQHandler                    /* CEC                          */
@@ -532,5 +532,5 @@ g_pfnVectors:
    .weak      FMPI2C1_ER_IRQHandler            
    .thumb_set FMPI2C1_ER_IRQHandler,Default_Handler 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/		
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/        
  
