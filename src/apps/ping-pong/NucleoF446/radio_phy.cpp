@@ -7,6 +7,7 @@
 #include "cli.h"
 #include "config.h"
 #include "device_messages.h"
+#include "measurements.h"
 #include "tasks.h"
 #include "uart_messages.h"
 
@@ -126,6 +127,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     // Ensure that the message is not re-used
     auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
+
+    RegisterNewMeasurement(sequenceNumber, (uint8_t)-rssi, (uint8_t) snr);
     UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr);
     readLoraBuffer.clear();
     loraPhyMessage.clear();
@@ -146,12 +149,16 @@ void TransmitProtoBuffer() {
     writeLoraBuffer.clear();
 }
 
+ProtoWriteBuffer* GetWriteAccess() {
+    return &writeLoraBuffer;
+}
+
 void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
     loraPhyMessage.clear();
     loraPhyMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
     loraPhyMessage.set_payload(command.get_Payload());
     loraPhyMessage.set_SequenceNumber(command.get_SequenceNumber());
-    
+
     auto result = loraPhyMessage.serialize(writeLoraBuffer);
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
         TransmitProtoBuffer();
@@ -169,16 +176,16 @@ void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
     }
 }
 
-void TransmitSequenceRequest() {
-    loraPhyMessage.clear();
+// void TransmitSequenceRequest() {
+//     loraPhyMessage.clear();
 
-    auto sequenceConfig = loraPhyMessage.mutable_sequenceRequestConfig();
-    sequenceConfig.set_DeviceId(0x00);
-    sequenceConfig.set_Interval(500);
-    sequenceConfig.set_MessageCount(5);
+//     auto sequenceConfig = loraPhyMessage.mutable_sequenceRequestConfig();
+//     sequenceConfig.set_DeviceId(0x00);
+//     sequenceConfig.set_Interval(500);
+//     sequenceConfig.set_MessageCount(5);
 
-    auto result = sequenceConfig.serialize(writeLoraBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        TransmitProtoBuffer();
-    }
-}
+//     auto result = sequenceConfig.serialize(writeLoraBuffer);
+//     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+//         TransmitProtoBuffer();
+//     }
+// }
