@@ -22,8 +22,9 @@ message LoraReceive
     uint32 Rssi = 2;
     uint32 Snr = 3;
     uint32 SequenceNumber = 4;
-    bool Success = 5;
-    bytes Payload = 6;
+    optional bool IsMeasurementFragment = 5;
+    bool Success = 6;
+    bytes Payload = 7;
 }
 
 message BootMessage {
@@ -62,8 +63,10 @@ message LoRaMessage {
         MultiCastAck = 2;
         UniCast = 3;
         UniCastAck = 4;
-        SequenceRequest = 5;
-        SequenceResponse = 6;
+        MeasurementStreamRequest = 5;
+        MeasurementStreamFragmentReply = 6;
+        SequenceRequest = 7;
+        SequenceResponse = 8;
     }
 
     CommandType command = 1;

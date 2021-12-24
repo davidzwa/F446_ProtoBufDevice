@@ -8,6 +8,7 @@
 
 void RegisterNewMeasurement(uint16_t sequenceNumber, uint8_t rssiInv, uint8_t snr);
 void ClearMeasurements();
+void RequestStreamMeasurements(/* DeviceId */);
 void StreamMeasurements();
 
 #endif  //  MEASUREMENTS_H__

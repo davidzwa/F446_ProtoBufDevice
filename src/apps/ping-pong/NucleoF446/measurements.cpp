@@ -2,6 +2,7 @@
 
 #include "device_messages.h"
 #include "radio_phy.h"
+#include "delay.h"
 
 #define MAX_MEASUREMENT_NUM 5000
 #define FIXED_LORA_FRAGMENT_BYTES 100
@@ -21,18 +22,40 @@ void ClearMeasurements() {
     currentMeasurementCount = 0;
 }
 
+/**
+ * Request another device to stream its measurements
+ * */
+void RequestStreamMeasurements(/*DeviceId*/) {
+    loraBlobMessage.clear();
+    loraBlobMessage.set_command(::LoRaMessage<FIXED_LORA_FRAGMENT_BYTES>::CommandType::MeasurementStreamRequest);
+    loraBlobMessage.set_SequenceNumber(0xFFFF);
+
+    auto radioWriteBuffer = GetWriteAccess();
+    loraBlobMessage.serialize(*radioWriteBuffer);
+    TransmitProtoBufferInternal();
+}
+
 void StreamMeasurements() {
     uint16_t currentStreamFragment = 0;
     const uint16_t requiredFragmentCount = ceil((currentMeasurementCount * 4) / (FIXED_LORA_FRAGMENT_BYTES));
 
     while (currentStreamFragment < requiredFragmentCount) {
-        auto radioWriteBuffer = GetWriteAccess();
-
         ProtoWriteBuffer writeEncapsulateBuffer;
         auto offset = FIXED_LORA_FRAGMENT_BYTES * currentStreamFragment;
         writeEncapsulateBuffer.push(offset+(uint8_t*) measurements, FIXED_LORA_FRAGMENT_BYTES);
-        loraBlobMessage.get_payload().serialize(writeEncapsulateBuffer);
+        loraBlobMessage.clear();
+        loraBlobMessage.set_SequenceNumber(currentStreamFragment);
+        loraBlobMessage.get_payload()
+            .serialize(writeEncapsulateBuffer);
+        loraBlobMessage.set_command(::LoRaMessage<FIXED_LORA_FRAGMENT_BYTES>::CommandType::MeasurementStreamFragmentReply);
+
+        // Take over transmission from radio
+        auto radioWriteBuffer = GetWriteAccess();
         loraBlobMessage.serialize(*radioWriteBuffer);
+        TransmitProtoBufferInternal();
+
+        // Should wait long packet
+        DelayMs(200);
 
         currentStreamFragment++;
     }

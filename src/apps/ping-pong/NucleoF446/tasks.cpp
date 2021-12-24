@@ -55,9 +55,9 @@ static void OnPeriodicTx(void* context) {
     TransmitUnicast(command);
     periodicCurrentCounter++;
 
-    if (periodicCurrentCounter >= periodicTransmissionMax) {
+    if (periodicCurrentCounter > periodicTransmissionMax) {
         // We will send the data once
-        StreamMeasurements();
+        RequestStreamMeasurements();
         TimerStop(&PeriodicTxTimer);
     } else {
         TimerReset(&PeriodicTxTimer);

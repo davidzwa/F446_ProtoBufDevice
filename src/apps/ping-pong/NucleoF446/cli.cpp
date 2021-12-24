@@ -197,11 +197,12 @@ void UartSendLoRaRxError() {
     }
 }
 
-void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr) {
+void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
     UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
     auto loraMessage = uartResponse.mutable_loraReceiveMessage();
     loraMessage.set_Payload(payload);
     loraMessage.set_Rssi(rssi);
+    loraMessage.set_IsMeasurementFragment(isMeasurementFragment);
     loraMessage.set_Success(true);
     loraMessage.set_Snr(snr);
     loraMessage.set_SequenceNumber(sequenceNumber);
