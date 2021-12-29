@@ -7,6 +7,7 @@
 #include "cli.h"
 #include "config.h"
 #include "device_messages.h"
+#include "measurements.h"
 #include "tasks.h"
 #include "uart_messages.h"
 
@@ -108,11 +109,15 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     auto result = loraPhyMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
         UartSendAck(3);
-        Radio.Rx(RX_TIMEOUT_VALUE);
+        Radio.Rx(0);
         return;
     }
 
-    if (loraPhyMessage.get_command() == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {
+    auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
+    RegisterNewMeasurement(sequenceNumber, (uint8_t)-rssi, (uint8_t)snr);
+
+    auto commandType = loraPhyMessage.get_command();
+    if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {
         if (loraPhyMessage.has_spreadingFactorConfig()) {
             auto config = loraPhyMessage.get_spreadingFactorConfig();
             UpdateRadioSpreadingFactor(config.get_spreadingFactorRx(), config.get_spreadingFactorTx(), true);
@@ -122,11 +127,20 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
             // TODO send ACK if success
         }
+    } else if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::MeasurementStreamRequest) {
+        // TODO filter based on device id
+        // StreamMeasurements();
+        readLoraBuffer.clear();
+    } 
+    
+    if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::MeasurementStreamFragmentReply) {
+        UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, true);
     }
-
+    else {
+        UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, false);
+    }
     // Ensure that the message is not re-used
-    auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
-    UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr);
+    
     readLoraBuffer.clear();
     loraPhyMessage.clear();
 
@@ -141,9 +155,13 @@ void OnRxError(void) {
     Radio.Rx(0);
 }
 
-void TransmitProtoBuffer() {
+void TransmitProtoBufferInternal() {
     Radio.Send(writeLoraBuffer.get_data(), writeLoraBuffer.get_size());
     writeLoraBuffer.clear();
+}
+
+ProtoWriteBuffer *GetWriteAccess() {
+    return &writeLoraBuffer;
 }
 
 void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
@@ -151,10 +169,10 @@ void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
     loraPhyMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
     loraPhyMessage.set_payload(command.get_Payload());
     loraPhyMessage.set_SequenceNumber(command.get_SequenceNumber());
-    
+
     auto result = loraPhyMessage.serialize(writeLoraBuffer);
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        TransmitProtoBuffer();
+        TransmitProtoBufferInternal();
     }
 }
 
@@ -165,20 +183,20 @@ void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
 
     auto result = loraPhyMessage.serialize(writeLoraBuffer);
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        TransmitProtoBuffer();
+        TransmitProtoBufferInternal();
     }
 }
 
-void TransmitSequenceRequest() {
-    loraPhyMessage.clear();
+// void TransmitSequenceRequest() {
+//     loraPhyMessage.clear();
 
-    auto sequenceConfig = loraPhyMessage.mutable_sequenceRequestConfig();
-    sequenceConfig.set_DeviceId(0x00);
-    sequenceConfig.set_Interval(500);
-    sequenceConfig.set_MessageCount(5);
+//     auto sequenceConfig = loraPhyMessage.mutable_sequenceRequestConfig();
+//     sequenceConfig.set_DeviceId(0x00);
+//     sequenceConfig.set_Interval(500);
+//     sequenceConfig.set_MessageCount(5);
 
-    auto result = sequenceConfig.serialize(writeLoraBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        TransmitProtoBuffer();
-    }
-}
+//     auto result = sequenceConfig.serialize(writeLoraBuffer);
+//     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
+//         TransmitProtoBuffer();
+//     }
+// }

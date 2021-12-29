@@ -132,7 +132,12 @@
         "timer.h": "c",
         "cstddef": "cpp",
         "memory": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "cmath": "cpp",
+        "bit": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "streambuf": "cpp"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",
