@@ -48,5 +48,7 @@ int main(void) {
         if (IsCliCommandReady()) {
             ProcessCliCommand();
         }
+
+        ProcessHasReceived();
     }
 }

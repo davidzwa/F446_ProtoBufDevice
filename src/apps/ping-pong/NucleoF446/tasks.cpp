@@ -17,11 +17,8 @@
 static TimerEvent_t heartBeatTimer;
 
 // Normal operation
-static TimerEvent_t pingSlotTimer;
-static TimerEvent_t beaconTimer;
 static TimerEvent_t periodicTxTimer;
 ProtoWriteBuffer writeTransmitBuffer;
-uint16_t beaconSequenceCount;
 uint16_t sequenceNumberLimit = MAX_SEQUENCE_NUMBERS;  // Defines the sequencenumber limit
 uint16_t periodicCurrentCounter = 0;
 uint16_t periodicTxInterval = DEFAULT_TX_PERIOD;
@@ -49,13 +46,7 @@ bool ApplyPeriodicTxIntervalSafely(uint32_t period) {
     }
 }
 
-static void OnBeaconEvent(void* context) {
-    beaconSequenceCount++;
-    TimerReset(&beaconTimer);
-}
-
 static void OnHeartbeatEvent(void* context) {
-    // printf("Beat <3 (b:%d)\n", BeaconSequenceCount);
     UartSendBoot();
     TimerReset(&heartBeatTimer);
 }
@@ -102,12 +93,8 @@ void TogglePeriodicTx(uint16_t timerPeriod, uint16_t maxPacketCount) {
     }
 }
 
-static void OnPingSlotEvent(void* context) {
-}
-
-static void OnSequenceEvent(void* context) {
-    sequenceMessageCount++;
-}
+// static void OnPingSlotEvent(void* context) {
+// }
 
 /**
  * Send periodically indefinitely
@@ -139,28 +126,23 @@ void SetSequenceRequestConfig(const SequenceRequestConfig& config) {
     sequenceRequestConfig = config;
     sequenceMessageCount = 0;
 
-    TimerSetValue(&sequenceTimer, sequenceRequestConfig.get_Interval());
+    // TimerSetValue(&sequenceTimer, sequenceRequestConfig.get_Interval());
 }
 
 void InitTimedTasks() {
-    TimerInit(&beaconTimer, OnBeaconEvent);
     TimerInit(&heartBeatTimer, OnHeartbeatEvent);
-    TimerInit(&pingSlotTimer, OnPingSlotEvent);
-    TimerInit(&sequenceTimer, OnSequenceEvent);
     TimerInit(&periodicTxTimer, OnPeriodicTx);
 
-    TimerSetValue(&periodicTxTimer, periodicTxInterval);
-    TimerSetValue(&beaconTimer, 128000);
     TimerSetValue(&heartBeatTimer, 30000);
+    TimerSetValue(&periodicTxTimer, periodicTxInterval);
 
 #ifdef STANDALONE_TX_INFINITE
     standaloneAlwaysSendPeriodically = true;
     periodicCurrentCounter = 0;
     TimerStart(&periodicTxTimer);
 #else
-    standaloneSendInfinitely = false;
+    standaloneAlwaysSendPeriodically = false;
 #endif
 
-    TimerStart(&beaconTimer);
     TimerStart(&heartBeatTimer);
 }

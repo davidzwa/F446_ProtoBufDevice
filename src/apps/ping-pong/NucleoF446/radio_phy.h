@@ -9,8 +9,9 @@
 
 void InitRadioPhy();
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor);
+bool ProcessHasReceived();
 
-void TransmitProtoBufferInternal ();
+void TransmitProtoBufferInternal();
 void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command);
 ProtoWriteBuffer *GetWriteAccess();
 

@@ -4,7 +4,7 @@
 #define CONFIG_H__
 
 #define APP_NAME "LoRaMulticast"
-#define STANDALONE_TX_INFINITE
+// #define STANDALONE_TX_INFINITE
 
 #if defined(REGION_AS923)
 

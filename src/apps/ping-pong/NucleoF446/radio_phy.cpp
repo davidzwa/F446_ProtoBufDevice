@@ -19,6 +19,8 @@ LoRaMessage<MAX_PAYLOAD_LENGTH> loraPhyMessage;
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
 
+bool hasReceived = false;
+
 /*!
  * \brief Radio interupts
  */
@@ -97,6 +99,15 @@ void OnTxTimeout(void) {
     // }
 }
 
+bool ProcessHasReceived() {
+    if (hasReceived == false) {
+        return false;
+    }
+
+    hasReceived = false;
+    UartDebug("RX", 2);
+}
+
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     // Tracks RSSI and SNR
     lastRssiValue = rssi;
@@ -112,6 +123,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
         Radio.Rx(0);
         return;
     }
+
+    hasReceived = true;
 
     auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
     RegisterNewMeasurement(sequenceNumber, (uint8_t)-rssi, (uint8_t)snr);
@@ -139,8 +152,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     else {
         UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, false);
     }
+
     // Ensure that the message is not re-used
-    
     readLoraBuffer.clear();
     loraPhyMessage.clear();
 
