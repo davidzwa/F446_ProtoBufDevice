@@ -107,15 +107,45 @@ print_section_sizes(${PROJECT_NAME})
 create_bin_output(${PROJECT_NAME})
 create_hex_output(${PROJECT_NAME})
 
+add_custom_target(probe
+
+DEPENDS ${PROJECT_NAME}
+COMMENT "Probing ST-Link Hardware"
+)
+# Flash firmware to two specific targets.
+add_custom_target(flash_all
+${OPENOCD_BIN} -f interface/stlink.cfg -f target/stm32f4x.cfg 
+-f ${CMAKE_CURRENT_SOURCE_DIR}/test.cfg
+-c "transport select hla_swd" 
+-c "init" 
+-c "reset halt" 
+-c "flash write_image erase ${PROJECT_NAME}"
+-c "flash verify_image ${PROJECT_NAME}"
+-c "reset run" 
+-c "shutdown"
+&&
+${OPENOCD_BIN} -f interface/stlink.cfg -f target/stm32f4x.cfg 
+-f ${CMAKE_CURRENT_SOURCE_DIR}/test_copy.cfg
+-c "transport select hla_swd" 
+-c "init" 
+-c "reset halt" 
+-c "flash write_image erase ${PROJECT_NAME}"
+-c "flash verify_image ${PROJECT_NAME}"
+-c "reset run" 
+-c "shutdown"
+DEPENDS ${PROJECT_NAME}
+COMMENT "Flashing 2 hardware targets")
+
 # Flash firmware to target.
-add_custom_target(flash
-  ${OPENOCD_BIN} -f interface/stlink.cfg -f target/stm32f4x.cfg 
-    -c "transport select hla_swd" 
-    -c "init" 
-    -c "reset halt" 
-    -c "flash write_image erase ${PROJECT_NAME}"
-    -c "flash verify_image ${PROJECT_NAME}"
-    -c "reset run" 
-    -c "shutdown"
-  DEPENDS ${PROJECT_NAME}
-  COMMENT "Flashing target hardware")
+add_custom_target(flash_first
+${OPENOCD_BIN} -f interface/stlink.cfg -f target/stm32f4x.cfg 
+-f ${CMAKE_CURRENT_SOURCE_DIR}/test.cfg
+-c "transport select hla_swd" 
+-c "init" 
+-c "reset halt" 
+-c "flash write_image erase ${PROJECT_NAME}"
+-c "flash verify_image ${PROJECT_NAME}"
+-c "reset run" 
+-c "shutdown"
+DEPENDS ${PROJECT_NAME}
+COMMENT "Flashing target hardware")

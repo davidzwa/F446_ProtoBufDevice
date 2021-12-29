@@ -23,7 +23,7 @@ def parse_firmware_version(spec):
 
 
 def convert_device_id_string(spec):
-    return str((spec.Id0 << 64) + (spec.Id1 << 32) + spec.Id2)
+    return f"{str(spec.Id0)}-{str(spec.Id1)}-{str(spec.Id2)}"
 
 
 def parse_device_id(spec):
@@ -52,7 +52,13 @@ def print_boot_message(boot_message):
 
 def decode_message(data):
     try:
+        for byte in data:
+            print('{:02X} '.format(byte), end='')
+        print('')
+
         decoded_data = cobs.decode(data)[1:-1]
+        print(decoded_data)
+
         uart_packet = device_messages_pb2.UartResponse()
         uart_packet.ParseFromString(decoded_data)
         if uart_packet.HasField("bootMessage"):

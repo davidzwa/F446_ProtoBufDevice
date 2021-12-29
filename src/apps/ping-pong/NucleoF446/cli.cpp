@@ -54,6 +54,15 @@ uint8_t GetLastChar(uint8_t offset) {
     return uart->FifoRx.Data[uart->FifoRx.End - offset];
 }
 
+void UartSend(uint8_t *buffer, size_t length) {
+    uint8_t encodedBuffer[length * 2];
+    size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
+    UartPutChar(uart, 0xFF);
+    UartPutChar(uart, encodedSize);
+    UartPutBuffer(uart, encodedBuffer, encodedSize);
+    UartPutChar(uart, 0x0);
+}
+
 void UartISR(UartNotifyId_t id) {
     if (id == UART_NOTIFY_TX) {
         return;
@@ -61,7 +70,7 @@ void UartISR(UartNotifyId_t id) {
 
     if (IsFifoEmpty(&uart->FifoRx)) {
         // Illegal scenario
-        return;
+        return; 
     }
 
     if (GetFifoRxLength() > PACKET_SIZE_LIMIT) {
@@ -152,15 +161,6 @@ void ProcessCliCommand() {
     }
 
     uartCommand.clear();
-}
-
-void UartSend(uint8_t *buffer, size_t length) {
-    uint8_t encodedBuffer[length * 2];
-    size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
-    UartPutChar(uart, 0xFF);
-    UartPutChar(uart, encodedSize);
-    UartPutBuffer(uart, encodedBuffer, encodedSize);
-    // UartPutChar(uart, packetEndMarker);
 }
 
 void UartSendAck(uint8_t sequenceNumber) {
