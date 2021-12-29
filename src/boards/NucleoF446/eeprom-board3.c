@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "eeprom_emul.h"
-#include "stm32l4xx.h"
+#include "stm32f4xx.h"
 #include "utilities.h"
 
 uint16_t EepromVirtualAddress[NB_OF_VARIABLES];
