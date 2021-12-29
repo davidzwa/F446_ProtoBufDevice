@@ -1,6 +1,8 @@
 #include "tasks.h"
 
 #include "ProtoWriteBuffer.h"
+#include "config.h"
+#include "delay.h"
 #include "device_messages.h"
 #include "measurements.h"
 #include "radio_phy.h"
@@ -8,34 +10,54 @@
 #include "timer.h"
 #include "uart_messages.h"
 
+#define MAX_SEQUENCE_NUMBERS 5000
+#define DEFAULT_TX_PERIOD 1000
+
 // Uart debugging
-static TimerEvent_t HeartBeatTimer;
+static TimerEvent_t heartBeatTimer;
 
 // Normal operation
-static TimerEvent_t PingSlotTimer;
-static TimerEvent_t BeaconTimer;
-static TimerEvent_t PeriodicTxTimer;
+static TimerEvent_t pingSlotTimer;
+static TimerEvent_t beaconTimer;
+static TimerEvent_t periodicTxTimer;
 ProtoWriteBuffer writeTransmitBuffer;
 uint16_t beaconSequenceCount;
-uint16_t periodicTransmissionMax;
-uint16_t periodicCurrentCounter;
-uint16_t periodicTxInterval = 1000;
+uint16_t sequenceNumberLimit = MAX_SEQUENCE_NUMBERS;  // Defines the sequencenumber limit
+uint16_t periodicCurrentCounter = 0;
+uint16_t periodicTxInterval = DEFAULT_TX_PERIOD;
 
 // Sequencer as test
-static TimerEvent_t SequenceTimer;
+bool standaloneAlwaysSendPeriodically = false;
+static TimerEvent_t sequenceTimer;
 SequenceRequestConfig sequenceRequestConfig;
 uint16_t sequenceMessageCount = 0;
 bool sequenceTestRunning = false;
 
+bool ApplyPeriodicTxIntervalSafely(uint32_t period) {
+    // Period < 50 Too fast (chance of radio overrun) and nice way to disable the periodic timer
+    if (period < 50) {
+        periodicCurrentCounter = 0;
+        TimerStop(&periodicTxTimer);
+
+        return false;
+    } else {
+        periodicTxInterval = period;
+        TimerSetValue(&periodicTxTimer, periodicTxInterval);
+        TimerReset(&periodicTxTimer);
+
+        return true;
+    }
+}
+
 static void OnBeaconEvent(void* context) {
     beaconSequenceCount++;
-    TimerReset(&BeaconTimer);
+    TimerReset(&beaconTimer);
 }
 
 static void OnHeartbeatEvent(void* context) {
     // printf("Beat <3 (b:%d)\n", BeaconSequenceCount);
     UartSendBoot();
-    TimerReset(&HeartBeatTimer);
+    TimerReset(&heartBeatTimer);
 }
 
 static void OnPeriodicTx(void* context) {
@@ -44,23 +66,29 @@ static void OnPeriodicTx(void* context) {
     command.set_IsMulticast(false);
 
     // TODO REPLACE with useful payload
-    uint8_t* buffer = (uint8_t*)"ZEDdify me";
-    writeTransmitBuffer.clear();
-    writeTransmitBuffer.push(buffer, 3);
-
-    command.get_Payload()
-        .serialize(writeTransmitBuffer);
+    uint8_t* test_message = (uint8_t*)"ZEDdify me";
+    auto payload = command.mutable_Payload();
+    payload.set(test_message, sizeof(test_message));
     command.set_SequenceNumber(periodicCurrentCounter);
 
     TransmitUnicast(command);
+
+    UartDebug("PeriodTX", 8);
     periodicCurrentCounter++;
 
-    if (periodicCurrentCounter > periodicTransmissionMax) {
-        // We will send the data once
-        RequestStreamMeasurements();
-        TimerStop(&PeriodicTxTimer);
+    if (periodicCurrentCounter > sequenceNumberLimit) {
+        if (standaloneAlwaysSendPeriodically) {
+            // We start again with new counter
+            periodicCurrentCounter = 0;
+            TimerReset(&periodicTxTimer);
+        }
+        else {
+            // We will send the data once
+            // RequestStreamMeasurements();
+            TimerStop(&periodicTxTimer);
+        }
     } else {
-        TimerReset(&PeriodicTxTimer);
+        TimerReset(&periodicTxTimer);
     }
 }
 
@@ -68,14 +96,9 @@ void TogglePeriodicTx(uint16_t timerPeriod, uint16_t maxPacketCount) {
     periodicCurrentCounter = 0;
 
     // Period < 50 Too fast (chance of radio overrun) and nice way to disable the periodic timer
-    if (timerPeriod < 50) {
-        periodicCurrentCounter = 0;
-        TimerStop(&PeriodicTxTimer);
-    } else {
-        periodicTransmissionMax = maxPacketCount;
-        periodicTxInterval = timerPeriod;
-        TimerSetValue(&PeriodicTxTimer, periodicTxInterval);
-        TimerReset(&PeriodicTxTimer);
+    auto result = ApplyPeriodicTxIntervalSafely(timerPeriod);
+    if (result) {
+        sequenceNumberLimit = maxPacketCount;
     }
 }
 
@@ -84,6 +107,25 @@ static void OnPingSlotEvent(void* context) {
 
 static void OnSequenceEvent(void* context) {
     sequenceMessageCount++;
+}
+
+/**
+ * Send periodically indefinitely
+ * */
+void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod) {
+    standaloneAlwaysSendPeriodically = alwaysSend;
+
+    if (standaloneAlwaysSendPeriodically) {
+        standaloneAlwaysSendPeriodically = true;
+        periodicCurrentCounter = 0;
+        sequenceNumberLimit = MAX_SEQUENCE_NUMBERS;
+
+        ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
+    }
+    else {
+        standaloneAlwaysSendPeriodically = false;
+        TimerStop(&periodicTxTimer);
+    }
 }
 
 void SetSequenceRequestConfig(const SequenceRequestConfig& config) {
@@ -97,20 +139,28 @@ void SetSequenceRequestConfig(const SequenceRequestConfig& config) {
     sequenceRequestConfig = config;
     sequenceMessageCount = 0;
 
-    TimerSetValue(&SequenceTimer, sequenceRequestConfig.get_Interval());
+    TimerSetValue(&sequenceTimer, sequenceRequestConfig.get_Interval());
 }
 
 void InitTimedTasks() {
-    TimerInit(&BeaconTimer, OnBeaconEvent);
-    TimerInit(&HeartBeatTimer, OnHeartbeatEvent);
-    TimerInit(&PingSlotTimer, OnPingSlotEvent);
-    TimerInit(&SequenceTimer, OnSequenceEvent);
-    TimerInit(&PeriodicTxTimer, OnPeriodicTx);
+    TimerInit(&beaconTimer, OnBeaconEvent);
+    TimerInit(&heartBeatTimer, OnHeartbeatEvent);
+    TimerInit(&pingSlotTimer, OnPingSlotEvent);
+    TimerInit(&sequenceTimer, OnSequenceEvent);
+    TimerInit(&periodicTxTimer, OnPeriodicTx);
 
-    TimerSetValue(&PeriodicTxTimer, periodicTxInterval);
-    TimerSetValue(&BeaconTimer, 128000);
-    TimerSetValue(&HeartBeatTimer, 30000);
+    TimerSetValue(&periodicTxTimer, periodicTxInterval);
+    TimerSetValue(&beaconTimer, 128000);
+    TimerSetValue(&heartBeatTimer, 30000);
 
-    TimerStart(&BeaconTimer);
-    TimerStart(&HeartBeatTimer);
+#ifdef STANDALONE_TX_INFINITE
+    standaloneAlwaysSendPeriodically = true;
+    periodicCurrentCounter = 0;
+    TimerStart(&periodicTxTimer);
+#else
+    standaloneSendInfinitely = false;
+#endif
+
+    TimerStart(&beaconTimer);
+    TimerStart(&heartBeatTimer);
 }
