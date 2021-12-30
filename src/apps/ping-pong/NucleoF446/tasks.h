@@ -5,6 +5,7 @@
 #define TIMERS__H__
 
 void SetSequenceRequestConfig(const SequenceRequestConfig& config);
+void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t period);
 void TogglePeriodicTx(uint16_t timerPeriod, uint16_t maxPacketCount);
 void InitTimedTasks();
 

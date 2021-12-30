@@ -4,6 +4,7 @@
 #define CONFIG_H__
 
 #define APP_NAME "LoRaMulticast"
+// #define STANDALONE_TX_INFINITE
 
 #if defined(REGION_AS923)
 
@@ -85,5 +86,5 @@
 #define MAX_APPNAME_LENGTH 20
 #define MAX_PAYLOAD_LENGTH 120
 
-#define FIRMWARE_VERSION 0x02000013
+#define FIRMWARE_VERSION 0x02000015
 #endif
