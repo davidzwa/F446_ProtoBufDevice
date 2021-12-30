@@ -2,6 +2,7 @@
 
 #include "ProtoWriteBuffer.h"
 #include "device_messages.h"
+#include "measurements.h"
 #include "radio_phy.h"
 #include "stdio.h"
 #include "timer.h"
@@ -41,7 +42,7 @@ static void OnPeriodicTx(void* context) {
     // We generate a packet as if it came from PC/UART
     TransmitCommand<MAX_PAYLOAD_LENGTH> command;
     command.set_IsMulticast(false);
-    
+
     // TODO REPLACE with useful payload
     uint8_t* buffer = (uint8_t*)"ZEDdify me";
     writeTransmitBuffer.clear();
@@ -53,10 +54,13 @@ static void OnPeriodicTx(void* context) {
 
     TransmitUnicast(command);
     periodicCurrentCounter++;
-    TimerReset(&PeriodicTxTimer);
 
-    if (periodicCurrentCounter >= periodicTransmissionMax) {
+    if (periodicCurrentCounter > periodicTransmissionMax) {
+        // We will send the data once
+        RequestStreamMeasurements();
         TimerStop(&PeriodicTxTimer);
+    } else {
+        TimerReset(&PeriodicTxTimer);
     }
 }
 
@@ -89,6 +93,7 @@ void SetSequenceRequestConfig(const SequenceRequestConfig& config) {
     // if (!config->get_DeviceId() ) return;
 
     // Call copy constructor
+    ClearMeasurements();
     sequenceRequestConfig = config;
     sequenceMessageCount = 0;
 

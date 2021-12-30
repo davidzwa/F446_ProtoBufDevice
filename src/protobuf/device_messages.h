@@ -394,6 +394,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
       set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
     }
@@ -404,6 +405,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
       set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
     }
@@ -417,8 +419,9 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       RSSI = 2,
       SNR = 3,
       SEQUENCENUMBER = 4,
-      SUCCESS = 5,
-      PAYLOAD = 6
+      ISMEASUREMENTFRAGMENT = 5,
+      SUCCESS = 6,
+      PAYLOAD = 7
     };
 
     LoraReceive& operator=(const LoraReceive& rhs)
@@ -427,6 +430,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
       set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
       return *this;
@@ -438,6 +442,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Rssi(rhs.get_Rssi());
       set_Snr(rhs.get_Snr());
       set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
       set_Payload(rhs.get_Payload());
       return *this;
@@ -470,6 +475,33 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
     inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
     inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
+
+    inline bool has_IsMeasurementFragment() const
+    {
+      return 0 != (presence::mask(presence::fields::ISMEASUREMENTFRAGMENT) & presence_[presence::index(presence::fields::ISMEASUREMENTFRAGMENT)]);
+    }
+    inline void clear_IsMeasurementFragment()
+    {
+      presence_[presence::index(presence::fields::ISMEASUREMENTFRAGMENT)] &= ~(presence::mask(presence::fields::ISMEASUREMENTFRAGMENT));
+      IsMeasurementFragment_.clear();
+    }
+    inline void set_IsMeasurementFragment(const EmbeddedProto::boolean& value)
+    {
+      presence_[presence::index(presence::fields::ISMEASUREMENTFRAGMENT)] |= presence::mask(presence::fields::ISMEASUREMENTFRAGMENT);
+      IsMeasurementFragment_ = value;
+    }
+    inline void set_IsMeasurementFragment(const EmbeddedProto::boolean&& value)
+    {
+      presence_[presence::index(presence::fields::ISMEASUREMENTFRAGMENT)] |= presence::mask(presence::fields::ISMEASUREMENTFRAGMENT);
+      IsMeasurementFragment_ = value;
+    }
+    inline EmbeddedProto::boolean& mutable_IsMeasurementFragment()
+    {
+      presence_[presence::index(presence::fields::ISMEASUREMENTFRAGMENT)] |= presence::mask(presence::fields::ISMEASUREMENTFRAGMENT);
+      return IsMeasurementFragment_;
+    }
+    inline const EmbeddedProto::boolean& get_IsMeasurementFragment() const { return IsMeasurementFragment_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE IsMeasurementFragment() const { return IsMeasurementFragment_.get(); }
 
     inline void clear_Success() { Success_.clear(); }
     inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
@@ -507,6 +539,11 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
+      }
+
+      if(has_IsMeasurementFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = IsMeasurementFragment_.serialize_with_id(static_cast<uint32_t>(id::ISMEASUREMENTFRAGMENT), buffer, true);
       }
 
       if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
@@ -551,6 +588,11 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
             return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::ISMEASUREMENTFRAGMENT:
+            presence_[presence::index(presence::fields::ISMEASUREMENTFRAGMENT)] |= presence::mask(presence::fields::ISMEASUREMENTFRAGMENT);
+            return_value = IsMeasurementFragment_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::SUCCESS:
             return_value = Success_.deserialize_check_type(buffer, wire_type);
             break;
@@ -592,6 +634,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       clear_Rssi();
       clear_Snr();
       clear_SequenceNumber();
+      clear_IsMeasurementFragment();
       clear_Success();
       clear_Payload();
 
@@ -599,11 +642,46 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
 
     private:
 
+      // Define constants for tracking the presence of fields.
+      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
+      struct presence
+      {
+        // An enumeration with all the fields for which presence has to be tracked.
+        enum class fields : uint32_t
+        {
+          ISMEASUREMENTFRAGMENT
+        };
+
+        // The number of fields for which presence has to be tracked.
+        static constexpr uint32_t N_FIELDS = 1;
+
+        // Which type are we using to track presence.
+        using TYPE = uint32_t;
+
+        // How many bits are there in the presence type.
+        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
+
+        // How many variables of TYPE do we need to bit mask all presence fields.
+        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
+
+        // Obtain the index of a given field in the presence array.
+        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
+
+        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
+        static constexpr TYPE mask(const fields& field)
+        {
+          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
+        }
+      };
+
+      // Create an array in which the presence flags are stored.
+      typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::uint32 Size_ = 0U;
       EmbeddedProto::uint32 Rssi_ = 0U;
       EmbeddedProto::uint32 Snr_ = 0U;
       EmbeddedProto::uint32 SequenceNumber_ = 0U;
+      EmbeddedProto::boolean IsMeasurementFragment_ = false;
       EmbeddedProto::boolean Success_ = false;
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
@@ -1672,8 +1750,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       MultiCastAck = 2,
       UniCast = 3,
       UniCastAck = 4,
-      SequenceRequest = 5,
-      SequenceResponse = 6
+      MeasurementStreamRequest = 5,
+      MeasurementStreamFragmentReply = 6,
+      SequenceRequest = 7,
+      SequenceResponse = 8
     };
 
     enum class id : uint32_t
