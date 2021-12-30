@@ -19,6 +19,7 @@
 #include "utilities.h"
 #include "utils.h"
 
+#define PROTO_LIMITS MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH, MAX_PAYLOAD_LENGTH
 #define PACKET_SIZE_LIMIT 256
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
@@ -30,7 +31,7 @@ const size_t offset = 1;  // End byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
-bool newCommandReady = false;
+bool newCommandReceived = false;
 RadioRxConfig rxConf;
 RadioTxConfig txConf;
 UartCommand<MAX_PAYLOAD_LENGTH> uartCommand;
@@ -110,7 +111,7 @@ void UartISR(UartNotifyId_t id) {
         auto deserialize_status = uartCommand.deserialize(readBuffer);
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
             // Let main loop pick it up
-            newCommandReady = true;
+            newCommandReceived = true;
         }
 
         readBuffer.clear();
@@ -120,16 +121,16 @@ void UartISR(UartNotifyId_t id) {
 }
 
 bool IsCliCommandReady() {
-    return newCommandReady;
+    return newCommandReceived;
 }
 
 void ProcessCliCommand() {
-    if (newCommandReady == false) {
+    if (newCommandReceived == false) {
         return;
     }
 
     // We dont want to process twice, so we immediately set it to false
-    newCommandReady = false;
+    newCommandReceived = false;
 
     if (uartCommand.has_rxConfig()) {
         printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
@@ -156,6 +157,12 @@ void ProcessCliCommand() {
         UartSendAck(1);
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
+    } else if (uartCommand.has_deviceConfiguration()) {
+        auto config = uartCommand.get_deviceConfiguration();
+        bool alwaysSend = config.get_EnableAlwaysSend();
+        auto alwaysSendPeriod = config.get_AlwaysSendPeriod();
+        ApplyAlwaysSendPeriodically(alwaysSend, alwaysSendPeriod);
+        UartSendAck(1);
     } else {
         UartSendAck(250);
     }
@@ -163,16 +170,11 @@ void ProcessCliCommand() {
     uartCommand.clear();
 }
 
-void UartSendAck(uint8_t sequenceNumber) {
-    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
-    auto ack = uartResponse.mutable_ackMessage();
-    ack.set_SequenceNumber(sequenceNumber);
-    uartResponse.set_ackMessage(ack);
-
+void UartResponseSend(UartResponse<PROTO_LIMITS> & response) {
     // First the length
-    writeBuffer.push((uint8_t)uartResponse.serialized_size());
+    writeBuffer.push((uint8_t)response.serialized_size());
     // Push the data
-    auto result = uartResponse.serialize(writeBuffer);
+    auto result = response.serialize(writeBuffer);
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
         // Send the buffer in COBS encoded form
         writeBuffer.push(packetEndMarker);
@@ -181,68 +183,57 @@ void UartSendAck(uint8_t sequenceNumber) {
     writeBuffer.clear();
 }
 
-void UartSendLoRaRxError() {
-    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
-    auto loraMessage = uartResponse.mutable_loraReceiveMessage();
-    loraMessage.set_Success(false);
+void UartSendAck(uint8_t sequenceNumber) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& ack = uartResponse.mutable_ackMessage();
+    ack.set_SequenceNumber(sequenceNumber);
 
-    // First the length
-    writeBuffer.push((uint8_t)uartResponse.serialized_size());
-    // Push the data
-    auto result = uartResponse.serialize(writeBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        // Send the buffer in COBS encoded form
-        writeBuffer.push(packetEndMarker);
-        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
-    }
+    UartResponseSend(uartResponse);
+}
+
+void UartDebug(const char* payload, size_t length) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& debugMessage = uartResponse.mutable_debugMessage();
+    auto& debugPayload = debugMessage.mutable_payload();
+    debugPayload.set((uint8_t*)payload, length);
+
+    UartResponseSend(uartResponse);
+}
+
+void UartSendLoRaRxError() {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& loraMessage = uartResponse.mutable_loraReceiveMessage();
+    loraMessage.set_Success(false);
+    
+    UartResponseSend(uartResponse);
 }
 
 void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
-    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
-    auto loraMessage = uartResponse.mutable_loraReceiveMessage();
-    loraMessage.set_Payload(payload);
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& loraMessage = uartResponse.mutable_loraReceiveMessage();
     loraMessage.set_Rssi(rssi);
     loraMessage.set_IsMeasurementFragment(isMeasurementFragment);
     loraMessage.set_Success(true);
     loraMessage.set_Snr(snr);
     loraMessage.set_SequenceNumber(sequenceNumber);
+    loraMessage.set_Payload(payload);
 
-    uartResponse.set_loraReceiveMessage(loraMessage);
-
-    // First the length
-    writeBuffer.push((uint8_t)uartResponse.serialized_size());
-    // Push the data
-    auto result = uartResponse.serialize(writeBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        // Send the buffer in COBS encoded form
-        writeBuffer.push(packetEndMarker);
-        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
-    }
-    writeBuffer.clear();
+    UartResponseSend(uartResponse);
 }
 
 void UartSendBoot() {
-    UartResponse<MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH> uartResponse;
-    auto bootMessage = uartResponse.mutable_bootMessage();
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& bootMessage = uartResponse.mutable_bootMessage();
     bootMessage.mutable_AppName() = APP_NAME;
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
+    auto& version = bootMessage.mutable_FirmwareVersion();
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
-    bootMessage.mutable_FirmwareVersion().set_Major(appVersion.Fields.Major);
-    bootMessage.mutable_FirmwareVersion().set_Minor(appVersion.Fields.Minor);
-    bootMessage.mutable_FirmwareVersion().set_Patch(appVersion.Fields.Patch);
-    bootMessage.mutable_FirmwareVersion().set_Revision(appVersion.Fields.Revision);
-    uartResponse.set_bootMessage(bootMessage);
+    version.set_Major(appVersion.Fields.Major);
+    version.set_Minor(appVersion.Fields.Minor);
+    version.set_Patch(appVersion.Fields.Patch);
+    version.set_Revision(appVersion.Fields.Revision);
 
-    // First the length
-    writeBuffer.push((uint8_t)uartResponse.serialized_size());
-    // Push the data
-    auto result = uartResponse.serialize(writeBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        // Send the buffer in COBS encoded form
-        writeBuffer.push(packetEndMarker);
-        UartSend(writeBuffer.get_data(), writeBuffer.get_size());
-    }
-    writeBuffer.clear();
+    UartResponseSend(uartResponse);
 }
 
 void InitRadioTxConfigLoRa() {
