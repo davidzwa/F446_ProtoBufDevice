@@ -1291,6 +1291,140 @@ class RequestBootInfo final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DeviceConfiguration() = default;
+    DeviceConfiguration(const DeviceConfiguration& rhs )
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+    }
+
+    DeviceConfiguration(const DeviceConfiguration&& rhs ) noexcept
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+    }
+
+    ~DeviceConfiguration() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      ENABLEALWAYSSEND = 1,
+      ALWAYSSENDPERIOD = 2
+    };
+
+    DeviceConfiguration& operator=(const DeviceConfiguration& rhs)
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      return *this;
+    }
+
+    DeviceConfiguration& operator=(const DeviceConfiguration&& rhs) noexcept
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      return *this;
+    }
+
+    inline void clear_EnableAlwaysSend() { EnableAlwaysSend_.clear(); }
+    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean& value) { EnableAlwaysSend_ = value; }
+    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean&& value) { EnableAlwaysSend_ = value; }
+    inline EmbeddedProto::boolean& mutable_EnableAlwaysSend() { return EnableAlwaysSend_; }
+    inline const EmbeddedProto::boolean& get_EnableAlwaysSend() const { return EnableAlwaysSend_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE EnableAlwaysSend() const { return EnableAlwaysSend_.get(); }
+
+    inline void clear_AlwaysSendPeriod() { AlwaysSendPeriod_.clear(); }
+    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32& value) { AlwaysSendPeriod_ = value; }
+    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32&& value) { AlwaysSendPeriod_ = value; }
+    inline EmbeddedProto::uint32& mutable_AlwaysSendPeriod() { return AlwaysSendPeriod_; }
+    inline const EmbeddedProto::uint32& get_AlwaysSendPeriod() const { return AlwaysSendPeriod_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE AlwaysSendPeriod() const { return AlwaysSendPeriod_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != EnableAlwaysSend_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = EnableAlwaysSend_.serialize_with_id(static_cast<uint32_t>(id::ENABLEALWAYSSEND), buffer, false);
+      }
+
+      if((0U != AlwaysSendPeriod_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = AlwaysSendPeriod_.serialize_with_id(static_cast<uint32_t>(id::ALWAYSSENDPERIOD), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::ENABLEALWAYSSEND:
+            return_value = EnableAlwaysSend_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ALWAYSSENDPERIOD:
+            return_value = AlwaysSendPeriod_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_EnableAlwaysSend();
+      clear_AlwaysSendPeriod();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean EnableAlwaysSend_ = false;
+      EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
+
+};
+
 template<uint32_t transmitCommand_Payload_LENGTH>
 class UartCommand final: public ::EmbeddedProto::MessageInterface
 {
@@ -1312,6 +1446,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::TXCONFIG:
           set_txConfig(rhs.get_txConfig());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1346,6 +1484,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_txConfig(rhs.get_txConfig());
           break;
 
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
+          break;
+
         case id::TRANSMITCOMMAND:
           set_transmitCommand(rhs.get_transmitCommand());
           break;
@@ -1367,8 +1509,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       RXCONFIG = 1,
       TXCONFIG = 2,
-      TRANSMITCOMMAND = 3,
-      REQUESTBOOTINFO = 4
+      DEVICECONFIGURATION = 3,
+      TRANSMITCOMMAND = 4,
+      REQUESTBOOTINFO = 5
     };
 
     UartCommand& operator=(const UartCommand& rhs)
@@ -1387,6 +1530,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::TXCONFIG:
           set_txConfig(rhs.get_txConfig());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1420,6 +1567,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::TXCONFIG:
           set_txConfig(rhs.get_txConfig());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
         case id::TRANSMITCOMMAND:
@@ -1516,6 +1667,45 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     }
     inline const RadioTxConfig& get_txConfig() const { return Body_.txConfig_; }
     inline const RadioTxConfig& txConfig() const { return Body_.txConfig_; }
+
+    inline bool has_deviceConfiguration() const
+    {
+      return id::DEVICECONFIGURATION == which_Body_;
+    }
+    inline void clear_deviceConfiguration()
+    {
+      if(id::DEVICECONFIGURATION == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.deviceConfiguration_.~DeviceConfiguration();
+      }
+    }
+    inline void set_deviceConfiguration(const DeviceConfiguration& value)
+    {
+      if(id::DEVICECONFIGURATION != which_Body_)
+      {
+        init_Body(id::DEVICECONFIGURATION);
+      }
+      Body_.deviceConfiguration_ = value;
+    }
+    inline void set_deviceConfiguration(const DeviceConfiguration&& value)
+    {
+      if(id::DEVICECONFIGURATION != which_Body_)
+      {
+        init_Body(id::DEVICECONFIGURATION);
+      }
+      Body_.deviceConfiguration_ = value;
+    }
+    inline DeviceConfiguration& mutable_deviceConfiguration()
+    {
+      if(id::DEVICECONFIGURATION != which_Body_)
+      {
+        init_Body(id::DEVICECONFIGURATION);
+      }
+      return Body_.deviceConfiguration_;
+    }
+    inline const DeviceConfiguration& get_deviceConfiguration() const { return Body_.deviceConfiguration_; }
+    inline const DeviceConfiguration& deviceConfiguration() const { return Body_.deviceConfiguration_; }
 
     inline bool has_transmitCommand() const
     {
@@ -1616,6 +1806,13 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::DEVICECONFIGURATION:
+          if(has_deviceConfiguration() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.deviceConfiguration_.serialize_with_id(static_cast<uint32_t>(id::DEVICECONFIGURATION), buffer, true);
+          }
+          break;
+
         case id::TRANSMITCOMMAND:
           if(has_transmitCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -1657,6 +1854,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
           case id::TXCONFIG:
             return_value = deserialize_Body(id::TXCONFIG, Body_.txConfig_, buffer, wire_type);
+
+            break;
+
+          case id::DEVICECONFIGURATION:
+            return_value = deserialize_Body(id::DEVICECONFIGURATION, Body_.deviceConfiguration_, buffer, wire_type);
 
             break;
 
@@ -1714,6 +1916,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         RadioRxConfig rxConfig_;
         RadioTxConfig txConfig_;
+        DeviceConfiguration deviceConfiguration_;
         TransmitCommand<transmitCommand_Payload_LENGTH> transmitCommand_;
         RequestBootInfo requestBootInfo_;
       };
@@ -1738,6 +1941,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           case id::TXCONFIG:
             new(&Body_.txConfig_) RadioTxConfig;
             which_Body_ = id::TXCONFIG;
+            break;
+
+          case id::DEVICECONFIGURATION:
+            new(&Body_.deviceConfiguration_) DeviceConfiguration;
+            which_Body_ = id::DEVICECONFIGURATION;
             break;
 
           case id::TRANSMITCOMMAND:
@@ -1766,6 +1974,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             break;
           case id::TXCONFIG:
             Body_.txConfig_.~RadioTxConfig(); // NOSONAR Unions require this.
+            break;
+          case id::DEVICECONFIGURATION:
+            Body_.deviceConfiguration_.~DeviceConfiguration(); // NOSONAR Unions require this.
             break;
           case id::TRANSMITCOMMAND:
             Body_.transmitCommand_.~TransmitCommand<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.

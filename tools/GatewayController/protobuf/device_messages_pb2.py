@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x64\x65vice_messages.proto\"H\n\x07Version\x12\r\n\x05Major\x18\x01 \x01(\r\x12\r\n\x05Minor\x18\x02 \x01(\r\x12\r\n\x05Patch\x18\x03 \x01(\r\x12\x10\n\x08Revision\x18\x04 \x01(\r\"1\n\x08\x44\x65viceId\x12\x0b\n\x03Id0\x18\x01 \x01(\r\x12\x0b\n\x03Id1\x18\x02 \x01(\r\x12\x0b\n\x03Id2\x18\x03 \x01(\r\"\xae\x01\n\x0bLoraReceive\x12\x0c\n\x04Size\x18\x01 \x01(\r\x12\x0c\n\x04Rssi\x18\x02 \x01(\r\x12\x0b\n\x03Snr\x18\x03 \x01(\r\x12\x16\n\x0eSequenceNumber\x18\x04 \x01(\r\x12\"\n\x15IsMeasurementFragment\x18\x05 \x01(\x08H\x00\x88\x01\x01\x12\x0f\n\x07Success\x18\x06 \x01(\x08\x12\x0f\n\x07Payload\x18\x07 \x01(\x0c\x42\x18\n\x16_IsMeasurementFragment\"f\n\x0b\x42ootMessage\x12#\n\x10\x44\x65viceIdentifier\x18\x01 \x01(\x0b\x32\t.DeviceId\x12!\n\x0f\x46irmwareVersion\x18\x02 \x01(\x0b\x32\x08.Version\x12\x0f\n\x07\x41ppName\x18\x03 \x01(\t\"$\n\nAckMessage\x12\x16\n\x0eSequenceNumber\x18\x01 \x01(\r\"\x8a\x01\n\x0cUartResponse\x12#\n\x0b\x62ootMessage\x18\x01 \x01(\x0b\x32\x0c.BootMessageH\x00\x12!\n\nackMessage\x18\x02 \x01(\x0b\x32\x0b.AckMessageH\x00\x12*\n\x12loraReceiveMessage\x18\x03 \x01(\x0b\x32\x0c.LoraReceiveH\x00\x42\x06\n\x04\x42ody\"M\n\x15SpreadingFactorConfig\x12\x19\n\x11spreadingFactorRx\x18\x01 \x01(\r\x12\x19\n\x11spreadingFactorTx\x18\x02 \x01(\r\"Q\n\x15SequenceRequestConfig\x12\x14\n\x0cMessageCount\x18\x01 \x01(\r\x12\x10\n\x08Interval\x18\x02 \x01(\r\x12\x10\n\x08\x44\x65viceId\x18\x03 \x01(\r\"\xab\x03\n\x0bLoRaMessage\x12)\n\x07\x63ommand\x18\x01 \x01(\x0e\x32\x18.LoRaMessage.CommandType\x12\x16\n\x0eSequenceNumber\x18\x02 \x01(\r\x12\x37\n\x15spreadingFactorConfig\x18\x03 \x01(\x0b\x32\x16.SpreadingFactorConfigH\x00\x12\x37\n\x15sequenceRequestConfig\x18\x04 \x01(\x0b\x32\x16.SequenceRequestConfigH\x00\x12\x11\n\x07payload\x18\x05 \x01(\x0cH\x00\"\xcb\x01\n\x0b\x43ommandType\x12\x11\n\rConfiguration\x10\x00\x12\r\n\tMultiCast\x10\x01\x12\x10\n\x0cMultiCastAck\x10\x02\x12\x0b\n\x07UniCast\x10\x03\x12\x0e\n\nUniCastAck\x10\x04\x12\x1c\n\x18MeasurementStreamRequest\x10\x05\x12\"\n\x1eMeasurementStreamFragmentReply\x10\x06\x12\x13\n\x0fSequenceRequest\x10\x07\x12\x14\n\x10SequenceResponse\x10\x08\x42\x06\n\x04\x42odyb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x64\x65vice_messages.proto\"H\n\x07Version\x12\r\n\x05Major\x18\x01 \x01(\r\x12\r\n\x05Minor\x18\x02 \x01(\r\x12\r\n\x05Patch\x18\x03 \x01(\r\x12\x10\n\x08Revision\x18\x04 \x01(\r\"1\n\x08\x44\x65viceId\x12\x0b\n\x03Id0\x18\x01 \x01(\r\x12\x0b\n\x03Id1\x18\x02 \x01(\r\x12\x0b\n\x03Id2\x18\x03 \x01(\r\"\xae\x01\n\x0bLoraReceive\x12\x0c\n\x04Size\x18\x01 \x01(\r\x12\x0c\n\x04Rssi\x18\x02 \x01(\r\x12\x0b\n\x03Snr\x18\x03 \x01(\r\x12\x16\n\x0eSequenceNumber\x18\x04 \x01(\r\x12\"\n\x15IsMeasurementFragment\x18\x05 \x01(\x08H\x00\x88\x01\x01\x12\x0f\n\x07Success\x18\x06 \x01(\x08\x12\x0f\n\x07Payload\x18\x07 \x01(\x0c\x42\x18\n\x16_IsMeasurementFragment\"f\n\x0b\x42ootMessage\x12#\n\x10\x44\x65viceIdentifier\x18\x01 \x01(\x0b\x32\t.DeviceId\x12!\n\x0f\x46irmwareVersion\x18\x02 \x01(\x0b\x32\x08.Version\x12\x0f\n\x07\x41ppName\x18\x03 \x01(\t\"$\n\nAckMessage\x12\x16\n\x0eSequenceNumber\x18\x01 \x01(\r\"\x1f\n\x0c\x44\x65\x62ugMessage\x12\x0f\n\x07payload\x18\x01 \x01(\x0c\"\xb1\x01\n\x0cUartResponse\x12#\n\x0b\x62ootMessage\x18\x01 \x01(\x0b\x32\x0c.BootMessageH\x00\x12!\n\nackMessage\x18\x02 \x01(\x0b\x32\x0b.AckMessageH\x00\x12*\n\x12loraReceiveMessage\x18\x03 \x01(\x0b\x32\x0c.LoraReceiveH\x00\x12%\n\x0c\x64\x65\x62ugMessage\x18\x04 \x01(\x0b\x32\r.DebugMessageH\x00\x42\x06\n\x04\x42ody\"M\n\x15SpreadingFactorConfig\x12\x19\n\x11spreadingFactorRx\x18\x01 \x01(\r\x12\x19\n\x11spreadingFactorTx\x18\x02 \x01(\r\"Q\n\x15SequenceRequestConfig\x12\x14\n\x0cMessageCount\x18\x01 \x01(\r\x12\x10\n\x08Interval\x18\x02 \x01(\r\x12\x10\n\x08\x44\x65viceId\x18\x03 \x01(\r\"\xab\x03\n\x0bLoRaMessage\x12)\n\x07\x63ommand\x18\x01 \x01(\x0e\x32\x18.LoRaMessage.CommandType\x12\x16\n\x0eSequenceNumber\x18\x02 \x01(\r\x12\x37\n\x15spreadingFactorConfig\x18\x03 \x01(\x0b\x32\x16.SpreadingFactorConfigH\x00\x12\x37\n\x15sequenceRequestConfig\x18\x04 \x01(\x0b\x32\x16.SequenceRequestConfigH\x00\x12\x11\n\x07payload\x18\x05 \x01(\x0cH\x00\"\xcb\x01\n\x0b\x43ommandType\x12\x11\n\rConfiguration\x10\x00\x12\r\n\tMultiCast\x10\x01\x12\x10\n\x0cMultiCastAck\x10\x02\x12\x0b\n\x07UniCast\x10\x03\x12\x0e\n\nUniCastAck\x10\x04\x12\x1c\n\x18MeasurementStreamRequest\x10\x05\x12\"\n\x1eMeasurementStreamFragmentReply\x10\x06\x12\x13\n\x0fSequenceRequest\x10\x07\x12\x14\n\x10SequenceResponse\x10\x08\x42\x06\n\x04\x42odyb\x06proto3')
 
 
 
@@ -23,6 +23,7 @@ _DEVICEID = DESCRIPTOR.message_types_by_name['DeviceId']
 _LORARECEIVE = DESCRIPTOR.message_types_by_name['LoraReceive']
 _BOOTMESSAGE = DESCRIPTOR.message_types_by_name['BootMessage']
 _ACKMESSAGE = DESCRIPTOR.message_types_by_name['AckMessage']
+_DEBUGMESSAGE = DESCRIPTOR.message_types_by_name['DebugMessage']
 _UARTRESPONSE = DESCRIPTOR.message_types_by_name['UartResponse']
 _SPREADINGFACTORCONFIG = DESCRIPTOR.message_types_by_name['SpreadingFactorConfig']
 _SEQUENCEREQUESTCONFIG = DESCRIPTOR.message_types_by_name['SequenceRequestConfig']
@@ -62,6 +63,13 @@ AckMessage = _reflection.GeneratedProtocolMessageType('AckMessage', (_message.Me
   # @@protoc_insertion_point(class_scope:AckMessage)
   })
 _sym_db.RegisterMessage(AckMessage)
+
+DebugMessage = _reflection.GeneratedProtocolMessageType('DebugMessage', (_message.Message,), {
+  'DESCRIPTOR' : _DEBUGMESSAGE,
+  '__module__' : 'device_messages_pb2'
+  # @@protoc_insertion_point(class_scope:DebugMessage)
+  })
+_sym_db.RegisterMessage(DebugMessage)
 
 UartResponse = _reflection.GeneratedProtocolMessageType('UartResponse', (_message.Message,), {
   'DESCRIPTOR' : _UARTRESPONSE,
@@ -104,14 +112,16 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _BOOTMESSAGE._serialized_end=429
   _ACKMESSAGE._serialized_start=431
   _ACKMESSAGE._serialized_end=467
-  _UARTRESPONSE._serialized_start=470
-  _UARTRESPONSE._serialized_end=608
-  _SPREADINGFACTORCONFIG._serialized_start=610
-  _SPREADINGFACTORCONFIG._serialized_end=687
-  _SEQUENCEREQUESTCONFIG._serialized_start=689
-  _SEQUENCEREQUESTCONFIG._serialized_end=770
-  _LORAMESSAGE._serialized_start=773
-  _LORAMESSAGE._serialized_end=1200
-  _LORAMESSAGE_COMMANDTYPE._serialized_start=989
-  _LORAMESSAGE_COMMANDTYPE._serialized_end=1192
+  _DEBUGMESSAGE._serialized_start=469
+  _DEBUGMESSAGE._serialized_end=500
+  _UARTRESPONSE._serialized_start=503
+  _UARTRESPONSE._serialized_end=680
+  _SPREADINGFACTORCONFIG._serialized_start=682
+  _SPREADINGFACTORCONFIG._serialized_end=759
+  _SEQUENCEREQUESTCONFIG._serialized_start=761
+  _SEQUENCEREQUESTCONFIG._serialized_end=842
+  _LORAMESSAGE._serialized_start=845
+  _LORAMESSAGE._serialized_end=1272
+  _LORAMESSAGE_COMMANDTYPE._serialized_start=1061
+  _LORAMESSAGE_COMMANDTYPE._serialized_end=1264
 # @@protoc_insertion_point(module_scope)

@@ -32,23 +32,25 @@ public static partial class DeviceMessagesReflection {
           "bnRGcmFnbWVudCJmCgtCb290TWVzc2FnZRIjChBEZXZpY2VJZGVudGlmaWVy",
           "GAEgASgLMgkuRGV2aWNlSWQSIQoPRmlybXdhcmVWZXJzaW9uGAIgASgLMggu",
           "VmVyc2lvbhIPCgdBcHBOYW1lGAMgASgJIiQKCkFja01lc3NhZ2USFgoOU2Vx",
-          "dWVuY2VOdW1iZXIYASABKA0iigEKDFVhcnRSZXNwb25zZRIjCgtib290TWVz",
-          "c2FnZRgBIAEoCzIMLkJvb3RNZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgCIAEo",
-          "CzILLkFja01lc3NhZ2VIABIqChJsb3JhUmVjZWl2ZU1lc3NhZ2UYAyABKAsy",
-          "DC5Mb3JhUmVjZWl2ZUgAQgYKBEJvZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29u",
-          "ZmlnEhkKEXNwcmVhZGluZ0ZhY3RvclJ4GAEgASgNEhkKEXNwcmVhZGluZ0Zh",
-          "Y3RvclR4GAIgASgNIlEKFVNlcXVlbmNlUmVxdWVzdENvbmZpZxIUCgxNZXNz",
-          "YWdlQ291bnQYASABKA0SEAoISW50ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQY",
-          "AyABKA0iqwMKC0xvUmFNZXNzYWdlEikKB2NvbW1hbmQYASABKA4yGC5Mb1Jh",
-          "TWVzc2FnZS5Db21tYW5kVHlwZRIWCg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3",
-          "ChVzcHJlYWRpbmdGYWN0b3JDb25maWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0",
-          "b3JDb25maWdIABI3ChVzZXF1ZW5jZVJlcXVlc3RDb25maWcYBCABKAsyFi5T",
-          "ZXF1ZW5jZVJlcXVlc3RDb25maWdIABIRCgdwYXlsb2FkGAUgASgMSAAiywEK",
-          "C0NvbW1hbmRUeXBlEhEKDUNvbmZpZ3VyYXRpb24QABINCglNdWx0aUNhc3QQ",
-          "ARIQCgxNdWx0aUNhc3RBY2sQAhILCgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFj",
-          "axAEEhwKGE1lYXN1cmVtZW50U3RyZWFtUmVxdWVzdBAFEiIKHk1lYXN1cmVt",
-          "ZW50U3RyZWFtRnJhZ21lbnRSZXBseRAGEhMKD1NlcXVlbmNlUmVxdWVzdBAH",
-          "EhQKEFNlcXVlbmNlUmVzcG9uc2UQCEIGCgRCb2R5YgZwcm90bzM="));
+          "dWVuY2VOdW1iZXIYASABKA0iHwoMRGVidWdNZXNzYWdlEg8KB3BheWxvYWQY",
+          "ASABKAwisQEKDFVhcnRSZXNwb25zZRIjCgtib290TWVzc2FnZRgBIAEoCzIM",
+          "LkJvb3RNZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgCIAEoCzILLkFja01lc3Nh",
+          "Z2VIABIqChJsb3JhUmVjZWl2ZU1lc3NhZ2UYAyABKAsyDC5Mb3JhUmVjZWl2",
+          "ZUgAEiUKDGRlYnVnTWVzc2FnZRgEIAEoCzINLkRlYnVnTWVzc2FnZUgAQgYK",
+          "BEJvZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29uZmlnEhkKEXNwcmVhZGluZ0Zh",
+          "Y3RvclJ4GAEgASgNEhkKEXNwcmVhZGluZ0ZhY3RvclR4GAIgASgNIlEKFVNl",
+          "cXVlbmNlUmVxdWVzdENvbmZpZxIUCgxNZXNzYWdlQ291bnQYASABKA0SEAoI",
+          "SW50ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQYAyABKA0iqwMKC0xvUmFNZXNz",
+          "YWdlEikKB2NvbW1hbmQYASABKA4yGC5Mb1JhTWVzc2FnZS5Db21tYW5kVHlw",
+          "ZRIWCg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3ChVzcHJlYWRpbmdGYWN0b3JD",
+          "b25maWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0b3JDb25maWdIABI3ChVzZXF1",
+          "ZW5jZVJlcXVlc3RDb25maWcYBCABKAsyFi5TZXF1ZW5jZVJlcXVlc3RDb25m",
+          "aWdIABIRCgdwYXlsb2FkGAUgASgMSAAiywEKC0NvbW1hbmRUeXBlEhEKDUNv",
+          "bmZpZ3VyYXRpb24QABINCglNdWx0aUNhc3QQARIQCgxNdWx0aUNhc3RBY2sQ",
+          "AhILCgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFjaxAEEhwKGE1lYXN1cmVtZW50",
+          "U3RyZWFtUmVxdWVzdBAFEiIKHk1lYXN1cmVtZW50U3RyZWFtRnJhZ21lbnRS",
+          "ZXBseRAGEhMKD1NlcXVlbmNlUmVxdWVzdBAHEhQKEFNlcXVlbmNlUmVzcG9u",
+          "c2UQCEIGCgRCb2R5YgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -57,7 +59,8 @@ public static partial class DeviceMessagesReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "SequenceNumber", "IsMeasurementFragment", "Success", "Payload" }, new[]{ "IsMeasurementFragment" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::BootMessage), global::BootMessage.Parser, new[]{ "DeviceIdentifier", "FirmwareVersion", "AppName" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AckMessage), global::AckMessage.Parser, new[]{ "SequenceNumber" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraReceiveMessage" }, new[]{ "Body" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::DebugMessage), global::DebugMessage.Parser, new[]{ "Payload" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraReceiveMessage", "DebugMessage" }, new[]{ "Body" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SpreadingFactorConfig), global::SpreadingFactorConfig.Parser, new[]{ "SpreadingFactorRx", "SpreadingFactorTx" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SequenceRequestConfig), global::SequenceRequestConfig.Parser, new[]{ "MessageCount", "Interval", "DeviceId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::LoRaMessage), global::LoRaMessage.Parser, new[]{ "Command", "SequenceNumber", "SpreadingFactorConfig", "SequenceRequestConfig", "Payload" }, new[]{ "Body" }, new[]{ typeof(global::LoRaMessage.Types.CommandType) }, null, null)
@@ -1526,6 +1529,195 @@ public sealed partial class AckMessage : pb::IMessage<AckMessage>
 
 }
 
+public sealed partial class DebugMessage : pb::IMessage<DebugMessage>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<DebugMessage> _parser = new pb::MessageParser<DebugMessage>(() => new DebugMessage());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<DebugMessage> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[5]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public DebugMessage() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public DebugMessage(DebugMessage other) : this() {
+    payload_ = other.payload_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public DebugMessage Clone() {
+    return new DebugMessage(this);
+  }
+
+  /// <summary>Field number for the "payload" field.</summary>
+  public const int PayloadFieldNumber = 1;
+  private pb::ByteString payload_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public pb::ByteString Payload {
+    get { return payload_; }
+    set {
+      payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as DebugMessage);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(DebugMessage other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Payload != other.Payload) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Payload.Length != 0) hash ^= Payload.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (Payload.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteBytes(Payload);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (Payload.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteBytes(Payload);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (Payload.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Payload);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(DebugMessage other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Payload.Length != 0) {
+      Payload = other.Payload;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          Payload = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 10: {
+          Payload = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
 public sealed partial class UartResponse : pb::IMessage<UartResponse>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
@@ -1540,7 +1732,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[5]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[6]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1569,6 +1761,9 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
         break;
       case BodyOneofCase.LoraReceiveMessage:
         LoraReceiveMessage = other.LoraReceiveMessage.Clone();
+        break;
+      case BodyOneofCase.DebugMessage:
+        DebugMessage = other.DebugMessage.Clone();
         break;
     }
 
@@ -1617,6 +1812,18 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
   }
 
+  /// <summary>Field number for the "debugMessage" field.</summary>
+  public const int DebugMessageFieldNumber = 4;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::DebugMessage DebugMessage {
+    get { return bodyCase_ == BodyOneofCase.DebugMessage ? (global::DebugMessage) body_ : null; }
+    set {
+      body_ = value;
+      bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.DebugMessage;
+    }
+  }
+
   private object body_;
   /// <summary>Enum of possible cases for the "Body" oneof.</summary>
   public enum BodyOneofCase {
@@ -1624,6 +1831,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     BootMessage = 1,
     AckMessage = 2,
     LoraReceiveMessage = 3,
+    DebugMessage = 4,
   }
   private BodyOneofCase bodyCase_ = BodyOneofCase.None;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1657,6 +1865,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     if (!object.Equals(BootMessage, other.BootMessage)) return false;
     if (!object.Equals(AckMessage, other.AckMessage)) return false;
     if (!object.Equals(LoraReceiveMessage, other.LoraReceiveMessage)) return false;
+    if (!object.Equals(DebugMessage, other.DebugMessage)) return false;
     if (BodyCase != other.BodyCase) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -1668,6 +1877,7 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     if (bodyCase_ == BodyOneofCase.BootMessage) hash ^= BootMessage.GetHashCode();
     if (bodyCase_ == BodyOneofCase.AckMessage) hash ^= AckMessage.GetHashCode();
     if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) hash ^= LoraReceiveMessage.GetHashCode();
+    if (bodyCase_ == BodyOneofCase.DebugMessage) hash ^= DebugMessage.GetHashCode();
     hash ^= (int) bodyCase_;
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -1699,6 +1909,10 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       output.WriteRawTag(26);
       output.WriteMessage(LoraReceiveMessage);
     }
+    if (bodyCase_ == BodyOneofCase.DebugMessage) {
+      output.WriteRawTag(34);
+      output.WriteMessage(DebugMessage);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -1721,6 +1935,10 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
       output.WriteRawTag(26);
       output.WriteMessage(LoraReceiveMessage);
     }
+    if (bodyCase_ == BodyOneofCase.DebugMessage) {
+      output.WriteRawTag(34);
+      output.WriteMessage(DebugMessage);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -1739,6 +1957,9 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
     }
     if (bodyCase_ == BodyOneofCase.LoraReceiveMessage) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(LoraReceiveMessage);
+    }
+    if (bodyCase_ == BodyOneofCase.DebugMessage) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(DebugMessage);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -1770,6 +1991,12 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
           LoraReceiveMessage = new global::LoraReceive();
         }
         LoraReceiveMessage.MergeFrom(other.LoraReceiveMessage);
+        break;
+      case BodyOneofCase.DebugMessage:
+        if (DebugMessage == null) {
+          DebugMessage = new global::DebugMessage();
+        }
+        DebugMessage.MergeFrom(other.DebugMessage);
         break;
     }
 
@@ -1815,6 +2042,15 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
           LoraReceiveMessage = subBuilder;
           break;
         }
+        case 34: {
+          global::DebugMessage subBuilder = new global::DebugMessage();
+          if (bodyCase_ == BodyOneofCase.DebugMessage) {
+            subBuilder.MergeFrom(DebugMessage);
+          }
+          input.ReadMessage(subBuilder);
+          DebugMessage = subBuilder;
+          break;
+        }
       }
     }
   #endif
@@ -1857,6 +2093,15 @@ public sealed partial class UartResponse : pb::IMessage<UartResponse>
           LoraReceiveMessage = subBuilder;
           break;
         }
+        case 34: {
+          global::DebugMessage subBuilder = new global::DebugMessage();
+          if (bodyCase_ == BodyOneofCase.DebugMessage) {
+            subBuilder.MergeFrom(DebugMessage);
+          }
+          input.ReadMessage(subBuilder);
+          DebugMessage = subBuilder;
+          break;
+        }
       }
     }
   }
@@ -1878,7 +2123,7 @@ public sealed partial class SpreadingFactorConfig : pb::IMessage<SpreadingFactor
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[6]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[7]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2104,7 +2349,7 @@ public sealed partial class SequenceRequestConfig : pb::IMessage<SequenceRequest
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[7]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[8]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2367,7 +2612,7 @@ public sealed partial class LoRaMessage : pb::IMessage<LoRaMessage>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[8]; }
+    get { return global::DeviceMessagesReflection.Descriptor.MessageTypes[9]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

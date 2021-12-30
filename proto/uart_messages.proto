@@ -58,11 +58,17 @@ message RequestBootInfo {
     bool Request = 1; 
 } 
  
+message DeviceConfiguration {
+    bool EnableAlwaysSend = 1;
+    uint32 AlwaysSendPeriod = 2;
+}
+
 message UartCommand { 
     oneof Body { 
         RadioRxConfig rxConfig = 1; 
         RadioTxConfig txConfig = 2; 
-        TransmitCommand transmitCommand = 3;
-        RequestBootInfo requestBootInfo = 4; 
+        DeviceConfiguration deviceConfiguration = 3;
+        TransmitCommand transmitCommand = 4;
+        RequestBootInfo requestBootInfo = 5; 
     } 
 } 

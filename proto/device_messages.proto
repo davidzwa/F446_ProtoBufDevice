@@ -37,11 +37,16 @@ message AckMessage {
     uint32 SequenceNumber = 1;
 }
 
+message DebugMessage {
+    bytes payload = 1;
+}
+
 message UartResponse {
     oneof Body {
         BootMessage bootMessage = 1;
         AckMessage ackMessage = 2;
         LoraReceive loraReceiveMessage = 3;
+        DebugMessage debugMessage = 4;
     }
 }
 

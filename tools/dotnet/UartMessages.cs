@@ -39,12 +39,15 @@ public static partial class UartMessagesReflection {
           "AiABKA0SFgoOU2VxdWVuY2VOdW1iZXIYAyABKA0SEwoGUGVyaW9kGAQgASgN",
           "SACIAQESGwoOTWF4UGFja2V0Q291bnQYBSABKA1IAYgBARIPCgdQYXlsb2Fk",
           "GAYgASgMQgkKB19QZXJpb2RCEQoPX01heFBhY2tldENvdW50IiIKD1JlcXVl",
-          "c3RCb290SW5mbxIPCgdSZXF1ZXN0GAEgASgIIrcBCgtVYXJ0Q29tbWFuZBIi",
-          "CghyeENvbmZpZxgBIAEoCzIOLlJhZGlvUnhDb25maWdIABIiCgh0eENvbmZp",
-          "ZxgCIAEoCzIOLlJhZGlvVHhDb25maWdIABIrCg90cmFuc21pdENvbW1hbmQY",
-          "AyABKAsyEC5UcmFuc21pdENvbW1hbmRIABIrCg9yZXF1ZXN0Qm9vdEluZm8Y",
-          "BCABKAsyEC5SZXF1ZXN0Qm9vdEluZm9IAEIGCgRCb2R5KiwKC1JhZGlvTW9k",
-          "ZW1zEg0KCU1PREVNX0ZTSxAAEg4KCk1PREVNX0xPUkEQAWIGcHJvdG8z"));
+          "c3RCb290SW5mbxIPCgdSZXF1ZXN0GAEgASgIIkkKE0RldmljZUNvbmZpZ3Vy",
+          "YXRpb24SGAoQRW5hYmxlQWx3YXlzU2VuZBgBIAEoCBIYChBBbHdheXNTZW5k",
+          "UGVyaW9kGAIgASgNIuwBCgtVYXJ0Q29tbWFuZBIiCghyeENvbmZpZxgBIAEo",
+          "CzIOLlJhZGlvUnhDb25maWdIABIiCgh0eENvbmZpZxgCIAEoCzIOLlJhZGlv",
+          "VHhDb25maWdIABIzChNkZXZpY2VDb25maWd1cmF0aW9uGAMgASgLMhQuRGV2",
+          "aWNlQ29uZmlndXJhdGlvbkgAEisKD3RyYW5zbWl0Q29tbWFuZBgEIAEoCzIQ",
+          "LlRyYW5zbWl0Q29tbWFuZEgAEisKD3JlcXVlc3RCb290SW5mbxgFIAEoCzIQ",
+          "LlJlcXVlc3RCb290SW5mb0gAQgYKBEJvZHkqLAoLUmFkaW9Nb2RlbXMSDQoJ",
+          "TU9ERU1fRlNLEAASDgoKTU9ERU1fTE9SQRABYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::RadioModems), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -52,7 +55,8 @@ public static partial class UartMessagesReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::RadioTxConfig), global::RadioTxConfig.Parser, new[]{ "Modem", "Power", "Fdev", "Bandwidth", "DataRate", "CodeRate", "PreambleLen", "FixLen", "CrcOn", "FreqHopOn", "HopPeriod", "IqInverted", "Timeout" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::TransmitCommand), global::TransmitCommand.Parser, new[]{ "IsMulticast", "DeviceId", "SequenceNumber", "Period", "MaxPacketCount", "Payload" }, new[]{ "Period", "MaxPacketCount" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RequestBootInfo), global::RequestBootInfo.Parser, new[]{ "Request" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::UartCommand), global::UartCommand.Parser, new[]{ "RxConfig", "TxConfig", "TransmitCommand", "RequestBootInfo" }, new[]{ "Body" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::DeviceConfiguration), global::DeviceConfiguration.Parser, new[]{ "EnableAlwaysSend", "AlwaysSendPeriod" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::UartCommand), global::UartCommand.Parser, new[]{ "RxConfig", "TxConfig", "DeviceConfiguration", "TransmitCommand", "RequestBootInfo" }, new[]{ "Body" }, null, null, null)
         }));
   }
   #endregion
@@ -1964,6 +1968,232 @@ public sealed partial class RequestBootInfo : pb::IMessage<RequestBootInfo>
 
 }
 
+public sealed partial class DeviceConfiguration : pb::IMessage<DeviceConfiguration>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<DeviceConfiguration> _parser = new pb::MessageParser<DeviceConfiguration>(() => new DeviceConfiguration());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<DeviceConfiguration> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::UartMessagesReflection.Descriptor.MessageTypes[4]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public DeviceConfiguration() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public DeviceConfiguration(DeviceConfiguration other) : this() {
+    enableAlwaysSend_ = other.enableAlwaysSend_;
+    alwaysSendPeriod_ = other.alwaysSendPeriod_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public DeviceConfiguration Clone() {
+    return new DeviceConfiguration(this);
+  }
+
+  /// <summary>Field number for the "EnableAlwaysSend" field.</summary>
+  public const int EnableAlwaysSendFieldNumber = 1;
+  private bool enableAlwaysSend_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool EnableAlwaysSend {
+    get { return enableAlwaysSend_; }
+    set {
+      enableAlwaysSend_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "AlwaysSendPeriod" field.</summary>
+  public const int AlwaysSendPeriodFieldNumber = 2;
+  private uint alwaysSendPeriod_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint AlwaysSendPeriod {
+    get { return alwaysSendPeriod_; }
+    set {
+      alwaysSendPeriod_ = value;
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as DeviceConfiguration);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(DeviceConfiguration other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (EnableAlwaysSend != other.EnableAlwaysSend) return false;
+    if (AlwaysSendPeriod != other.AlwaysSendPeriod) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (EnableAlwaysSend != false) hash ^= EnableAlwaysSend.GetHashCode();
+    if (AlwaysSendPeriod != 0) hash ^= AlwaysSendPeriod.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (EnableAlwaysSend != false) {
+      output.WriteRawTag(8);
+      output.WriteBool(EnableAlwaysSend);
+    }
+    if (AlwaysSendPeriod != 0) {
+      output.WriteRawTag(16);
+      output.WriteUInt32(AlwaysSendPeriod);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (EnableAlwaysSend != false) {
+      output.WriteRawTag(8);
+      output.WriteBool(EnableAlwaysSend);
+    }
+    if (AlwaysSendPeriod != 0) {
+      output.WriteRawTag(16);
+      output.WriteUInt32(AlwaysSendPeriod);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (EnableAlwaysSend != false) {
+      size += 1 + 1;
+    }
+    if (AlwaysSendPeriod != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AlwaysSendPeriod);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(DeviceConfiguration other) {
+    if (other == null) {
+      return;
+    }
+    if (other.EnableAlwaysSend != false) {
+      EnableAlwaysSend = other.EnableAlwaysSend;
+    }
+    if (other.AlwaysSendPeriod != 0) {
+      AlwaysSendPeriod = other.AlwaysSendPeriod;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          EnableAlwaysSend = input.ReadBool();
+          break;
+        }
+        case 16: {
+          AlwaysSendPeriod = input.ReadUInt32();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 8: {
+          EnableAlwaysSend = input.ReadBool();
+          break;
+        }
+        case 16: {
+          AlwaysSendPeriod = input.ReadUInt32();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
 public sealed partial class UartCommand : pb::IMessage<UartCommand>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
@@ -1978,7 +2208,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::UartMessagesReflection.Descriptor.MessageTypes[4]; }
+    get { return global::UartMessagesReflection.Descriptor.MessageTypes[5]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2004,6 +2234,9 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
         break;
       case BodyOneofCase.TxConfig:
         TxConfig = other.TxConfig.Clone();
+        break;
+      case BodyOneofCase.DeviceConfiguration:
+        DeviceConfiguration = other.DeviceConfiguration.Clone();
         break;
       case BodyOneofCase.TransmitCommand:
         TransmitCommand = other.TransmitCommand.Clone();
@@ -2046,8 +2279,20 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     }
   }
 
+  /// <summary>Field number for the "deviceConfiguration" field.</summary>
+  public const int DeviceConfigurationFieldNumber = 3;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::DeviceConfiguration DeviceConfiguration {
+    get { return bodyCase_ == BodyOneofCase.DeviceConfiguration ? (global::DeviceConfiguration) body_ : null; }
+    set {
+      body_ = value;
+      bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.DeviceConfiguration;
+    }
+  }
+
   /// <summary>Field number for the "transmitCommand" field.</summary>
-  public const int TransmitCommandFieldNumber = 3;
+  public const int TransmitCommandFieldNumber = 4;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public global::TransmitCommand TransmitCommand {
@@ -2059,7 +2304,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
   }
 
   /// <summary>Field number for the "requestBootInfo" field.</summary>
-  public const int RequestBootInfoFieldNumber = 4;
+  public const int RequestBootInfoFieldNumber = 5;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public global::RequestBootInfo RequestBootInfo {
@@ -2076,8 +2321,9 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     None = 0,
     RxConfig = 1,
     TxConfig = 2,
-    TransmitCommand = 3,
-    RequestBootInfo = 4,
+    DeviceConfiguration = 3,
+    TransmitCommand = 4,
+    RequestBootInfo = 5,
   }
   private BodyOneofCase bodyCase_ = BodyOneofCase.None;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2110,6 +2356,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     }
     if (!object.Equals(RxConfig, other.RxConfig)) return false;
     if (!object.Equals(TxConfig, other.TxConfig)) return false;
+    if (!object.Equals(DeviceConfiguration, other.DeviceConfiguration)) return false;
     if (!object.Equals(TransmitCommand, other.TransmitCommand)) return false;
     if (!object.Equals(RequestBootInfo, other.RequestBootInfo)) return false;
     if (BodyCase != other.BodyCase) return false;
@@ -2122,6 +2369,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     int hash = 1;
     if (bodyCase_ == BodyOneofCase.RxConfig) hash ^= RxConfig.GetHashCode();
     if (bodyCase_ == BodyOneofCase.TxConfig) hash ^= TxConfig.GetHashCode();
+    if (bodyCase_ == BodyOneofCase.DeviceConfiguration) hash ^= DeviceConfiguration.GetHashCode();
     if (bodyCase_ == BodyOneofCase.TransmitCommand) hash ^= TransmitCommand.GetHashCode();
     if (bodyCase_ == BodyOneofCase.RequestBootInfo) hash ^= RequestBootInfo.GetHashCode();
     hash ^= (int) bodyCase_;
@@ -2151,12 +2399,16 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
       output.WriteRawTag(18);
       output.WriteMessage(TxConfig);
     }
-    if (bodyCase_ == BodyOneofCase.TransmitCommand) {
+    if (bodyCase_ == BodyOneofCase.DeviceConfiguration) {
       output.WriteRawTag(26);
+      output.WriteMessage(DeviceConfiguration);
+    }
+    if (bodyCase_ == BodyOneofCase.TransmitCommand) {
+      output.WriteRawTag(34);
       output.WriteMessage(TransmitCommand);
     }
     if (bodyCase_ == BodyOneofCase.RequestBootInfo) {
-      output.WriteRawTag(34);
+      output.WriteRawTag(42);
       output.WriteMessage(RequestBootInfo);
     }
     if (_unknownFields != null) {
@@ -2177,12 +2429,16 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
       output.WriteRawTag(18);
       output.WriteMessage(TxConfig);
     }
-    if (bodyCase_ == BodyOneofCase.TransmitCommand) {
+    if (bodyCase_ == BodyOneofCase.DeviceConfiguration) {
       output.WriteRawTag(26);
+      output.WriteMessage(DeviceConfiguration);
+    }
+    if (bodyCase_ == BodyOneofCase.TransmitCommand) {
+      output.WriteRawTag(34);
       output.WriteMessage(TransmitCommand);
     }
     if (bodyCase_ == BodyOneofCase.RequestBootInfo) {
-      output.WriteRawTag(34);
+      output.WriteRawTag(42);
       output.WriteMessage(RequestBootInfo);
     }
     if (_unknownFields != null) {
@@ -2200,6 +2456,9 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     }
     if (bodyCase_ == BodyOneofCase.TxConfig) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(TxConfig);
+    }
+    if (bodyCase_ == BodyOneofCase.DeviceConfiguration) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(DeviceConfiguration);
     }
     if (bodyCase_ == BodyOneofCase.TransmitCommand) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(TransmitCommand);
@@ -2231,6 +2490,12 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           TxConfig = new global::RadioTxConfig();
         }
         TxConfig.MergeFrom(other.TxConfig);
+        break;
+      case BodyOneofCase.DeviceConfiguration:
+        if (DeviceConfiguration == null) {
+          DeviceConfiguration = new global::DeviceConfiguration();
+        }
+        DeviceConfiguration.MergeFrom(other.DeviceConfiguration);
         break;
       case BodyOneofCase.TransmitCommand:
         if (TransmitCommand == null) {
@@ -2280,6 +2545,15 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           break;
         }
         case 26: {
+          global::DeviceConfiguration subBuilder = new global::DeviceConfiguration();
+          if (bodyCase_ == BodyOneofCase.DeviceConfiguration) {
+            subBuilder.MergeFrom(DeviceConfiguration);
+          }
+          input.ReadMessage(subBuilder);
+          DeviceConfiguration = subBuilder;
+          break;
+        }
+        case 34: {
           global::TransmitCommand subBuilder = new global::TransmitCommand();
           if (bodyCase_ == BodyOneofCase.TransmitCommand) {
             subBuilder.MergeFrom(TransmitCommand);
@@ -2288,7 +2562,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           TransmitCommand = subBuilder;
           break;
         }
-        case 34: {
+        case 42: {
           global::RequestBootInfo subBuilder = new global::RequestBootInfo();
           if (bodyCase_ == BodyOneofCase.RequestBootInfo) {
             subBuilder.MergeFrom(RequestBootInfo);
@@ -2331,6 +2605,15 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           break;
         }
         case 26: {
+          global::DeviceConfiguration subBuilder = new global::DeviceConfiguration();
+          if (bodyCase_ == BodyOneofCase.DeviceConfiguration) {
+            subBuilder.MergeFrom(DeviceConfiguration);
+          }
+          input.ReadMessage(subBuilder);
+          DeviceConfiguration = subBuilder;
+          break;
+        }
+        case 34: {
           global::TransmitCommand subBuilder = new global::TransmitCommand();
           if (bodyCase_ == BodyOneofCase.TransmitCommand) {
             subBuilder.MergeFrom(TransmitCommand);
@@ -2339,7 +2622,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           TransmitCommand = subBuilder;
           break;
         }
-        case 34: {
+        case 42: {
           global::RequestBootInfo subBuilder = new global::RequestBootInfo();
           if (bodyCase_ == BodyOneofCase.RequestBootInfo) {
             subBuilder.MergeFrom(RequestBootInfo);
