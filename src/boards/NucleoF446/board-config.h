@@ -67,8 +67,8 @@ extern "C"
 #define RADIO_XTAL_SEL                              PB_0
 #define RADIO_DEVICE_SEL                            PA_4
 
-#define LED_1                                       PC_1
-#define LED_2                                       PC_0
+#define LED_1                                       PC_1 // Not connected to LED on A_5
+#define LED_2                                       PC_0 // Does not exist
 
 // Debug pins definition.
 #define RADIO_DBG_PIN_TX                            PB_6

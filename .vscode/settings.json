@@ -137,7 +137,8 @@
         "bit": "cpp",
         "random": "cpp",
         "limits": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "initializer_list": "cpp"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

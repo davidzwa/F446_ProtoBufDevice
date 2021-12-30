@@ -130,7 +130,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     } else if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::MeasurementStreamRequest) {
         // TODO filter based on device id
         // StreamMeasurements();
-        readLoraBuffer.clear();
+
     } 
     
     if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::MeasurementStreamFragmentReply) {
@@ -139,8 +139,8 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     else {
         UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, false);
     }
+
     // Ensure that the message is not re-used
-    
     readLoraBuffer.clear();
     loraPhyMessage.clear();
 
