@@ -49,12 +49,12 @@
 #define __EEPROM_EMUL_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32l4xx_hal.h"
+#include "stm32f4xx_hal.h"
 #include "eeprom_emul_conf.h"
 #include "eeprom_emul_types.h"
 #include "flash_interface.h"
-#include "stm32l4xx_ll_crc.h"
-#include "stm32l4xx_ll_bus.h"
+#include "stm32f4xx_ll_crc.h"
+#include "stm32f4xx_ll_bus.h"
 #if defined(RECOVERY_TEST)
 #include "stm32f4xx_ll_rtc.h"
 #endif
@@ -73,6 +73,8 @@
   */
 
 /* Page definitions */
+#define FLASH_PAGE_SIZE         (uint32_t)0x4000 // 16kB
+#define BANK_SIZE               0x040 // 64kB
 #define PAGE_SIZE               FLASH_PAGE_SIZE                                  /*!< Page size */
 #define PAGE_HEADER_SIZE        EE_ELEMENT_SIZE * 4U                             /*!< Page Header is 4 elements to save page state */
 #define NB_MAX_ELEMENTS_BY_PAGE ((PAGE_SIZE - PAGE_HEADER_SIZE) / EE_ELEMENT_SIZE) /*!< Max number of elements by page */

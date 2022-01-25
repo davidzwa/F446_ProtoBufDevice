@@ -176,8 +176,8 @@ static EE_State_type GetPageState(uint32_t Address);
 #if defined(RECOVERY_TEST)
 static void VerifyStateReset(uint32_t TriggerState);
 #endif
-void ConfigureCrc(void);
-uint16_t CalculateCrc(EE_DATA_TYPE Data, uint16_t VirtAddress);
+// void ConfigureCrc(void);
+uint32_t CalculateCrc(EE_DATA_TYPE Data, uint32_t VirtAddress);
 
 /**
   * @}
@@ -223,7 +223,7 @@ EE_Status EE_Init(uint16_t* VirtAddTab, EE_Erase_type EraseType)
   /* Step 0: Check parameters validity and perform initial configuration     */
   /***************************************************************************/
   /* Configure CRC peripheral for eeprom emulation usage */
-  ConfigureCrc();
+//   ConfigureCrc();
 
   /* Check validity of Table of Virtual addresses */
   if (VirtAddTab == NULL)
@@ -1604,7 +1604,7 @@ static void VerifyStateReset(uint32_t TriggerState)
 {
   uint32_t state = 0U;
 
-  /* Read state in backup registers N°31 */
+  /* Read state in backup registers Nï¿½31 */
   state = LL_RTC_BAK_GetRegister(RTC, 31U);
 
   /* Trig System Reset, if state reach trigger state */
@@ -1613,7 +1613,7 @@ static void VerifyStateReset(uint32_t TriggerState)
     /* Increment state */
     state++;
 
-    /* Save state in backup register N°31 */
+    /* Save state in backup register Nï¿½31 */
     LL_RTC_BAK_SetRegister(RTC, 31U, state);
 
     /* System Reset */
@@ -1641,8 +1641,8 @@ void ConfigureCrc(void)
   /* (2) Configure CRC functional parameters */
 
   /* Configure CRC calculation unit with user defined polynomial */
-  LL_CRC_SetPolynomialCoef(CRC, CRC_POLYNOMIAL_VALUE);
-  LL_CRC_SetPolynomialSize(CRC, CRC_POLYNOMIAL_LENGTH);
+//   LL_CRC_SetPolynomialCoef(CRC, CRC_POLYNOMIAL_VALUE);
+//   LL_CRC_SetPolynomialSize(CRC, CRC_POLYNOMIAL_LENGTH);
 
   /* Initialize default CRC initial value */
   /* Reset value is LL_CRC_DEFAULT_CRC_INITVALUE */
@@ -1650,7 +1650,7 @@ void ConfigureCrc(void)
 
   /* Set input data inversion mode : No inversion*/
   /* Reset value is LL_CRC_INDATA_REVERSE_NONE */
-  /* LL_CRC_SetInputDataReverseMode(CRC, LL_CRC_INDATA_REVERSE_NONE); */
+//   LL_CRC_SetInputDataReverseMode(CRC, LL_CRC_INDATA_REVERSE_NONE);
 
   /* Set output data inversion mode : No inversion */
   /* Reset value is LL_CRC_OUTDATA_REVERSE_NONE */
@@ -1663,17 +1663,17 @@ void ConfigureCrc(void)
   * @param  VirtAddress address of the eeprom variable.
   * @retval 16-bit CRC value computed on Data and Virtual Address.
   */
-uint16_t CalculateCrc(EE_DATA_TYPE Data, uint16_t VirtAddress)
-{
-  /* Reset CRC calculation unit */
-  LL_CRC_ResetCRCCalculationUnit(CRC);
+uint32_t CalculateCrc(EE_DATA_TYPE Data, uint32_t VirtAddress) {
+    /* Reset CRC calculation unit */
+    LL_CRC_ResetCRCCalculationUnit(CRC);
 
-  /* Feed Data and Virtual Address */
-  LL_CRC_FeedData32(CRC, Data);
-  LL_CRC_FeedData16(CRC, VirtAddress);
+    /* Feed Data and Virtual Address */
+    LL_CRC_FeedData32(CRC, Data);
+    //   LL_CRC_FeedData16(CRC, VirtAddress);
+    LL_CRC_FeedData32(CRC, VirtAddress);
 
-  /* Return computed CRC value */
-  return(LL_CRC_ReadData16(CRC));
+    /* Return computed CRC value */
+    return (LL_CRC_ReadData32(CRC));
 }
 
 /**

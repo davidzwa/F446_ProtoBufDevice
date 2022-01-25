@@ -56,7 +56,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static uint32_t GetBankNumber(uint32_t Address);
+
+// F4 has only 1 bank static uint32_t GetBankNumber(uint32_t Address);
 
 /* Exported functions --------------------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -66,25 +67,24 @@ static uint32_t GetBankNumber(uint32_t Address);
 
 /**
   * @brief  Erase a page in polling mode
-  * @param  Page Page number
-  * @param  NbPages Number of pages to erase
+  * @param  Sector Page number
+  * @param  NbSectors Number of pages to erase
   * @retval EE_Status
   *           - EE_OK: on success
   *           - EE error code: if an error occurs
   */
-EE_Status PageErase(uint32_t Page, uint16_t NbPages)
-{
-  EE_Status status = EE_OK;
-  FLASH_EraseInitTypeDef s_eraseinit;
-  uint32_t bank = FLASH_BANK_1, page_error = 0U;
+EE_Status PageErase(uint32_t Sector, uint16_t NbSectors) {
+    EE_Status status = EE_OK;
+    FLASH_EraseInitTypeDef s_eraseinit;
+    uint32_t bank = FLASH_BANK_1, page_error = 0U;
 
 #if defined(FLASH_OPTR_BFB2)
-  bank = GetBankNumber(PAGE_ADDRESS(Page));
+//   bank = GetBankNumber(PAGE_ADDRESS(Page));
 #endif
 
-  s_eraseinit.TypeErase   = FLASH_TYPEERASE_PAGES;
-  s_eraseinit.NbPages     = NbPages;
-  s_eraseinit.Page        = Page;
+  s_eraseinit.TypeErase = FLASH_TYPEERASE_SECTORS; // _PAGE => _SECTORS for F4
+  s_eraseinit.NbSectors = NbSectors;
+  s_eraseinit.Sector = Sector;
   s_eraseinit.Banks       = bank;
 
   /* Erase the Page: Set Page status to ERASED status */
@@ -103,19 +103,19 @@ EE_Status PageErase(uint32_t Page, uint16_t NbPages)
   *           - EE_OK: on success
   *           - EE error code: if an error occurs
   */
-EE_Status PageErase_IT(uint32_t Page, uint16_t NbPages)
+EE_Status PageErase_IT(uint32_t Page, uint16_t NbSectors)
 {
   EE_Status status = EE_OK;
   FLASH_EraseInitTypeDef s_eraseinit;
   uint32_t bank = FLASH_BANK_1;
 
 #if defined(FLASH_OPTR_BFB2)
-  bank = GetBankNumber(PAGE_ADDRESS(Page));
+//   bank = GetBankNumber(PAGE_ADDRESS(Page));
 #endif
 
-  s_eraseinit.TypeErase   = FLASH_TYPEERASE_PAGES;
-  s_eraseinit.NbPages     = NbPages;
-  s_eraseinit.Page        = Page;
+  s_eraseinit.TypeErase   = FLASH_TYPEERASE_SECTORS;
+  s_eraseinit.NbSectors     = NbSectors;
+  s_eraseinit.Sector        = Page;
   s_eraseinit.Banks       = bank;
 
   /* Erase the Page: Set Page status to ERASED status */
@@ -126,42 +126,44 @@ EE_Status PageErase_IT(uint32_t Page, uint16_t NbPages)
   return status;
 }
 
-/**
-  * @brief  Gets the bank of a given address
-  * @param  Address Address of the FLASH Memory
-  * @retval Bank_Number The bank of a given address
-  */
-static uint32_t GetBankNumber(uint32_t Address)
-{
-  uint32_t bank = 0U;
+// F4 has only 1 bank
+// /**
+//   * @brief  Gets the bank of a given address
+//   * @param  Address Address of the FLASH Memory
+//   * @retval Bank_Number The bank of a given address
+//   */
+// static uint32_t GetBankNumber(uint32_t Address)
+// {
+//   uint32_t bank = 0U;
 
-  if (READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_FB_MODE) == 0U)
-  {
-    /* No Bank swap */
-    if (Address < (FLASH_BASE + FLASH_BANK_SIZE))
-    {
-      bank = FLASH_BANK_1;
-    }
-    else
-    {
-      bank = FLASH_BANK_2;
-    }
-  }
-  else
-  {
-    /* Bank swap */
-    if (Address < (FLASH_BASE + FLASH_BANK_SIZE))
-    {
-      bank = FLASH_BANK_2;
-    }
-    else
-    {
-      bank = FLASH_BANK_1;
-    }
-  }
+//   if (READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_FB_MODE) == 0U)
+//   {
+//     /* No Bank swap */
+//     if (Address < (FLASH_BASE + FLASH_BANK_SIZE))
+//     {
+//       bank = FLASH_BANK_1;
+//     }
+//     else
+//     {
+//     //   bank = FLASH_BANK_2;
+//     return FLASH_ERR
+//     }
+//   }
+//   else
+//   {
+//     /* Bank swap */
+//     if (Address < (FLASH_BASE + FLASH_BANK_SIZE))
+//     {
+//       bank = FLASH_BANK_2;
+//     }
+//     else
+//     {
+//       bank = FLASH_BANK_1;
+//     }
+//   }
 
-  return bank;
-}
+//   return bank;
+// }
 
 /**
   * @brief  Delete corrupted Flash address, can be called from NMI. No Timeout.
@@ -196,9 +198,10 @@ EE_Status DeleteCorruptedFlashAddress(uint32_t Address)
   }
 
   /* Check if error occured */
-  if((__HAL_FLASH_GET_FLAG(FLASH_FLAG_OPERR))  || (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PROGERR)) ||
+  // Had to adjust FLASH_FLAG_SIZEERR to FLASH_FLAG_PGSERR error for F4, and FLASH_FLAG_PROGERR to FLASH_FLAG_PGPERR
+  if((__HAL_FLASH_GET_FLAG(FLASH_FLAG_OPERR))  || (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PGPERR)) ||
      (__HAL_FLASH_GET_FLAG(FLASH_FLAG_WRPERR)) || (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PGAERR))  ||
-     (__HAL_FLASH_GET_FLAG(FLASH_FLAG_SIZERR)) || (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PGSERR)))
+     (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PGSERR)) || (__HAL_FLASH_GET_FLAG(FLASH_FLAG_PGSERR)))
   {
     status = EE_DELETE_ERROR;
   }
@@ -223,7 +226,8 @@ EE_Status DeleteCorruptedFlashAddress(uint32_t Address)
   }
 
   /* Clear FLASH ECCD bit */
-  __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_ECCD);
+  // F4 does not have ECC for its single flash bank 
+//   __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_ECCD);
 
   return status;
 }
