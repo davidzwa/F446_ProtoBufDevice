@@ -22,6 +22,7 @@
 #include "cli.h"
 #include "config.h"
 #include "delay.h"
+#include "nvmm.h"
 #include "radio_phy.h"
 #include "tasks.h"
 #include "utils.h"
@@ -37,6 +38,20 @@ int main(void) {
     InitRadioConfig();
     InitTimedTasks();
     InitRadioPhy();
+
+    uint16_t status = NvmmWriteVar(0x1234, 0);
+    if (status != 0) {
+        throw 1;
+    }
+    
+    uint16_t readData;
+    uint16_t result = NvmmReadVar(&readData, 0);
+    if (result != 0) {
+        throw 1;
+    }
+    if (readData != 0x1234) {
+        throw 2;
+    }
 
     Radio.Rx(0);
     while (1) {
