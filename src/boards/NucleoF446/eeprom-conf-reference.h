@@ -24,6 +24,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include "utilities.h"
 
 /* Exported constants --------------------------------------------------------*/
 /* EEPROM emulation firmware error codes */
@@ -40,9 +41,10 @@
 #define VOLTAGE_RANGE           (uint8_t)VOLTAGE_RANGE_3
 
 /* EEPROM start address in Flash */
-#define EEPROM_START_ADDRESS  ((uint32_t)0x08008000) /* EEPROM emulation start address:
-                                                  from sector2 : after 16KByte of used 
-                                                  Flash memory */
+#define EEPROM_START_ADDRESS ((uint32_t)0x08020000)  // 0x08008000
+/* EEPROM emulation start address:
+        from sector 4 ~sector2~ : after 16KByte of used 
+        Flash memory */
 
 /* Pages 0 and 1 base and end addresses */
 #define PAGE0_BASE_ADDRESS    ((uint32_t)(EEPROM_START_ADDRESS + 0x0000))
@@ -74,13 +76,14 @@
 
 /* Variables' number */
 #define NB_OF_VAR             ((uint8_t)0x03)
+uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 uint16_t EE_Init(void);
-uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data);
-uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data);
+uint16_t EepromMcuReadVariable(uint16_t virtAddress, uint16_t* data);
+uint16_t EepromMcuWriteVariable(uint16_t virtAddress, uint16_t data);
 
 #endif /* __EEPROM_H */
 

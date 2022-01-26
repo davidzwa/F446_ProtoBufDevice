@@ -26,6 +26,7 @@
 #include "i2c.h"
 #include "lpm-board.h"
 #include "rtc-board.h"
+#include "eeprom-board.h"
 #include "spi.h"
 #include "stm32f4xx.h"
 #include "sysIrqHandlers.h"
@@ -442,7 +443,7 @@ static void PVD_Config(void) {
  *
  * \remark This function is defined in eeprom-board.c file
  */
-void EepromMcuInit(void);
+// void EepromMcuInit(void);
 
 static void InitFlashMemoryOperations(void) {
     // Enable and set FLASH Interrupt priority
@@ -477,7 +478,7 @@ static void InitFlashMemoryOperations(void) {
     PVD_Config();
 
     // Initialize the EEPROM emulation driver
-    // EepromMcuInit( );
+    EepromMcuInit( );
 
     // Lock the Flash Program Erase controller
     HAL_FLASH_Lock();

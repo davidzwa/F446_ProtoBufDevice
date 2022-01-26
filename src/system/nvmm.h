@@ -34,13 +34,12 @@
 #define __NVMM_H__
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-#include <stdlib.h>
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 /*!
  * \brief Writes data to given data block.
@@ -51,7 +50,8 @@ extern "C"
  *
  * \retval           Status of the operation
  */
-uint16_t NvmmWrite( uint8_t* src, uint16_t size, uint16_t offset );
+uint16_t NvmmWrite(uint8_t* src, uint16_t size, uint16_t offset);
+uint16_t NvmmWriteVar(uint16_t variable, uint16_t offset);
 
 /*!
  * \brief Reads from data block to destination pointer.
@@ -62,7 +62,8 @@ uint16_t NvmmWrite( uint8_t* src, uint16_t size, uint16_t offset );
  *
  * \retval           Status of the operation
  */
-uint16_t NvmmRead( uint8_t* dest, uint16_t size, uint16_t offset );
+uint16_t NvmmRead(uint8_t* dest, uint16_t size, uint16_t offset);
+uint16_t NvmmReadVar(uint16_t* variable, uint16_t offset);
 
 /*!
  * \brief Verfies the CRC 32 of a data block. The function assumes that the
@@ -73,7 +74,7 @@ uint16_t NvmmRead( uint8_t* dest, uint16_t size, uint16_t offset );
  *
  * \retval           Status of the operation
  */
-bool NvmmCrc32Check( uint16_t size, uint16_t offset );
+bool NvmmCrc32Check(uint16_t size, uint16_t offset);
 
 /*!
  * \brief Invalidates the CRC 32 of a data block. The function assumes that the
@@ -84,10 +85,10 @@ bool NvmmCrc32Check( uint16_t size, uint16_t offset );
  *
  * \retval           Status of the operation
  */
-bool NvmmReset( uint16_t size, uint16_t offset );
+bool NvmmReset(uint16_t size, uint16_t offset);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __NVMM_H__
+#endif  // __NVMM_H__

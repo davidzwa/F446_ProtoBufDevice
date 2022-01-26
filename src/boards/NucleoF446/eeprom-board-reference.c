@@ -21,7 +21,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "eeprom-conf.h"
+#include "eeprom-conf-reference.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -49,7 +49,7 @@ static uint16_t EE_VerifyPageFullyErased(uint32_t Address);
   * @retval - Flash error code: on write Flash error
   *         - FLASH_COMPLETE: on success
   */
-uint16_t EE_Init(void) {
+uint16_t EepromMcuInit(void) {
     uint16_t PageStatus0 = 6, PageStatus1 = 6;
     uint16_t VarIdx = 0;
     uint16_t EepromStatus = 0, ReadStatus = 0;
@@ -118,7 +118,7 @@ uint16_t EE_Init(void) {
                     }
                     if (VarIdx != x) {
                         /* Read the last variables' updates */
-                        ReadStatus = EE_ReadVariable(VirtAddVarTab[VarIdx], &DataVar);
+                        ReadStatus = EepromMcuReadVariable(VirtAddVarTab[VarIdx], &DataVar);
                         /* In case variable corresponding to the virtual address was found */
                         if (ReadStatus != 0x1) {
                             /* Transfer the variable to the Page0 */
@@ -208,7 +208,7 @@ uint16_t EE_Init(void) {
                     }
                     if (VarIdx != x) {
                         /* Read the last variables' updates */
-                        ReadStatus = EE_ReadVariable(VirtAddVarTab[VarIdx], &DataVar);
+                        ReadStatus = EepromMcuReadVariable(VirtAddVarTab[VarIdx], &DataVar);
                         /* In case variable corresponding to the virtual address was found */
                         if (ReadStatus != 0x1) {
                             /* Transfer the variable to the Page1 */
@@ -287,6 +287,16 @@ uint16_t EE_VerifyPageFullyErased(uint32_t Address) {
     return ReadStatus;
 }
 
+LmnStatus_t EepromMcuReadBuffer(uint16_t addr, uint8_t* buffer, uint16_t size) {
+    // Not implemented
+    return LMN_STATUS_OK;
+}
+
+LmnStatus_t EepromMcuWriteBuffer(uint16_t addr, uint8_t* buffer, uint16_t size) {
+    // Not implemented
+    return LMN_STATUS_OK;
+}
+
 /**
   * @brief  Returns the last stored variable data, if found, which correspond to
   *   the passed virtual address
@@ -297,7 +307,9 @@ uint16_t EE_VerifyPageFullyErased(uint32_t Address) {
   *           - 1: if the variable was not found
   *           - NO_VALID_PAGE: if no valid page was found.
   */
-uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data) {
+uint16_t EepromMcuReadVariable(uint16_t VirtAddress, uint16_t* Data) {
+    HAL_FLASH_Unlock();
+
     uint16_t ValidPage = PAGE0;
     uint16_t AddressValue = 0x5555, ReadStatus = 1;
     uint32_t Address = EEPROM_START_ADDRESS, PageStartAddress = EEPROM_START_ADDRESS;
@@ -336,6 +348,8 @@ uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data) {
         }
     }
 
+    HAL_FLASH_Lock();
+
     /* Return ReadStatus value: (0: variable exist, 1: variable doesn't exist) */
     return ReadStatus;
 }
@@ -350,8 +364,9 @@ uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data) {
   *           - NO_VALID_PAGE: if no valid page was found
   *           - Flash error code: on write Flash error
   */
-uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data) {
+uint16_t EepromMcuWriteVariable(uint16_t VirtAddress, uint16_t Data) {
     uint16_t Status = 0;
+    HAL_FLASH_Unlock();
 
     /* Write the variable virtual address and value in the EEPROM */
     Status = EE_VerifyPageFullWriteVariable(VirtAddress, Data);
@@ -361,6 +376,8 @@ uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data) {
         /* Perform Page transfer */
         Status = EE_PageTransfer(VirtAddress, Data);
     }
+
+    HAL_FLASH_Lock();
 
     /* Return last operation status */
     return Status;
@@ -575,7 +592,7 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data) {
         if (VirtAddVarTab[VarIdx] != VirtAddress) /* Check each variable except the one passed as parameter */
         {
             /* Read the other last variable updates */
-            ReadStatus = EE_ReadVariable(VirtAddVarTab[VarIdx], &DataVar);
+            ReadStatus = EepromMcuReadVariable(VirtAddVarTab[VarIdx], &DataVar);
             /* In case variable corresponding to the virtual address was found */
             if (ReadStatus != 0x1) {
                 /* Transfer the variable to the new active page */
