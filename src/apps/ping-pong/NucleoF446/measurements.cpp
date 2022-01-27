@@ -4,8 +4,6 @@
 #include "device_messages.h"
 #include "radio_phy.h"
 
-// 4000 32-bit values in sector, 1 for header, 2 reserved for future use and 2 for counting (both containing same value for safety checks)
-#define MAX_MEASUREMENT_NUM (4000 - 5) 
 #define FIXED_LORA_FRAGMENT_BYTES 100
 LoRaMessage<FIXED_LORA_FRAGMENT_BYTES> loraBlobMessage;
 

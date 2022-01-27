@@ -11,9 +11,9 @@
 #define EE_TIMEOUT (uint32_t)HAL_TIMEOUT
 
 /* Define the size of the sectors to be used */
-#define PAGE_SIZE_16K          (uint32_t)0x4000  /* Page size = 16KByte */
-#define PAGE_SIZE_64K          (uint32_t)0x10000 /* Page size = 64KByte */
-#define PAGE_SIZE_128K         (uint32_t)0x20000 /* Page size = 128KByte */
+#define PAGE_SIZE_16K          (uint32_t)0x4000  /* Page size = 16KByte, sector 0,1,2,3*/
+#define PAGE_SIZE_64K          (uint32_t)0x10000 /* Page size = 64KByte, sector 4*/
+#define PAGE_SIZE_128K         (uint32_t)0x20000 /* Page size = 128KByte, sector 5,6,7 */
 
 // Sector 0 0x0800 0000 - 0x0800 3FFF 16 Kbytes
 #define SECTOR0_START           0x08000000
@@ -38,7 +38,8 @@
 
 /* EEPROM start address in Flash */
 // Sector 4 (to ensure 0-3 dont overwrite code) start at 0x08008000
-#define EEPROM_START_ADDRESS ((uint32_t)0x08000000)
+// Try to avoid using this
+// #define EEPROM_START_ADDRESS ((uint32_t)0x08000000)
 
 /* Pages 0 and 1 base and end addresses */
 #define PAGE0_ID              FLASH_SECTOR_5
