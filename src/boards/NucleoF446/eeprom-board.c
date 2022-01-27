@@ -1,169 +1,203 @@
-/*!
- * \file      eeprom-board.c
- *
- * \brief     Target board EEPROM driver implementation
- *
- * \copyright Revised BSD License, see section \ref LICENSE.
- *
- * \code
- *                ______                              _
- *               / _____)             _              | |
- *              ( (____  _____ ____ _| |_ _____  ____| |__
- *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- *               _____) ) ____| | | || |_| ____( (___| | | |
- *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
- *              (C)2013-2017 Semtech
- *
- * \endcode
- *
- * \author    Miguel Luis ( Semtech )
- *
- * \author    Gregory Cristian ( Semtech )
- */
-#include "eeprom-board.h"
 
 #include <stdbool.h>
-#include <stdint.h>
 
-#include "eeprom_emul.h"
-#include "stm32f4xx.h"
-#include "utilities.h"
+#include "eeprom-conf.h"
 
-uint16_t EepromVirtualAddress[NB_OF_VARIABLES];
-__IO uint32_t ErasingOnGoing = 0;
+uint32_t DataVar = 0;
 
-/*!
- * \brief Initializes the EEPROM emulation module.
- */
-void EepromMcuInit(void) {
-    EE_Status eeStatus = EE_OK;
+static uint16_t FindUsefulPage(uint8_t flashOperation);
+uint16_t GetPageHeader(uint8_t pageId);
+HAL_StatusTypeDef EnsurePageErased(uint8_t pageId);
+HAL_StatusTypeDef ValidatePageLimits(uint8_t pageId, uint16_t offset);
+uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset);
 
-    // Unlock the Flash Program Erase controller
+HAL_StatusTypeDef EepromMcuInit(void) {
     HAL_FLASH_Unlock();
 
-    // Set user List of Virtual Address variables: 0x0000 and 0xFFFF values are prohibited
-    for (uint16_t varValue = 0; varValue < NB_OF_VARIABLES; varValue++) {
-        EepromVirtualAddress[varValue] = varValue + 1;
+    uint16_t pageStatus0 = GetPageHeader(PAGE0_ID);
+    if (pageStatus0 != FILLED_PAGE && pageStatus0 != VALID_PAGE) {
+        EnsurePageErased(PAGE0_ID);
     }
 
-    // Set EEPROM emulation firmware to erase all potentially incompletely erased
-    // pages if the system came from an asynchronous reset. Conditional erase is
-    // safe to use if all Flash operations where completed before the system reset
-    if (__HAL_PWR_GET_FLAG(PWR_FLAG_SB) == RESET) {
-        // System reset comes from a power-on reset: Forced Erase
-        // Initialize EEPROM emulation driver (mandatory)
-        eeStatus = EE_Init(EepromVirtualAddress, EE_FORCED_ERASE);
-        if (eeStatus != EE_OK) {
-            assert_param(LMN_STATUS_ERROR);
+    uint16_t pageStatus1 = GetPageHeader(PAGE1_ID);
+    if (pageStatus1 != FILLED_PAGE && pageStatus1 != VALID_PAGE) {
+        EnsurePageErased(PAGE1_ID);
+    }
+
+    HAL_FLASH_Lock();
+
+    return HAL_OK;
+}
+
+uint16_t EepromMcuReadVariable32(uint16_t pageAddress, uint32_t* data) {
+    uint16_t activePageId;
+    uint32_t dataAddress;
+    HAL_StatusTypeDef result = HAL_OK;
+
+    HAL_FLASH_Unlock();
+
+    activePageId = FindUsefulPage(READ_FROM_VALID_PAGE);
+    if (activePageId != NO_VALID_PAGE) {
+        result = ValidatePageLimits(activePageId, pageAddress);
+        if (result == HAL_OK) {
+            dataAddress = GetPageOffsetAddress(activePageId, pageAddress);
+            *data = (*(__IO uint32_t*)(dataAddress));
         }
     } else {
-        // Clear the Standby flag
-        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
-
-        // Check and Clear the Wakeup flag
-        if (__HAL_PWR_GET_FLAG(PWR_FLAG_WU) != RESET) {
-            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-        }
-
-        // System reset comes from a STANDBY wakeup: Conditional Erase
-        // Initialize EEPROM emulation driver (mandatory)
-        eeStatus = EE_Init(EepromVirtualAddress, EE_CONDITIONAL_ERASE);
-        if (eeStatus != EE_OK) {
-            assert_param(LMN_STATUS_ERROR);
-        }
+        result = NO_VALID_PAGE;
     }
 
-    // Lock the Flash Program Erase controller
     HAL_FLASH_Lock();
+
+    return result;  // (0: variable exist, 1: variable doesn't exist)
 }
 
-/*!
- * \brief Indicates if an erasing operation is on going.
- *
- * \retval isEradingOnGoing Returns true is an erasing operation is on going.
- */
-bool EepromMcuIsErasingOnGoing(void) {
-    return ErasingOnGoing;
-}
+uint16_t EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data) {
+    uint16_t writeStatus = 0;
 
-LmnStatus_t EepromMcuWriteBuffer(uint16_t addr, uint8_t *buffer, uint16_t size) {
-    LmnStatus_t status = LMN_STATUS_OK;
-    EE_Status eeStatus = EE_OK;
-
-    // Unlock the Flash Program Erase controller
     HAL_FLASH_Unlock();
 
-    CRITICAL_SECTION_BEGIN();
-    for (uint32_t i = 0; i < size; i++) {
-        eeStatus |= EE_WriteVariable8bits(EepromVirtualAddress[addr + i], buffer[i]);
-    }
-    CRITICAL_SECTION_END();
+    uint32_t dataAddress;
+    uint16_t activePage = FindUsefulPage(WRITE_IN_VALID_PAGE);
 
-    if (eeStatus != EE_OK) {
-        status = LMN_STATUS_ERROR;
+    if (activePage == NO_VALID_PAGE) {
+        HAL_FLASH_Lock();
+        return NO_VALID_PAGE;
     }
 
-    if ((eeStatus & EE_STATUSMASK_CLEANUP) == EE_STATUSMASK_CLEANUP) {
-        ErasingOnGoing = 0;
-        eeStatus |= EE_CleanUp();
-    }
-    if ((eeStatus & EE_STATUSMASK_ERROR) == EE_STATUSMASK_ERROR) {
-        status = LMN_STATUS_ERROR;
+    if (ValidatePageLimits(activePage, pageAddress32) != HAL_OK) {
+        HAL_FLASH_Lock();
+        return PAGE_OVERRUN;
     }
 
-    // Lock the Flash Program Erase controller
+    dataAddress = GetPageOffsetAddress(activePage, pageAddress32);
+    if (dataAddress == PAGE_ILLEGAL_ID) return PAGE_ILLEGAL_ID;
+
+    writeStatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, dataAddress, data);
     HAL_FLASH_Lock();
-    return status;
+
+    /* Return last operation status */
+    return writeStatus;
 }
 
-LmnStatus_t EepromMcuReadBuffer(uint16_t addr, uint8_t *buffer, uint16_t size) {
-    LmnStatus_t status = LMN_STATUS_OK;
+HAL_StatusTypeDef ValidatePageId(uint8_t pageId) {
+    if (pageId != PAGE1_ID || pageId != PAGE0_ID) {
+        return PAGE_ILLEGAL_ID;
+    }
 
-    // Unlock the Flash Program Erase controller
-    HAL_FLASH_Unlock();
+    return HAL_OK;
+}
 
-    for (uint32_t i = 0; i < size; i++) {
-        if (EE_ReadVariable8bits(EepromVirtualAddress[addr + i], buffer + i) != EE_OK) {
-            status = LMN_STATUS_ERROR;
+uint32_t GetPageBaseAddress(uint8_t pageId) {
+    if (pageId == PAGE0_ID) {
+        return PAGE0_BASE_ADDRESS;
+    } else if (pageId == PAGE1_ID) {
+        return PAGE1_BASE_ADDRESS;
+    } else {
+        return PAGE_ILLEGAL_ID;
+    }
+}
+
+uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset) {
+    uint32_t pageBaseAddress = GetPageBaseAddress(pageId);
+    if (pageBaseAddress == PAGE_ILLEGAL_ID) return PAGE_ILLEGAL_ID;
+
+    return pageBaseAddress + offset;
+}
+
+HAL_StatusTypeDef ValidatePageLimits(uint8_t pageId, uint16_t offset) {
+    uint32_t baseAddress = GetPageBaseAddress(pageId);
+    if (baseAddress == PAGE_ILLEGAL_ID) return PAGE_ILLEGAL_ID;
+
+    if (baseAddress + offset > baseAddress + PAGE_SIZE - 1) return PAGE_OVERRUN;
+
+    return HAL_OK;
+}
+
+uint16_t GetPageHeader(uint8_t pageId) {
+    if (!ValidatePageId(pageId)) return PAGE_ILLEGAL_ID;
+
+    uint32_t pageBaseAddress = GetPageBaseAddress(pageId);
+
+    // Requires flash to be unlocked
+    return (*(__IO uint16_t*)pageBaseAddress);
+}
+
+HAL_StatusTypeDef SetPageHeader(uint8_t pageId, uint32_t header) {
+    if (!ValidatePageId(pageId)) return PAGE_ILLEGAL_ID;
+
+    if (header != VALID_PAGE || header != ERASED) {
+        return PAGE_ILLEGAL_HEADER;
+    }
+
+    uint32_t pageBaseAddress = GetPageBaseAddress(pageId);
+    return HAL_FLASH_Program(TYPEPROGRAM_HALFWORD, pageBaseAddress, header);
+}
+
+HAL_StatusTypeDef EnsurePageErased(uint8_t pageId) {
+    FLASH_EraseInitTypeDef pageEraseInit;
+    HAL_StatusTypeDef flashStatus;
+    uint32_t sectorError = 0, address;
+    bool pageDirty = false;
+    uint16_t addressValue;
+
+    HAL_StatusTypeDef validation = ValidatePageId(pageId);
+    if (validation == PAGE_ILLEGAL_ID) {
+        return PAGE_ILLEGAL_ID;
+    }
+
+    // We dont check page-id validity again
+    uint32_t pageEndAddress = GetPageOffsetAddress(pageId, PAGE_SIZE - 1);
+    pageEraseInit.Sector = pageId;
+    pageEraseInit.NbSectors = 1;
+    pageEraseInit.VoltageRange = VOLTAGE_RANGE;
+
+    /* Check value 0xFFFFFFFF - requires flash to be unlocked */
+    while (address <= pageEndAddress) {
+        addressValue = (*(__IO uint16_t*)address);
+
+        if (addressValue != ERASED) {
+            pageDirty = true;
             break;
         }
+
+        address = address + 4;
     }
 
-    // Lock the Flash Program Erase controller
-    HAL_FLASH_Lock();
-    return status;
-}
+    // Erase - requires flash to be unlocked
+    if (pageDirty) {
+        flashStatus = HAL_FLASHEx_Erase(&pageEraseInit, &sectorError);
 
-void EepromMcuSetDeviceAddr(uint8_t addr) {
-    assert_param(LMN_STATUS_ERROR);
-}
-
-LmnStatus_t EepromMcuGetDeviceAddr(void) {
-    assert_param(LMN_STATUS_ERROR);
-    return 0;
-}
-
-/*!
- * \brief  FLASH end of operation interrupt callback.
- * \param  ReturnValue: The value saved in this parameter depends on the ongoing procedure
- *                  Mass Erase: Bank number which has been requested to erase
- *                  Page Erase: Page which has been erased
- *                    (if 0xFFFFFFFF, it means that all the selected pages have been erased)
- *                  Program: Address which was selected for data program
- * \retval None
- */
-void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue) {
-    // Call CleanUp callback when all requested pages have been erased
-    if (ReturnValue == 0xFFFFFFFF) {
-        EE_EndOfCleanup_UserCallback();
+        if (flashStatus != HAL_OK) {
+            return flashStatus;
+        }
     }
+
+    return HAL_OK;
 }
 
-/*!
- * \brief  Clean Up end of operation interrupt callback.
- * \param  None
- * \retval None
- */
-void EE_EndOfCleanup_UserCallback(void) {
-    ErasingOnGoing = 0;
+static uint16_t FindUsefulPage(uint8_t flashOperation) {
+    uint16_t pageStatus0 = GetPageHeader(PAGE0_ID);
+    uint16_t pageStatus1 = GetPageHeader(PAGE1_ID);
+
+    if (flashOperation == READ_FROM_VALID_PAGE) {
+        if (pageStatus0 == VALID_PAGE || pageStatus0 == FILLED_PAGE) {
+            return PAGE0_ID;
+        } else if (pageStatus1 == VALID_PAGE || pageStatus1 == FILLED_PAGE) {
+            return PAGE1_ID;
+        } else {
+            return NO_VALID_PAGE;
+        }
+    } else if (flashOperation == WRITE_IN_VALID_PAGE) {
+        // We dont want filled pages to be written
+        if (pageStatus0 == VALID_PAGE) {
+            return PAGE0_ID;
+        } else if (pageStatus1 == VALID_PAGE) {
+            return PAGE1_ID;
+        } else {
+            return NO_VALID_PAGE;
+        }
+    } else {
+        return NO_VALID_PAGE;
+    }
 }

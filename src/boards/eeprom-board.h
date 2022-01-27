@@ -41,8 +41,8 @@ uint16_t EepromMcuInit(void);
  * \param[IN] size Size of the buffer to be written.
  * \retval status [LMN_STATUS_OK, LMN_STATUS_ERROR]
  */
-LmnStatus_t EepromMcuWriteBuffer(uint16_t addr, uint8_t *buffer, uint16_t size);
-LmnStatus_t EepromMcuWriteVariable(uint16_t addr, uint16_t value);
+// LmnStatus_t EepromMcuWriteBuffer(uint16_t addr, uint8_t *buffer, uint16_t size);
+LmnStatus_t EepromMcuWriteVariable32(uint16_t addr, uint32_t value);
 
 /*!
  * Reads the EEPROM at the specified address to the given buffer.
@@ -52,8 +52,8 @@ LmnStatus_t EepromMcuWriteVariable(uint16_t addr, uint16_t value);
  * \param[IN] size Size of the buffer to be read.
  * \retval status [LMN_STATUS_OK, LMN_STATUS_ERROR]
  */
-LmnStatus_t EepromMcuReadBuffer( uint16_t addr, uint8_t *buffer, uint16_t size );
-LmnStatus_t EepromMcuReadVariable(uint16_t addr, uint16_t* value);
+// LmnStatus_t EepromMcuReadBuffer( uint16_t addr, uint8_t *buffer, uint16_t size );
+LmnStatus_t EepromMcuReadVariable32(uint16_t addr, uint32_t* value);
 
 // /*!
 //  * Sets the device address.

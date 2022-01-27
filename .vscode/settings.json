@@ -139,7 +139,8 @@
         "limits": "cpp",
         "streambuf": "cpp",
         "initializer_list": "cpp",
-        "eeprom_emul.h": "c"
+        "eeprom_emul.h": "c",
+        "eeprom-conf-reference.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

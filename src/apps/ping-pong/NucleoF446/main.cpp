@@ -39,13 +39,13 @@ int main(void) {
     InitTimedTasks();
     InitRadioPhy();
 
-    uint16_t status = NvmmWriteVar(0x1234, 0);
+    uint16_t status = NvmmWriteVar32(1, (uint32_t)0x1234);
     if (status != 0) {
         throw 1;
     }
     
-    uint16_t readData;
-    uint16_t result = NvmmReadVar(&readData, 0);
+    uint32_t readData;
+    uint16_t result = NvmmReadVar32(1, &readData);
     if (result != 0) {
         throw 1;
     }
