@@ -98,6 +98,16 @@ uint32_t GetPageBaseAddress(uint8_t pageId) {
     }
 }
 
+uint32_t GetPageEndAddress(uint8_t pageId) {
+    if (pageId == PAGE0_ID) {
+        return PAGE0_END_ADDRESS;
+    } else if (pageId == PAGE1_ID) {
+        return PAGE1_END_ADDRESS;
+    } else {
+        return PAGE_ILLEGAL_ID;
+    }
+}
+
 uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset) {
     uint32_t pageBaseAddress = GetPageBaseAddress(pageId);
     if (pageBaseAddress == PAGE_ILLEGAL_ID) return PAGE_ILLEGAL_ID;
@@ -107,9 +117,12 @@ uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset) {
 
 HAL_StatusTypeDef ValidatePageLimits(uint8_t pageId, uint16_t offset) {
     uint32_t baseAddress = GetPageBaseAddress(pageId);
-    if (baseAddress == PAGE_ILLEGAL_ID) return PAGE_ILLEGAL_ID;
+    uint32_t endAddress = GetPageEndAddress(pageId);
+    if (baseAddress == PAGE_ILLEGAL_ID || endAddress == PAGE_ILLEGAL_ID) {
+        return PAGE_ILLEGAL_ID;
+    }
 
-    if (baseAddress + offset > baseAddress + PAGE_SIZE - 1) return PAGE_OVERRUN;
+    if (baseAddress + offset > endAddress) return PAGE_OVERRUN;
 
     return HAL_OK;
 }
@@ -147,7 +160,7 @@ HAL_StatusTypeDef EnsurePageErased(uint8_t pageId) {
     }
 
     // We dont check page-id validity again
-    uint32_t pageEndAddress = GetPageOffsetAddress(pageId, PAGE_SIZE - 1);
+    uint32_t pageEndAddress = GetPageEndAddress(pageId);
     pageEraseInit.Sector = pageId;
     pageEraseInit.NbSectors = 1;
     pageEraseInit.VoltageRange = VOLTAGE_RANGE;
