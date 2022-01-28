@@ -87,6 +87,13 @@ uint16_t NvmmReadVar32(uint16_t address, uint32_t* variable);
  */
 // bool NvmmReset(uint16_t size, uint16_t offset);
 
+/**
+ * @brief Clear all assigned pages in flash for re-use
+ * 
+ * @return uint16_t 
+ */
+bool NvmmClear();
+
 #ifdef __cplusplus
 }
 #endif

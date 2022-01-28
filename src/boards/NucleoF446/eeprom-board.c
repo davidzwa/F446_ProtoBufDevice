@@ -11,6 +11,8 @@ HAL_StatusTypeDef EnsurePageErased(uint8_t pageId);
 HAL_StatusTypeDef ValidatePageLimits(uint8_t pageId, uint16_t offset);
 uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset);
 
+///// PUBLIC FUNCTIONS /////
+
 HAL_StatusTypeDef EepromMcuInit(void) {
     HAL_FLASH_Unlock();
 
@@ -29,7 +31,7 @@ HAL_StatusTypeDef EepromMcuInit(void) {
     return HAL_OK;
 }
 
-uint16_t EepromMcuReadVariable32(uint16_t pageAddress, uint32_t* data) {
+HAL_StatusTypeDef EepromMcuReadVariable32(uint16_t pageAddress, uint32_t* data) {
     uint16_t activePageId;
     uint32_t dataAddress;
     HAL_StatusTypeDef result = HAL_OK;
@@ -52,7 +54,7 @@ uint16_t EepromMcuReadVariable32(uint16_t pageAddress, uint32_t* data) {
     return result;  // (0: variable exist, 1: variable doesn't exist)
 }
 
-uint16_t EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data) {
+HAL_StatusTypeDef EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data) {
     uint16_t writeStatus = 0;
 
     HAL_FLASH_Unlock();
@@ -80,8 +82,27 @@ uint16_t EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data) {
     return writeStatus;
 }
 
+/**
+ * @brief Clear all the configured pages in flash
+ * 
+ * @return bool (0: success, 1 failed)
+ */
+bool ClearAllPages() {
+    HAL_FLASH_Unlock();
+
+    uint16_t status1 = EnsurePageErased(PAGE0_ID);
+    uint16_t status2 = EnsurePageErased(PAGE1_ID);
+
+    HAL_FLASH_Lock();
+
+    // HAL_OK=0x00 if all good - otherwise 0x01
+    return !(status1 == HAL_OK && status2 == HAL_OK);
+}
+
+///// PRIVATE FUNCTIONS /////
+
 HAL_StatusTypeDef ValidatePageId(uint8_t pageId) {
-    if (pageId != PAGE1_ID || pageId != PAGE0_ID) {
+    if (pageId != PAGE1_ID && pageId != PAGE0_ID) {
         return PAGE_ILLEGAL_ID;
     }
 

@@ -24,12 +24,11 @@
 #include "delay.h"
 #include "nvmm.h"
 #include "radio_phy.h"
+#include "measurements_nvmm.h"
 #include "tasks.h"
 #include "utils.h"
 
-/**
- * Main application entry point.
- */
+
 int main(void) {
     BoardInitMcu();
     BoardInitPeriph();
@@ -53,7 +52,14 @@ int main(void) {
         throw 2;
     }
 
-    Radio.Rx(0);
+    NvmmClear();
+    
+    uint32_t resultMeasurements = GetMeasurementCount();
+    if (resultMeasurements == CORRUPT_MEASUREMENT_COUNTERS) {
+        throw 3;
+    }
+
+        Radio.Rx(0);
     while (1) {
         // Process Radio IRQ
         if (Radio.IrqProcess != NULL) {

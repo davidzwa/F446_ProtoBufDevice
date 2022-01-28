@@ -39,4 +39,7 @@ uint16_t FlashReadMeasurement(uint32_t index, uint32_t value);
 // 1 for header, 2 reserved for future use and 2 for counting (both containing same value for safety checks)
 #define MAX_MEASUREMENT_NUM (32000-7)
 
+#define READ_ERROR                      ((uint16_t)0xFFFE)
+#define CORRUPT_MEASUREMENT_COUNTERS    ((uint16_t)0xFFFF)
+
 #endif // MEASUREMENTS_H_NVMM__

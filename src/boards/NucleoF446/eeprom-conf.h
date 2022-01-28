@@ -71,8 +71,8 @@
 #define PAGE_OVERRUN          ((uint8_t)0x81) // Address given does not fit in page
 
 /* Exported functions ------------------------------------------------------- */
-uint16_t EE_Init(void);
-uint16_t EepromMcuReadVariable32(uint16_t virtAddress, uint32_t* data);
-uint16_t EepromMcuWriteVariable32(uint16_t virtAddress, uint32_t data);
+HAL_StatusTypeDef EepromMcuReadVariable32(uint16_t virtAddress, uint32_t* data);
+HAL_StatusTypeDef EepromMcuWriteVariable32(uint16_t virtAddress, uint32_t data);
+bool ClearAllPages();
 
 #endif /* __EEPROM_H */

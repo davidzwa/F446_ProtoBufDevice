@@ -9,6 +9,7 @@ LoRaMessage<FIXED_LORA_FRAGMENT_BYTES> loraBlobMessage;
 
 uint16_t lastSequenceNumberReceived = 0xFFFF;
 uint16_t currentMeasurementCount = 0;
+#define MAX_MEASUREMENT_NUM 100
 uint32_t measurements[MAX_MEASUREMENT_NUM];
 
 void RegisterNewMeasurement(uint16_t sequenceNumber, uint8_t rssiInv, uint8_t snr) {

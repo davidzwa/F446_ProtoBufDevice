@@ -33,6 +33,8 @@ extern "C"
 
 uint16_t EepromMcuInit(void);
 
+uint16_t ClearAllPages();
+
 /*!
  * Writes the given buffer to the EEPROM at the specified address.
  *
@@ -72,6 +74,7 @@ LmnStatus_t EepromMcuReadVariable32(uint16_t addr, uint32_t* value);
 //  * \retval addr External EEPROM address
 //  */
 // LmnStatus_t EepromMcuGetDeviceAddr( void );
+
 
 #ifdef __cplusplus
 }

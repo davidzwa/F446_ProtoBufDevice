@@ -38,6 +38,10 @@ uint16_t NvmmReadVar32(uint16_t address, uint32_t* variable) {
     return EepromMcuReadVariable32(address * 0x04, variable);
 }
 
+bool NvmmClear() {
+    return ClearAllPages();
+}
+
 // bool NvmmCrc32Check(uint16_t size, uint16_t address) {
 //     uint8_t data = 0;
 //     uint32_t calculatedCrc32 = 0;
