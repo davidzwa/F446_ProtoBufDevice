@@ -7,12 +7,18 @@ uint32_t DataVar = 0;
 
 static uint16_t FindUsefulPage(uint8_t flashOperation);
 uint16_t GetPageHeader(uint8_t pageId);
+HAL_StatusTypeDef SetPageHeader(uint8_t pageId, uint32_t header);
 HAL_StatusTypeDef EnsurePageErased(uint8_t pageId);
 HAL_StatusTypeDef ValidatePageLimits(uint8_t pageId, uint16_t offset);
 uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset);
 
 ///// PUBLIC FUNCTIONS /////
 
+/**
+ * @brief Initialize MCU Init
+ * 
+ * @return HAL_StatusTypeDef 
+ */
 HAL_StatusTypeDef EepromMcuInit(void) {
     HAL_FLASH_Unlock();
 
@@ -26,11 +32,31 @@ HAL_StatusTypeDef EepromMcuInit(void) {
         EnsurePageErased(PAGE1_ID);
     }
 
+    uint16_t header0 = GetPageHeader(PAGE0_ID);
+    uint16_t header1 = GetPageHeader(PAGE1_ID);
+
+    if (header0 == ERASED_PAGE && header1 == ERASED_PAGE) {
+        SetPageHeader(PAGE0_ID, VALID_PAGE);
+    }
+    else if (header0 == FILLED_PAGE && header1 == ERASED_PAGE) {
+        SetPageHeader(PAGE1_ID, VALID_PAGE);
+    }
+    else if (header0 == ERASED_PAGE && header1 == FILLED_PAGE) {
+        SetPageHeader(PAGE0_ID, VALID_PAGE);
+    }
+
     HAL_FLASH_Lock();
 
     return HAL_OK;
 }
 
+/**
+ * @brief Read 32-bit variable
+ * 
+ * @param pageAddress 
+ * @param data 
+ * @return HAL_StatusTypeDef 
+ */
 HAL_StatusTypeDef EepromMcuReadVariable32(uint16_t pageAddress, uint32_t* data) {
     uint16_t activePageId;
     uint32_t dataAddress;
@@ -54,6 +80,13 @@ HAL_StatusTypeDef EepromMcuReadVariable32(uint16_t pageAddress, uint32_t* data) 
     return result;  // (0: variable exist, 1: variable doesn't exist)
 }
 
+/**
+ * @brief Write a 32-bit variable
+ * 
+ * @param pageAddress32 
+ * @param data 
+ * @return HAL_StatusTypeDef 
+ */
 HAL_StatusTypeDef EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data) {
     uint16_t writeStatus = 0;
 
@@ -73,9 +106,12 @@ HAL_StatusTypeDef EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data
     }
 
     dataAddress = GetPageOffsetAddress(activePage, pageAddress32);
-    if (dataAddress == PAGE_ILLEGAL_ID) return PAGE_ILLEGAL_ID;
+    if (dataAddress == PAGE_ILLEGAL_ID) {
+        return PAGE_ILLEGAL_ID;
+    }
 
     writeStatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, dataAddress, data);
+
     HAL_FLASH_Lock();
 
     /* Return last operation status */
@@ -93,10 +129,12 @@ bool ClearAllPages() {
     uint16_t status1 = EnsurePageErased(PAGE0_ID);
     uint16_t status2 = EnsurePageErased(PAGE1_ID);
 
+    uint16_t status3 = SetPageHeader(PAGE0_ID, VALID_PAGE);
+
     HAL_FLASH_Lock();
 
     // HAL_OK=0x00 if all good - otherwise 0x01
-    return !(status1 == HAL_OK && status2 == HAL_OK);
+    return !(status1 == HAL_OK && status2 == HAL_OK && status3 == HAL_OK);
 }
 
 ///// PRIVATE FUNCTIONS /////
@@ -149,7 +187,9 @@ HAL_StatusTypeDef ValidatePageLimits(uint8_t pageId, uint16_t offset) {
 }
 
 uint16_t GetPageHeader(uint8_t pageId) {
-    if (!ValidatePageId(pageId)) return PAGE_ILLEGAL_ID;
+    if (ValidatePageId(pageId) != HAL_OK) {
+        return PAGE_ILLEGAL_ID;
+    }
 
     uint32_t pageBaseAddress = GetPageBaseAddress(pageId);
 
@@ -158,9 +198,11 @@ uint16_t GetPageHeader(uint8_t pageId) {
 }
 
 HAL_StatusTypeDef SetPageHeader(uint8_t pageId, uint32_t header) {
-    if (!ValidatePageId(pageId)) return PAGE_ILLEGAL_ID;
+    if (ValidatePageId(pageId) != HAL_OK) {
+        return PAGE_ILLEGAL_ID;
+    }
 
-    if (header != VALID_PAGE || header != ERASED) {
+    if (header != VALID_PAGE && header != ERASED_PAGE && header != FILLED_PAGE) {
         return PAGE_ILLEGAL_HEADER;
     }
 
@@ -171,7 +213,7 @@ HAL_StatusTypeDef SetPageHeader(uint8_t pageId, uint32_t header) {
 HAL_StatusTypeDef EnsurePageErased(uint8_t pageId) {
     FLASH_EraseInitTypeDef pageEraseInit;
     HAL_StatusTypeDef flashStatus;
-    uint32_t sectorError = 0, address;
+    uint32_t sectorError = 0, address = 0;
     bool pageDirty = false;
     uint16_t addressValue;
 
@@ -182,6 +224,7 @@ HAL_StatusTypeDef EnsurePageErased(uint8_t pageId) {
 
     // We dont check page-id validity again
     uint32_t pageEndAddress = GetPageEndAddress(pageId);
+    address = GetPageBaseAddress(pageId);
     pageEraseInit.Sector = pageId;
     pageEraseInit.NbSectors = 1;
     pageEraseInit.VoltageRange = VOLTAGE_RANGE;
@@ -190,7 +233,7 @@ HAL_StatusTypeDef EnsurePageErased(uint8_t pageId) {
     while (address <= pageEndAddress) {
         addressValue = (*(__IO uint16_t*)address);
 
-        if (addressValue != ERASED) {
+        if (addressValue != ERASED_PAGE) {
             pageDirty = true;
             break;
         }

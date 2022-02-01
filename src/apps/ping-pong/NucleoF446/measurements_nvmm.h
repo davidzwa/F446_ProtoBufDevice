@@ -26,20 +26,27 @@
 #define RESERVED3                   ((uint16_t)0x0005)
 #define RESERVED4                   ((uint16_t)0x0006) 
 
-#define DATA_SECTOR_BASE            ((uint16_t)0x0007)
-#define DATA_SECTOR_END             ((uint32_t)0x20000)
+#define DATA_SECTOR_BASE            ((uint16_t)0x0007) // in 32-bits
+#define DATA_SECTOR_END             ((uint16_t)0x8000) // in 32-bits (32k measurements)
 
 uint16_t IsStorageValid();
 uint16_t IsStorageFull();
+uint16_t ClearStorage();
 uint32_t GetMeasurementCount();
+uint16_t AppendMeasurement(uint32_t value);
 uint16_t FlashWriteMeasurement(uint32_t index, uint32_t value);
-uint16_t FlashReadMeasurement(uint32_t index, uint32_t value);
+uint16_t FlashReadMeasurement(uint32_t index, uint32_t* value);
 
 // 32000 32-bit values in sector
 // 1 for header, 2 reserved for future use and 2 for counting (both containing same value for safety checks)
 #define MAX_MEASUREMENT_NUM (32000-7)
 
-#define READ_ERROR                      ((uint16_t)0xFFFE)
-#define CORRUPT_MEASUREMENT_COUNTERS    ((uint16_t)0xFFFF)
+#define ADDRESS_ALREADY_WRITTEN             ((uint16_t)0xFFF9)
+#define ADDRESS_OUT_OF_BOUNDS               ((uint16_t)0xFFFA)
+#define MEASUREMENT_COUNTERS_UPDATE_ERROR   ((uint16_t)0xFFFB)
+#define CLEAR_ERROR                         ((uint16_t)0xFFFC)
+#define WRITE_ERROR                         ((uint16_t)0xFFFD)
+#define READ_ERROR                          ((uint16_t)0xFFFE)
+#define CORRUPT_MEASUREMENT_COUNTERS        ((uint16_t)0xFFFF)
 
 #endif // MEASUREMENTS_H_NVMM__
