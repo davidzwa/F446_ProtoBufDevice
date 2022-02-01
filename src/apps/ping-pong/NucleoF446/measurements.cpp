@@ -34,6 +34,7 @@ void RegisterNewMeasurement(uint16_t sequenceNumber, int16_t rssi, int8_t snr) {
 
 void ClearMeasurements() {
     lastSequenceNumberReceived = 0xFFFF;
+    isStorageDirtyAndLocked = false;
     ClearStorage();
 }
 

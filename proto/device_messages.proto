@@ -19,7 +19,7 @@ message DeviceId {
 message LoraReceive 
 {
     uint32 Size = 1;
-    uint32 Rssi = 2;
+    int32 Rssi = 2;
     int32 Snr = 3;
     uint32 SequenceNumber = 4;
     optional bool IsMeasurementFragment = 5;

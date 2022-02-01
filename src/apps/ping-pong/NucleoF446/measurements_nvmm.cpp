@@ -14,7 +14,7 @@ uint16_t ClearStorage() {
         return CLEAR_ERROR;
     }
 
-    measurementCountState = 0xFFFF;
+    measurementCountState = 0x0000;
 
     return 0;
 }

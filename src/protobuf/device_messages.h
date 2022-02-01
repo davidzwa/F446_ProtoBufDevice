@@ -456,11 +456,11 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32::FIELD_TYPE Size() const { return Size_.get(); }
 
     inline void clear_Rssi() { Rssi_.clear(); }
-    inline void set_Rssi(const EmbeddedProto::uint32& value) { Rssi_ = value; }
-    inline void set_Rssi(const EmbeddedProto::uint32&& value) { Rssi_ = value; }
-    inline EmbeddedProto::uint32& mutable_Rssi() { return Rssi_; }
-    inline const EmbeddedProto::uint32& get_Rssi() const { return Rssi_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Rssi() const { return Rssi_.get(); }
+    inline void set_Rssi(const EmbeddedProto::int32& value) { Rssi_ = value; }
+    inline void set_Rssi(const EmbeddedProto::int32&& value) { Rssi_ = value; }
+    inline EmbeddedProto::int32& mutable_Rssi() { return Rssi_; }
+    inline const EmbeddedProto::int32& get_Rssi() const { return Rssi_; }
+    inline EmbeddedProto::int32::FIELD_TYPE Rssi() const { return Rssi_.get(); }
 
     inline void clear_Snr() { Snr_.clear(); }
     inline void set_Snr(const EmbeddedProto::int32& value) { Snr_ = value; }
@@ -526,7 +526,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
         return_value = Size_.serialize_with_id(static_cast<uint32_t>(id::SIZE), buffer, false);
       }
 
-      if((0U != Rssi_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != Rssi_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Rssi_.serialize_with_id(static_cast<uint32_t>(id::RSSI), buffer, false);
       }
@@ -678,7 +678,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::uint32 Size_ = 0U;
-      EmbeddedProto::uint32 Rssi_ = 0U;
+      EmbeddedProto::int32 Rssi_ = 0;
       EmbeddedProto::int32 Snr_ = 0;
       EmbeddedProto::uint32 SequenceNumber_ = 0U;
       EmbeddedProto::boolean IsMeasurementFragment_ = false;

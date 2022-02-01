@@ -158,6 +158,15 @@ void ProcessCliCommand() {
         UartSendAck(1);
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
+    } else if (uartCommand.has_clearMeasurementsCommand()) {
+        ClearMeasurements();
+
+        if (uartCommand.get_clearMeasurementsCommand().get_SendBootAfter()) {
+            UartSendBoot();
+        }
+        else {
+            UartSendAck(1);
+        }
     } else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
         bool alwaysSend = config.get_EnableAlwaysSend();

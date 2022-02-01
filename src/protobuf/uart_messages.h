@@ -1425,6 +1425,117 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class ClearMeasurementsCommand final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    ClearMeasurementsCommand() = default;
+    ClearMeasurementsCommand(const ClearMeasurementsCommand& rhs )
+    {
+      set_SendBootAfter(rhs.get_SendBootAfter());
+    }
+
+    ClearMeasurementsCommand(const ClearMeasurementsCommand&& rhs ) noexcept
+    {
+      set_SendBootAfter(rhs.get_SendBootAfter());
+    }
+
+    ~ClearMeasurementsCommand() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      SENDBOOTAFTER = 1
+    };
+
+    ClearMeasurementsCommand& operator=(const ClearMeasurementsCommand& rhs)
+    {
+      set_SendBootAfter(rhs.get_SendBootAfter());
+      return *this;
+    }
+
+    ClearMeasurementsCommand& operator=(const ClearMeasurementsCommand&& rhs) noexcept
+    {
+      set_SendBootAfter(rhs.get_SendBootAfter());
+      return *this;
+    }
+
+    inline void clear_SendBootAfter() { SendBootAfter_.clear(); }
+    inline void set_SendBootAfter(const EmbeddedProto::boolean& value) { SendBootAfter_ = value; }
+    inline void set_SendBootAfter(const EmbeddedProto::boolean&& value) { SendBootAfter_ = value; }
+    inline EmbeddedProto::boolean& mutable_SendBootAfter() { return SendBootAfter_; }
+    inline const EmbeddedProto::boolean& get_SendBootAfter() const { return SendBootAfter_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE SendBootAfter() const { return SendBootAfter_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != SendBootAfter_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SendBootAfter_.serialize_with_id(static_cast<uint32_t>(id::SENDBOOTAFTER), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::SENDBOOTAFTER:
+            return_value = SendBootAfter_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_SendBootAfter();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean SendBootAfter_ = false;
+
+};
+
 template<uint32_t transmitCommand_Payload_LENGTH>
 class UartCommand final: public ::EmbeddedProto::MessageInterface
 {
@@ -1458,6 +1569,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::CLEARMEASUREMENTSCOMMAND:
+          set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
           break;
 
         default:
@@ -1496,6 +1611,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_requestBootInfo(rhs.get_requestBootInfo());
           break;
 
+        case id::CLEARMEASUREMENTSCOMMAND:
+          set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
+          break;
+
         default:
           break;
       }
@@ -1511,7 +1630,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       TXCONFIG = 2,
       DEVICECONFIGURATION = 3,
       TRANSMITCOMMAND = 4,
-      REQUESTBOOTINFO = 5
+      REQUESTBOOTINFO = 5,
+      CLEARMEASUREMENTSCOMMAND = 6
     };
 
     UartCommand& operator=(const UartCommand& rhs)
@@ -1542,6 +1662,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::CLEARMEASUREMENTSCOMMAND:
+          set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
           break;
 
         default:
@@ -1579,6 +1703,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::CLEARMEASUREMENTSCOMMAND:
+          set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
           break;
 
         default:
@@ -1785,6 +1913,45 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     inline const RequestBootInfo& get_requestBootInfo() const { return Body_.requestBootInfo_; }
     inline const RequestBootInfo& requestBootInfo() const { return Body_.requestBootInfo_; }
 
+    inline bool has_clearMeasurementsCommand() const
+    {
+      return id::CLEARMEASUREMENTSCOMMAND == which_Body_;
+    }
+    inline void clear_clearMeasurementsCommand()
+    {
+      if(id::CLEARMEASUREMENTSCOMMAND == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.clearMeasurementsCommand_.~ClearMeasurementsCommand();
+      }
+    }
+    inline void set_clearMeasurementsCommand(const ClearMeasurementsCommand& value)
+    {
+      if(id::CLEARMEASUREMENTSCOMMAND != which_Body_)
+      {
+        init_Body(id::CLEARMEASUREMENTSCOMMAND);
+      }
+      Body_.clearMeasurementsCommand_ = value;
+    }
+    inline void set_clearMeasurementsCommand(const ClearMeasurementsCommand&& value)
+    {
+      if(id::CLEARMEASUREMENTSCOMMAND != which_Body_)
+      {
+        init_Body(id::CLEARMEASUREMENTSCOMMAND);
+      }
+      Body_.clearMeasurementsCommand_ = value;
+    }
+    inline ClearMeasurementsCommand& mutable_clearMeasurementsCommand()
+    {
+      if(id::CLEARMEASUREMENTSCOMMAND != which_Body_)
+      {
+        init_Body(id::CLEARMEASUREMENTSCOMMAND);
+      }
+      return Body_.clearMeasurementsCommand_;
+    }
+    inline const ClearMeasurementsCommand& get_clearMeasurementsCommand() const { return Body_.clearMeasurementsCommand_; }
+    inline const ClearMeasurementsCommand& clearMeasurementsCommand() const { return Body_.clearMeasurementsCommand_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1824,6 +1991,13 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           if(has_requestBootInfo() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.requestBootInfo_.serialize_with_id(static_cast<uint32_t>(id::REQUESTBOOTINFO), buffer, true);
+          }
+          break;
+
+        case id::CLEARMEASUREMENTSCOMMAND:
+          if(has_clearMeasurementsCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.clearMeasurementsCommand_.serialize_with_id(static_cast<uint32_t>(id::CLEARMEASUREMENTSCOMMAND), buffer, true);
           }
           break;
 
@@ -1869,6 +2043,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
           case id::REQUESTBOOTINFO:
             return_value = deserialize_Body(id::REQUESTBOOTINFO, Body_.requestBootInfo_, buffer, wire_type);
+
+            break;
+
+          case id::CLEARMEASUREMENTSCOMMAND:
+            return_value = deserialize_Body(id::CLEARMEASUREMENTSCOMMAND, Body_.clearMeasurementsCommand_, buffer, wire_type);
 
             break;
 
@@ -1919,6 +2098,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         DeviceConfiguration deviceConfiguration_;
         TransmitCommand<transmitCommand_Payload_LENGTH> transmitCommand_;
         RequestBootInfo requestBootInfo_;
+        ClearMeasurementsCommand clearMeasurementsCommand_;
       };
       Body Body_;
 
@@ -1958,6 +2138,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::REQUESTBOOTINFO;
             break;
 
+          case id::CLEARMEASUREMENTSCOMMAND:
+            new(&Body_.clearMeasurementsCommand_) ClearMeasurementsCommand;
+            which_Body_ = id::CLEARMEASUREMENTSCOMMAND;
+            break;
+
           default:
             break;
          }
@@ -1983,6 +2168,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             break;
           case id::REQUESTBOOTINFO:
             Body_.requestBootInfo_.~RequestBootInfo(); // NOSONAR Unions require this.
+            break;
+          case id::CLEARMEASUREMENTSCOMMAND:
+            Body_.clearMeasurementsCommand_.~ClearMeasurementsCommand(); // NOSONAR Unions require this.
             break;
           default:
             break;

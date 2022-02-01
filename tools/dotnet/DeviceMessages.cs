@@ -26,7 +26,7 @@ public static partial class DeviceMessagesReflection {
           "IAEoDRINCgVNaW5vchgCIAEoDRINCgVQYXRjaBgDIAEoDRIQCghSZXZpc2lv",
           "bhgEIAEoDSIxCghEZXZpY2VJZBILCgNJZDAYASABKA0SCwoDSWQxGAIgASgN",
           "EgsKA0lkMhgDIAEoDSKuAQoLTG9yYVJlY2VpdmUSDAoEU2l6ZRgBIAEoDRIM",
-          "CgRSc3NpGAIgASgNEgsKA1NuchgDIAEoBRIWCg5TZXF1ZW5jZU51bWJlchgE",
+          "CgRSc3NpGAIgASgFEgsKA1NuchgDIAEoBRIWCg5TZXF1ZW5jZU51bWJlchgE",
           "IAEoDRIiChVJc01lYXN1cmVtZW50RnJhZ21lbnQYBSABKAhIAIgBARIPCgdT",
           "dWNjZXNzGAYgASgIEg8KB1BheWxvYWQYByABKAxCGAoWX0lzTWVhc3VyZW1l",
           "bnRGcmFnbWVudCKeAQoLQm9vdE1lc3NhZ2USIwoQRGV2aWNlSWRlbnRpZmll",
@@ -700,10 +700,10 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
 
   /// <summary>Field number for the "Rssi" field.</summary>
   public const int RssiFieldNumber = 2;
-  private uint rssi_;
+  private int rssi_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint Rssi {
+  public int Rssi {
     get { return rssi_; }
     set {
       rssi_ = value;
@@ -843,7 +843,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (Rssi != 0) {
       output.WriteRawTag(16);
-      output.WriteUInt32(Rssi);
+      output.WriteInt32(Rssi);
     }
     if (Snr != 0) {
       output.WriteRawTag(24);
@@ -881,7 +881,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (Rssi != 0) {
       output.WriteRawTag(16);
-      output.WriteUInt32(Rssi);
+      output.WriteInt32(Rssi);
     }
     if (Snr != 0) {
       output.WriteRawTag(24);
@@ -917,7 +917,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
       size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Size);
     }
     if (Rssi != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rssi);
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Rssi);
     }
     if (Snr != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(Snr);
@@ -987,7 +987,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           break;
         }
         case 16: {
-          Rssi = input.ReadUInt32();
+          Rssi = input.ReadInt32();
           break;
         }
         case 24: {
@@ -1030,7 +1030,7 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           break;
         }
         case 16: {
-          Rssi = input.ReadUInt32();
+          Rssi = input.ReadInt32();
           break;
         }
         case 24: {
