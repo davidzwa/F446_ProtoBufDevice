@@ -7,18 +7,22 @@
 #define FIXED_LORA_FRAGMENT_BYTES 100
 LoRaMessage<FIXED_LORA_FRAGMENT_BYTES> loraBlobMessage;
 uint16_t lastSequenceNumberReceived = 0xFFFF;
-bool storageDirtyMeasurementDisabled = false;
+bool isStorageDirtyAndLocked = false;
 
 /**
  * @brief Check if storage contains 
  * 
  */
 void InitializeMeasurements() {
-    storageDirtyMeasurementDisabled = (GetMeasurementCount() != 0x00);
+    isStorageDirtyAndLocked = (GetMeasurementCount() != 0x00);
+}
+
+bool IsStorageDirtyAndLocked() {
+    return isStorageDirtyAndLocked;
 }
 
 void RegisterNewMeasurement(uint16_t sequenceNumber, int16_t rssi, int8_t snr) {
-    if (storageDirtyMeasurementDisabled) return;
+    if (isStorageDirtyAndLocked) return;
     
     // Compress the value in 32 bits 
     // TODO

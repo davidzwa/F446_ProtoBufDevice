@@ -8,6 +8,7 @@
 #define MEASUREMENTS_H__
 
 void InitializeMeasurements();
+bool IsStorageDirtyAndLocked();
 void RegisterNewMeasurement(uint16_t sequenceNumber, int16_t rssi, int8_t snr);
 void ClearMeasurements();
 void RequestStreamMeasurements(/* DeviceId */);

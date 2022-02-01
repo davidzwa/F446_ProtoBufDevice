@@ -11,6 +11,7 @@
 #include "config.h"
 #include "delay.h"
 #include "device_messages.h"
+#include "measurements.h"
 #include "radio_config.h"
 #include "radio_phy.h"
 #include "uart.h"
@@ -226,6 +227,8 @@ void UartSendBoot() {
     auto& bootMessage = uartResponse.mutable_bootMessage();
     bootMessage.mutable_AppName() = APP_NAME;
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
+    bootMessage.set_MeasurementCount(GetMeasurementCount());
+    bootMessage.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
     auto& version = bootMessage.mutable_FirmwareVersion();
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     version.set_Major(appVersion.Fields.Major);

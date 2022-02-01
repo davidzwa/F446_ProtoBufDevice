@@ -31,6 +31,8 @@ message BootMessage {
     DeviceId DeviceIdentifier = 1;
     Version FirmwareVersion = 2;
     string AppName = 3;
+    uint32 MeasurementCount = 4;
+    bool MeasurementsDisabled = 5;
 }
 
 message AckMessage {
