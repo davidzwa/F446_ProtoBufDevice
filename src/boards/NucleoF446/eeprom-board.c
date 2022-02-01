@@ -23,12 +23,12 @@ HAL_StatusTypeDef EepromMcuInit(void) {
     HAL_FLASH_Unlock();
 
     uint16_t pageStatus0 = GetPageHeader(PAGE0_ID);
-    if (pageStatus0 != FILLED_PAGE && pageStatus0 != VALID_PAGE) {
+    if (pageStatus0 != VALID_PAGE) {
         EnsurePageErased(PAGE0_ID);
     }
 
     uint16_t pageStatus1 = GetPageHeader(PAGE1_ID);
-    if (pageStatus1 != FILLED_PAGE && pageStatus1 != VALID_PAGE) {
+    if (pageStatus1 != VALID_PAGE) {
         EnsurePageErased(PAGE1_ID);
     }
 
@@ -36,12 +36,6 @@ HAL_StatusTypeDef EepromMcuInit(void) {
     uint16_t header1 = GetPageHeader(PAGE1_ID);
 
     if (header0 == ERASED_PAGE && header1 == ERASED_PAGE) {
-        SetPageHeader(PAGE0_ID, VALID_PAGE);
-    }
-    else if (header0 == FILLED_PAGE && header1 == ERASED_PAGE) {
-        SetPageHeader(PAGE1_ID, VALID_PAGE);
-    }
-    else if (header0 == ERASED_PAGE && header1 == FILLED_PAGE) {
         SetPageHeader(PAGE0_ID, VALID_PAGE);
     }
 
@@ -107,10 +101,15 @@ HAL_StatusTypeDef EepromMcuWriteVariable32(uint16_t pageAddress32, uint32_t data
 
     dataAddress = GetPageOffsetAddress(activePage, pageAddress32);
     if (dataAddress == PAGE_ILLEGAL_ID) {
+        HAL_FLASH_Lock();
         return PAGE_ILLEGAL_ID;
     }
 
+    CRITICAL_SECTION_BEGIN();
+
     writeStatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, dataAddress, data);
+    
+    CRITICAL_SECTION_END();
 
     HAL_FLASH_Lock();
 
@@ -202,7 +201,7 @@ HAL_StatusTypeDef SetPageHeader(uint8_t pageId, uint32_t header) {
         return PAGE_ILLEGAL_ID;
     }
 
-    if (header != VALID_PAGE && header != ERASED_PAGE && header != FILLED_PAGE) {
+    if (header != VALID_PAGE && header != ERASED_PAGE) {
         return PAGE_ILLEGAL_HEADER;
     }
 
@@ -258,15 +257,15 @@ static uint16_t FindUsefulPage(uint8_t flashOperation) {
     uint16_t pageStatus1 = GetPageHeader(PAGE1_ID);
 
     if (flashOperation == READ_FROM_VALID_PAGE) {
-        if (pageStatus0 == VALID_PAGE || pageStatus0 == FILLED_PAGE) {
+        if (pageStatus0 == VALID_PAGE) {
             return PAGE0_ID;
-        } else if (pageStatus1 == VALID_PAGE || pageStatus1 == FILLED_PAGE) {
+        } else if (pageStatus1 == VALID_PAGE) {
             return PAGE1_ID;
         } else {
             return NO_VALID_PAGE;
         }
     } else if (flashOperation == WRITE_IN_VALID_PAGE) {
-        // We dont want filled pages to be written
+        // TODO We dont want filled pages to be written
         if (pageStatus0 == VALID_PAGE) {
             return PAGE0_ID;
         } else if (pageStatus1 == VALID_PAGE) {

@@ -11,7 +11,6 @@
 #include "tasks.h"
 #include "uart_messages.h"
 
-// uint16_t msgSize = BUFFER_SIZE;
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
 LoRaMessage<MAX_PAYLOAD_LENGTH> loraPhyMessage;
@@ -114,7 +113,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
-    RegisterNewMeasurement(sequenceNumber, (uint8_t)-rssi, (uint8_t)snr);
+    RegisterNewMeasurement(sequenceNumber, rssi, snr);
 
     auto commandType = loraPhyMessage.get_command();
     if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {

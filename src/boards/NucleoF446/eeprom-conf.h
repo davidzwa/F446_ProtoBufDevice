@@ -56,8 +56,7 @@
 #define NO_VALID_PAGE         ((uint16_t)0x00AB)
 
 /* Page status definitions */
-#define ERASED_PAGE                ((uint16_t)0xFFFF)     /* Page is empty */
-#define FILLED_PAGE           ((uint16_t)0xEEEE)     // Page is filled with valuable data (avoid erase)
+#define ERASED_PAGE           ((uint16_t)0xFFFF)     /* Page is erased */
 #define VALID_PAGE            ((uint16_t)0x0000)     /* Page containing valid data */
 
 /* Valid pages in read and write defines */

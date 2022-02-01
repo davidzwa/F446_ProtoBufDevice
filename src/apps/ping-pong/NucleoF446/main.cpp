@@ -22,7 +22,7 @@
 #include "cli.h"
 #include "config.h"
 #include "delay.h"
-#include "measurements_nvmm.h"
+#include "measurements.h"
 #include "nvmm.h"
 #include "radio_phy.h"
 #include "tasks.h"
@@ -32,40 +32,24 @@ int main(void) {
     BoardInitMcu();
     BoardInitPeriph();
     InitCli(true);
+    InitializeMeasurements();
     UartSendBoot();
     InitRadioConfig();
     InitTimedTasks();
     InitRadioPhy();
 
-    // uint16_t status = NvmmWriteVar32(1, (uint32_t)0x1234);
-    // if (status != 0) {
-    //     throw 1;
-    // }
+    // This must be called remotely/over UART
+    // ClearStorage();
 
-    // uint32_t readData;
-    // uint16_t result = NvmmReadVar32(1, &readData);
-    // if (result != 0) {
-    //     throw 1;
-    // }
-    // if (readData != 0x1234) {
-    //     throw 3;
-    // }
-
-    ClearStorage();
-
-    uint32_t resultMeasurements = GetMeasurementCount();
-    if (resultMeasurements == CORRUPT_MEASUREMENT_COUNTERS) {
-        throw 3;
-    }
-    if (resultMeasurements != 0) {
-        throw 2;
-    }
     uint32_t result = AppendMeasurement(0x12345678);
-    uint32_t resultNewMeasurements = GetMeasurementCount();
+    uint32_t result2 = AppendMeasurement(0x00005678);
+    uint32_t result3 = AppendMeasurement(0x00005678);
+
+    uint32_t measurementCount = GetMeasurementCount();
     if (result != 0) {
         throw 1;
     }
-    if (resultNewMeasurements != 0x01) {
+    if (measurementCount != 0x01) {
         throw 4;
     }
 

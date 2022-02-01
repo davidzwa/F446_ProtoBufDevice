@@ -20,7 +20,7 @@ message LoraReceive
 {
     uint32 Size = 1;
     uint32 Rssi = 2;
-    uint32 Snr = 3;
+    int32 Snr = 3;
     uint32 SequenceNumber = 4;
     optional bool IsMeasurementFragment = 5;
     bool Success = 6;

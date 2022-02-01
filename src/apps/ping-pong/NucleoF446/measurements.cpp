@@ -6,22 +6,31 @@
 
 #define FIXED_LORA_FRAGMENT_BYTES 100
 LoRaMessage<FIXED_LORA_FRAGMENT_BYTES> loraBlobMessage;
-
 uint16_t lastSequenceNumberReceived = 0xFFFF;
-uint16_t currentMeasurementCount = 0;
-#define MAX_MEASUREMENT_NUM 100
-uint32_t measurements[MAX_MEASUREMENT_NUM];
+bool storageDirtyMeasurementDisabled = false;
 
-void RegisterNewMeasurement(uint16_t sequenceNumber, uint8_t rssiInv, uint8_t snr) {
-    if (currentMeasurementCount >= (MAX_MEASUREMENT_NUM - 1)) return;
+/**
+ * @brief Check if storage contains 
+ * 
+ */
+void InitializeMeasurements() {
+    storageDirtyMeasurementDisabled = (GetMeasurementCount() != 0x00);
+}
 
-    measurements[currentMeasurementCount] = (sequenceNumber << 2) || (rssiInv << 1) || snr;
-    currentMeasurementCount++;
+void RegisterNewMeasurement(uint16_t sequenceNumber, int16_t rssi, int8_t snr) {
+    if (storageDirtyMeasurementDisabled) return;
+    
+    // Compress the value in 32 bits 
+    // TODO
+
+    // Store it in flash
+    // AppendMeasurement(0x000);
+    // TODO
 }
 
 void ClearMeasurements() {
     lastSequenceNumberReceived = 0xFFFF;
-    currentMeasurementCount = 0;
+    ClearStorage();
 }
 
 /**
@@ -38,32 +47,32 @@ void RequestStreamMeasurements(/*DeviceId*/) {
 }
 
 void StreamMeasurements() {
-    uint16_t currentStreamFragment = 0;
-    const uint16_t requiredFragmentCount = 1 + floor((currentMeasurementCount * 4) / (FIXED_LORA_FRAGMENT_BYTES));
+    // uint16_t currentStreamFragment = 0;
+    // const uint16_t requiredFragmentCount = 1 + floor((currentMeasurementCount * 4) / (FIXED_LORA_FRAGMENT_BYTES));
 
-    while (currentStreamFragment < requiredFragmentCount) {
-        ProtoWriteBuffer writeEncapsulateBuffer;
-        auto offset = FIXED_LORA_FRAGMENT_BYTES * currentStreamFragment;
-        writeEncapsulateBuffer.push(offset + (uint8_t*)measurements, FIXED_LORA_FRAGMENT_BYTES);
-        loraBlobMessage.clear();
-        loraBlobMessage.set_SequenceNumber(currentStreamFragment);
-        auto result = loraBlobMessage.get_payload()
-                          .serialize(writeEncapsulateBuffer);
-        if (result == EmbeddedProto::Error::BUFFER_FULL) {
-            return;
-        }
+    // while (currentStreamFragment < requiredFragmentCount) {
+    //     ProtoWriteBuffer writeEncapsulateBuffer;
+    //     auto offset = FIXED_LORA_FRAGMENT_BYTES * currentStreamFragment;
+    //     writeEncapsulateBuffer.push(offset + (uint8_t*)measurements, FIXED_LORA_FRAGMENT_BYTES);
+    //     loraBlobMessage.clear();
+    //     loraBlobMessage.set_SequenceNumber(currentStreamFragment);
+    //     auto result = loraBlobMessage.get_payload()
+    //                       .serialize(writeEncapsulateBuffer);
+    //     if (result == EmbeddedProto::Error::BUFFER_FULL) {
+    //         return;
+    //     }
 
-        loraBlobMessage.set_command(::LoRaMessage<FIXED_LORA_FRAGMENT_BYTES>::CommandType::MeasurementStreamFragmentReply);
+    //     loraBlobMessage.set_command(::LoRaMessage<FIXED_LORA_FRAGMENT_BYTES>::CommandType::MeasurementStreamFragmentReply);
 
-        // Take over transmission from radio
-        auto radioWriteBuffer = GetWriteAccess();
-        loraBlobMessage.serialize(*radioWriteBuffer);
-        TransmitProtoBufferInternal();
+    //     // Take over transmission from radio
+    //     auto radioWriteBuffer = GetWriteAccess();
+    //     loraBlobMessage.serialize(*radioWriteBuffer);
+    //     TransmitProtoBufferInternal();
 
-        // Should wait long packet
-        DelayMs(200);
+    //     // Should wait long packet
+    //     DelayMs(200);
 
-        currentStreamFragment++;
-    }
-    ClearMeasurements();
+    //     currentStreamFragment++;
+    // }
+    // ClearMeasurements();
 }

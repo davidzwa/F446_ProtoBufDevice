@@ -25,3 +25,4 @@ cd ..
 mkdir .\tools\GatewayController\protobuf
 protoc -I.\proto --python_out=.\tools\GatewayController\protobuf .\proto\device_messages.proto .\proto\uart_messages.proto 
 protoc -I.\proto --csharp_out=.\tools\dotnet .\proto\device_messages.proto .\proto\uart_messages.proto 
+protoc -I.\proto --csharp_out=..\LoraGateway\Protobuf .\proto\device_messages.proto .\proto\uart_messages.proto 
