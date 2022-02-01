@@ -41,18 +41,6 @@ int main(void) {
     // This must be called remotely/over UART
     // ClearStorage();
 
-    uint32_t result = AppendMeasurement(0x12345678);
-    uint32_t result2 = AppendMeasurement(0x00005678);
-    uint32_t result3 = AppendMeasurement(0x00005678);
-
-    uint32_t measurementCount = GetMeasurementCount();
-    if (result != 0) {
-        throw 1;
-    }
-    if (measurementCount != 0x01) {
-        throw 4;
-    }
-
     Radio.Rx(0);
     while (1) {
         // Process Radio IRQ

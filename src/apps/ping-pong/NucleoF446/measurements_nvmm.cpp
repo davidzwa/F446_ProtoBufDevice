@@ -87,9 +87,9 @@ uint32_t GetMeasurementCount() {
     measurementCountState = 0;
     while (valueAtIndex < DATA_SECTOR_END) {
         uint16_t result = NvmmReadVar32(valueAtIndex, &target);
-        if (!result) break;
+        if (result) return 0xFFFF;
 
-        if (target == 0xFFFFFFF) break;
+        if (target == 0xFFFFFFFF) break;
 
         measurementCountState++;
         valueAtIndex++;
