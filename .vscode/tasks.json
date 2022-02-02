@@ -12,6 +12,17 @@
                 "command": "${cwd}\\tools\\flash.bat"
             }
         },
+                {
+            "label": "STLink Probe",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "${cwd}\\stlink_probe.bat"
+            }
+        }
         {
             "label": "Protoc",
             "type": "shell",

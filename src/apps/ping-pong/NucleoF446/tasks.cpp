@@ -12,6 +12,7 @@
 
 #define MAX_SEQUENCE_NUMBERS 5000
 #define DEFAULT_TX_PERIOD 1000
+// #define STANDALONE_TX_INFINITE 
 
 // Uart debugging
 static TimerEvent_t heartBeatTimer;
