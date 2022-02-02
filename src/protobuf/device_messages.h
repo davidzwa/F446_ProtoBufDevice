@@ -44,351 +44,15 @@
 #include <limits>
 
 // Include external proto definitions
+#include <shared/firmware.h>
 
-
-class Version final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    Version() = default;
-    Version(const Version& rhs )
-    {
-      set_Major(rhs.get_Major());
-      set_Minor(rhs.get_Minor());
-      set_Patch(rhs.get_Patch());
-      set_Revision(rhs.get_Revision());
-    }
-
-    Version(const Version&& rhs ) noexcept
-    {
-      set_Major(rhs.get_Major());
-      set_Minor(rhs.get_Minor());
-      set_Patch(rhs.get_Patch());
-      set_Revision(rhs.get_Revision());
-    }
-
-    ~Version() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      MAJOR = 1,
-      MINOR = 2,
-      PATCH = 3,
-      REVISION = 4
-    };
-
-    Version& operator=(const Version& rhs)
-    {
-      set_Major(rhs.get_Major());
-      set_Minor(rhs.get_Minor());
-      set_Patch(rhs.get_Patch());
-      set_Revision(rhs.get_Revision());
-      return *this;
-    }
-
-    Version& operator=(const Version&& rhs) noexcept
-    {
-      set_Major(rhs.get_Major());
-      set_Minor(rhs.get_Minor());
-      set_Patch(rhs.get_Patch());
-      set_Revision(rhs.get_Revision());
-      return *this;
-    }
-
-    inline void clear_Major() { Major_.clear(); }
-    inline void set_Major(const EmbeddedProto::uint32& value) { Major_ = value; }
-    inline void set_Major(const EmbeddedProto::uint32&& value) { Major_ = value; }
-    inline EmbeddedProto::uint32& mutable_Major() { return Major_; }
-    inline const EmbeddedProto::uint32& get_Major() const { return Major_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Major() const { return Major_.get(); }
-
-    inline void clear_Minor() { Minor_.clear(); }
-    inline void set_Minor(const EmbeddedProto::uint32& value) { Minor_ = value; }
-    inline void set_Minor(const EmbeddedProto::uint32&& value) { Minor_ = value; }
-    inline EmbeddedProto::uint32& mutable_Minor() { return Minor_; }
-    inline const EmbeddedProto::uint32& get_Minor() const { return Minor_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Minor() const { return Minor_.get(); }
-
-    inline void clear_Patch() { Patch_.clear(); }
-    inline void set_Patch(const EmbeddedProto::uint32& value) { Patch_ = value; }
-    inline void set_Patch(const EmbeddedProto::uint32&& value) { Patch_ = value; }
-    inline EmbeddedProto::uint32& mutable_Patch() { return Patch_; }
-    inline const EmbeddedProto::uint32& get_Patch() const { return Patch_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Patch() const { return Patch_.get(); }
-
-    inline void clear_Revision() { Revision_.clear(); }
-    inline void set_Revision(const EmbeddedProto::uint32& value) { Revision_ = value; }
-    inline void set_Revision(const EmbeddedProto::uint32&& value) { Revision_ = value; }
-    inline EmbeddedProto::uint32& mutable_Revision() { return Revision_; }
-    inline const EmbeddedProto::uint32& get_Revision() const { return Revision_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Revision() const { return Revision_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != Major_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Major_.serialize_with_id(static_cast<uint32_t>(id::MAJOR), buffer, false);
-      }
-
-      if((0U != Minor_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Minor_.serialize_with_id(static_cast<uint32_t>(id::MINOR), buffer, false);
-      }
-
-      if((0U != Patch_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Patch_.serialize_with_id(static_cast<uint32_t>(id::PATCH), buffer, false);
-      }
-
-      if((0U != Revision_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Revision_.serialize_with_id(static_cast<uint32_t>(id::REVISION), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::MAJOR:
-            return_value = Major_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::MINOR:
-            return_value = Minor_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::PATCH:
-            return_value = Patch_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::REVISION:
-            return_value = Revision_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_Major();
-      clear_Minor();
-      clear_Patch();
-      clear_Revision();
-
-    }
-
-    private:
-
-
-      EmbeddedProto::uint32 Major_ = 0U;
-      EmbeddedProto::uint32 Minor_ = 0U;
-      EmbeddedProto::uint32 Patch_ = 0U;
-      EmbeddedProto::uint32 Revision_ = 0U;
-
-};
-
-class DeviceId final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    DeviceId() = default;
-    DeviceId(const DeviceId& rhs )
-    {
-      set_Id0(rhs.get_Id0());
-      set_Id1(rhs.get_Id1());
-      set_Id2(rhs.get_Id2());
-    }
-
-    DeviceId(const DeviceId&& rhs ) noexcept
-    {
-      set_Id0(rhs.get_Id0());
-      set_Id1(rhs.get_Id1());
-      set_Id2(rhs.get_Id2());
-    }
-
-    ~DeviceId() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      ID0 = 1,
-      ID1 = 2,
-      ID2 = 3
-    };
-
-    DeviceId& operator=(const DeviceId& rhs)
-    {
-      set_Id0(rhs.get_Id0());
-      set_Id1(rhs.get_Id1());
-      set_Id2(rhs.get_Id2());
-      return *this;
-    }
-
-    DeviceId& operator=(const DeviceId&& rhs) noexcept
-    {
-      set_Id0(rhs.get_Id0());
-      set_Id1(rhs.get_Id1());
-      set_Id2(rhs.get_Id2());
-      return *this;
-    }
-
-    inline void clear_Id0() { Id0_.clear(); }
-    inline void set_Id0(const EmbeddedProto::uint32& value) { Id0_ = value; }
-    inline void set_Id0(const EmbeddedProto::uint32&& value) { Id0_ = value; }
-    inline EmbeddedProto::uint32& mutable_Id0() { return Id0_; }
-    inline const EmbeddedProto::uint32& get_Id0() const { return Id0_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Id0() const { return Id0_.get(); }
-
-    inline void clear_Id1() { Id1_.clear(); }
-    inline void set_Id1(const EmbeddedProto::uint32& value) { Id1_ = value; }
-    inline void set_Id1(const EmbeddedProto::uint32&& value) { Id1_ = value; }
-    inline EmbeddedProto::uint32& mutable_Id1() { return Id1_; }
-    inline const EmbeddedProto::uint32& get_Id1() const { return Id1_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Id1() const { return Id1_.get(); }
-
-    inline void clear_Id2() { Id2_.clear(); }
-    inline void set_Id2(const EmbeddedProto::uint32& value) { Id2_ = value; }
-    inline void set_Id2(const EmbeddedProto::uint32&& value) { Id2_ = value; }
-    inline EmbeddedProto::uint32& mutable_Id2() { return Id2_; }
-    inline const EmbeddedProto::uint32& get_Id2() const { return Id2_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Id2() const { return Id2_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != Id0_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Id0_.serialize_with_id(static_cast<uint32_t>(id::ID0), buffer, false);
-      }
-
-      if((0U != Id1_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Id1_.serialize_with_id(static_cast<uint32_t>(id::ID1), buffer, false);
-      }
-
-      if((0U != Id2_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Id2_.serialize_with_id(static_cast<uint32_t>(id::ID2), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::ID0:
-            return_value = Id0_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::ID1:
-            return_value = Id1_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::ID2:
-            return_value = Id2_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_Id0();
-      clear_Id1();
-      clear_Id2();
-
-    }
-
-    private:
-
-
-      EmbeddedProto::uint32 Id0_ = 0U;
-      EmbeddedProto::uint32 Id1_ = 0U;
-      EmbeddedProto::uint32 Id2_ = 0U;
-
-};
 
 template<uint32_t Payload_LENGTH>
-class LoraReceive final: public ::EmbeddedProto::MessageInterface
+class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    LoraReceive() = default;
-    LoraReceive(const LoraReceive& rhs )
+    LoraMeasurement() = default;
+    LoraMeasurement(const LoraMeasurement& rhs )
     {
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
@@ -399,7 +63,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Payload(rhs.get_Payload());
     }
 
-    LoraReceive(const LoraReceive&& rhs ) noexcept
+    LoraMeasurement(const LoraMeasurement&& rhs ) noexcept
     {
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
@@ -410,7 +74,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       set_Payload(rhs.get_Payload());
     }
 
-    ~LoraReceive() override = default;
+    ~LoraMeasurement() override = default;
 
     enum class id : uint32_t
     {
@@ -424,7 +88,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       PAYLOAD = 7
     };
 
-    LoraReceive& operator=(const LoraReceive& rhs)
+    LoraMeasurement& operator=(const LoraMeasurement& rhs)
     {
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
@@ -436,7 +100,7 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       return *this;
     }
 
-    LoraReceive& operator=(const LoraReceive&& rhs) noexcept
+    LoraMeasurement& operator=(const LoraMeasurement&& rhs) noexcept
     {
       set_Size(rhs.get_Size());
       set_Rssi(rhs.get_Rssi());
@@ -896,12 +560,12 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
     AckMessage() = default;
     AckMessage(const AckMessage& rhs )
     {
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Code(rhs.get_Code());
     }
 
     AckMessage(const AckMessage&& rhs ) noexcept
     {
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Code(rhs.get_Code());
     }
 
     ~AckMessage() override = default;
@@ -909,36 +573,36 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      SEQUENCENUMBER = 1
+      CODE = 1
     };
 
     AckMessage& operator=(const AckMessage& rhs)
     {
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Code(rhs.get_Code());
       return *this;
     }
 
     AckMessage& operator=(const AckMessage&& rhs) noexcept
     {
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_Code(rhs.get_Code());
       return *this;
     }
 
-    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
-    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
+    inline void clear_Code() { Code_.clear(); }
+    inline void set_Code(const EmbeddedProto::uint32& value) { Code_ = value; }
+    inline void set_Code(const EmbeddedProto::uint32&& value) { Code_ = value; }
+    inline EmbeddedProto::uint32& mutable_Code() { return Code_; }
+    inline const EmbeddedProto::uint32& get_Code() const { return Code_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Code() const { return Code_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != Code_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
+        return_value = Code_.serialize_with_id(static_cast<uint32_t>(id::CODE), buffer, false);
       }
 
       return return_value;
@@ -957,8 +621,8 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::SEQUENCENUMBER:
-            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
+          case id::CODE:
+            return_value = Code_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -990,14 +654,14 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_SequenceNumber();
+      clear_Code();
 
     }
 
     private:
 
 
-      EmbeddedProto::uint32 SequenceNumber_ = 0U;
+      EmbeddedProto::uint32 Code_ = 0U;
 
 };
 
@@ -1113,7 +777,7 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
 };
 
 template<uint32_t bootMessage_AppName_LENGTH, 
-uint32_t loraReceiveMessage_Payload_LENGTH, 
+uint32_t loraMeasurement_Payload_LENGTH, 
 uint32_t debugMessage_payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
@@ -1137,8 +801,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORARECEIVEMESSAGE:
-          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
+        case id::LORAMEASUREMENT:
+          set_loraMeasurement(rhs.get_loraMeasurement());
           break;
 
         case id::DEBUGMESSAGE:
@@ -1169,8 +833,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORARECEIVEMESSAGE:
-          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
+        case id::LORAMEASUREMENT:
+          set_loraMeasurement(rhs.get_loraMeasurement());
           break;
 
         case id::DEBUGMESSAGE:
@@ -1190,7 +854,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       BOOTMESSAGE = 1,
       ACKMESSAGE = 2,
-      LORARECEIVEMESSAGE = 3,
+      LORAMEASUREMENT = 3,
       DEBUGMESSAGE = 4
     };
 
@@ -1212,8 +876,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORARECEIVEMESSAGE:
-          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
+        case id::LORAMEASUREMENT:
+          set_loraMeasurement(rhs.get_loraMeasurement());
           break;
 
         case id::DEBUGMESSAGE:
@@ -1245,8 +909,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_ackMessage(rhs.get_ackMessage());
           break;
 
-        case id::LORARECEIVEMESSAGE:
-          set_loraReceiveMessage(rhs.get_loraReceiveMessage());
+        case id::LORAMEASUREMENT:
+          set_loraMeasurement(rhs.get_loraMeasurement());
           break;
 
         case id::DEBUGMESSAGE:
@@ -1340,44 +1004,44 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline const AckMessage& get_ackMessage() const { return Body_.ackMessage_; }
     inline const AckMessage& ackMessage() const { return Body_.ackMessage_; }
 
-    inline bool has_loraReceiveMessage() const
+    inline bool has_loraMeasurement() const
     {
-      return id::LORARECEIVEMESSAGE == which_Body_;
+      return id::LORAMEASUREMENT == which_Body_;
     }
-    inline void clear_loraReceiveMessage()
+    inline void clear_loraMeasurement()
     {
-      if(id::LORARECEIVEMESSAGE == which_Body_)
+      if(id::LORAMEASUREMENT == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.loraReceiveMessage_.~LoraReceive<loraReceiveMessage_Payload_LENGTH>();
+        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_LENGTH>();
       }
     }
-    inline void set_loraReceiveMessage(const LoraReceive<loraReceiveMessage_Payload_LENGTH>& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_LENGTH>& value)
     {
-      if(id::LORARECEIVEMESSAGE != which_Body_)
+      if(id::LORAMEASUREMENT != which_Body_)
       {
-        init_Body(id::LORARECEIVEMESSAGE);
+        init_Body(id::LORAMEASUREMENT);
       }
-      Body_.loraReceiveMessage_ = value;
+      Body_.loraMeasurement_ = value;
     }
-    inline void set_loraReceiveMessage(const LoraReceive<loraReceiveMessage_Payload_LENGTH>&& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_LENGTH>&& value)
     {
-      if(id::LORARECEIVEMESSAGE != which_Body_)
+      if(id::LORAMEASUREMENT != which_Body_)
       {
-        init_Body(id::LORARECEIVEMESSAGE);
+        init_Body(id::LORAMEASUREMENT);
       }
-      Body_.loraReceiveMessage_ = value;
+      Body_.loraMeasurement_ = value;
     }
-    inline LoraReceive<loraReceiveMessage_Payload_LENGTH>& mutable_loraReceiveMessage()
+    inline LoraMeasurement<loraMeasurement_Payload_LENGTH>& mutable_loraMeasurement()
     {
-      if(id::LORARECEIVEMESSAGE != which_Body_)
+      if(id::LORAMEASUREMENT != which_Body_)
       {
-        init_Body(id::LORARECEIVEMESSAGE);
+        init_Body(id::LORAMEASUREMENT);
       }
-      return Body_.loraReceiveMessage_;
+      return Body_.loraMeasurement_;
     }
-    inline const LoraReceive<loraReceiveMessage_Payload_LENGTH>& get_loraReceiveMessage() const { return Body_.loraReceiveMessage_; }
-    inline const LoraReceive<loraReceiveMessage_Payload_LENGTH>& loraReceiveMessage() const { return Body_.loraReceiveMessage_; }
+    inline const LoraMeasurement<loraMeasurement_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
 
     inline bool has_debugMessage() const
     {
@@ -1439,10 +1103,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case id::LORARECEIVEMESSAGE:
-          if(has_loraReceiveMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case id::LORAMEASUREMENT:
+          if(has_loraMeasurement() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.loraReceiveMessage_.serialize_with_id(static_cast<uint32_t>(id::LORARECEIVEMESSAGE), buffer, true);
+            return_value = Body_.loraMeasurement_.serialize_with_id(static_cast<uint32_t>(id::LORAMEASUREMENT), buffer, true);
           }
           break;
 
@@ -1483,8 +1147,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
             break;
 
-          case id::LORARECEIVEMESSAGE:
-            return_value = deserialize_Body(id::LORARECEIVEMESSAGE, Body_.loraReceiveMessage_, buffer, wire_type);
+          case id::LORAMEASUREMENT:
+            return_value = deserialize_Body(id::LORAMEASUREMENT, Body_.loraMeasurement_, buffer, wire_type);
 
             break;
 
@@ -1537,7 +1201,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
         AckMessage ackMessage_;
-        LoraReceive<loraReceiveMessage_Payload_LENGTH> loraReceiveMessage_;
+        LoraMeasurement<loraMeasurement_Payload_LENGTH> loraMeasurement_;
         DebugMessage<debugMessage_payload_LENGTH> debugMessage_;
       };
       Body Body_;
@@ -1563,9 +1227,9 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::ACKMESSAGE;
             break;
 
-          case id::LORARECEIVEMESSAGE:
-            new(&Body_.loraReceiveMessage_) LoraReceive<loraReceiveMessage_Payload_LENGTH>;
-            which_Body_ = id::LORARECEIVEMESSAGE;
+          case id::LORAMEASUREMENT:
+            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_Payload_LENGTH>;
+            which_Body_ = id::LORAMEASUREMENT;
             break;
 
           case id::DEBUGMESSAGE:
@@ -1590,795 +1254,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           case id::ACKMESSAGE:
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
             break;
-          case id::LORARECEIVEMESSAGE:
-            Body_.loraReceiveMessage_.~LoraReceive<loraReceiveMessage_Payload_LENGTH>(); // NOSONAR Unions require this.
+          case id::LORAMEASUREMENT:
+            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::DEBUGMESSAGE:
             Body_.debugMessage_.~DebugMessage<debugMessage_payload_LENGTH>(); // NOSONAR Unions require this.
-            break;
-          default:
-            break;
-        }
-        which_Body_ = id::NOT_SET;
-      }
-
-      ::EmbeddedProto::Error deserialize_Body(const id field_id, ::EmbeddedProto::Field& field,
-                                    ::EmbeddedProto::ReadBufferInterface& buffer,
-                                    const ::EmbeddedProto::WireFormatter::WireType wire_type)
-      {
-        if(field_id != which_Body_)
-        {
-          init_Body(field_id);
-        }
-        ::EmbeddedProto::Error return_value = field.deserialize_check_type(buffer, wire_type);
-        if(::EmbeddedProto::Error::NO_ERRORS != return_value)
-        {
-          clear_Body();
-        }
-        return return_value;
-      }
-
-};
-
-class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    SpreadingFactorConfig() = default;
-    SpreadingFactorConfig(const SpreadingFactorConfig& rhs )
-    {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
-    }
-
-    SpreadingFactorConfig(const SpreadingFactorConfig&& rhs ) noexcept
-    {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
-    }
-
-    ~SpreadingFactorConfig() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      SPREADINGFACTORRX = 1,
-      SPREADINGFACTORTX = 2
-    };
-
-    SpreadingFactorConfig& operator=(const SpreadingFactorConfig& rhs)
-    {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
-      return *this;
-    }
-
-    SpreadingFactorConfig& operator=(const SpreadingFactorConfig&& rhs) noexcept
-    {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
-      return *this;
-    }
-
-    inline void clear_spreadingFactorRx() { spreadingFactorRx_.clear(); }
-    inline void set_spreadingFactorRx(const EmbeddedProto::uint32& value) { spreadingFactorRx_ = value; }
-    inline void set_spreadingFactorRx(const EmbeddedProto::uint32&& value) { spreadingFactorRx_ = value; }
-    inline EmbeddedProto::uint32& mutable_spreadingFactorRx() { return spreadingFactorRx_; }
-    inline const EmbeddedProto::uint32& get_spreadingFactorRx() const { return spreadingFactorRx_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactorRx() const { return spreadingFactorRx_.get(); }
-
-    inline void clear_spreadingFactorTx() { spreadingFactorTx_.clear(); }
-    inline void set_spreadingFactorTx(const EmbeddedProto::uint32& value) { spreadingFactorTx_ = value; }
-    inline void set_spreadingFactorTx(const EmbeddedProto::uint32&& value) { spreadingFactorTx_ = value; }
-    inline EmbeddedProto::uint32& mutable_spreadingFactorTx() { return spreadingFactorTx_; }
-    inline const EmbeddedProto::uint32& get_spreadingFactorTx() const { return spreadingFactorTx_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactorTx() const { return spreadingFactorTx_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != spreadingFactorRx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = spreadingFactorRx_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORRX), buffer, false);
-      }
-
-      if((0U != spreadingFactorTx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = spreadingFactorTx_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORTX), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::SPREADINGFACTORRX:
-            return_value = spreadingFactorRx_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::SPREADINGFACTORTX:
-            return_value = spreadingFactorTx_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_spreadingFactorRx();
-      clear_spreadingFactorTx();
-
-    }
-
-    private:
-
-
-      EmbeddedProto::uint32 spreadingFactorRx_ = 0U;
-      EmbeddedProto::uint32 spreadingFactorTx_ = 0U;
-
-};
-
-class SequenceRequestConfig final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    SequenceRequestConfig() = default;
-    SequenceRequestConfig(const SequenceRequestConfig& rhs )
-    {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
-    }
-
-    SequenceRequestConfig(const SequenceRequestConfig&& rhs ) noexcept
-    {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
-    }
-
-    ~SequenceRequestConfig() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      MESSAGECOUNT = 1,
-      INTERVAL = 2,
-      DEVICEID = 3
-    };
-
-    SequenceRequestConfig& operator=(const SequenceRequestConfig& rhs)
-    {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
-      return *this;
-    }
-
-    SequenceRequestConfig& operator=(const SequenceRequestConfig&& rhs) noexcept
-    {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
-      return *this;
-    }
-
-    inline void clear_MessageCount() { MessageCount_.clear(); }
-    inline void set_MessageCount(const EmbeddedProto::uint32& value) { MessageCount_ = value; }
-    inline void set_MessageCount(const EmbeddedProto::uint32&& value) { MessageCount_ = value; }
-    inline EmbeddedProto::uint32& mutable_MessageCount() { return MessageCount_; }
-    inline const EmbeddedProto::uint32& get_MessageCount() const { return MessageCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MessageCount() const { return MessageCount_.get(); }
-
-    inline void clear_Interval() { Interval_.clear(); }
-    inline void set_Interval(const EmbeddedProto::uint32& value) { Interval_ = value; }
-    inline void set_Interval(const EmbeddedProto::uint32&& value) { Interval_ = value; }
-    inline EmbeddedProto::uint32& mutable_Interval() { return Interval_; }
-    inline const EmbeddedProto::uint32& get_Interval() const { return Interval_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Interval() const { return Interval_.get(); }
-
-    inline void clear_DeviceId() { DeviceId_.clear(); }
-    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
-    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
-    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
-    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != MessageCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MessageCount_.serialize_with_id(static_cast<uint32_t>(id::MESSAGECOUNT), buffer, false);
-      }
-
-      if((0U != Interval_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Interval_.serialize_with_id(static_cast<uint32_t>(id::INTERVAL), buffer, false);
-      }
-
-      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::MESSAGECOUNT:
-            return_value = MessageCount_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::INTERVAL:
-            return_value = Interval_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::DEVICEID:
-            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_MessageCount();
-      clear_Interval();
-      clear_DeviceId();
-
-    }
-
-    private:
-
-
-      EmbeddedProto::uint32 MessageCount_ = 0U;
-      EmbeddedProto::uint32 Interval_ = 0U;
-      EmbeddedProto::uint32 DeviceId_ = 0U;
-
-};
-
-template<uint32_t payload_LENGTH>
-class LoRaMessage final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    LoRaMessage() = default;
-    LoRaMessage(const LoRaMessage& rhs )
-    {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      if(rhs.get_which_Body() != which_Body_)
-      {
-        // First delete the old object in the oneof.
-        clear_Body();
-      }
-
-      switch(rhs.get_which_Body())
-      {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
-          break;
-
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
-          break;
-
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
-          break;
-
-        default:
-          break;
-      }
-
-    }
-
-    LoRaMessage(const LoRaMessage&& rhs ) noexcept
-    {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      if(rhs.get_which_Body() != which_Body_)
-      {
-        // First delete the old object in the oneof.
-        clear_Body();
-      }
-
-      switch(rhs.get_which_Body())
-      {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
-          break;
-
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
-          break;
-
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
-          break;
-
-        default:
-          break;
-      }
-
-    }
-
-    ~LoRaMessage() override = default;
-
-    enum class CommandType : uint32_t
-    {
-      Configuration = 0,
-      MultiCast = 1,
-      MultiCastAck = 2,
-      UniCast = 3,
-      UniCastAck = 4,
-      MeasurementStreamRequest = 5,
-      MeasurementStreamFragmentReply = 6,
-      SequenceRequest = 7,
-      SequenceResponse = 8
-    };
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      COMMAND = 1,
-      SEQUENCENUMBER = 2,
-      SPREADINGFACTORCONFIG = 3,
-      SEQUENCEREQUESTCONFIG = 4,
-      PAYLOAD = 5
-    };
-
-    LoRaMessage& operator=(const LoRaMessage& rhs)
-    {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      if(rhs.get_which_Body() != which_Body_)
-      {
-        // First delete the old object in the oneof.
-        clear_Body();
-      }
-
-      switch(rhs.get_which_Body())
-      {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
-          break;
-
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
-          break;
-
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
-          break;
-
-        default:
-          break;
-      }
-
-      return *this;
-    }
-
-    LoRaMessage& operator=(const LoRaMessage&& rhs) noexcept
-    {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      if(rhs.get_which_Body() != which_Body_)
-      {
-        // First delete the old object in the oneof.
-        clear_Body();
-      }
-
-      switch(rhs.get_which_Body())
-      {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
-          break;
-
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
-          break;
-
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
-          break;
-
-        default:
-          break;
-      }
-
-      return *this;
-    }
-
-    inline void clear_command() { command_ = static_cast<CommandType>(0); }
-    inline void set_command(const CommandType& value) { command_ = value; }
-    inline void set_command(const CommandType&& value) { command_ = value; }
-    inline const CommandType& get_command() const { return command_; }
-    inline CommandType command() const { return command_; }
-
-    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
-    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
-
-    id get_which_Body() const { return which_Body_; }
-
-    inline bool has_spreadingFactorConfig() const
-    {
-      return id::SPREADINGFACTORCONFIG == which_Body_;
-    }
-    inline void clear_spreadingFactorConfig()
-    {
-      if(id::SPREADINGFACTORCONFIG == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.spreadingFactorConfig_.~SpreadingFactorConfig();
-      }
-    }
-    inline void set_spreadingFactorConfig(const SpreadingFactorConfig& value)
-    {
-      if(id::SPREADINGFACTORCONFIG != which_Body_)
-      {
-        init_Body(id::SPREADINGFACTORCONFIG);
-      }
-      Body_.spreadingFactorConfig_ = value;
-    }
-    inline void set_spreadingFactorConfig(const SpreadingFactorConfig&& value)
-    {
-      if(id::SPREADINGFACTORCONFIG != which_Body_)
-      {
-        init_Body(id::SPREADINGFACTORCONFIG);
-      }
-      Body_.spreadingFactorConfig_ = value;
-    }
-    inline SpreadingFactorConfig& mutable_spreadingFactorConfig()
-    {
-      if(id::SPREADINGFACTORCONFIG != which_Body_)
-      {
-        init_Body(id::SPREADINGFACTORCONFIG);
-      }
-      return Body_.spreadingFactorConfig_;
-    }
-    inline const SpreadingFactorConfig& get_spreadingFactorConfig() const { return Body_.spreadingFactorConfig_; }
-    inline const SpreadingFactorConfig& spreadingFactorConfig() const { return Body_.spreadingFactorConfig_; }
-
-    inline bool has_sequenceRequestConfig() const
-    {
-      return id::SEQUENCEREQUESTCONFIG == which_Body_;
-    }
-    inline void clear_sequenceRequestConfig()
-    {
-      if(id::SEQUENCEREQUESTCONFIG == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.sequenceRequestConfig_.~SequenceRequestConfig();
-      }
-    }
-    inline void set_sequenceRequestConfig(const SequenceRequestConfig& value)
-    {
-      if(id::SEQUENCEREQUESTCONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCEREQUESTCONFIG);
-      }
-      Body_.sequenceRequestConfig_ = value;
-    }
-    inline void set_sequenceRequestConfig(const SequenceRequestConfig&& value)
-    {
-      if(id::SEQUENCEREQUESTCONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCEREQUESTCONFIG);
-      }
-      Body_.sequenceRequestConfig_ = value;
-    }
-    inline SequenceRequestConfig& mutable_sequenceRequestConfig()
-    {
-      if(id::SEQUENCEREQUESTCONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCEREQUESTCONFIG);
-      }
-      return Body_.sequenceRequestConfig_;
-    }
-    inline const SequenceRequestConfig& get_sequenceRequestConfig() const { return Body_.sequenceRequestConfig_; }
-    inline const SequenceRequestConfig& sequenceRequestConfig() const { return Body_.sequenceRequestConfig_; }
-
-    inline bool has_payload() const
-    {
-      return id::PAYLOAD == which_Body_;
-    }
-    inline void clear_payload()
-    {
-      if(id::PAYLOAD == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.payload_.~FieldBytes();
-      }
-    }
-    inline ::EmbeddedProto::FieldBytes<payload_LENGTH>& mutable_payload()
-    {
-      if(id::PAYLOAD != which_Body_)
-      {
-        init_Body(id::PAYLOAD);
-      }
-      return Body_.payload_;
-    }
-    inline void set_payload(const ::EmbeddedProto::FieldBytes<payload_LENGTH>& rhs)
-    {
-      if(id::PAYLOAD != which_Body_)
-      {
-        init_Body(id::PAYLOAD);
-      }
-      Body_.payload_.set(rhs);
-    }
-    inline const ::EmbeddedProto::FieldBytes<payload_LENGTH>& get_payload() const { return Body_.payload_; }
-    inline const uint8_t* payload() const { return Body_.payload_.get_const(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((static_cast<CommandType>(0) != command_) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        EmbeddedProto::uint32 value = 0;
-        value.set(static_cast<uint32_t>(command_));
-        return_value = value.serialize_with_id(static_cast<uint32_t>(id::COMMAND), buffer, false);
-      }
-
-      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
-      }
-
-      switch(which_Body_)
-      {
-        case id::SPREADINGFACTORCONFIG:
-          if(has_spreadingFactorConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = Body_.spreadingFactorConfig_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORCONFIG), buffer, true);
-          }
-          break;
-
-        case id::SEQUENCEREQUESTCONFIG:
-          if(has_sequenceRequestConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = Body_.sequenceRequestConfig_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCEREQUESTCONFIG), buffer, true);
-          }
-          break;
-
-        case id::PAYLOAD:
-          if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-          {
-            return_value = Body_.payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, true);
-          }
-          break;
-
-        default:
-          break;
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::COMMAND:
-            if(::EmbeddedProto::WireFormatter::WireType::VARINT == wire_type)
-            {
-              uint32_t value = 0;
-              return_value = ::EmbeddedProto::WireFormatter::DeserializeVarint(buffer, value);
-              if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-              {
-                set_command(static_cast<CommandType>(value));
-              }
-            }
-            else
-            {
-              // Wire type does not match field.
-              return_value = ::EmbeddedProto::Error::INVALID_WIRETYPE;
-            }
-            break;
-
-          case id::SEQUENCENUMBER:
-            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::SPREADINGFACTORCONFIG:
-            return_value = deserialize_Body(id::SPREADINGFACTORCONFIG, Body_.spreadingFactorConfig_, buffer, wire_type);
-
-            break;
-
-          case id::SEQUENCEREQUESTCONFIG:
-            return_value = deserialize_Body(id::SEQUENCEREQUESTCONFIG, Body_.sequenceRequestConfig_, buffer, wire_type);
-
-            break;
-
-          case id::PAYLOAD:
-            return_value = deserialize_Body(id::PAYLOAD, Body_.payload_, buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_command();
-      clear_SequenceNumber();
-      clear_Body();
-
-    }
-
-    private:
-
-
-      CommandType command_ = static_cast<CommandType>(0);
-      EmbeddedProto::uint32 SequenceNumber_ = 0U;
-
-      id which_Body_ = id::NOT_SET;
-      union Body
-      {
-        Body() {}
-        ~Body() {}
-        SpreadingFactorConfig spreadingFactorConfig_;
-        SequenceRequestConfig sequenceRequestConfig_;
-        ::EmbeddedProto::FieldBytes<payload_LENGTH> payload_;
-      };
-      Body Body_;
-
-      void init_Body(const id field_id)
-      {
-        if(id::NOT_SET != which_Body_)
-        {
-          // First delete the old object in the oneof.
-          clear_Body();
-        }
-
-        // C++11 unions only support nontrivial members when you explicitly call the placement new statement.
-        switch(field_id)
-        {
-          case id::SPREADINGFACTORCONFIG:
-            new(&Body_.spreadingFactorConfig_) SpreadingFactorConfig;
-            which_Body_ = id::SPREADINGFACTORCONFIG;
-            break;
-
-          case id::SEQUENCEREQUESTCONFIG:
-            new(&Body_.sequenceRequestConfig_) SequenceRequestConfig;
-            which_Body_ = id::SEQUENCEREQUESTCONFIG;
-            break;
-
-          case id::PAYLOAD:
-            new(&Body_.payload_) ::EmbeddedProto::FieldBytes<payload_LENGTH>;
-            which_Body_ = id::PAYLOAD;
-            break;
-
-          default:
-            break;
-         }
-
-         which_Body_ = field_id;
-      }
-
-      void clear_Body()
-      {
-        switch(which_Body_)
-        {
-          case id::SPREADINGFACTORCONFIG:
-            Body_.spreadingFactorConfig_.~SpreadingFactorConfig(); // NOSONAR Unions require this.
-            break;
-          case id::SEQUENCEREQUESTCONFIG:
-            Body_.sequenceRequestConfig_.~SequenceRequestConfig(); // NOSONAR Unions require this.
-            break;
-          case id::PAYLOAD:
-            Body_.payload_.~FieldBytes(); // NOSONAR Unions require this.
             break;
           default:
             break;

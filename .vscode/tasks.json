@@ -54,7 +54,7 @@
                 "cwd": "${workspaceFolder}"
             },
             "windows": {
-                "command": "${cwd}\\generate_source_files.bat"
+                "command": "${cwd}\\tools\\generate_source_files.ps1"
             }
         }
     ]

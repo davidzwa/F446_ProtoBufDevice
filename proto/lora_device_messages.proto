@@ -1,0 +1,17 @@
+// This file listes the protobuffer messages used to communicate between equipotent devices over LoRa
+
+syntax = "proto3";
+
+import "shared/experiment_config.proto";
+
+option csharp_namespace = "LoRa";
+
+message LoRaMessage {
+    CommandType command = 1;
+    uint32 SequenceNumber = 2;
+    oneof Body {
+        SpreadingFactorConfig spreadingFactorConfig = 3;
+        SequenceRequestConfig sequenceRequestConfig = 4;
+        bytes payload = 5;
+    }
+}
