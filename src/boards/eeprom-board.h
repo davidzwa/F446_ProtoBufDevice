@@ -31,6 +31,10 @@ extern "C"
 #include <stdint.h>
 #include "utilities.h"
 
+uint16_t EepromMcuInit(void);
+
+uint16_t ClearAllPages();
+
 /*!
  * Writes the given buffer to the EEPROM at the specified address.
  *
@@ -39,7 +43,8 @@ extern "C"
  * \param[IN] size Size of the buffer to be written.
  * \retval status [LMN_STATUS_OK, LMN_STATUS_ERROR]
  */
-LmnStatus_t EepromMcuWriteBuffer( uint16_t addr, uint8_t *buffer, uint16_t size );
+// LmnStatus_t EepromMcuWriteBuffer(uint16_t addr, uint8_t *buffer, uint16_t size);
+LmnStatus_t EepromMcuWriteVariable32(uint16_t addr, uint32_t value);
 
 /*!
  * Reads the EEPROM at the specified address to the given buffer.
@@ -49,25 +54,27 @@ LmnStatus_t EepromMcuWriteBuffer( uint16_t addr, uint8_t *buffer, uint16_t size 
  * \param[IN] size Size of the buffer to be read.
  * \retval status [LMN_STATUS_OK, LMN_STATUS_ERROR]
  */
-LmnStatus_t EepromMcuReadBuffer( uint16_t addr, uint8_t *buffer, uint16_t size );
+// LmnStatus_t EepromMcuReadBuffer( uint16_t addr, uint8_t *buffer, uint16_t size );
+LmnStatus_t EepromMcuReadVariable32(uint16_t addr, uint32_t* value);
 
-/*!
- * Sets the device address.
- *
- * \remark Useful for I2C external EEPROMS
- *
- * \param[IN] addr External EEPROM address
- */
-void EepromMcuSetDeviceAddr( uint8_t addr );
+// /*!
+//  * Sets the device address.
+//  *
+//  * \remark Useful for I2C external EEPROMS
+//  *
+//  * \param[IN] addr External EEPROM address
+//  */
+// void EepromMcuSetDeviceAddr( uint8_t addr );
 
-/*!
- * Gets the current device address.
- *
- * \remark Useful for I2C external EEPROMS
- *
- * \retval addr External EEPROM address
- */
-LmnStatus_t EepromMcuGetDeviceAddr( void );
+// /*!
+//  * Gets the current device address.
+//  *
+//  * \remark Useful for I2C external EEPROMS
+//  *
+//  * \retval addr External EEPROM address
+//  */
+// LmnStatus_t EepromMcuGetDeviceAddr( void );
+
 
 #ifdef __cplusplus
 }

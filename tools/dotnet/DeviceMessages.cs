@@ -26,38 +26,39 @@ public static partial class DeviceMessagesReflection {
           "IAEoDRINCgVNaW5vchgCIAEoDRINCgVQYXRjaBgDIAEoDRIQCghSZXZpc2lv",
           "bhgEIAEoDSIxCghEZXZpY2VJZBILCgNJZDAYASABKA0SCwoDSWQxGAIgASgN",
           "EgsKA0lkMhgDIAEoDSKuAQoLTG9yYVJlY2VpdmUSDAoEU2l6ZRgBIAEoDRIM",
-          "CgRSc3NpGAIgASgNEgsKA1NuchgDIAEoDRIWCg5TZXF1ZW5jZU51bWJlchgE",
+          "CgRSc3NpGAIgASgFEgsKA1NuchgDIAEoBRIWCg5TZXF1ZW5jZU51bWJlchgE",
           "IAEoDRIiChVJc01lYXN1cmVtZW50RnJhZ21lbnQYBSABKAhIAIgBARIPCgdT",
           "dWNjZXNzGAYgASgIEg8KB1BheWxvYWQYByABKAxCGAoWX0lzTWVhc3VyZW1l",
-          "bnRGcmFnbWVudCJmCgtCb290TWVzc2FnZRIjChBEZXZpY2VJZGVudGlmaWVy",
-          "GAEgASgLMgkuRGV2aWNlSWQSIQoPRmlybXdhcmVWZXJzaW9uGAIgASgLMggu",
-          "VmVyc2lvbhIPCgdBcHBOYW1lGAMgASgJIiQKCkFja01lc3NhZ2USFgoOU2Vx",
-          "dWVuY2VOdW1iZXIYASABKA0iHwoMRGVidWdNZXNzYWdlEg8KB3BheWxvYWQY",
-          "ASABKAwisQEKDFVhcnRSZXNwb25zZRIjCgtib290TWVzc2FnZRgBIAEoCzIM",
-          "LkJvb3RNZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgCIAEoCzILLkFja01lc3Nh",
-          "Z2VIABIqChJsb3JhUmVjZWl2ZU1lc3NhZ2UYAyABKAsyDC5Mb3JhUmVjZWl2",
-          "ZUgAEiUKDGRlYnVnTWVzc2FnZRgEIAEoCzINLkRlYnVnTWVzc2FnZUgAQgYK",
-          "BEJvZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29uZmlnEhkKEXNwcmVhZGluZ0Zh",
-          "Y3RvclJ4GAEgASgNEhkKEXNwcmVhZGluZ0ZhY3RvclR4GAIgASgNIlEKFVNl",
-          "cXVlbmNlUmVxdWVzdENvbmZpZxIUCgxNZXNzYWdlQ291bnQYASABKA0SEAoI",
-          "SW50ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQYAyABKA0iqwMKC0xvUmFNZXNz",
-          "YWdlEikKB2NvbW1hbmQYASABKA4yGC5Mb1JhTWVzc2FnZS5Db21tYW5kVHlw",
-          "ZRIWCg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3ChVzcHJlYWRpbmdGYWN0b3JD",
-          "b25maWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0b3JDb25maWdIABI3ChVzZXF1",
-          "ZW5jZVJlcXVlc3RDb25maWcYBCABKAsyFi5TZXF1ZW5jZVJlcXVlc3RDb25m",
-          "aWdIABIRCgdwYXlsb2FkGAUgASgMSAAiywEKC0NvbW1hbmRUeXBlEhEKDUNv",
-          "bmZpZ3VyYXRpb24QABINCglNdWx0aUNhc3QQARIQCgxNdWx0aUNhc3RBY2sQ",
-          "AhILCgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFjaxAEEhwKGE1lYXN1cmVtZW50",
-          "U3RyZWFtUmVxdWVzdBAFEiIKHk1lYXN1cmVtZW50U3RyZWFtRnJhZ21lbnRS",
-          "ZXBseRAGEhMKD1NlcXVlbmNlUmVxdWVzdBAHEhQKEFNlcXVlbmNlUmVzcG9u",
-          "c2UQCEIGCgRCb2R5YgZwcm90bzM="));
+          "bnRGcmFnbWVudCKeAQoLQm9vdE1lc3NhZ2USIwoQRGV2aWNlSWRlbnRpZmll",
+          "chgBIAEoCzIJLkRldmljZUlkEiEKD0Zpcm13YXJlVmVyc2lvbhgCIAEoCzII",
+          "LlZlcnNpb24SDwoHQXBwTmFtZRgDIAEoCRIYChBNZWFzdXJlbWVudENvdW50",
+          "GAQgASgNEhwKFE1lYXN1cmVtZW50c0Rpc2FibGVkGAUgASgIIiQKCkFja01l",
+          "c3NhZ2USFgoOU2VxdWVuY2VOdW1iZXIYASABKA0iHwoMRGVidWdNZXNzYWdl",
+          "Eg8KB3BheWxvYWQYASABKAwisQEKDFVhcnRSZXNwb25zZRIjCgtib290TWVz",
+          "c2FnZRgBIAEoCzIMLkJvb3RNZXNzYWdlSAASIQoKYWNrTWVzc2FnZRgCIAEo",
+          "CzILLkFja01lc3NhZ2VIABIqChJsb3JhUmVjZWl2ZU1lc3NhZ2UYAyABKAsy",
+          "DC5Mb3JhUmVjZWl2ZUgAEiUKDGRlYnVnTWVzc2FnZRgEIAEoCzINLkRlYnVn",
+          "TWVzc2FnZUgAQgYKBEJvZHkiTQoVU3ByZWFkaW5nRmFjdG9yQ29uZmlnEhkK",
+          "EXNwcmVhZGluZ0ZhY3RvclJ4GAEgASgNEhkKEXNwcmVhZGluZ0ZhY3RvclR4",
+          "GAIgASgNIlEKFVNlcXVlbmNlUmVxdWVzdENvbmZpZxIUCgxNZXNzYWdlQ291",
+          "bnQYASABKA0SEAoISW50ZXJ2YWwYAiABKA0SEAoIRGV2aWNlSWQYAyABKA0i",
+          "qwMKC0xvUmFNZXNzYWdlEikKB2NvbW1hbmQYASABKA4yGC5Mb1JhTWVzc2Fn",
+          "ZS5Db21tYW5kVHlwZRIWCg5TZXF1ZW5jZU51bWJlchgCIAEoDRI3ChVzcHJl",
+          "YWRpbmdGYWN0b3JDb25maWcYAyABKAsyFi5TcHJlYWRpbmdGYWN0b3JDb25m",
+          "aWdIABI3ChVzZXF1ZW5jZVJlcXVlc3RDb25maWcYBCABKAsyFi5TZXF1ZW5j",
+          "ZVJlcXVlc3RDb25maWdIABIRCgdwYXlsb2FkGAUgASgMSAAiywEKC0NvbW1h",
+          "bmRUeXBlEhEKDUNvbmZpZ3VyYXRpb24QABINCglNdWx0aUNhc3QQARIQCgxN",
+          "dWx0aUNhc3RBY2sQAhILCgdVbmlDYXN0EAMSDgoKVW5pQ2FzdEFjaxAEEhwK",
+          "GE1lYXN1cmVtZW50U3RyZWFtUmVxdWVzdBAFEiIKHk1lYXN1cmVtZW50U3Ry",
+          "ZWFtRnJhZ21lbnRSZXBseRAGEhMKD1NlcXVlbmNlUmVxdWVzdBAHEhQKEFNl",
+          "cXVlbmNlUmVzcG9uc2UQCEIGCgRCb2R5YgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Version), global::Version.Parser, new[]{ "Major", "Minor", "Patch", "Revision" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DeviceId), global::DeviceId.Parser, new[]{ "Id0", "Id1", "Id2" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::LoraReceive), global::LoraReceive.Parser, new[]{ "Size", "Rssi", "Snr", "SequenceNumber", "IsMeasurementFragment", "Success", "Payload" }, new[]{ "IsMeasurementFragment" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::BootMessage), global::BootMessage.Parser, new[]{ "DeviceIdentifier", "FirmwareVersion", "AppName" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::BootMessage), global::BootMessage.Parser, new[]{ "DeviceIdentifier", "FirmwareVersion", "AppName", "MeasurementCount", "MeasurementsDisabled" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::AckMessage), global::AckMessage.Parser, new[]{ "SequenceNumber" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DebugMessage), global::DebugMessage.Parser, new[]{ "Payload" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::UartResponse), global::UartResponse.Parser, new[]{ "BootMessage", "AckMessage", "LoraReceiveMessage", "DebugMessage" }, new[]{ "Body" }, null, null, null),
@@ -699,10 +700,10 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
 
   /// <summary>Field number for the "Rssi" field.</summary>
   public const int RssiFieldNumber = 2;
-  private uint rssi_;
+  private int rssi_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint Rssi {
+  public int Rssi {
     get { return rssi_; }
     set {
       rssi_ = value;
@@ -711,10 +712,10 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
 
   /// <summary>Field number for the "Snr" field.</summary>
   public const int SnrFieldNumber = 3;
-  private uint snr_;
+  private int snr_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-  public uint Snr {
+  public int Snr {
     get { return snr_; }
     set {
       snr_ = value;
@@ -842,11 +843,11 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (Rssi != 0) {
       output.WriteRawTag(16);
-      output.WriteUInt32(Rssi);
+      output.WriteInt32(Rssi);
     }
     if (Snr != 0) {
       output.WriteRawTag(24);
-      output.WriteUInt32(Snr);
+      output.WriteInt32(Snr);
     }
     if (SequenceNumber != 0) {
       output.WriteRawTag(32);
@@ -880,11 +881,11 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
     }
     if (Rssi != 0) {
       output.WriteRawTag(16);
-      output.WriteUInt32(Rssi);
+      output.WriteInt32(Rssi);
     }
     if (Snr != 0) {
       output.WriteRawTag(24);
-      output.WriteUInt32(Snr);
+      output.WriteInt32(Snr);
     }
     if (SequenceNumber != 0) {
       output.WriteRawTag(32);
@@ -916,10 +917,10 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
       size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Size);
     }
     if (Rssi != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rssi);
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Rssi);
     }
     if (Snr != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Snr);
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Snr);
     }
     if (SequenceNumber != 0) {
       size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SequenceNumber);
@@ -986,11 +987,11 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           break;
         }
         case 16: {
-          Rssi = input.ReadUInt32();
+          Rssi = input.ReadInt32();
           break;
         }
         case 24: {
-          Snr = input.ReadUInt32();
+          Snr = input.ReadInt32();
           break;
         }
         case 32: {
@@ -1029,11 +1030,11 @@ public sealed partial class LoraReceive : pb::IMessage<LoraReceive>
           break;
         }
         case 16: {
-          Rssi = input.ReadUInt32();
+          Rssi = input.ReadInt32();
           break;
         }
         case 24: {
-          Snr = input.ReadUInt32();
+          Snr = input.ReadInt32();
           break;
         }
         case 32: {
@@ -1096,6 +1097,8 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
     deviceIdentifier_ = other.deviceIdentifier_ != null ? other.deviceIdentifier_.Clone() : null;
     firmwareVersion_ = other.firmwareVersion_ != null ? other.firmwareVersion_.Clone() : null;
     appName_ = other.appName_;
+    measurementCount_ = other.measurementCount_;
+    measurementsDisabled_ = other.measurementsDisabled_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -1141,6 +1144,30 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
     }
   }
 
+  /// <summary>Field number for the "MeasurementCount" field.</summary>
+  public const int MeasurementCountFieldNumber = 4;
+  private uint measurementCount_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public uint MeasurementCount {
+    get { return measurementCount_; }
+    set {
+      measurementCount_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "MeasurementsDisabled" field.</summary>
+  public const int MeasurementsDisabledFieldNumber = 5;
+  private bool measurementsDisabled_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool MeasurementsDisabled {
+    get { return measurementsDisabled_; }
+    set {
+      measurementsDisabled_ = value;
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public override bool Equals(object other) {
@@ -1159,6 +1186,8 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
     if (!object.Equals(DeviceIdentifier, other.DeviceIdentifier)) return false;
     if (!object.Equals(FirmwareVersion, other.FirmwareVersion)) return false;
     if (AppName != other.AppName) return false;
+    if (MeasurementCount != other.MeasurementCount) return false;
+    if (MeasurementsDisabled != other.MeasurementsDisabled) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -1169,6 +1198,8 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
     if (deviceIdentifier_ != null) hash ^= DeviceIdentifier.GetHashCode();
     if (firmwareVersion_ != null) hash ^= FirmwareVersion.GetHashCode();
     if (AppName.Length != 0) hash ^= AppName.GetHashCode();
+    if (MeasurementCount != 0) hash ^= MeasurementCount.GetHashCode();
+    if (MeasurementsDisabled != false) hash ^= MeasurementsDisabled.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -1199,6 +1230,14 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
       output.WriteRawTag(26);
       output.WriteString(AppName);
     }
+    if (MeasurementCount != 0) {
+      output.WriteRawTag(32);
+      output.WriteUInt32(MeasurementCount);
+    }
+    if (MeasurementsDisabled != false) {
+      output.WriteRawTag(40);
+      output.WriteBool(MeasurementsDisabled);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -1221,6 +1260,14 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
       output.WriteRawTag(26);
       output.WriteString(AppName);
     }
+    if (MeasurementCount != 0) {
+      output.WriteRawTag(32);
+      output.WriteUInt32(MeasurementCount);
+    }
+    if (MeasurementsDisabled != false) {
+      output.WriteRawTag(40);
+      output.WriteBool(MeasurementsDisabled);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -1239,6 +1286,12 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
     }
     if (AppName.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(AppName);
+    }
+    if (MeasurementCount != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MeasurementCount);
+    }
+    if (MeasurementsDisabled != false) {
+      size += 1 + 1;
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -1266,6 +1319,12 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
     }
     if (other.AppName.Length != 0) {
       AppName = other.AppName;
+    }
+    if (other.MeasurementCount != 0) {
+      MeasurementCount = other.MeasurementCount;
+    }
+    if (other.MeasurementsDisabled != false) {
+      MeasurementsDisabled = other.MeasurementsDisabled;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -1300,6 +1359,14 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
           AppName = input.ReadString();
           break;
         }
+        case 32: {
+          MeasurementCount = input.ReadUInt32();
+          break;
+        }
+        case 40: {
+          MeasurementsDisabled = input.ReadBool();
+          break;
+        }
       }
     }
   #endif
@@ -1331,6 +1398,14 @@ public sealed partial class BootMessage : pb::IMessage<BootMessage>
         }
         case 26: {
           AppName = input.ReadString();
+          break;
+        }
+        case 32: {
+          MeasurementCount = input.ReadUInt32();
+          break;
+        }
+        case 40: {
+          MeasurementsDisabled = input.ReadBool();
           break;
         }
       }

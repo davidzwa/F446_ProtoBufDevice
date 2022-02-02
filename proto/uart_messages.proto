@@ -63,6 +63,11 @@ message DeviceConfiguration {
     uint32 AlwaysSendPeriod = 2;
 }
 
+message ClearMeasurementsCommand {
+    // No content to report
+    bool SendBootAfter = 1;
+}
+
 message UartCommand { 
     oneof Body { 
         RadioRxConfig rxConfig = 1; 
@@ -70,5 +75,6 @@ message UartCommand {
         DeviceConfiguration deviceConfiguration = 3;
         TransmitCommand transmitCommand = 4;
         RequestBootInfo requestBootInfo = 5; 
+        ClearMeasurementsCommand clearMeasurementsCommand = 6;
     } 
 } 

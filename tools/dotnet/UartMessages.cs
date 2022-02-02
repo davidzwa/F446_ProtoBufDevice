@@ -41,13 +41,16 @@ public static partial class UartMessagesReflection {
           "GAYgASgMQgkKB19QZXJpb2RCEQoPX01heFBhY2tldENvdW50IiIKD1JlcXVl",
           "c3RCb290SW5mbxIPCgdSZXF1ZXN0GAEgASgIIkkKE0RldmljZUNvbmZpZ3Vy",
           "YXRpb24SGAoQRW5hYmxlQWx3YXlzU2VuZBgBIAEoCBIYChBBbHdheXNTZW5k",
-          "UGVyaW9kGAIgASgNIuwBCgtVYXJ0Q29tbWFuZBIiCghyeENvbmZpZxgBIAEo",
-          "CzIOLlJhZGlvUnhDb25maWdIABIiCgh0eENvbmZpZxgCIAEoCzIOLlJhZGlv",
-          "VHhDb25maWdIABIzChNkZXZpY2VDb25maWd1cmF0aW9uGAMgASgLMhQuRGV2",
-          "aWNlQ29uZmlndXJhdGlvbkgAEisKD3RyYW5zbWl0Q29tbWFuZBgEIAEoCzIQ",
-          "LlRyYW5zbWl0Q29tbWFuZEgAEisKD3JlcXVlc3RCb290SW5mbxgFIAEoCzIQ",
-          "LlJlcXVlc3RCb290SW5mb0gAQgYKBEJvZHkqLAoLUmFkaW9Nb2RlbXMSDQoJ",
-          "TU9ERU1fRlNLEAASDgoKTU9ERU1fTE9SQRABYgZwcm90bzM="));
+          "UGVyaW9kGAIgASgNIjEKGENsZWFyTWVhc3VyZW1lbnRzQ29tbWFuZBIVCg1T",
+          "ZW5kQm9vdEFmdGVyGAEgASgIIqsCCgtVYXJ0Q29tbWFuZBIiCghyeENvbmZp",
+          "ZxgBIAEoCzIOLlJhZGlvUnhDb25maWdIABIiCgh0eENvbmZpZxgCIAEoCzIO",
+          "LlJhZGlvVHhDb25maWdIABIzChNkZXZpY2VDb25maWd1cmF0aW9uGAMgASgL",
+          "MhQuRGV2aWNlQ29uZmlndXJhdGlvbkgAEisKD3RyYW5zbWl0Q29tbWFuZBgE",
+          "IAEoCzIQLlRyYW5zbWl0Q29tbWFuZEgAEisKD3JlcXVlc3RCb290SW5mbxgF",
+          "IAEoCzIQLlJlcXVlc3RCb290SW5mb0gAEj0KGGNsZWFyTWVhc3VyZW1lbnRz",
+          "Q29tbWFuZBgGIAEoCzIZLkNsZWFyTWVhc3VyZW1lbnRzQ29tbWFuZEgAQgYK",
+          "BEJvZHkqLAoLUmFkaW9Nb2RlbXMSDQoJTU9ERU1fRlNLEAASDgoKTU9ERU1f",
+          "TE9SQRABYgZwcm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::RadioModems), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -56,7 +59,8 @@ public static partial class UartMessagesReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::TransmitCommand), global::TransmitCommand.Parser, new[]{ "IsMulticast", "DeviceId", "SequenceNumber", "Period", "MaxPacketCount", "Payload" }, new[]{ "Period", "MaxPacketCount" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::RequestBootInfo), global::RequestBootInfo.Parser, new[]{ "Request" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DeviceConfiguration), global::DeviceConfiguration.Parser, new[]{ "EnableAlwaysSend", "AlwaysSendPeriod" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::UartCommand), global::UartCommand.Parser, new[]{ "RxConfig", "TxConfig", "DeviceConfiguration", "TransmitCommand", "RequestBootInfo" }, new[]{ "Body" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::ClearMeasurementsCommand), global::ClearMeasurementsCommand.Parser, new[]{ "SendBootAfter" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::UartCommand), global::UartCommand.Parser, new[]{ "RxConfig", "TxConfig", "DeviceConfiguration", "TransmitCommand", "RequestBootInfo", "ClearMeasurementsCommand" }, new[]{ "Body" }, null, null, null)
         }));
   }
   #endregion
@@ -2194,6 +2198,198 @@ public sealed partial class DeviceConfiguration : pb::IMessage<DeviceConfigurati
 
 }
 
+public sealed partial class ClearMeasurementsCommand : pb::IMessage<ClearMeasurementsCommand>
+#if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    , pb::IBufferMessage
+#endif
+{
+  private static readonly pb::MessageParser<ClearMeasurementsCommand> _parser = new pb::MessageParser<ClearMeasurementsCommand>(() => new ClearMeasurementsCommand());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pb::MessageParser<ClearMeasurementsCommand> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::UartMessagesReflection.Descriptor.MessageTypes[5]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ClearMeasurementsCommand() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ClearMeasurementsCommand(ClearMeasurementsCommand other) : this() {
+    sendBootAfter_ = other.sendBootAfter_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public ClearMeasurementsCommand Clone() {
+    return new ClearMeasurementsCommand(this);
+  }
+
+  /// <summary>Field number for the "SendBootAfter" field.</summary>
+  public const int SendBootAfterFieldNumber = 1;
+  private bool sendBootAfter_;
+  /// <summary>
+  /// No content to report
+  /// </summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool SendBootAfter {
+    get { return sendBootAfter_; }
+    set {
+      sendBootAfter_ = value;
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override bool Equals(object other) {
+    return Equals(other as ClearMeasurementsCommand);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public bool Equals(ClearMeasurementsCommand other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (SendBootAfter != other.SendBootAfter) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (SendBootAfter != false) hash ^= SendBootAfter.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void WriteTo(pb::CodedOutputStream output) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    output.WriteRawMessage(this);
+  #else
+    if (SendBootAfter != false) {
+      output.WriteRawTag(8);
+      output.WriteBool(SendBootAfter);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+    if (SendBootAfter != false) {
+      output.WriteRawTag(8);
+      output.WriteBool(SendBootAfter);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(ref output);
+    }
+  }
+  #endif
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public int CalculateSize() {
+    int size = 0;
+    if (SendBootAfter != false) {
+      size += 1 + 1;
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(ClearMeasurementsCommand other) {
+    if (other == null) {
+      return;
+    }
+    if (other.SendBootAfter != false) {
+      SendBootAfter = other.SendBootAfter;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public void MergeFrom(pb::CodedInputStream input) {
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    input.ReadRawMessage(this);
+  #else
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          SendBootAfter = input.ReadBool();
+          break;
+        }
+      }
+    }
+  #endif
+  }
+
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+          break;
+        case 8: {
+          SendBootAfter = input.ReadBool();
+          break;
+        }
+      }
+    }
+  }
+  #endif
+
+}
+
 public sealed partial class UartCommand : pb::IMessage<UartCommand>
 #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     , pb::IBufferMessage
@@ -2208,7 +2404,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::UartMessagesReflection.Descriptor.MessageTypes[5]; }
+    get { return global::UartMessagesReflection.Descriptor.MessageTypes[6]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2243,6 +2439,9 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
         break;
       case BodyOneofCase.RequestBootInfo:
         RequestBootInfo = other.RequestBootInfo.Clone();
+        break;
+      case BodyOneofCase.ClearMeasurementsCommand:
+        ClearMeasurementsCommand = other.ClearMeasurementsCommand.Clone();
         break;
     }
 
@@ -2315,6 +2514,18 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     }
   }
 
+  /// <summary>Field number for the "clearMeasurementsCommand" field.</summary>
+  public const int ClearMeasurementsCommandFieldNumber = 6;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+  public global::ClearMeasurementsCommand ClearMeasurementsCommand {
+    get { return bodyCase_ == BodyOneofCase.ClearMeasurementsCommand ? (global::ClearMeasurementsCommand) body_ : null; }
+    set {
+      body_ = value;
+      bodyCase_ = value == null ? BodyOneofCase.None : BodyOneofCase.ClearMeasurementsCommand;
+    }
+  }
+
   private object body_;
   /// <summary>Enum of possible cases for the "Body" oneof.</summary>
   public enum BodyOneofCase {
@@ -2324,6 +2535,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     DeviceConfiguration = 3,
     TransmitCommand = 4,
     RequestBootInfo = 5,
+    ClearMeasurementsCommand = 6,
   }
   private BodyOneofCase bodyCase_ = BodyOneofCase.None;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2359,6 +2571,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     if (!object.Equals(DeviceConfiguration, other.DeviceConfiguration)) return false;
     if (!object.Equals(TransmitCommand, other.TransmitCommand)) return false;
     if (!object.Equals(RequestBootInfo, other.RequestBootInfo)) return false;
+    if (!object.Equals(ClearMeasurementsCommand, other.ClearMeasurementsCommand)) return false;
     if (BodyCase != other.BodyCase) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -2372,6 +2585,7 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     if (bodyCase_ == BodyOneofCase.DeviceConfiguration) hash ^= DeviceConfiguration.GetHashCode();
     if (bodyCase_ == BodyOneofCase.TransmitCommand) hash ^= TransmitCommand.GetHashCode();
     if (bodyCase_ == BodyOneofCase.RequestBootInfo) hash ^= RequestBootInfo.GetHashCode();
+    if (bodyCase_ == BodyOneofCase.ClearMeasurementsCommand) hash ^= ClearMeasurementsCommand.GetHashCode();
     hash ^= (int) bodyCase_;
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -2411,6 +2625,10 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
       output.WriteRawTag(42);
       output.WriteMessage(RequestBootInfo);
     }
+    if (bodyCase_ == BodyOneofCase.ClearMeasurementsCommand) {
+      output.WriteRawTag(50);
+      output.WriteMessage(ClearMeasurementsCommand);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -2441,6 +2659,10 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
       output.WriteRawTag(42);
       output.WriteMessage(RequestBootInfo);
     }
+    if (bodyCase_ == BodyOneofCase.ClearMeasurementsCommand) {
+      output.WriteRawTag(50);
+      output.WriteMessage(ClearMeasurementsCommand);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(ref output);
     }
@@ -2465,6 +2687,9 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
     }
     if (bodyCase_ == BodyOneofCase.RequestBootInfo) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(RequestBootInfo);
+    }
+    if (bodyCase_ == BodyOneofCase.ClearMeasurementsCommand) {
+      size += 1 + pb::CodedOutputStream.ComputeMessageSize(ClearMeasurementsCommand);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -2508,6 +2733,12 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           RequestBootInfo = new global::RequestBootInfo();
         }
         RequestBootInfo.MergeFrom(other.RequestBootInfo);
+        break;
+      case BodyOneofCase.ClearMeasurementsCommand:
+        if (ClearMeasurementsCommand == null) {
+          ClearMeasurementsCommand = new global::ClearMeasurementsCommand();
+        }
+        ClearMeasurementsCommand.MergeFrom(other.ClearMeasurementsCommand);
         break;
     }
 
@@ -2571,6 +2802,15 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           RequestBootInfo = subBuilder;
           break;
         }
+        case 50: {
+          global::ClearMeasurementsCommand subBuilder = new global::ClearMeasurementsCommand();
+          if (bodyCase_ == BodyOneofCase.ClearMeasurementsCommand) {
+            subBuilder.MergeFrom(ClearMeasurementsCommand);
+          }
+          input.ReadMessage(subBuilder);
+          ClearMeasurementsCommand = subBuilder;
+          break;
+        }
       }
     }
   #endif
@@ -2629,6 +2869,15 @@ public sealed partial class UartCommand : pb::IMessage<UartCommand>
           }
           input.ReadMessage(subBuilder);
           RequestBootInfo = subBuilder;
+          break;
+        }
+        case 50: {
+          global::ClearMeasurementsCommand subBuilder = new global::ClearMeasurementsCommand();
+          if (bodyCase_ == BodyOneofCase.ClearMeasurementsCommand) {
+            subBuilder.MergeFrom(ClearMeasurementsCommand);
+          }
+          input.ReadMessage(subBuilder);
+          ClearMeasurementsCommand = subBuilder;
           break;
         }
       }

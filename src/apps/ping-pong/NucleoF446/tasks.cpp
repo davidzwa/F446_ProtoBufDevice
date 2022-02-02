@@ -12,6 +12,7 @@
 
 #define MAX_SEQUENCE_NUMBERS 5000
 #define DEFAULT_TX_PERIOD 1000
+// #define STANDALONE_TX_INFINITE 
 
 // Uart debugging
 static TimerEvent_t heartBeatTimer;
@@ -25,7 +26,6 @@ uint16_t periodicTxInterval = DEFAULT_TX_PERIOD;
 
 // Sequencer as test
 bool standaloneAlwaysSendPeriodically = false;
-static TimerEvent_t sequenceTimer;
 SequenceRequestConfig sequenceRequestConfig;
 uint16_t sequenceMessageCount = 0;
 bool sequenceTestRunning = false;

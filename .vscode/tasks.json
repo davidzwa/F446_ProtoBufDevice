@@ -13,6 +13,40 @@
             }
         },
         {
+            "label": "STLink Probe",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "${cwd}\\tools\\stlink_probe.bat"
+            }
+        },
+        {
+            "label": "STLink Flash Read",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "${cwd}\\tools\\stlink_read.bat"
+            }
+        },
+        {
+            "label": "Python Flash Process",
+            // The Python command
+            "command": "${config:python.pythonPath}",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "windows": {
+                "command": "python ${cwd}\\tools\\stlink_flash_convert.py"
+            }
+        },
+        {
             "label": "Protoc",
             "type": "shell",
             "group": "build",

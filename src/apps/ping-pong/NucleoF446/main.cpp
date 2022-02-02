@@ -22,21 +22,24 @@
 #include "cli.h"
 #include "config.h"
 #include "delay.h"
+#include "measurements.h"
+#include "nvmm.h"
 #include "radio_phy.h"
 #include "tasks.h"
 #include "utils.h"
 
-/**
- * Main application entry point.
- */
 int main(void) {
     BoardInitMcu();
     BoardInitPeriph();
     InitCli(true);
+    InitializeMeasurements();
     UartSendBoot();
     InitRadioConfig();
     InitTimedTasks();
     InitRadioPhy();
+
+    // This must be called remotely/over UART
+    // ClearStorage();
 
     Radio.Rx(0);
     while (1) {

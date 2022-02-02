@@ -456,18 +456,18 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32::FIELD_TYPE Size() const { return Size_.get(); }
 
     inline void clear_Rssi() { Rssi_.clear(); }
-    inline void set_Rssi(const EmbeddedProto::uint32& value) { Rssi_ = value; }
-    inline void set_Rssi(const EmbeddedProto::uint32&& value) { Rssi_ = value; }
-    inline EmbeddedProto::uint32& mutable_Rssi() { return Rssi_; }
-    inline const EmbeddedProto::uint32& get_Rssi() const { return Rssi_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Rssi() const { return Rssi_.get(); }
+    inline void set_Rssi(const EmbeddedProto::int32& value) { Rssi_ = value; }
+    inline void set_Rssi(const EmbeddedProto::int32&& value) { Rssi_ = value; }
+    inline EmbeddedProto::int32& mutable_Rssi() { return Rssi_; }
+    inline const EmbeddedProto::int32& get_Rssi() const { return Rssi_; }
+    inline EmbeddedProto::int32::FIELD_TYPE Rssi() const { return Rssi_.get(); }
 
     inline void clear_Snr() { Snr_.clear(); }
-    inline void set_Snr(const EmbeddedProto::uint32& value) { Snr_ = value; }
-    inline void set_Snr(const EmbeddedProto::uint32&& value) { Snr_ = value; }
-    inline EmbeddedProto::uint32& mutable_Snr() { return Snr_; }
-    inline const EmbeddedProto::uint32& get_Snr() const { return Snr_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Snr() const { return Snr_.get(); }
+    inline void set_Snr(const EmbeddedProto::int32& value) { Snr_ = value; }
+    inline void set_Snr(const EmbeddedProto::int32&& value) { Snr_ = value; }
+    inline EmbeddedProto::int32& mutable_Snr() { return Snr_; }
+    inline const EmbeddedProto::int32& get_Snr() const { return Snr_; }
+    inline EmbeddedProto::int32::FIELD_TYPE Snr() const { return Snr_.get(); }
 
     inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
     inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
@@ -526,12 +526,12 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
         return_value = Size_.serialize_with_id(static_cast<uint32_t>(id::SIZE), buffer, false);
       }
 
-      if((0U != Rssi_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != Rssi_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Rssi_.serialize_with_id(static_cast<uint32_t>(id::RSSI), buffer, false);
       }
 
-      if((0U != Snr_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != Snr_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Snr_.serialize_with_id(static_cast<uint32_t>(id::SNR), buffer, false);
       }
@@ -678,8 +678,8 @@ class LoraReceive final: public ::EmbeddedProto::MessageInterface
       typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::uint32 Size_ = 0U;
-      EmbeddedProto::uint32 Rssi_ = 0U;
-      EmbeddedProto::uint32 Snr_ = 0U;
+      EmbeddedProto::int32 Rssi_ = 0;
+      EmbeddedProto::int32 Snr_ = 0;
       EmbeddedProto::uint32 SequenceNumber_ = 0U;
       EmbeddedProto::boolean IsMeasurementFragment_ = false;
       EmbeddedProto::boolean Success_ = false;
@@ -697,6 +697,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_AppName(rhs.get_AppName());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
     }
 
     BootMessage(const BootMessage&& rhs ) noexcept
@@ -704,6 +706,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_AppName(rhs.get_AppName());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
     }
 
     ~BootMessage() override = default;
@@ -713,7 +717,9 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       DEVICEIDENTIFIER = 1,
       FIRMWAREVERSION = 2,
-      APPNAME = 3
+      APPNAME = 3,
+      MEASUREMENTCOUNT = 4,
+      MEASUREMENTSDISABLED = 5
     };
 
     BootMessage& operator=(const BootMessage& rhs)
@@ -721,6 +727,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_AppName(rhs.get_AppName());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       return *this;
     }
 
@@ -729,6 +737,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_AppName(rhs.get_AppName());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       return *this;
     }
 
@@ -752,6 +762,20 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     inline const ::EmbeddedProto::FieldString<AppName_LENGTH>& get_AppName() const { return AppName_; }
     inline const char* AppName() const { return AppName_.get_const(); }
 
+    inline void clear_MeasurementCount() { MeasurementCount_.clear(); }
+    inline void set_MeasurementCount(const EmbeddedProto::uint32& value) { MeasurementCount_ = value; }
+    inline void set_MeasurementCount(const EmbeddedProto::uint32&& value) { MeasurementCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_MeasurementCount() { return MeasurementCount_; }
+    inline const EmbeddedProto::uint32& get_MeasurementCount() const { return MeasurementCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MeasurementCount() const { return MeasurementCount_.get(); }
+
+    inline void clear_MeasurementsDisabled() { MeasurementsDisabled_.clear(); }
+    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean& value) { MeasurementsDisabled_ = value; }
+    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean&& value) { MeasurementsDisabled_ = value; }
+    inline EmbeddedProto::boolean& mutable_MeasurementsDisabled() { return MeasurementsDisabled_; }
+    inline const EmbeddedProto::boolean& get_MeasurementsDisabled() const { return MeasurementsDisabled_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE MeasurementsDisabled() const { return MeasurementsDisabled_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -770,6 +794,16 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
         return_value = AppName_.serialize_with_id(static_cast<uint32_t>(id::APPNAME), buffer, false);
+      }
+
+      if((0U != MeasurementCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MeasurementCount_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTCOUNT), buffer, false);
+      }
+
+      if((false != MeasurementsDisabled_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MeasurementsDisabled_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSDISABLED), buffer, false);
       }
 
       return return_value;
@@ -798,6 +832,14 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
 
           case id::APPNAME:
             return_value = AppName_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MEASUREMENTCOUNT:
+            return_value = MeasurementCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MEASUREMENTSDISABLED:
+            return_value = MeasurementsDisabled_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -832,6 +874,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       clear_DeviceIdentifier();
       clear_FirmwareVersion();
       clear_AppName();
+      clear_MeasurementCount();
+      clear_MeasurementsDisabled();
 
     }
 
@@ -841,6 +885,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       DeviceId DeviceIdentifier_;
       Version FirmwareVersion_;
       ::EmbeddedProto::FieldString<AppName_LENGTH> AppName_;
+      EmbeddedProto::uint32 MeasurementCount_ = 0U;
+      EmbeddedProto::boolean MeasurementsDisabled_ = false;
 
 };
 

@@ -26,10 +26,9 @@
 #include <stdint.h>
 
 #include "eeprom_emul.h"
-#include "stm32l4xx.h"
+#include "stm32f4xx.h"
 #include "utilities.h"
 
-uint16_t EepromVirtualAddress[NB_OF_VARIABLES];
 __IO uint32_t ErasingOnGoing = 0;
 
 /*!
@@ -40,11 +39,6 @@ void EepromMcuInit(void) {
 
     // Unlock the Flash Program Erase controller
     HAL_FLASH_Unlock();
-
-    // Set user List of Virtual Address variables: 0x0000 and 0xFFFF values are prohibited
-    for (uint16_t varValue = 0; varValue < NB_OF_VARIABLES; varValue++) {
-        EepromVirtualAddress[varValue] = varValue + 1;
-    }
 
     // Set EEPROM emulation firmware to erase all potentially incompletely erased
     // pages if the system came from an asynchronous reset. Conditional erase is
@@ -61,8 +55,8 @@ void EepromMcuInit(void) {
         __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
 
         // Check and Clear the Wakeup flag
-        if (__HAL_PWR_GET_FLAG(PWR_FLAG_WUF1) != RESET) {
-            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WUF1);
+        if (__HAL_PWR_GET_FLAG(PWR_FLAG_WU) != RESET) {
+            __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
         }
 
         // System reset comes from a STANDBY wakeup: Conditional Erase
@@ -132,15 +126,6 @@ LmnStatus_t EepromMcuReadBuffer(uint16_t addr, uint8_t *buffer, uint16_t size) {
     // Lock the Flash Program Erase controller
     HAL_FLASH_Lock();
     return status;
-}
-
-void EepromMcuSetDeviceAddr(uint8_t addr) {
-    assert_param(LMN_STATUS_ERROR);
-}
-
-LmnStatus_t EepromMcuGetDeviceAddr(void) {
-    assert_param(LMN_STATUS_ERROR);
-    return 0;
 }
 
 /*!
