@@ -2,6 +2,7 @@
 
 #include "delay.h"
 #include "device_messages.h"
+#include "lora_device_messages.h"
 #include "radio_phy.h"
 
 #define FIXED_LORA_FRAGMENT_BYTES 100

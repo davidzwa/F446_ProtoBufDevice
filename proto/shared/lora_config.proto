@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message SpreadingFactorConfig {
+    uint32 spreadingFactorRx = 1;
+    uint32 spreadingFactorTx = 2;
+}
+
+message SequenceRequestConfig {
+    uint32 MessageCount = 1;
+    uint32 Interval = 2;
+    uint32 DeviceId = 3;
+}
