@@ -1,0 +1,36 @@
+// This file listes the protobuffer messages used to communicate between equipotent devices over LoRa
+
+syntax = "proto3";
+
+message SpreadingFactorConfig {
+    uint32 spreadingFactorRx = 1;
+    uint32 spreadingFactorTx = 2;
+}
+
+message SequenceRequestConfig {
+    uint32 MessageCount = 1;
+    uint32 Interval = 2;
+    uint32 DeviceId = 3;
+}
+
+message LoRaMessage {
+    enum CommandType {
+        Configuration = 0;
+        MultiCast = 1;
+        MultiCastAck = 2;
+        UniCast = 3;
+        UniCastAck = 4;
+        MeasurementStreamRequest = 5;
+        MeasurementStreamFragmentReply = 6;
+        SequenceRequest = 7;
+        SequenceResponse = 8;
+    }
+
+    CommandType command = 1;
+    uint32 SequenceNumber = 2;
+    oneof Body {
+        SpreadingFactorConfig spreadingFactorConfig = 3;
+        SequenceRequestConfig sequenceRequestConfig = 4;
+        bytes payload = 5;
+    }
+}
