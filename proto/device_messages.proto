@@ -5,6 +5,8 @@ syntax = "proto3";
 
 import "shared/firmware.proto";
 
+option csharp_namespace = "LoRa";
+
 message LoraMeasurement 
 {
     uint32 Size = 1;

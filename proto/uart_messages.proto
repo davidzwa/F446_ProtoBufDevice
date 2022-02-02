@@ -5,6 +5,8 @@ syntax = "proto3";
  
 import "shared/lora_phy.proto";
 
+option csharp_namespace = "LoRa";
+
 message TransmitCommand  
 { 
     bool IsMulticast = 1; 

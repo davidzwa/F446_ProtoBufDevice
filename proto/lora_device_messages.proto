@@ -4,6 +4,8 @@ syntax = "proto3";
 
 import "shared/experiment_config.proto";
 
+option csharp_namespace = "LoRa";
+
 message LoRaMessage {
     CommandType command = 1;
     uint32 SequenceNumber = 2;

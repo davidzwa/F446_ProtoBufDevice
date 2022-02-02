@@ -35,8 +35,9 @@ echo "Ensuring output folders exist (C++, Python, C#)"
 mkdir ${OUT_CPP} -ErrorAction SilentlyContinue
 mkdir ${OUT_PYTHON} -ErrorAction SilentlyContinue
 mkdir ${OUT_CSHARP} -ErrorAction SilentlyContinue
+mkdir ${OUT_CSHARP}\shared -ErrorAction SilentlyContinue
 
 echo "Calling protoc (C++, Python, C#) in $PWD"
 protoc --proto_path=$SRC --eams_out=$OUT_CPP ./$SRC/*.proto --plugin=protoc-gen-eams=${PLUGIN}
-# protoc --proto_path=$SRC --python_out=$OUT_PYTHON ./$SRC/*.proto
-protoc --proto_path=$SRC --csharp_out=$OUT_CSHARP ./$SRC/*.proto
+protoc --proto_path=$SRC --csharp_out=$OUT_CSHARP\shared ./$SRC/shared/**.proto
+protoc --proto_path=$SRC --csharp_out=$OUT_CSHARP ./$SRC/**.proto

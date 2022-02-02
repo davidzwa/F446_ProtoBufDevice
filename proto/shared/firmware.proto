@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option csharp_namespace = "LoRa";
+
 message Version {
     uint32 Major = 1;
     uint32 Minor = 2;

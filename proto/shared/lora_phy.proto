@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+option csharp_namespace = "LoRa";
+
 enum RadioModems {
     MODEM_FSK = 0;
     MODEM_LORA = 1;
