@@ -2,21 +2,9 @@
 
 syntax = "proto3";
 
-import "shared/lora_config.proto";
+import "shared/experiment_config.proto";
 
 message LoRaMessage {
-    enum CommandType {
-        Configuration = 0;
-        MultiCast = 1;
-        MultiCastAck = 2;
-        UniCast = 3;
-        UniCastAck = 4;
-        MeasurementStreamRequest = 5;
-        MeasurementStreamFragmentReply = 6;
-        SequenceRequest = 7;
-        SequenceResponse = 8;
-    }
-
     CommandType command = 1;
     uint32 SequenceNumber = 2;
     oneof Body {

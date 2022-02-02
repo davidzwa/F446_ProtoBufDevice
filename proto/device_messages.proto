@@ -3,20 +3,9 @@
 
 syntax = "proto3";
 
-message Version {
-    uint32 Major = 1;
-    uint32 Minor = 2;
-    uint32 Patch = 3;
-    uint32 Revision = 4;
-}
+import "shared/firmware.proto";
 
-message DeviceId {
-    uint32 Id0 = 1;
-    uint32 Id1 = 2;
-    uint32 Id2 = 3;
-}
-
-message LoraReceive 
+message LoraMeasurement 
 {
     uint32 Size = 1;
     int32 Rssi = 2;
@@ -36,7 +25,7 @@ message BootMessage {
 }
 
 message AckMessage {
-    uint32 SequenceNumber = 1;
+    uint32 Code = 1;
 }
 
 message DebugMessage {
@@ -48,7 +37,7 @@ message UartResponse {
     oneof Body {
         BootMessage bootMessage = 1;
         AckMessage ackMessage = 2;
-        LoraReceive loraReceiveMessage = 3;
+        LoraMeasurement loraMeasurement = 3;
         DebugMessage debugMessage = 4;
     }
 }

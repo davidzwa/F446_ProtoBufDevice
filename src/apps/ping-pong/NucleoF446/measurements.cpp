@@ -1,6 +1,7 @@
 #include "measurements.h"
 
 #include "delay.h"
+#include "experiment_config.h"
 #include "device_messages.h"
 #include "lora_device_messages.h"
 #include "radio_phy.h"
@@ -46,7 +47,7 @@ void ClearMeasurements() {
  * */
 void RequestStreamMeasurements(/*DeviceId*/) {
     loraBlobMessage.clear();
-    loraBlobMessage.set_command(::LoRaMessage<FIXED_LORA_FRAGMENT_BYTES>::CommandType::MeasurementStreamRequest);
+    loraBlobMessage.set_command(CommandType::MeasurementStreamRequest);
     loraBlobMessage.set_SequenceNumber(0xFFFE);
 
     auto radioWriteBuffer = GetWriteAccess();

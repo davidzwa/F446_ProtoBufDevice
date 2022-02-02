@@ -29,8 +29,8 @@
  */
 
 // This file is generated. Please do not edit!
-#ifndef TEST_H
-#define TEST_H
+#ifndef SHARED_EXPERIMENT_CONFIG_H
+#define SHARED_EXPERIMENT_CONFIG_H
 
 #include <cstdint>
 #include <MessageInterface.h>
@@ -45,6 +45,176 @@
 
 // Include external proto definitions
 
+
+enum class CommandType : uint32_t
+{
+  Configuration = 0,
+  MultiCast = 1,
+  MultiCastAck = 2,
+  UniCast = 3,
+  UniCastAck = 4,
+  MeasurementStreamRequest = 5,
+  MeasurementStreamFragmentReply = 6,
+  SequenceRequest = 7,
+  SequenceResponse = 8
+};
+
+class SequenceRequestConfig final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    SequenceRequestConfig() = default;
+    SequenceRequestConfig(const SequenceRequestConfig& rhs )
+    {
+      set_MessageCount(rhs.get_MessageCount());
+      set_Interval(rhs.get_Interval());
+      set_DeviceId(rhs.get_DeviceId());
+    }
+
+    SequenceRequestConfig(const SequenceRequestConfig&& rhs ) noexcept
+    {
+      set_MessageCount(rhs.get_MessageCount());
+      set_Interval(rhs.get_Interval());
+      set_DeviceId(rhs.get_DeviceId());
+    }
+
+    ~SequenceRequestConfig() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      MESSAGECOUNT = 1,
+      INTERVAL = 2,
+      DEVICEID = 3
+    };
+
+    SequenceRequestConfig& operator=(const SequenceRequestConfig& rhs)
+    {
+      set_MessageCount(rhs.get_MessageCount());
+      set_Interval(rhs.get_Interval());
+      set_DeviceId(rhs.get_DeviceId());
+      return *this;
+    }
+
+    SequenceRequestConfig& operator=(const SequenceRequestConfig&& rhs) noexcept
+    {
+      set_MessageCount(rhs.get_MessageCount());
+      set_Interval(rhs.get_Interval());
+      set_DeviceId(rhs.get_DeviceId());
+      return *this;
+    }
+
+    inline void clear_MessageCount() { MessageCount_.clear(); }
+    inline void set_MessageCount(const EmbeddedProto::uint32& value) { MessageCount_ = value; }
+    inline void set_MessageCount(const EmbeddedProto::uint32&& value) { MessageCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_MessageCount() { return MessageCount_; }
+    inline const EmbeddedProto::uint32& get_MessageCount() const { return MessageCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MessageCount() const { return MessageCount_.get(); }
+
+    inline void clear_Interval() { Interval_.clear(); }
+    inline void set_Interval(const EmbeddedProto::uint32& value) { Interval_ = value; }
+    inline void set_Interval(const EmbeddedProto::uint32&& value) { Interval_ = value; }
+    inline EmbeddedProto::uint32& mutable_Interval() { return Interval_; }
+    inline const EmbeddedProto::uint32& get_Interval() const { return Interval_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Interval() const { return Interval_.get(); }
+
+    inline void clear_DeviceId() { DeviceId_.clear(); }
+    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
+    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
+    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
+    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != MessageCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MessageCount_.serialize_with_id(static_cast<uint32_t>(id::MESSAGECOUNT), buffer, false);
+      }
+
+      if((0U != Interval_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Interval_.serialize_with_id(static_cast<uint32_t>(id::INTERVAL), buffer, false);
+      }
+
+      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::MESSAGECOUNT:
+            return_value = MessageCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::INTERVAL:
+            return_value = Interval_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEVICEID:
+            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_MessageCount();
+      clear_Interval();
+      clear_DeviceId();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 MessageCount_ = 0U;
+      EmbeddedProto::uint32 Interval_ = 0U;
+      EmbeddedProto::uint32 DeviceId_ = 0U;
+
+};
 
 class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
 {
@@ -180,4 +350,4 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
 
 };
 
-#endif // TEST_H
+#endif // SHARED_EXPERIMENT_CONFIG_H

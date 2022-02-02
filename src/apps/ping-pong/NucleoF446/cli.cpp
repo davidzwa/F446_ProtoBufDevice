@@ -193,10 +193,10 @@ void UartResponseSend(UartResponse<PROTO_LIMITS> & response) {
     writeBuffer.clear();
 }
 
-void UartSendAck(uint8_t sequenceNumber) {
+void UartSendAck(uint8_t code) {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& ack = uartResponse.mutable_ackMessage();
-    ack.set_SequenceNumber(sequenceNumber);
+    ack.set_Code(code);
 
     UartResponseSend(uartResponse);
 }
@@ -212,7 +212,7 @@ void UartDebug(const char* payload, size_t length) {
 
 void UartSendLoRaRxError() {
     UartResponse<PROTO_LIMITS> uartResponse;
-    auto& loraMessage = uartResponse.mutable_loraReceiveMessage();
+    auto& loraMessage = uartResponse.mutable_loraMeasurement();
     loraMessage.set_Success(false);
     
     UartResponseSend(uartResponse);
@@ -220,7 +220,7 @@ void UartSendLoRaRxError() {
 
 void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
     UartResponse<PROTO_LIMITS> uartResponse;
-    auto& loraMessage = uartResponse.mutable_loraReceiveMessage();
+    auto& loraMessage = uartResponse.mutable_loraMeasurement();
     loraMessage.set_Rssi(rssi);
     loraMessage.set_IsMeasurementFragment(isMeasurementFragment);
     loraMessage.set_Success(true);

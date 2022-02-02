@@ -6,6 +6,7 @@
 #include "ProtoWriteBuffer.h"
 #include "cli.h"
 #include "config.h"
+#include "lora_device_messages.h"
 #include "device_messages.h"
 #include "measurements.h"
 #include "tasks.h"
@@ -116,7 +117,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     RegisterNewMeasurement(sequenceNumber, rssi, snr);
 
     auto commandType = loraPhyMessage.get_command();
-    if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::Configuration) {
+    if (commandType == CommandType::Configuration) {
         if (loraPhyMessage.has_spreadingFactorConfig()) {
             auto config = loraPhyMessage.get_spreadingFactorConfig();
             UpdateRadioSpreadingFactor(config.get_spreadingFactorRx(), config.get_spreadingFactorTx(), true);
@@ -126,13 +127,13 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
             // TODO send ACK if success
         }
-    } else if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::MeasurementStreamRequest) {
+    } else if (commandType == CommandType::MeasurementStreamRequest) {
         // TODO filter based on device id
         // StreamMeasurements();
 
     } 
     
-    if (commandType == LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::MeasurementStreamFragmentReply) {
+    if (commandType == CommandType::MeasurementStreamFragmentReply) {
         UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, true);
     }
     else {
@@ -165,7 +166,7 @@ ProtoWriteBuffer *GetWriteAccess() {
 
 void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
     loraPhyMessage.clear();
-    loraPhyMessage.set_command(::LoRaMessage<MAX_PAYLOAD_LENGTH>::CommandType::UniCast);
+    loraPhyMessage.set_command(CommandType::UniCast);
     loraPhyMessage.set_payload(command.get_Payload());
     loraPhyMessage.set_SequenceNumber(command.get_SequenceNumber());
 

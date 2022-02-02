@@ -38,5 +38,5 @@ mkdir ${OUT_CSHARP} -ErrorAction SilentlyContinue
 
 echo "Calling protoc (C++, Python, C#) in $PWD"
 protoc --proto_path=$SRC --eams_out=$OUT_CPP ./$SRC/*.proto --plugin=protoc-gen-eams=${PLUGIN}
-protoc --proto_path=$SRC --eams_out=$OUT_PYTHON ./$SRC/*.proto --plugin=protoc-gen-eams=${PLUGIN}
-protoc --proto_path=$SRC --eams_out=$OUT_CSHARP ./$SRC/*.proto --plugin=protoc-gen-eams=${PLUGIN}
+# protoc --proto_path=$SRC --python_out=$OUT_PYTHON ./$SRC/*.proto
+protoc --proto_path=$SRC --csharp_out=$OUT_CSHARP ./$SRC/*.proto

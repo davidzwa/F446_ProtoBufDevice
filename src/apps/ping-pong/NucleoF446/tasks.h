@@ -1,5 +1,6 @@
 #include "cli.h"
 #include "device_messages.h"
+#include "lora_device_messages.h"
 
 #ifndef TIMERS__H__
 #define TIMERS__H__

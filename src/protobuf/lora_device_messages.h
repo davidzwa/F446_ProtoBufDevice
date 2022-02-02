@@ -44,7 +44,7 @@
 #include <limits>
 
 // Include external proto definitions
-#include <shared/lora_config.h>
+#include <shared/experiment_config.h>
 
 
 template<uint32_t payload_LENGTH>
@@ -113,19 +113,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     }
 
     ~LoRaMessage() override = default;
-
-    enum class CommandType : uint32_t
-    {
-      Configuration = 0,
-      MultiCast = 1,
-      MultiCastAck = 2,
-      UniCast = 3,
-      UniCastAck = 4,
-      MeasurementStreamRequest = 5,
-      MeasurementStreamFragmentReply = 6,
-      SequenceRequest = 7,
-      SequenceResponse = 8
-    };
 
     enum class id : uint32_t
     {

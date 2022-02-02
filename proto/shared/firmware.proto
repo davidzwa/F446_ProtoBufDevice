@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message Version {
+    uint32 Major = 1;
+    uint32 Minor = 2;
+    uint32 Patch = 3;
+    uint32 Revision = 4;
+}
+
+message DeviceId {
+    uint32 Id0 = 1;
+    uint32 Id1 = 2;
+    uint32 Id2 = 3;
+}
