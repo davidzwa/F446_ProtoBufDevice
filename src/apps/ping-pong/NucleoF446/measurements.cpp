@@ -22,14 +22,16 @@ bool IsStorageDirtyAndLocked() {
 }
 
 void RegisterNewMeasurement(uint16_t sequenceNumber, int16_t rssi, int8_t snr) {
+    // Relocate rssi range of values so it fits in 8 bits
+    uint8_t rssi150 = (uint8_t)(rssi + 150);
+
+    // Confine the data in 32 bits
+    uint32_t measurement = (uint32_t)(sequenceNumber << 16) + (int16_t)(rssi150 << 8) + (int8_t)snr;
+
     if (isStorageDirtyAndLocked) return;
-    
-    // Compress the value in 32 bits 
-    // TODO
 
     // Store it in flash
-    // AppendMeasurement(0x000);
-    // TODO
+    AppendMeasurement(measurement);
 }
 
 void ClearMeasurements() {
