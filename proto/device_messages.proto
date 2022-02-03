@@ -31,7 +31,8 @@ message AckMessage {
 }
 
 message DebugMessage {
-    bytes payload = 1;
+    uint32 Code = 1;
+    bytes Payload = 2;
 }
 
 // The main message container

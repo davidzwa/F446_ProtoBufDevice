@@ -201,10 +201,11 @@ void UartSendAck(uint8_t code) {
     UartResponseSend(uartResponse);
 }
 
-void UartDebug(const char* payload, size_t length) {
+void UartDebug(const char* payload, uint32_t code, size_t length) {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& debugMessage = uartResponse.mutable_debugMessage();
-    auto& debugPayload = debugMessage.mutable_payload();
+    debugMessage.set_Code(code);
+    auto& debugPayload = debugMessage.mutable_Payload();
     debugPayload.set((uint8_t*)payload, length);
 
     UartResponseSend(uartResponse);

@@ -665,19 +665,21 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t payload_LENGTH>
+template<uint32_t Payload_LENGTH>
 class DebugMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
     DebugMessage() = default;
     DebugMessage(const DebugMessage& rhs )
     {
-      set_payload(rhs.get_payload());
+      set_Code(rhs.get_Code());
+      set_Payload(rhs.get_Payload());
     }
 
     DebugMessage(const DebugMessage&& rhs ) noexcept
     {
-      set_payload(rhs.get_payload());
+      set_Code(rhs.get_Code());
+      set_Payload(rhs.get_Payload());
     }
 
     ~DebugMessage() override = default;
@@ -685,35 +687,50 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      PAYLOAD = 1
+      CODE = 1,
+      PAYLOAD = 2
     };
 
     DebugMessage& operator=(const DebugMessage& rhs)
     {
-      set_payload(rhs.get_payload());
+      set_Code(rhs.get_Code());
+      set_Payload(rhs.get_Payload());
       return *this;
     }
 
     DebugMessage& operator=(const DebugMessage&& rhs) noexcept
     {
-      set_payload(rhs.get_payload());
+      set_Code(rhs.get_Code());
+      set_Payload(rhs.get_Payload());
       return *this;
     }
 
-    inline void clear_payload() { payload_.clear(); }
-    inline ::EmbeddedProto::FieldBytes<payload_LENGTH>& mutable_payload() { return payload_; }
-    inline void set_payload(const ::EmbeddedProto::FieldBytes<payload_LENGTH>& rhs) { payload_.set(rhs); }
-    inline const ::EmbeddedProto::FieldBytes<payload_LENGTH>& get_payload() const { return payload_; }
-    inline const uint8_t* payload() const { return payload_.get_const(); }
+    inline void clear_Code() { Code_.clear(); }
+    inline void set_Code(const EmbeddedProto::uint32& value) { Code_ = value; }
+    inline void set_Code(const EmbeddedProto::uint32&& value) { Code_ = value; }
+    inline EmbeddedProto::uint32& mutable_Code() { return Code_; }
+    inline const EmbeddedProto::uint32& get_Code() const { return Code_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Code() const { return Code_.get(); }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
+      if((0U != Code_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Code_.serialize_with_id(static_cast<uint32_t>(id::CODE), buffer, false);
+      }
+
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
-        return_value = payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
       }
 
       return return_value;
@@ -732,8 +749,12 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
+          case id::CODE:
+            return_value = Code_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::PAYLOAD:
-            return_value = payload_.deserialize_check_type(buffer, wire_type);
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -765,20 +786,22 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_payload();
+      clear_Code();
+      clear_Payload();
 
     }
 
     private:
 
 
-      ::EmbeddedProto::FieldBytes<payload_LENGTH> payload_;
+      EmbeddedProto::uint32 Code_ = 0U;
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
 };
 
 template<uint32_t bootMessage_AppName_LENGTH, 
 uint32_t loraMeasurement_Payload_LENGTH, 
-uint32_t debugMessage_payload_LENGTH>
+uint32_t debugMessage_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -1052,10 +1075,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(id::DEBUGMESSAGE == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.debugMessage_.~DebugMessage<debugMessage_payload_LENGTH>();
+        Body_.debugMessage_.~DebugMessage<debugMessage_Payload_LENGTH>();
       }
     }
-    inline void set_debugMessage(const DebugMessage<debugMessage_payload_LENGTH>& value)
+    inline void set_debugMessage(const DebugMessage<debugMessage_Payload_LENGTH>& value)
     {
       if(id::DEBUGMESSAGE != which_Body_)
       {
@@ -1063,7 +1086,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.debugMessage_ = value;
     }
-    inline void set_debugMessage(const DebugMessage<debugMessage_payload_LENGTH>&& value)
+    inline void set_debugMessage(const DebugMessage<debugMessage_Payload_LENGTH>&& value)
     {
       if(id::DEBUGMESSAGE != which_Body_)
       {
@@ -1071,7 +1094,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.debugMessage_ = value;
     }
-    inline DebugMessage<debugMessage_payload_LENGTH>& mutable_debugMessage()
+    inline DebugMessage<debugMessage_Payload_LENGTH>& mutable_debugMessage()
     {
       if(id::DEBUGMESSAGE != which_Body_)
       {
@@ -1079,8 +1102,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.debugMessage_;
     }
-    inline const DebugMessage<debugMessage_payload_LENGTH>& get_debugMessage() const { return Body_.debugMessage_; }
-    inline const DebugMessage<debugMessage_payload_LENGTH>& debugMessage() const { return Body_.debugMessage_; }
+    inline const DebugMessage<debugMessage_Payload_LENGTH>& get_debugMessage() const { return Body_.debugMessage_; }
+    inline const DebugMessage<debugMessage_Payload_LENGTH>& debugMessage() const { return Body_.debugMessage_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -1202,7 +1225,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
         AckMessage ackMessage_;
         LoraMeasurement<loraMeasurement_Payload_LENGTH> loraMeasurement_;
-        DebugMessage<debugMessage_payload_LENGTH> debugMessage_;
+        DebugMessage<debugMessage_Payload_LENGTH> debugMessage_;
       };
       Body Body_;
 
@@ -1233,7 +1256,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::DEBUGMESSAGE:
-            new(&Body_.debugMessage_) DebugMessage<debugMessage_payload_LENGTH>;
+            new(&Body_.debugMessage_) DebugMessage<debugMessage_Payload_LENGTH>;
             which_Body_ = id::DEBUGMESSAGE;
             break;
 
@@ -1258,7 +1281,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::DEBUGMESSAGE:
-            Body_.debugMessage_.~DebugMessage<debugMessage_payload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.debugMessage_.~DebugMessage<debugMessage_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;

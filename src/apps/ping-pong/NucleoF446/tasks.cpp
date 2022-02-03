@@ -11,8 +11,8 @@
 #include "uart_messages.h"
 
 #define MAX_SEQUENCE_NUMBERS 5000
-#define DEFAULT_TX_PERIOD 1000
-// #define STANDALONE_TX_INFINITE 
+#define DEFAULT_TX_PERIOD 2000
+#define STANDALONE_TX_INFINITE
 
 // Uart debugging
 static TimerEvent_t heartBeatTimer;
@@ -63,8 +63,7 @@ static void OnPeriodicTx(void* context) {
     command.set_SequenceNumber(periodicCurrentCounter);
 
     TransmitUnicast(command);
-
-    UartDebug("PeriodTX", 8);
+    UartDebug("PeriodTX", periodicCurrentCounter, 8);
     periodicCurrentCounter++;
 
     if (periodicCurrentCounter > sequenceNumberLimit) {
@@ -72,8 +71,7 @@ static void OnPeriodicTx(void* context) {
             // We start again with new counter
             periodicCurrentCounter = 0;
             TimerReset(&periodicTxTimer);
-        }
-        else {
+        } else {
             // We will send the data once
             // RequestStreamMeasurements();
             TimerStop(&periodicTxTimer);
@@ -108,8 +106,7 @@ void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod) {
         sequenceNumberLimit = MAX_SEQUENCE_NUMBERS;
 
         ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
-    }
-    else {
+    } else {
         standaloneAlwaysSendPeriodically = false;
         TimerStop(&periodicTxTimer);
     }
