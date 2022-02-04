@@ -10,14 +10,16 @@ message LoRaMessage {
     bool IsMulticast = 1; 
     uint32 DeviceId = 2;
     uint32 CorrelationCode = 3;
+    bytes Payload = 4;
+    
     oneof Body {
-        ForwardSequenceConfig sequenceConfig = 4;
-        ForwardRadioConfigUpdate forwardRadioConfigUpdate = 5;
-        ForwardExperimentCommand forwardExperimentCommand = 6; // Set role TX/RX, play/pause or switch to predefined experiment
-        MeasurementStreamRequest measurementStreamRequest = 7;
-        MeasurementStreamFragment measurementStreamFragment = 8;
+        ForwardSequenceConfig sequenceConfig = 5;
+        ForwardRadioConfigUpdate forwardRadioConfigUpdate = 6;
+        ForwardExperimentCommand forwardExperimentCommand = 7; // Set role TX/RX, play/pause or switch to predefined experiment
+        MeasurementStreamRequest measurementStreamRequest = 8;
+        MeasurementStreamFragment measurementStreamFragment = 9;
         
         // Avoid if possible
-        // bytes payload = 7;
+        // 
     }
 }

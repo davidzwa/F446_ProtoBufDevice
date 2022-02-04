@@ -815,19 +815,16 @@ class MeasurementStreamRequest final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t FragmentPayload_LENGTH>
 class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
 {
   public:
     MeasurementStreamFragment() = default;
     MeasurementStreamFragment(const MeasurementStreamFragment& rhs )
     {
-      set_FragmentPayload(rhs.get_FragmentPayload());
     }
 
     MeasurementStreamFragment(const MeasurementStreamFragment&& rhs ) noexcept
     {
-      set_FragmentPayload(rhs.get_FragmentPayload());
     }
 
     ~MeasurementStreamFragment() override = default;
@@ -835,36 +832,22 @@ class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      FRAGMENTPAYLOAD = 1
     };
 
     MeasurementStreamFragment& operator=(const MeasurementStreamFragment& rhs)
     {
-      set_FragmentPayload(rhs.get_FragmentPayload());
       return *this;
     }
 
     MeasurementStreamFragment& operator=(const MeasurementStreamFragment&& rhs) noexcept
     {
-      set_FragmentPayload(rhs.get_FragmentPayload());
       return *this;
     }
-
-    inline void clear_FragmentPayload() { FragmentPayload_.clear(); }
-    inline ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH>& mutable_FragmentPayload() { return FragmentPayload_; }
-    inline void set_FragmentPayload(const ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH>& rhs) { FragmentPayload_.set(rhs); }
-    inline const ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH>& get_FragmentPayload() const { return FragmentPayload_; }
-    inline const uint8_t* FragmentPayload() const { return FragmentPayload_.get_const(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-      {
-        return_value = FragmentPayload_.serialize_with_id(static_cast<uint32_t>(id::FRAGMENTPAYLOAD), buffer, false);
-      }
 
       return return_value;
     };
@@ -882,10 +865,6 @@ class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::FRAGMENTPAYLOAD:
-            return_value = FragmentPayload_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -915,14 +894,12 @@ class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_FragmentPayload();
 
     }
 
     private:
 
 
-      ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH> FragmentPayload_;
 
 };
 

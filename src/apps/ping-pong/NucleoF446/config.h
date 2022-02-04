@@ -1,4 +1,5 @@
 #include "radio.h"
+#include "lora_device_messages.h"
 
 #ifndef CONFIG_H__
 #define CONFIG_H__
@@ -82,12 +83,12 @@
 #endif
 
 // Protobuf defines
-
+#define MAX_LORA_BYTES (50)
+#define LORA_MSG_TEMPLATE LoRaMessage<MAX_LORA_BYTES>
 
 #define RX_TIMEOUT_VALUE 1000
 #define BUFFER_SIZE 64  // Define the payload size here
 #define MAX_APPNAME_LENGTH 20
-#define MAX_PAYLOAD_LENGTH 120
 
 #define FIRMWARE_VERSION 0x0200010B
 #endif

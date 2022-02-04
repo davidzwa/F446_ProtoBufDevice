@@ -404,7 +404,7 @@ class ClearMeasurementsCommand final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>
+template<uint32_t transmitCommand_Payload_LENGTH>
 class UartCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -790,10 +790,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       if(id::TRANSMITCOMMAND == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.transmitCommand_.~LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>();
+        Body_.transmitCommand_.~LoRaMessage<transmitCommand_Payload_LENGTH>();
       }
     }
-    inline void set_transmitCommand(const LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>& value)
+    inline void set_transmitCommand(const LoRaMessage<transmitCommand_Payload_LENGTH>& value)
     {
       if(id::TRANSMITCOMMAND != which_Body_)
       {
@@ -801,7 +801,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       }
       Body_.transmitCommand_ = value;
     }
-    inline void set_transmitCommand(const LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>&& value)
+    inline void set_transmitCommand(const LoRaMessage<transmitCommand_Payload_LENGTH>&& value)
     {
       if(id::TRANSMITCOMMAND != which_Body_)
       {
@@ -809,7 +809,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       }
       Body_.transmitCommand_ = value;
     }
-    inline LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>& mutable_transmitCommand()
+    inline LoRaMessage<transmitCommand_Payload_LENGTH>& mutable_transmitCommand()
     {
       if(id::TRANSMITCOMMAND != which_Body_)
       {
@@ -817,8 +817,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.transmitCommand_;
     }
-    inline const LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>& get_transmitCommand() const { return Body_.transmitCommand_; }
-    inline const LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>& transmitCommand() const { return Body_.transmitCommand_; }
+    inline const LoRaMessage<transmitCommand_Payload_LENGTH>& get_transmitCommand() const { return Body_.transmitCommand_; }
+    inline const LoRaMessage<transmitCommand_Payload_LENGTH>& transmitCommand() const { return Body_.transmitCommand_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -966,7 +966,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         DeviceConfiguration deviceConfiguration_;
         RequestBootInfo requestBootInfo_;
         ClearMeasurementsCommand clearMeasurementsCommand_;
-        LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH> transmitCommand_;
+        LoRaMessage<transmitCommand_Payload_LENGTH> transmitCommand_;
       };
       Body Body_;
 
@@ -1007,7 +1007,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::TRANSMITCOMMAND:
-            new(&Body_.transmitCommand_) LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>;
+            new(&Body_.transmitCommand_) LoRaMessage<transmitCommand_Payload_LENGTH>;
             which_Body_ = id::TRANSMITCOMMAND;
             break;
 
@@ -1038,7 +1038,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             Body_.clearMeasurementsCommand_.~ClearMeasurementsCommand(); // NOSONAR Unions require this.
             break;
           case id::TRANSMITCOMMAND:
-            Body_.transmitCommand_.~LoRaMessage<transmitCommand_measurementStreamFragment_FragmentPayload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.transmitCommand_.~LoRaMessage<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;

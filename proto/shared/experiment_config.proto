@@ -57,5 +57,5 @@ message MeasurementStreamRequest {
 }
 
 message MeasurementStreamFragment {
-    bytes FragmentPayload = 1;
+    // Payload in generic bytes field
 }

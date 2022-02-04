@@ -2,11 +2,10 @@
 
 #include "delay.h"
 #include "experiment_config.h"
-#include "device_messages.h"
 #include "lora_device_messages.h"
 #include "radio_phy.h"
 
-LoRaMessage loraMessage;
+LORA_MSG_TEMPLATE loraMessage;
 uint16_t lastSequenceNumberReceived = 0xFFFF;
 bool isStorageDirtyAndLocked = false;
 
@@ -47,12 +46,10 @@ void ClearMeasurements() {
 void RequestStreamMeasurements(/*DeviceId*/) {
     loraMessage.clear();
     loraMessage.set_CorrelationCode(0xFFFE);
-    loraMessage.set_command(CommandType::MeasurementStreamRequest);
-    // loraMessage.set_SequenceNumber(0xFFFE);
+    auto body = loraMessage.mutable_measurementStreamRequest();
+    body.set_FragmentSizeMax(MEASUREMENT_FRAGMENT_SIZE);
 
-    auto radioWriteBuffer = GetWriteAccess();
-    loraMessage.serialize(*radioWriteBuffer);
-    TransmitProtoBufferInternal();
+    TransmitLoRaMessage(loraMessage);
 }
 
 void StreamMeasurements() {

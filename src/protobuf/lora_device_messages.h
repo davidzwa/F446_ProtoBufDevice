@@ -47,7 +47,7 @@
 #include <shared/experiment_config.h>
 
 
-template<uint32_t measurementStreamFragment_FragmentPayload_LENGTH>
+template<uint32_t Payload_LENGTH>
 class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -57,6 +57,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
       set_CorrelationCode(rhs.get_CorrelationCode());
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -96,6 +97,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
       set_CorrelationCode(rhs.get_CorrelationCode());
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -138,11 +140,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       ISMULTICAST = 1,
       DEVICEID = 2,
       CORRELATIONCODE = 3,
-      SEQUENCECONFIG = 4,
-      FORWARDRADIOCONFIGUPDATE = 5,
-      FORWARDEXPERIMENTCOMMAND = 6,
-      MEASUREMENTSTREAMREQUEST = 7,
-      MEASUREMENTSTREAMFRAGMENT = 8
+      PAYLOAD = 4,
+      SEQUENCECONFIG = 5,
+      FORWARDRADIOCONFIGUPDATE = 6,
+      FORWARDEXPERIMENTCOMMAND = 7,
+      MEASUREMENTSTREAMREQUEST = 8,
+      MEASUREMENTSTREAMFRAGMENT = 9
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -150,6 +153,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
       set_CorrelationCode(rhs.get_CorrelationCode());
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -190,6 +194,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       set_IsMulticast(rhs.get_IsMulticast());
       set_DeviceId(rhs.get_DeviceId());
       set_CorrelationCode(rhs.get_CorrelationCode());
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -245,6 +250,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_CorrelationCode() { return CorrelationCode_; }
     inline const EmbeddedProto::uint32& get_CorrelationCode() const { return CorrelationCode_; }
     inline EmbeddedProto::uint32::FIELD_TYPE CorrelationCode() const { return CorrelationCode_.get(); }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
 
     id get_which_Body() const { return which_Body_; }
 
@@ -413,10 +424,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       if(id::MEASUREMENTSTREAMFRAGMENT == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.measurementStreamFragment_.~MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>();
+        Body_.measurementStreamFragment_.~MeasurementStreamFragment();
       }
     }
-    inline void set_measurementStreamFragment(const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& value)
+    inline void set_measurementStreamFragment(const MeasurementStreamFragment& value)
     {
       if(id::MEASUREMENTSTREAMFRAGMENT != which_Body_)
       {
@@ -424,7 +435,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       }
       Body_.measurementStreamFragment_ = value;
     }
-    inline void set_measurementStreamFragment(const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>&& value)
+    inline void set_measurementStreamFragment(const MeasurementStreamFragment&& value)
     {
       if(id::MEASUREMENTSTREAMFRAGMENT != which_Body_)
       {
@@ -432,7 +443,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       }
       Body_.measurementStreamFragment_ = value;
     }
-    inline MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& mutable_measurementStreamFragment()
+    inline MeasurementStreamFragment& mutable_measurementStreamFragment()
     {
       if(id::MEASUREMENTSTREAMFRAGMENT != which_Body_)
       {
@@ -440,8 +451,8 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.measurementStreamFragment_;
     }
-    inline const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& get_measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
-    inline const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
+    inline const MeasurementStreamFragment& get_measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
+    inline const MeasurementStreamFragment& measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -461,6 +472,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       if((0U != CorrelationCode_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = CorrelationCode_.serialize_with_id(static_cast<uint32_t>(id::CORRELATIONCODE), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
       }
 
       switch(which_Body_)
@@ -532,6 +548,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             return_value = CorrelationCode_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::PAYLOAD:
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::SEQUENCECONFIG:
             return_value = deserialize_Body(id::SEQUENCECONFIG, Body_.sequenceConfig_, buffer, wire_type);
 
@@ -589,6 +609,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       clear_IsMulticast();
       clear_DeviceId();
       clear_CorrelationCode();
+      clear_Payload();
       clear_Body();
 
     }
@@ -599,6 +620,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::boolean IsMulticast_ = false;
       EmbeddedProto::uint32 DeviceId_ = 0U;
       EmbeddedProto::uint32 CorrelationCode_ = 0U;
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
       id which_Body_ = id::NOT_SET;
       union Body
@@ -609,7 +631,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         ForwardRadioConfigUpdate forwardRadioConfigUpdate_;
         ForwardExperimentCommand forwardExperimentCommand_;
         MeasurementStreamRequest measurementStreamRequest_;
-        MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH> measurementStreamFragment_;
+        MeasurementStreamFragment measurementStreamFragment_;
       };
       Body Body_;
 
@@ -645,7 +667,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::MEASUREMENTSTREAMFRAGMENT:
-            new(&Body_.measurementStreamFragment_) MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>;
+            new(&Body_.measurementStreamFragment_) MeasurementStreamFragment;
             which_Body_ = id::MEASUREMENTSTREAMFRAGMENT;
             break;
 
@@ -673,7 +695,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             Body_.measurementStreamRequest_.~MeasurementStreamRequest(); // NOSONAR Unions require this.
             break;
           case id::MEASUREMENTSTREAMFRAGMENT:
-            Body_.measurementStreamFragment_.~MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.measurementStreamFragment_.~MeasurementStreamFragment(); // NOSONAR Unions require this.
             break;
           default:
             break;

@@ -10,17 +10,17 @@
 #include "ProtoWriteBuffer.h"
 #include "config.h"
 #include "delay.h"
-#include "device_messages.h"
+#include "uart_control_messages.h"
+#include "uart_device_messages.h"
 #include "measurements.h"
 #include "radio_config.h"
 #include "radio_phy.h"
 #include "uart.h"
 #include "tasks.h"
-#include "uart_messages.h"
 #include "utilities.h"
 #include "utils.h"
 
-#define PROTO_LIMITS MAX_APPNAME_LENGTH, MAX_PAYLOAD_LENGTH, MAX_PAYLOAD_LENGTH
+#define PROTO_LIMITS MAX_APPNAME_LENGTH, MAX_LORA_BYTES, MAX_LORA_BYTES
 #define PACKET_SIZE_LIMIT 256
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
@@ -35,7 +35,7 @@ ProtoWriteBuffer writeBuffer;
 bool newCommandReceived = false;
 RadioRxConfig rxConf;
 RadioTxConfig txConf;
-UartCommand<MAX_PAYLOAD_LENGTH> uartCommand;
+UartCommand<MAX_LORA_BYTES> uartCommand;
 
 extern Uart_t Uart2;
 Uart_t *uart = &Uart2;
@@ -144,14 +144,13 @@ void ProcessCliCommand() {
         UartSendAck(1);
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
-        TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
-        if (command.has_Period() && command.get_Period() > 50) {
-            TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
-        } else {
-            TransmitUnicast(command);
-        }
-
+        LoRaMessage<MAX_LORA_BYTES> command = uartCommand.get_transmitCommand();
+        TransmitLoRaMessage(command);
         UartSendAck(1);
+        
+        // This is moved to separate uart control command
+        // if (command.has_Period() && command.get_Period() > 50) {
+        // TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
     } else if (uartCommand.has_clearMeasurementsCommand()) {
@@ -215,15 +214,15 @@ void UartSendLoRaRxError() {
     UartResponseSend(uartResponse);
 }
 
-void UartSendLoRaRx(const EmbeddedProto::FieldBytes<MAX_PAYLOAD_LENGTH> payload, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
+void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
     UartResponse<PROTO_LIMITS> uartResponse;
-    auto& loraMessage = uartResponse.mutable_loraMeasurement();
-    loraMessage.set_Rssi(rssi);
-    loraMessage.set_IsMeasurementFragment(isMeasurementFragment);
-    loraMessage.set_Success(true);
-    loraMessage.set_Snr(snr);
-    loraMessage.set_SequenceNumber(sequenceNumber);
-    loraMessage.set_Payload(payload);
+    auto& loraMeasurement = uartResponse.mutable_loraMeasurement();
+    loraMeasurement.set_Rssi(rssi);
+    loraMeasurement.set_IsMeasurementFragment(isMeasurementFragment);
+    loraMeasurement.set_Success(true);
+    loraMeasurement.set_Snr(snr);
+    loraMeasurement.set_SequenceNumber(sequenceNumber);
+    loraMeasurement.set_Payload(message);
 
     UartResponseSend(uartResponse);
 }

@@ -7,14 +7,12 @@
 #include "cli.h"
 #include "config.h"
 #include "lora_device_messages.h"
-#include "device_messages.h"
 #include "measurements.h"
 #include "tasks.h"
-#include "uart_messages.h"
 
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
-LoRaMessage<MAX_PAYLOAD_LENGTH> loraPhyMessage;
+LoRaMessage<MAX_LORA_BYTES> loraPhyMessage;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
@@ -113,32 +111,32 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
         return;
     }
 
-    auto sequenceNumber = loraPhyMessage.get_SequenceNumber();
+    auto sequenceNumber = loraPhyMessage.get_CorrelationCode();
     RegisterNewMeasurement(sequenceNumber, rssi, snr);
 
-    auto commandType = loraPhyMessage.get_command();
-    if (commandType == CommandType::Configuration) {
-        if (loraPhyMessage.has_spreadingFactorConfig()) {
-            auto config = loraPhyMessage.get_spreadingFactorConfig();
-            UpdateRadioSpreadingFactor(config.get_spreadingFactorRx(), config.get_spreadingFactorTx(), true);
+    if (loraPhyMessage.has_forwardRadioConfigUpdate()) {
+        auto configMessage = loraPhyMessage.get_forwardRadioConfigUpdate();
+        if (configMessage.has_radioRxConfig()) {
+            auto config = configMessage.get_radioRxConfig();
+            // TODO
+            // UpdateRadioRxConfig();
         }
-        if (loraPhyMessage.has_sequenceRequestConfig()) {
-            SetSequenceRequestConfig(loraPhyMessage.get_sequenceRequestConfig());
+        if (configMessage.has_radioTxConfig()) {
+            auto config = configMessage.get_radioTxConfig();
+            // TODO apply
+            // UpdateRadioTxConfig();
+        }
+        if (loraPhyMessage.has_sequenceConfig()) {
+            SetSequenceRequestConfig(loraPhyMessage.get_sequenceConfig());
 
             // TODO send ACK if success
         }
-    } else if (commandType == CommandType::MeasurementStreamRequest) {
+    } else if (loraPhyMessage.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();
-
     } 
     
-    if (commandType == CommandType::MeasurementStreamFragmentReply) {
-        UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, true);
-    }
-    else {
-        UartSendLoRaRx(loraPhyMessage.get_payload(), sequenceNumber, rssi, snr, false);
-    }
+    UartSendLoRaRx(loraPhyMessage, sequenceNumber, rssi, snr, false);
 
     // Ensure that the message is not re-used
     readLoraBuffer.clear();
@@ -155,48 +153,8 @@ void OnRxError(void) {
     Radio.Rx(0);
 }
 
-void TransmitProtoBufferInternal() {
+void TransmitLoRaMessage(LORA_MSG_TEMPLATE& message) {
+    message.serialize(writeLoraBuffer);
     Radio.Send(writeLoraBuffer.get_data(), writeLoraBuffer.get_size());
     writeLoraBuffer.clear();
 }
-
-ProtoWriteBuffer *GetWriteAccess() {
-    return &writeLoraBuffer;
-}
-
-void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command) {
-    loraPhyMessage.clear();
-    loraPhyMessage.set_command(CommandType::UniCast);
-    loraPhyMessage.set_payload(command.get_Payload());
-    loraPhyMessage.set_SequenceNumber(command.get_SequenceNumber());
-
-    auto result = loraPhyMessage.serialize(writeLoraBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        TransmitProtoBufferInternal();
-    }
-}
-
-void TransmitSpreadingFactorConfig(uint8_t spreadingFactor) {
-    loraPhyMessage.clear();
-    loraPhyMessage.mutable_spreadingFactorConfig().set_spreadingFactorRx(spreadingFactor);
-    loraPhyMessage.mutable_spreadingFactorConfig().set_spreadingFactorTx(spreadingFactor);
-
-    auto result = loraPhyMessage.serialize(writeLoraBuffer);
-    if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        TransmitProtoBufferInternal();
-    }
-}
-
-// void TransmitSequenceRequest() {
-//     loraPhyMessage.clear();
-
-//     auto sequenceConfig = loraPhyMessage.mutable_sequenceRequestConfig();
-//     sequenceConfig.set_DeviceId(0x00);
-//     sequenceConfig.set_Interval(500);
-//     sequenceConfig.set_MessageCount(5);
-
-//     auto result = sequenceConfig.serialize(writeLoraBuffer);
-//     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-//         TransmitProtoBuffer();
-//     }
-// }

@@ -2,7 +2,7 @@
 #include "config.h"
 #include "radio.h"
 #include "stdint.h"
-#include "uart_messages.h"
+#include "lora_device_messages.h"
 
 #ifndef RADIO_PHY__H__
 #define RADIO_PHY__H__
@@ -10,9 +10,7 @@
 void InitRadioPhy();
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor);
 
-void TransmitProtoBufferInternal();
-void TransmitUnicast(TransmitCommand<MAX_PAYLOAD_LENGTH> command);
-ProtoWriteBuffer *GetWriteAccess();
+void TransmitLoRaMessage(LORA_MSG_TEMPLATE& message);
 
 void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize);
 void TxSequenceTestTimerCallback(void *context);

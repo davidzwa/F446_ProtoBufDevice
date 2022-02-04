@@ -45,9 +45,10 @@
 
 // Include external proto definitions
 #include <shared/firmware.h>
+#include <lora_device_messages.h>
 
 
-template<uint32_t Payload_LENGTH>
+template<uint32_t Payload_Payload_LENGTH>
 class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -175,10 +176,11 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
 
     inline void clear_Payload() { Payload_.clear(); }
-    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
-    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
-    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
-    inline const uint8_t* Payload() const { return Payload_.get_const(); }
+    inline void set_Payload(const LoRaMessage<Payload_Payload_LENGTH>& value) { Payload_ = value; }
+    inline void set_Payload(const LoRaMessage<Payload_Payload_LENGTH>&& value) { Payload_ = value; }
+    inline LoRaMessage<Payload_Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline const LoRaMessage<Payload_Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const LoRaMessage<Payload_Payload_LENGTH>& Payload() const { return Payload_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -347,7 +349,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 SequenceNumber_ = 0U;
       EmbeddedProto::boolean IsMeasurementFragment_ = false;
       EmbeddedProto::boolean Success_ = false;
-      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
+      LoRaMessage<Payload_Payload_LENGTH> Payload_;
 
 };
 
@@ -800,7 +802,7 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
 };
 
 template<uint32_t bootMessage_AppName_LENGTH, 
-uint32_t loraMeasurement_Payload_LENGTH, 
+uint32_t loraMeasurement_Payload_Payload_LENGTH, 
 uint32_t debugMessage_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
@@ -1036,10 +1038,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(id::LORAMEASUREMENT == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_LENGTH>();
+        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>();
       }
     }
-    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_LENGTH>& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& value)
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1047,7 +1049,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.loraMeasurement_ = value;
     }
-    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_LENGTH>&& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>&& value)
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1055,7 +1057,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.loraMeasurement_ = value;
     }
-    inline LoraMeasurement<loraMeasurement_Payload_LENGTH>& mutable_loraMeasurement()
+    inline LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& mutable_loraMeasurement()
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1063,8 +1065,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.loraMeasurement_;
     }
-    inline const LoraMeasurement<loraMeasurement_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
-    inline const LoraMeasurement<loraMeasurement_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
 
     inline bool has_debugMessage() const
     {
@@ -1224,7 +1226,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
         AckMessage ackMessage_;
-        LoraMeasurement<loraMeasurement_Payload_LENGTH> loraMeasurement_;
+        LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH> loraMeasurement_;
         DebugMessage<debugMessage_Payload_LENGTH> debugMessage_;
       };
       Body Body_;
@@ -1251,7 +1253,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::LORAMEASUREMENT:
-            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_Payload_LENGTH>;
+            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>;
             which_Body_ = id::LORAMEASUREMENT;
             break;
 
@@ -1278,7 +1280,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
             break;
           case id::LORAMEASUREMENT:
-            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::DEBUGMESSAGE:
             Body_.debugMessage_.~DebugMessage<debugMessage_Payload_LENGTH>(); // NOSONAR Unions require this.

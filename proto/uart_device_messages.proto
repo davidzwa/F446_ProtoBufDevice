@@ -4,6 +4,7 @@
 syntax = "proto3";
 
 import "shared/firmware.proto";
+import "lora_device_messages.proto";
 
 option csharp_namespace = "LoRa";
 
@@ -15,7 +16,7 @@ message LoraMeasurement
     uint32 SequenceNumber = 4;
     optional bool IsMeasurementFragment = 5;
     bool Success = 6;
-    bytes Payload = 7;
+    LoRaMessage Payload = 7;
 }
 
 message BootMessage {
