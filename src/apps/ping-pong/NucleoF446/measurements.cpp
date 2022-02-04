@@ -6,8 +6,7 @@
 #include "lora_device_messages.h"
 #include "radio_phy.h"
 
-#define FIXED_LORA_FRAGMENT_BYTES 100
-LoRaMessage<FIXED_LORA_FRAGMENT_BYTES> loraBlobMessage;
+LoRaMessage loraMessage;
 uint16_t lastSequenceNumberReceived = 0xFFFF;
 bool isStorageDirtyAndLocked = false;
 
@@ -46,12 +45,13 @@ void ClearMeasurements() {
  * Request another device to stream its measurements
  * */
 void RequestStreamMeasurements(/*DeviceId*/) {
-    loraBlobMessage.clear();
-    loraBlobMessage.set_command(CommandType::MeasurementStreamRequest);
-    loraBlobMessage.set_SequenceNumber(0xFFFE);
+    loraMessage.clear();
+    loraMessage.set_CorrelationCode(0xFFFE);
+    loraMessage.set_command(CommandType::MeasurementStreamRequest);
+    // loraMessage.set_SequenceNumber(0xFFFE);
 
     auto radioWriteBuffer = GetWriteAccess();
-    loraBlobMessage.serialize(*radioWriteBuffer);
+    loraMessage.serialize(*radioWriteBuffer);
     TransmitProtoBufferInternal();
 }
 

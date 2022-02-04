@@ -47,15 +47,16 @@
 #include <shared/experiment_config.h>
 
 
-template<uint32_t payload_LENGTH>
+template<uint32_t measurementStreamFragment_FragmentPayload_LENGTH>
 class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
     LoRaMessage() = default;
     LoRaMessage(const LoRaMessage& rhs )
     {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_CorrelationCode(rhs.get_CorrelationCode());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -64,16 +65,24 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
+        case id::SEQUENCECONFIG:
+          set_sequenceConfig(rhs.get_sequenceConfig());
           break;
 
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+        case id::FORWARDRADIOCONFIGUPDATE:
+          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
 
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
+        case id::FORWARDEXPERIMENTCOMMAND:
+          set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::MEASUREMENTSTREAMREQUEST:
+          set_measurementStreamRequest(rhs.get_measurementStreamRequest());
+          break;
+
+        case id::MEASUREMENTSTREAMFRAGMENT:
+          set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
         default:
@@ -84,8 +93,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
     LoRaMessage(const LoRaMessage&& rhs ) noexcept
     {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_CorrelationCode(rhs.get_CorrelationCode());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -94,16 +104,24 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
+        case id::SEQUENCECONFIG:
+          set_sequenceConfig(rhs.get_sequenceConfig());
           break;
 
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+        case id::FORWARDRADIOCONFIGUPDATE:
+          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
 
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
+        case id::FORWARDEXPERIMENTCOMMAND:
+          set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::MEASUREMENTSTREAMREQUEST:
+          set_measurementStreamRequest(rhs.get_measurementStreamRequest());
+          break;
+
+        case id::MEASUREMENTSTREAMFRAGMENT:
+          set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
         default:
@@ -117,17 +135,21 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      COMMAND = 1,
-      SEQUENCENUMBER = 2,
-      SPREADINGFACTORCONFIG = 3,
-      SEQUENCEREQUESTCONFIG = 4,
-      PAYLOAD = 5
+      ISMULTICAST = 1,
+      DEVICEID = 2,
+      CORRELATIONCODE = 3,
+      SEQUENCECONFIG = 4,
+      FORWARDRADIOCONFIGUPDATE = 5,
+      FORWARDEXPERIMENTCOMMAND = 6,
+      MEASUREMENTSTREAMREQUEST = 7,
+      MEASUREMENTSTREAMFRAGMENT = 8
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
     {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_CorrelationCode(rhs.get_CorrelationCode());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -136,16 +158,24 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
+        case id::SEQUENCECONFIG:
+          set_sequenceConfig(rhs.get_sequenceConfig());
           break;
 
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+        case id::FORWARDRADIOCONFIGUPDATE:
+          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
 
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
+        case id::FORWARDEXPERIMENTCOMMAND:
+          set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::MEASUREMENTSTREAMREQUEST:
+          set_measurementStreamRequest(rhs.get_measurementStreamRequest());
+          break;
+
+        case id::MEASUREMENTSTREAMFRAGMENT:
+          set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
         default:
@@ -157,8 +187,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
     LoRaMessage& operator=(const LoRaMessage&& rhs) noexcept
     {
-      set_command(rhs.get_command());
-      set_SequenceNumber(rhs.get_SequenceNumber());
+      set_IsMulticast(rhs.get_IsMulticast());
+      set_DeviceId(rhs.get_DeviceId());
+      set_CorrelationCode(rhs.get_CorrelationCode());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -167,16 +198,24 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SPREADINGFACTORCONFIG:
-          set_spreadingFactorConfig(rhs.get_spreadingFactorConfig());
+        case id::SEQUENCECONFIG:
+          set_sequenceConfig(rhs.get_sequenceConfig());
           break;
 
-        case id::SEQUENCEREQUESTCONFIG:
-          set_sequenceRequestConfig(rhs.get_sequenceRequestConfig());
+        case id::FORWARDRADIOCONFIGUPDATE:
+          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
 
-        case id::PAYLOAD:
-          set_payload(rhs.get_payload());
+        case id::FORWARDEXPERIMENTCOMMAND:
+          set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::MEASUREMENTSTREAMREQUEST:
+          set_measurementStreamRequest(rhs.get_measurementStreamRequest());
+          break;
+
+        case id::MEASUREMENTSTREAMFRAGMENT:
+          set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
         default:
@@ -186,167 +225,278 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       return *this;
     }
 
-    inline void clear_command() { command_ = static_cast<CommandType>(0); }
-    inline void set_command(const CommandType& value) { command_ = value; }
-    inline void set_command(const CommandType&& value) { command_ = value; }
-    inline const CommandType& get_command() const { return command_; }
-    inline CommandType command() const { return command_; }
+    inline void clear_IsMulticast() { IsMulticast_.clear(); }
+    inline void set_IsMulticast(const EmbeddedProto::boolean& value) { IsMulticast_ = value; }
+    inline void set_IsMulticast(const EmbeddedProto::boolean&& value) { IsMulticast_ = value; }
+    inline EmbeddedProto::boolean& mutable_IsMulticast() { return IsMulticast_; }
+    inline const EmbeddedProto::boolean& get_IsMulticast() const { return IsMulticast_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE IsMulticast() const { return IsMulticast_.get(); }
 
-    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
-    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
+    inline void clear_DeviceId() { DeviceId_.clear(); }
+    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
+    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
+    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
+    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+
+    inline void clear_CorrelationCode() { CorrelationCode_.clear(); }
+    inline void set_CorrelationCode(const EmbeddedProto::uint32& value) { CorrelationCode_ = value; }
+    inline void set_CorrelationCode(const EmbeddedProto::uint32&& value) { CorrelationCode_ = value; }
+    inline EmbeddedProto::uint32& mutable_CorrelationCode() { return CorrelationCode_; }
+    inline const EmbeddedProto::uint32& get_CorrelationCode() const { return CorrelationCode_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CorrelationCode() const { return CorrelationCode_.get(); }
 
     id get_which_Body() const { return which_Body_; }
 
-    inline bool has_spreadingFactorConfig() const
+    inline bool has_sequenceConfig() const
     {
-      return id::SPREADINGFACTORCONFIG == which_Body_;
+      return id::SEQUENCECONFIG == which_Body_;
     }
-    inline void clear_spreadingFactorConfig()
+    inline void clear_sequenceConfig()
     {
-      if(id::SPREADINGFACTORCONFIG == which_Body_)
+      if(id::SEQUENCECONFIG == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.spreadingFactorConfig_.~SpreadingFactorConfig();
+        Body_.sequenceConfig_.~ForwardSequenceConfig();
       }
     }
-    inline void set_spreadingFactorConfig(const SpreadingFactorConfig& value)
+    inline void set_sequenceConfig(const ForwardSequenceConfig& value)
     {
-      if(id::SPREADINGFACTORCONFIG != which_Body_)
+      if(id::SEQUENCECONFIG != which_Body_)
       {
-        init_Body(id::SPREADINGFACTORCONFIG);
+        init_Body(id::SEQUENCECONFIG);
       }
-      Body_.spreadingFactorConfig_ = value;
+      Body_.sequenceConfig_ = value;
     }
-    inline void set_spreadingFactorConfig(const SpreadingFactorConfig&& value)
+    inline void set_sequenceConfig(const ForwardSequenceConfig&& value)
     {
-      if(id::SPREADINGFACTORCONFIG != which_Body_)
+      if(id::SEQUENCECONFIG != which_Body_)
       {
-        init_Body(id::SPREADINGFACTORCONFIG);
+        init_Body(id::SEQUENCECONFIG);
       }
-      Body_.spreadingFactorConfig_ = value;
+      Body_.sequenceConfig_ = value;
     }
-    inline SpreadingFactorConfig& mutable_spreadingFactorConfig()
+    inline ForwardSequenceConfig& mutable_sequenceConfig()
     {
-      if(id::SPREADINGFACTORCONFIG != which_Body_)
+      if(id::SEQUENCECONFIG != which_Body_)
       {
-        init_Body(id::SPREADINGFACTORCONFIG);
+        init_Body(id::SEQUENCECONFIG);
       }
-      return Body_.spreadingFactorConfig_;
+      return Body_.sequenceConfig_;
     }
-    inline const SpreadingFactorConfig& get_spreadingFactorConfig() const { return Body_.spreadingFactorConfig_; }
-    inline const SpreadingFactorConfig& spreadingFactorConfig() const { return Body_.spreadingFactorConfig_; }
+    inline const ForwardSequenceConfig& get_sequenceConfig() const { return Body_.sequenceConfig_; }
+    inline const ForwardSequenceConfig& sequenceConfig() const { return Body_.sequenceConfig_; }
 
-    inline bool has_sequenceRequestConfig() const
+    inline bool has_forwardRadioConfigUpdate() const
     {
-      return id::SEQUENCEREQUESTCONFIG == which_Body_;
+      return id::FORWARDRADIOCONFIGUPDATE == which_Body_;
     }
-    inline void clear_sequenceRequestConfig()
+    inline void clear_forwardRadioConfigUpdate()
     {
-      if(id::SEQUENCEREQUESTCONFIG == which_Body_)
+      if(id::FORWARDRADIOCONFIGUPDATE == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.sequenceRequestConfig_.~SequenceRequestConfig();
+        Body_.forwardRadioConfigUpdate_.~ForwardRadioConfigUpdate();
       }
     }
-    inline void set_sequenceRequestConfig(const SequenceRequestConfig& value)
+    inline void set_forwardRadioConfigUpdate(const ForwardRadioConfigUpdate& value)
     {
-      if(id::SEQUENCEREQUESTCONFIG != which_Body_)
+      if(id::FORWARDRADIOCONFIGUPDATE != which_Body_)
       {
-        init_Body(id::SEQUENCEREQUESTCONFIG);
+        init_Body(id::FORWARDRADIOCONFIGUPDATE);
       }
-      Body_.sequenceRequestConfig_ = value;
+      Body_.forwardRadioConfigUpdate_ = value;
     }
-    inline void set_sequenceRequestConfig(const SequenceRequestConfig&& value)
+    inline void set_forwardRadioConfigUpdate(const ForwardRadioConfigUpdate&& value)
     {
-      if(id::SEQUENCEREQUESTCONFIG != which_Body_)
+      if(id::FORWARDRADIOCONFIGUPDATE != which_Body_)
       {
-        init_Body(id::SEQUENCEREQUESTCONFIG);
+        init_Body(id::FORWARDRADIOCONFIGUPDATE);
       }
-      Body_.sequenceRequestConfig_ = value;
+      Body_.forwardRadioConfigUpdate_ = value;
     }
-    inline SequenceRequestConfig& mutable_sequenceRequestConfig()
+    inline ForwardRadioConfigUpdate& mutable_forwardRadioConfigUpdate()
     {
-      if(id::SEQUENCEREQUESTCONFIG != which_Body_)
+      if(id::FORWARDRADIOCONFIGUPDATE != which_Body_)
       {
-        init_Body(id::SEQUENCEREQUESTCONFIG);
+        init_Body(id::FORWARDRADIOCONFIGUPDATE);
       }
-      return Body_.sequenceRequestConfig_;
+      return Body_.forwardRadioConfigUpdate_;
     }
-    inline const SequenceRequestConfig& get_sequenceRequestConfig() const { return Body_.sequenceRequestConfig_; }
-    inline const SequenceRequestConfig& sequenceRequestConfig() const { return Body_.sequenceRequestConfig_; }
+    inline const ForwardRadioConfigUpdate& get_forwardRadioConfigUpdate() const { return Body_.forwardRadioConfigUpdate_; }
+    inline const ForwardRadioConfigUpdate& forwardRadioConfigUpdate() const { return Body_.forwardRadioConfigUpdate_; }
 
-    inline bool has_payload() const
+    inline bool has_forwardExperimentCommand() const
     {
-      return id::PAYLOAD == which_Body_;
+      return id::FORWARDEXPERIMENTCOMMAND == which_Body_;
     }
-    inline void clear_payload()
+    inline void clear_forwardExperimentCommand()
     {
-      if(id::PAYLOAD == which_Body_)
+      if(id::FORWARDEXPERIMENTCOMMAND == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.payload_.~FieldBytes();
+        Body_.forwardExperimentCommand_.~ForwardExperimentCommand();
       }
     }
-    inline ::EmbeddedProto::FieldBytes<payload_LENGTH>& mutable_payload()
+    inline void set_forwardExperimentCommand(const ForwardExperimentCommand& value)
     {
-      if(id::PAYLOAD != which_Body_)
+      if(id::FORWARDEXPERIMENTCOMMAND != which_Body_)
       {
-        init_Body(id::PAYLOAD);
+        init_Body(id::FORWARDEXPERIMENTCOMMAND);
       }
-      return Body_.payload_;
+      Body_.forwardExperimentCommand_ = value;
     }
-    inline void set_payload(const ::EmbeddedProto::FieldBytes<payload_LENGTH>& rhs)
+    inline void set_forwardExperimentCommand(const ForwardExperimentCommand&& value)
     {
-      if(id::PAYLOAD != which_Body_)
+      if(id::FORWARDEXPERIMENTCOMMAND != which_Body_)
       {
-        init_Body(id::PAYLOAD);
+        init_Body(id::FORWARDEXPERIMENTCOMMAND);
       }
-      Body_.payload_.set(rhs);
+      Body_.forwardExperimentCommand_ = value;
     }
-    inline const ::EmbeddedProto::FieldBytes<payload_LENGTH>& get_payload() const { return Body_.payload_; }
-    inline const uint8_t* payload() const { return Body_.payload_.get_const(); }
+    inline ForwardExperimentCommand& mutable_forwardExperimentCommand()
+    {
+      if(id::FORWARDEXPERIMENTCOMMAND != which_Body_)
+      {
+        init_Body(id::FORWARDEXPERIMENTCOMMAND);
+      }
+      return Body_.forwardExperimentCommand_;
+    }
+    inline const ForwardExperimentCommand& get_forwardExperimentCommand() const { return Body_.forwardExperimentCommand_; }
+    inline const ForwardExperimentCommand& forwardExperimentCommand() const { return Body_.forwardExperimentCommand_; }
+
+    inline bool has_measurementStreamRequest() const
+    {
+      return id::MEASUREMENTSTREAMREQUEST == which_Body_;
+    }
+    inline void clear_measurementStreamRequest()
+    {
+      if(id::MEASUREMENTSTREAMREQUEST == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.measurementStreamRequest_.~MeasurementStreamRequest();
+      }
+    }
+    inline void set_measurementStreamRequest(const MeasurementStreamRequest& value)
+    {
+      if(id::MEASUREMENTSTREAMREQUEST != which_Body_)
+      {
+        init_Body(id::MEASUREMENTSTREAMREQUEST);
+      }
+      Body_.measurementStreamRequest_ = value;
+    }
+    inline void set_measurementStreamRequest(const MeasurementStreamRequest&& value)
+    {
+      if(id::MEASUREMENTSTREAMREQUEST != which_Body_)
+      {
+        init_Body(id::MEASUREMENTSTREAMREQUEST);
+      }
+      Body_.measurementStreamRequest_ = value;
+    }
+    inline MeasurementStreamRequest& mutable_measurementStreamRequest()
+    {
+      if(id::MEASUREMENTSTREAMREQUEST != which_Body_)
+      {
+        init_Body(id::MEASUREMENTSTREAMREQUEST);
+      }
+      return Body_.measurementStreamRequest_;
+    }
+    inline const MeasurementStreamRequest& get_measurementStreamRequest() const { return Body_.measurementStreamRequest_; }
+    inline const MeasurementStreamRequest& measurementStreamRequest() const { return Body_.measurementStreamRequest_; }
+
+    inline bool has_measurementStreamFragment() const
+    {
+      return id::MEASUREMENTSTREAMFRAGMENT == which_Body_;
+    }
+    inline void clear_measurementStreamFragment()
+    {
+      if(id::MEASUREMENTSTREAMFRAGMENT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.measurementStreamFragment_.~MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>();
+      }
+    }
+    inline void set_measurementStreamFragment(const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& value)
+    {
+      if(id::MEASUREMENTSTREAMFRAGMENT != which_Body_)
+      {
+        init_Body(id::MEASUREMENTSTREAMFRAGMENT);
+      }
+      Body_.measurementStreamFragment_ = value;
+    }
+    inline void set_measurementStreamFragment(const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>&& value)
+    {
+      if(id::MEASUREMENTSTREAMFRAGMENT != which_Body_)
+      {
+        init_Body(id::MEASUREMENTSTREAMFRAGMENT);
+      }
+      Body_.measurementStreamFragment_ = value;
+    }
+    inline MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& mutable_measurementStreamFragment()
+    {
+      if(id::MEASUREMENTSTREAMFRAGMENT != which_Body_)
+      {
+        init_Body(id::MEASUREMENTSTREAMFRAGMENT);
+      }
+      return Body_.measurementStreamFragment_;
+    }
+    inline const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& get_measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
+    inline const MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>& measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((static_cast<CommandType>(0) != command_) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((false != IsMulticast_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        EmbeddedProto::uint32 value = 0;
-        value.set(static_cast<uint32_t>(command_));
-        return_value = value.serialize_with_id(static_cast<uint32_t>(id::COMMAND), buffer, false);
+        return_value = IsMulticast_.serialize_with_id(static_cast<uint32_t>(id::ISMULTICAST), buffer, false);
       }
 
-      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
+        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
+      }
+
+      if((0U != CorrelationCode_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CorrelationCode_.serialize_with_id(static_cast<uint32_t>(id::CORRELATIONCODE), buffer, false);
       }
 
       switch(which_Body_)
       {
-        case id::SPREADINGFACTORCONFIG:
-          if(has_spreadingFactorConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case id::SEQUENCECONFIG:
+          if(has_sequenceConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.spreadingFactorConfig_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORCONFIG), buffer, true);
+            return_value = Body_.sequenceConfig_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCECONFIG), buffer, true);
           }
           break;
 
-        case id::SEQUENCEREQUESTCONFIG:
-          if(has_sequenceRequestConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+        case id::FORWARDRADIOCONFIGUPDATE:
+          if(has_forwardRadioConfigUpdate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.sequenceRequestConfig_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCEREQUESTCONFIG), buffer, true);
+            return_value = Body_.forwardRadioConfigUpdate_.serialize_with_id(static_cast<uint32_t>(id::FORWARDRADIOCONFIGUPDATE), buffer, true);
           }
           break;
 
-        case id::PAYLOAD:
-          if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        case id::FORWARDEXPERIMENTCOMMAND:
+          if(has_forwardExperimentCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
-            return_value = Body_.payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, true);
+            return_value = Body_.forwardExperimentCommand_.serialize_with_id(static_cast<uint32_t>(id::FORWARDEXPERIMENTCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::MEASUREMENTSTREAMREQUEST:
+          if(has_measurementStreamRequest() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.measurementStreamRequest_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSTREAMREQUEST), buffer, true);
+          }
+          break;
+
+        case id::MEASUREMENTSTREAMFRAGMENT:
+          if(has_measurementStreamFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.measurementStreamFragment_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSTREAMFRAGMENT), buffer, true);
           }
           break;
 
@@ -370,39 +520,41 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::COMMAND:
-            if(::EmbeddedProto::WireFormatter::WireType::VARINT == wire_type)
-            {
-              uint32_t value = 0;
-              return_value = ::EmbeddedProto::WireFormatter::DeserializeVarint(buffer, value);
-              if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-              {
-                set_command(static_cast<CommandType>(value));
-              }
-            }
-            else
-            {
-              // Wire type does not match field.
-              return_value = ::EmbeddedProto::Error::INVALID_WIRETYPE;
-            }
+          case id::ISMULTICAST:
+            return_value = IsMulticast_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::SEQUENCENUMBER:
-            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
+          case id::DEVICEID:
+            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::SPREADINGFACTORCONFIG:
-            return_value = deserialize_Body(id::SPREADINGFACTORCONFIG, Body_.spreadingFactorConfig_, buffer, wire_type);
+          case id::CORRELATIONCODE:
+            return_value = CorrelationCode_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SEQUENCECONFIG:
+            return_value = deserialize_Body(id::SEQUENCECONFIG, Body_.sequenceConfig_, buffer, wire_type);
 
             break;
 
-          case id::SEQUENCEREQUESTCONFIG:
-            return_value = deserialize_Body(id::SEQUENCEREQUESTCONFIG, Body_.sequenceRequestConfig_, buffer, wire_type);
+          case id::FORWARDRADIOCONFIGUPDATE:
+            return_value = deserialize_Body(id::FORWARDRADIOCONFIGUPDATE, Body_.forwardRadioConfigUpdate_, buffer, wire_type);
 
             break;
 
-          case id::PAYLOAD:
-            return_value = deserialize_Body(id::PAYLOAD, Body_.payload_, buffer, wire_type);
+          case id::FORWARDEXPERIMENTCOMMAND:
+            return_value = deserialize_Body(id::FORWARDEXPERIMENTCOMMAND, Body_.forwardExperimentCommand_, buffer, wire_type);
+
+            break;
+
+          case id::MEASUREMENTSTREAMREQUEST:
+            return_value = deserialize_Body(id::MEASUREMENTSTREAMREQUEST, Body_.measurementStreamRequest_, buffer, wire_type);
+
+            break;
+
+          case id::MEASUREMENTSTREAMFRAGMENT:
+            return_value = deserialize_Body(id::MEASUREMENTSTREAMFRAGMENT, Body_.measurementStreamFragment_, buffer, wire_type);
+
             break;
 
           case id::NOT_SET:
@@ -434,8 +586,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_command();
-      clear_SequenceNumber();
+      clear_IsMulticast();
+      clear_DeviceId();
+      clear_CorrelationCode();
       clear_Body();
 
     }
@@ -443,17 +596,20 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     private:
 
 
-      CommandType command_ = static_cast<CommandType>(0);
-      EmbeddedProto::uint32 SequenceNumber_ = 0U;
+      EmbeddedProto::boolean IsMulticast_ = false;
+      EmbeddedProto::uint32 DeviceId_ = 0U;
+      EmbeddedProto::uint32 CorrelationCode_ = 0U;
 
       id which_Body_ = id::NOT_SET;
       union Body
       {
         Body() {}
         ~Body() {}
-        SpreadingFactorConfig spreadingFactorConfig_;
-        SequenceRequestConfig sequenceRequestConfig_;
-        ::EmbeddedProto::FieldBytes<payload_LENGTH> payload_;
+        ForwardSequenceConfig sequenceConfig_;
+        ForwardRadioConfigUpdate forwardRadioConfigUpdate_;
+        ForwardExperimentCommand forwardExperimentCommand_;
+        MeasurementStreamRequest measurementStreamRequest_;
+        MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH> measurementStreamFragment_;
       };
       Body Body_;
 
@@ -468,19 +624,29 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         // C++11 unions only support nontrivial members when you explicitly call the placement new statement.
         switch(field_id)
         {
-          case id::SPREADINGFACTORCONFIG:
-            new(&Body_.spreadingFactorConfig_) SpreadingFactorConfig;
-            which_Body_ = id::SPREADINGFACTORCONFIG;
+          case id::SEQUENCECONFIG:
+            new(&Body_.sequenceConfig_) ForwardSequenceConfig;
+            which_Body_ = id::SEQUENCECONFIG;
             break;
 
-          case id::SEQUENCEREQUESTCONFIG:
-            new(&Body_.sequenceRequestConfig_) SequenceRequestConfig;
-            which_Body_ = id::SEQUENCEREQUESTCONFIG;
+          case id::FORWARDRADIOCONFIGUPDATE:
+            new(&Body_.forwardRadioConfigUpdate_) ForwardRadioConfigUpdate;
+            which_Body_ = id::FORWARDRADIOCONFIGUPDATE;
             break;
 
-          case id::PAYLOAD:
-            new(&Body_.payload_) ::EmbeddedProto::FieldBytes<payload_LENGTH>;
-            which_Body_ = id::PAYLOAD;
+          case id::FORWARDEXPERIMENTCOMMAND:
+            new(&Body_.forwardExperimentCommand_) ForwardExperimentCommand;
+            which_Body_ = id::FORWARDEXPERIMENTCOMMAND;
+            break;
+
+          case id::MEASUREMENTSTREAMREQUEST:
+            new(&Body_.measurementStreamRequest_) MeasurementStreamRequest;
+            which_Body_ = id::MEASUREMENTSTREAMREQUEST;
+            break;
+
+          case id::MEASUREMENTSTREAMFRAGMENT:
+            new(&Body_.measurementStreamFragment_) MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>;
+            which_Body_ = id::MEASUREMENTSTREAMFRAGMENT;
             break;
 
           default:
@@ -494,14 +660,20 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       {
         switch(which_Body_)
         {
-          case id::SPREADINGFACTORCONFIG:
-            Body_.spreadingFactorConfig_.~SpreadingFactorConfig(); // NOSONAR Unions require this.
+          case id::SEQUENCECONFIG:
+            Body_.sequenceConfig_.~ForwardSequenceConfig(); // NOSONAR Unions require this.
             break;
-          case id::SEQUENCEREQUESTCONFIG:
-            Body_.sequenceRequestConfig_.~SequenceRequestConfig(); // NOSONAR Unions require this.
+          case id::FORWARDRADIOCONFIGUPDATE:
+            Body_.forwardRadioConfigUpdate_.~ForwardRadioConfigUpdate(); // NOSONAR Unions require this.
             break;
-          case id::PAYLOAD:
-            Body_.payload_.~FieldBytes(); // NOSONAR Unions require this.
+          case id::FORWARDEXPERIMENTCOMMAND:
+            Body_.forwardExperimentCommand_.~ForwardExperimentCommand(); // NOSONAR Unions require this.
+            break;
+          case id::MEASUREMENTSTREAMREQUEST:
+            Body_.measurementStreamRequest_.~MeasurementStreamRequest(); // NOSONAR Unions require this.
+            break;
+          case id::MEASUREMENTSTREAMFRAGMENT:
+            Body_.measurementStreamFragment_.~MeasurementStreamFragment<measurementStreamFragment_FragmentPayload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;

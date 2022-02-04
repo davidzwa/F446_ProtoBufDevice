@@ -144,13 +144,9 @@ void ProcessCliCommand() {
         UartSendAck(1);
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
-        // printf("TX %ld %d\n", (uint32_t)command.get_DeviceId(), (bool)command.get_IsMulticast());
         TransmitCommand<MAX_PAYLOAD_LENGTH> command = uartCommand.get_transmitCommand();
         if (command.has_Period() && command.get_Period() > 50) {
             TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
-        } else if (command.IsMulticast()) {
-            // TransmitMulticast(command);
-            TransmitUnicast(command);
         } else {
             TransmitUnicast(command);
         }

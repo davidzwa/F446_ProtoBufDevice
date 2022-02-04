@@ -1,26 +1,61 @@
 syntax = "proto3";
 
+import "shared/lora_phy.proto";
+
 option csharp_namespace = "LoRa";
 
-enum CommandType {
-    Configuration = 0;
-    MultiCast = 1;
-    MultiCastAck = 2;
-    UniCast = 3;
-    UniCastAck = 4;
-    MeasurementStreamRequest = 5;
-    MeasurementStreamFragmentReply = 6;
-    SequenceRequest = 7;
-    SequenceResponse = 8;
+// Try to avoid this as it breaks orthogonal packet structure
+// enum MessageType {
+//     Configuration = 0;
+//     MultiCast = 1;
+//     MultiCastAck = 2;
+//     UniCast = 3;
+//     UniCastAck = 4;
+//     MeasurementStreamRequest = 5;
+//     MeasurementStreamFragmentReply = 6;
+//     SequenceRequest = 7;
+//     SequenceResponse = 8;
+// }
+
+message ForwardSequenceConfig {
+    // Whether to silence at sequence count limit
+    bool Indefinite = 1;
+    // When sequence counter rollover occurs 
+    uint32 SequenceCountLimit = 2;
+    // Period <50 will disable it
+    uint32 Period = 3;
 }
 
-message SequenceRequestConfig {
-    uint32 MessageCount = 1;
-    uint32 Interval = 2;
-    uint32 DeviceId = 3;
+message ForwardRadioConfigUpdate {
+    // We can configure either RX, TX or both
+    optional RadioRxConfig radioRxConfig = 1;
+    optional RadioTxConfig radioTxConfig = 2;
+    bool ResetRadio = 3; // Call underlying GPIO to reset RF shield
 }
 
-message SpreadingFactorConfig {
-    uint32 spreadingFactorRx = 1;
-    uint32 spreadingFactorTx = 2;
+message ForwardExperimentCommand {
+    enum GatewayCommand {
+        PauseTransmit = 0;
+        ResumeTransmit = 1;
+        ResetTransmit = 2;
+    }
+    enum SlaveCommand {
+        ClearFlash = 0;
+        QueryFlash = 1;
+        StreamFlashContents = 2; 
+    }
+    // If true become gateway, otherwise become slave receiver
+    bool isTransmitterGateway = 1;
+    // Only valid if transmitting gateway
+    optional GatewayCommand gatewayCommand = 2;
+    // Only valid if receiving slave
+    optional SlaveCommand slaveCommand = 3;
+}
+
+message MeasurementStreamRequest {
+    uint32 FragmentSizeMax = 1;
+}
+
+message MeasurementStreamFragment {
+    bytes FragmentPayload = 1;
 }

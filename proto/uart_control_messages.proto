@@ -1,0 +1,37 @@
+// This file listes the protobuffer messages used in the example to make a simple uart communcation protocol. 
+// Commands are send from the desktop to the microctontroller which in turn sends a reply. 
+
+syntax = "proto3";
+
+import "lora_device_messages.proto";
+import "shared/lora_phy.proto";
+
+option csharp_namespace = "LoRa";
+ 
+message RequestBootInfo { 
+    bool Request = 1; 
+} 
+ 
+message DeviceConfiguration {
+    bool EnableAlwaysSend = 1;
+    uint32 AlwaysSendPeriod = 2;
+}
+
+message ClearMeasurementsCommand {
+    // No content to report
+    bool SendBootAfter = 1;
+}
+
+message UartCommand { 
+    oneof Body { 
+        // Configure the gateway device over UART
+        RadioRxConfig rxConfig = 1; 
+        RadioTxConfig txConfig = 2; 
+        DeviceConfiguration deviceConfiguration = 3;
+        // Request the info presented at boot
+        RequestBootInfo requestBootInfo = 4; 
+        ClearMeasurementsCommand clearMeasurementsCommand = 5;
+        // Request a LoRa transmission - generic
+        LoRaMessage transmitCommand = 6;
+    } 
+} 

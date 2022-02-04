@@ -44,104 +44,92 @@
 #include <limits>
 
 // Include external proto definitions
+#include <shared/lora_phy.h>
 
 
-enum class CommandType : uint32_t
-{
-  Configuration = 0,
-  MultiCast = 1,
-  MultiCastAck = 2,
-  UniCast = 3,
-  UniCastAck = 4,
-  MeasurementStreamRequest = 5,
-  MeasurementStreamFragmentReply = 6,
-  SequenceRequest = 7,
-  SequenceResponse = 8
-};
-
-class SequenceRequestConfig final: public ::EmbeddedProto::MessageInterface
+class ForwardSequenceConfig final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    SequenceRequestConfig() = default;
-    SequenceRequestConfig(const SequenceRequestConfig& rhs )
+    ForwardSequenceConfig() = default;
+    ForwardSequenceConfig(const ForwardSequenceConfig& rhs )
     {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
+      set_Indefinite(rhs.get_Indefinite());
+      set_SequenceCountLimit(rhs.get_SequenceCountLimit());
+      set_Period(rhs.get_Period());
     }
 
-    SequenceRequestConfig(const SequenceRequestConfig&& rhs ) noexcept
+    ForwardSequenceConfig(const ForwardSequenceConfig&& rhs ) noexcept
     {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
+      set_Indefinite(rhs.get_Indefinite());
+      set_SequenceCountLimit(rhs.get_SequenceCountLimit());
+      set_Period(rhs.get_Period());
     }
 
-    ~SequenceRequestConfig() override = default;
+    ~ForwardSequenceConfig() override = default;
 
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      MESSAGECOUNT = 1,
-      INTERVAL = 2,
-      DEVICEID = 3
+      INDEFINITE = 1,
+      SEQUENCECOUNTLIMIT = 2,
+      PERIOD = 3
     };
 
-    SequenceRequestConfig& operator=(const SequenceRequestConfig& rhs)
+    ForwardSequenceConfig& operator=(const ForwardSequenceConfig& rhs)
     {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
+      set_Indefinite(rhs.get_Indefinite());
+      set_SequenceCountLimit(rhs.get_SequenceCountLimit());
+      set_Period(rhs.get_Period());
       return *this;
     }
 
-    SequenceRequestConfig& operator=(const SequenceRequestConfig&& rhs) noexcept
+    ForwardSequenceConfig& operator=(const ForwardSequenceConfig&& rhs) noexcept
     {
-      set_MessageCount(rhs.get_MessageCount());
-      set_Interval(rhs.get_Interval());
-      set_DeviceId(rhs.get_DeviceId());
+      set_Indefinite(rhs.get_Indefinite());
+      set_SequenceCountLimit(rhs.get_SequenceCountLimit());
+      set_Period(rhs.get_Period());
       return *this;
     }
 
-    inline void clear_MessageCount() { MessageCount_.clear(); }
-    inline void set_MessageCount(const EmbeddedProto::uint32& value) { MessageCount_ = value; }
-    inline void set_MessageCount(const EmbeddedProto::uint32&& value) { MessageCount_ = value; }
-    inline EmbeddedProto::uint32& mutable_MessageCount() { return MessageCount_; }
-    inline const EmbeddedProto::uint32& get_MessageCount() const { return MessageCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MessageCount() const { return MessageCount_.get(); }
+    inline void clear_Indefinite() { Indefinite_.clear(); }
+    inline void set_Indefinite(const EmbeddedProto::boolean& value) { Indefinite_ = value; }
+    inline void set_Indefinite(const EmbeddedProto::boolean&& value) { Indefinite_ = value; }
+    inline EmbeddedProto::boolean& mutable_Indefinite() { return Indefinite_; }
+    inline const EmbeddedProto::boolean& get_Indefinite() const { return Indefinite_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Indefinite() const { return Indefinite_.get(); }
 
-    inline void clear_Interval() { Interval_.clear(); }
-    inline void set_Interval(const EmbeddedProto::uint32& value) { Interval_ = value; }
-    inline void set_Interval(const EmbeddedProto::uint32&& value) { Interval_ = value; }
-    inline EmbeddedProto::uint32& mutable_Interval() { return Interval_; }
-    inline const EmbeddedProto::uint32& get_Interval() const { return Interval_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Interval() const { return Interval_.get(); }
+    inline void clear_SequenceCountLimit() { SequenceCountLimit_.clear(); }
+    inline void set_SequenceCountLimit(const EmbeddedProto::uint32& value) { SequenceCountLimit_ = value; }
+    inline void set_SequenceCountLimit(const EmbeddedProto::uint32&& value) { SequenceCountLimit_ = value; }
+    inline EmbeddedProto::uint32& mutable_SequenceCountLimit() { return SequenceCountLimit_; }
+    inline const EmbeddedProto::uint32& get_SequenceCountLimit() const { return SequenceCountLimit_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE SequenceCountLimit() const { return SequenceCountLimit_.get(); }
 
-    inline void clear_DeviceId() { DeviceId_.clear(); }
-    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
-    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
-    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
-    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+    inline void clear_Period() { Period_.clear(); }
+    inline void set_Period(const EmbeddedProto::uint32& value) { Period_ = value; }
+    inline void set_Period(const EmbeddedProto::uint32&& value) { Period_ = value; }
+    inline EmbeddedProto::uint32& mutable_Period() { return Period_; }
+    inline const EmbeddedProto::uint32& get_Period() const { return Period_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Period() const { return Period_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != MessageCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((false != Indefinite_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = MessageCount_.serialize_with_id(static_cast<uint32_t>(id::MESSAGECOUNT), buffer, false);
+        return_value = Indefinite_.serialize_with_id(static_cast<uint32_t>(id::INDEFINITE), buffer, false);
       }
 
-      if((0U != Interval_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != SequenceCountLimit_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = Interval_.serialize_with_id(static_cast<uint32_t>(id::INTERVAL), buffer, false);
+        return_value = SequenceCountLimit_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCECOUNTLIMIT), buffer, false);
       }
 
-      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != Period_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
+        return_value = Period_.serialize_with_id(static_cast<uint32_t>(id::PERIOD), buffer, false);
       }
 
       return return_value;
@@ -160,16 +148,16 @@ class SequenceRequestConfig final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::MESSAGECOUNT:
-            return_value = MessageCount_.deserialize_check_type(buffer, wire_type);
+          case id::INDEFINITE:
+            return_value = Indefinite_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::INTERVAL:
-            return_value = Interval_.deserialize_check_type(buffer, wire_type);
+          case id::SEQUENCECOUNTLIMIT:
+            return_value = SequenceCountLimit_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::DEVICEID:
-            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
+          case id::PERIOD:
+            return_value = Period_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -201,87 +189,144 @@ class SequenceRequestConfig final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_MessageCount();
-      clear_Interval();
-      clear_DeviceId();
+      clear_Indefinite();
+      clear_SequenceCountLimit();
+      clear_Period();
 
     }
 
     private:
 
 
-      EmbeddedProto::uint32 MessageCount_ = 0U;
-      EmbeddedProto::uint32 Interval_ = 0U;
-      EmbeddedProto::uint32 DeviceId_ = 0U;
+      EmbeddedProto::boolean Indefinite_ = false;
+      EmbeddedProto::uint32 SequenceCountLimit_ = 0U;
+      EmbeddedProto::uint32 Period_ = 0U;
 
 };
 
-class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
+class ForwardRadioConfigUpdate final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    SpreadingFactorConfig() = default;
-    SpreadingFactorConfig(const SpreadingFactorConfig& rhs )
+    ForwardRadioConfigUpdate() = default;
+    ForwardRadioConfigUpdate(const ForwardRadioConfigUpdate& rhs )
     {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
+      set_radioRxConfig(rhs.get_radioRxConfig());
+      set_radioTxConfig(rhs.get_radioTxConfig());
+      set_ResetRadio(rhs.get_ResetRadio());
     }
 
-    SpreadingFactorConfig(const SpreadingFactorConfig&& rhs ) noexcept
+    ForwardRadioConfigUpdate(const ForwardRadioConfigUpdate&& rhs ) noexcept
     {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
+      set_radioRxConfig(rhs.get_radioRxConfig());
+      set_radioTxConfig(rhs.get_radioTxConfig());
+      set_ResetRadio(rhs.get_ResetRadio());
     }
 
-    ~SpreadingFactorConfig() override = default;
+    ~ForwardRadioConfigUpdate() override = default;
 
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      SPREADINGFACTORRX = 1,
-      SPREADINGFACTORTX = 2
+      RADIORXCONFIG = 1,
+      RADIOTXCONFIG = 2,
+      RESETRADIO = 3
     };
 
-    SpreadingFactorConfig& operator=(const SpreadingFactorConfig& rhs)
+    ForwardRadioConfigUpdate& operator=(const ForwardRadioConfigUpdate& rhs)
     {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
+      set_radioRxConfig(rhs.get_radioRxConfig());
+      set_radioTxConfig(rhs.get_radioTxConfig());
+      set_ResetRadio(rhs.get_ResetRadio());
       return *this;
     }
 
-    SpreadingFactorConfig& operator=(const SpreadingFactorConfig&& rhs) noexcept
+    ForwardRadioConfigUpdate& operator=(const ForwardRadioConfigUpdate&& rhs) noexcept
     {
-      set_spreadingFactorRx(rhs.get_spreadingFactorRx());
-      set_spreadingFactorTx(rhs.get_spreadingFactorTx());
+      set_radioRxConfig(rhs.get_radioRxConfig());
+      set_radioTxConfig(rhs.get_radioTxConfig());
+      set_ResetRadio(rhs.get_ResetRadio());
       return *this;
     }
 
-    inline void clear_spreadingFactorRx() { spreadingFactorRx_.clear(); }
-    inline void set_spreadingFactorRx(const EmbeddedProto::uint32& value) { spreadingFactorRx_ = value; }
-    inline void set_spreadingFactorRx(const EmbeddedProto::uint32&& value) { spreadingFactorRx_ = value; }
-    inline EmbeddedProto::uint32& mutable_spreadingFactorRx() { return spreadingFactorRx_; }
-    inline const EmbeddedProto::uint32& get_spreadingFactorRx() const { return spreadingFactorRx_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactorRx() const { return spreadingFactorRx_.get(); }
+    inline bool has_radioRxConfig() const
+    {
+      return 0 != (presence::mask(presence::fields::RADIORXCONFIG) & presence_[presence::index(presence::fields::RADIORXCONFIG)]);
+    }
+    inline void clear_radioRxConfig()
+    {
+      presence_[presence::index(presence::fields::RADIORXCONFIG)] &= ~(presence::mask(presence::fields::RADIORXCONFIG));
+      radioRxConfig_.clear();
+    }
+    inline void set_radioRxConfig(const RadioRxConfig& value)
+    {
+      presence_[presence::index(presence::fields::RADIORXCONFIG)] |= presence::mask(presence::fields::RADIORXCONFIG);
+      radioRxConfig_ = value;
+    }
+    inline void set_radioRxConfig(const RadioRxConfig&& value)
+    {
+      presence_[presence::index(presence::fields::RADIORXCONFIG)] |= presence::mask(presence::fields::RADIORXCONFIG);
+      radioRxConfig_ = value;
+    }
+    inline RadioRxConfig& mutable_radioRxConfig()
+    {
+      presence_[presence::index(presence::fields::RADIORXCONFIG)] |= presence::mask(presence::fields::RADIORXCONFIG);
+      return radioRxConfig_;
+    }
+    inline const RadioRxConfig& get_radioRxConfig() const { return radioRxConfig_; }
+    inline const RadioRxConfig& radioRxConfig() const { return radioRxConfig_; }
 
-    inline void clear_spreadingFactorTx() { spreadingFactorTx_.clear(); }
-    inline void set_spreadingFactorTx(const EmbeddedProto::uint32& value) { spreadingFactorTx_ = value; }
-    inline void set_spreadingFactorTx(const EmbeddedProto::uint32&& value) { spreadingFactorTx_ = value; }
-    inline EmbeddedProto::uint32& mutable_spreadingFactorTx() { return spreadingFactorTx_; }
-    inline const EmbeddedProto::uint32& get_spreadingFactorTx() const { return spreadingFactorTx_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE spreadingFactorTx() const { return spreadingFactorTx_.get(); }
+    inline bool has_radioTxConfig() const
+    {
+      return 0 != (presence::mask(presence::fields::RADIOTXCONFIG) & presence_[presence::index(presence::fields::RADIOTXCONFIG)]);
+    }
+    inline void clear_radioTxConfig()
+    {
+      presence_[presence::index(presence::fields::RADIOTXCONFIG)] &= ~(presence::mask(presence::fields::RADIOTXCONFIG));
+      radioTxConfig_.clear();
+    }
+    inline void set_radioTxConfig(const RadioTxConfig& value)
+    {
+      presence_[presence::index(presence::fields::RADIOTXCONFIG)] |= presence::mask(presence::fields::RADIOTXCONFIG);
+      radioTxConfig_ = value;
+    }
+    inline void set_radioTxConfig(const RadioTxConfig&& value)
+    {
+      presence_[presence::index(presence::fields::RADIOTXCONFIG)] |= presence::mask(presence::fields::RADIOTXCONFIG);
+      radioTxConfig_ = value;
+    }
+    inline RadioTxConfig& mutable_radioTxConfig()
+    {
+      presence_[presence::index(presence::fields::RADIOTXCONFIG)] |= presence::mask(presence::fields::RADIOTXCONFIG);
+      return radioTxConfig_;
+    }
+    inline const RadioTxConfig& get_radioTxConfig() const { return radioTxConfig_; }
+    inline const RadioTxConfig& radioTxConfig() const { return radioTxConfig_; }
+
+    inline void clear_ResetRadio() { ResetRadio_.clear(); }
+    inline void set_ResetRadio(const EmbeddedProto::boolean& value) { ResetRadio_ = value; }
+    inline void set_ResetRadio(const EmbeddedProto::boolean&& value) { ResetRadio_ = value; }
+    inline EmbeddedProto::boolean& mutable_ResetRadio() { return ResetRadio_; }
+    inline const EmbeddedProto::boolean& get_ResetRadio() const { return ResetRadio_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE ResetRadio() const { return ResetRadio_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != spreadingFactorRx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if(has_radioRxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = spreadingFactorRx_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORRX), buffer, false);
+        return_value = radioRxConfig_.serialize_with_id(static_cast<uint32_t>(id::RADIORXCONFIG), buffer, true);
       }
 
-      if((0U != spreadingFactorTx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if(has_radioTxConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = spreadingFactorTx_.serialize_with_id(static_cast<uint32_t>(id::SPREADINGFACTORTX), buffer, false);
+        return_value = radioTxConfig_.serialize_with_id(static_cast<uint32_t>(id::RADIOTXCONFIG), buffer, true);
+      }
+
+      if((false != ResetRadio_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ResetRadio_.serialize_with_id(static_cast<uint32_t>(id::RESETRADIO), buffer, false);
       }
 
       return return_value;
@@ -300,12 +345,18 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::SPREADINGFACTORRX:
-            return_value = spreadingFactorRx_.deserialize_check_type(buffer, wire_type);
+          case id::RADIORXCONFIG:
+            presence_[presence::index(presence::fields::RADIORXCONFIG)] |= presence::mask(presence::fields::RADIORXCONFIG);
+            return_value = radioRxConfig_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::SPREADINGFACTORTX:
-            return_value = spreadingFactorTx_.deserialize_check_type(buffer, wire_type);
+          case id::RADIOTXCONFIG:
+            presence_[presence::index(presence::fields::RADIOTXCONFIG)] |= presence::mask(presence::fields::RADIOTXCONFIG);
+            return_value = radioTxConfig_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RESETRADIO:
+            return_value = ResetRadio_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -337,16 +388,541 @@ class SpreadingFactorConfig final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_spreadingFactorRx();
-      clear_spreadingFactorTx();
+      clear_radioRxConfig();
+      clear_radioTxConfig();
+      clear_ResetRadio();
+
+    }
+
+    private:
+
+      // Define constants for tracking the presence of fields.
+      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
+      struct presence
+      {
+        // An enumeration with all the fields for which presence has to be tracked.
+        enum class fields : uint32_t
+        {
+          RADIORXCONFIG,
+          RADIOTXCONFIG
+        };
+
+        // The number of fields for which presence has to be tracked.
+        static constexpr uint32_t N_FIELDS = 2;
+
+        // Which type are we using to track presence.
+        using TYPE = uint32_t;
+
+        // How many bits are there in the presence type.
+        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
+
+        // How many variables of TYPE do we need to bit mask all presence fields.
+        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
+
+        // Obtain the index of a given field in the presence array.
+        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
+
+        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
+        static constexpr TYPE mask(const fields& field)
+        {
+          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
+        }
+      };
+
+      // Create an array in which the presence flags are stored.
+      typename presence::TYPE presence_[presence::SIZE] = {0};
+
+      RadioRxConfig radioRxConfig_;
+      RadioTxConfig radioTxConfig_;
+      EmbeddedProto::boolean ResetRadio_ = false;
+
+};
+
+class ForwardExperimentCommand final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    ForwardExperimentCommand() = default;
+    ForwardExperimentCommand(const ForwardExperimentCommand& rhs )
+    {
+      set_isTransmitterGateway(rhs.get_isTransmitterGateway());
+      set_gatewayCommand(rhs.get_gatewayCommand());
+      set_slaveCommand(rhs.get_slaveCommand());
+    }
+
+    ForwardExperimentCommand(const ForwardExperimentCommand&& rhs ) noexcept
+    {
+      set_isTransmitterGateway(rhs.get_isTransmitterGateway());
+      set_gatewayCommand(rhs.get_gatewayCommand());
+      set_slaveCommand(rhs.get_slaveCommand());
+    }
+
+    ~ForwardExperimentCommand() override = default;
+
+    enum class GatewayCommand : uint32_t
+    {
+      PauseTransmit = 0,
+      ResumeTransmit = 1,
+      ResetTransmit = 2
+    };
+
+    enum class SlaveCommand : uint32_t
+    {
+      ClearFlash = 0,
+      QueryFlash = 1,
+      StreamFlashContents = 2
+    };
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      ISTRANSMITTERGATEWAY = 1,
+      GATEWAYCOMMAND = 2,
+      SLAVECOMMAND = 3
+    };
+
+    ForwardExperimentCommand& operator=(const ForwardExperimentCommand& rhs)
+    {
+      set_isTransmitterGateway(rhs.get_isTransmitterGateway());
+      set_gatewayCommand(rhs.get_gatewayCommand());
+      set_slaveCommand(rhs.get_slaveCommand());
+      return *this;
+    }
+
+    ForwardExperimentCommand& operator=(const ForwardExperimentCommand&& rhs) noexcept
+    {
+      set_isTransmitterGateway(rhs.get_isTransmitterGateway());
+      set_gatewayCommand(rhs.get_gatewayCommand());
+      set_slaveCommand(rhs.get_slaveCommand());
+      return *this;
+    }
+
+    inline void clear_isTransmitterGateway() { isTransmitterGateway_.clear(); }
+    inline void set_isTransmitterGateway(const EmbeddedProto::boolean& value) { isTransmitterGateway_ = value; }
+    inline void set_isTransmitterGateway(const EmbeddedProto::boolean&& value) { isTransmitterGateway_ = value; }
+    inline EmbeddedProto::boolean& mutable_isTransmitterGateway() { return isTransmitterGateway_; }
+    inline const EmbeddedProto::boolean& get_isTransmitterGateway() const { return isTransmitterGateway_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE isTransmitterGateway() const { return isTransmitterGateway_.get(); }
+
+    inline bool has_gatewayCommand() const
+    {
+      return 0 != (presence::mask(presence::fields::GATEWAYCOMMAND) & presence_[presence::index(presence::fields::GATEWAYCOMMAND)]);
+    }
+    inline void clear_gatewayCommand()
+    {
+      presence_[presence::index(presence::fields::GATEWAYCOMMAND)] &= ~(presence::mask(presence::fields::GATEWAYCOMMAND));
+      gatewayCommand_ = static_cast<GatewayCommand>(0);
+    }
+    inline void set_gatewayCommand(const GatewayCommand& value)
+    {
+      presence_[presence::index(presence::fields::GATEWAYCOMMAND)] |= presence::mask(presence::fields::GATEWAYCOMMAND);
+      gatewayCommand_ = value;
+    }
+    inline void set_gatewayCommand(const GatewayCommand&& value)
+    {
+      presence_[presence::index(presence::fields::GATEWAYCOMMAND)] |= presence::mask(presence::fields::GATEWAYCOMMAND);
+      gatewayCommand_ = value;
+    }
+    inline const GatewayCommand& get_gatewayCommand() const { return gatewayCommand_; }
+    inline GatewayCommand gatewayCommand() const { return gatewayCommand_; }
+
+    inline bool has_slaveCommand() const
+    {
+      return 0 != (presence::mask(presence::fields::SLAVECOMMAND) & presence_[presence::index(presence::fields::SLAVECOMMAND)]);
+    }
+    inline void clear_slaveCommand()
+    {
+      presence_[presence::index(presence::fields::SLAVECOMMAND)] &= ~(presence::mask(presence::fields::SLAVECOMMAND));
+      slaveCommand_ = static_cast<SlaveCommand>(0);
+    }
+    inline void set_slaveCommand(const SlaveCommand& value)
+    {
+      presence_[presence::index(presence::fields::SLAVECOMMAND)] |= presence::mask(presence::fields::SLAVECOMMAND);
+      slaveCommand_ = value;
+    }
+    inline void set_slaveCommand(const SlaveCommand&& value)
+    {
+      presence_[presence::index(presence::fields::SLAVECOMMAND)] |= presence::mask(presence::fields::SLAVECOMMAND);
+      slaveCommand_ = value;
+    }
+    inline const SlaveCommand& get_slaveCommand() const { return slaveCommand_; }
+    inline SlaveCommand slaveCommand() const { return slaveCommand_; }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != isTransmitterGateway_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = isTransmitterGateway_.serialize_with_id(static_cast<uint32_t>(id::ISTRANSMITTERGATEWAY), buffer, false);
+      }
+
+      if(has_gatewayCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        EmbeddedProto::uint32 value = 0;
+        value.set(static_cast<uint32_t>(gatewayCommand_));
+        return_value = value.serialize_with_id(static_cast<uint32_t>(id::GATEWAYCOMMAND), buffer, true);
+      }
+
+      if(has_slaveCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        EmbeddedProto::uint32 value = 0;
+        value.set(static_cast<uint32_t>(slaveCommand_));
+        return_value = value.serialize_with_id(static_cast<uint32_t>(id::SLAVECOMMAND), buffer, true);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::ISTRANSMITTERGATEWAY:
+            return_value = isTransmitterGateway_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::GATEWAYCOMMAND:
+            if(::EmbeddedProto::WireFormatter::WireType::VARINT == wire_type)
+            {
+              uint32_t value = 0;
+              return_value = ::EmbeddedProto::WireFormatter::DeserializeVarint(buffer, value);
+              if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+              {
+                set_gatewayCommand(static_cast<GatewayCommand>(value));
+              }
+            }
+            else
+            {
+              // Wire type does not match field.
+              return_value = ::EmbeddedProto::Error::INVALID_WIRETYPE;
+            }
+            break;
+
+          case id::SLAVECOMMAND:
+            if(::EmbeddedProto::WireFormatter::WireType::VARINT == wire_type)
+            {
+              uint32_t value = 0;
+              return_value = ::EmbeddedProto::WireFormatter::DeserializeVarint(buffer, value);
+              if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+              {
+                set_slaveCommand(static_cast<SlaveCommand>(value));
+              }
+            }
+            else
+            {
+              // Wire type does not match field.
+              return_value = ::EmbeddedProto::Error::INVALID_WIRETYPE;
+            }
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_isTransmitterGateway();
+      clear_gatewayCommand();
+      clear_slaveCommand();
+
+    }
+
+    private:
+
+      // Define constants for tracking the presence of fields.
+      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
+      struct presence
+      {
+        // An enumeration with all the fields for which presence has to be tracked.
+        enum class fields : uint32_t
+        {
+          GATEWAYCOMMAND,
+          SLAVECOMMAND
+        };
+
+        // The number of fields for which presence has to be tracked.
+        static constexpr uint32_t N_FIELDS = 2;
+
+        // Which type are we using to track presence.
+        using TYPE = uint32_t;
+
+        // How many bits are there in the presence type.
+        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
+
+        // How many variables of TYPE do we need to bit mask all presence fields.
+        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
+
+        // Obtain the index of a given field in the presence array.
+        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
+
+        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
+        static constexpr TYPE mask(const fields& field)
+        {
+          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
+        }
+      };
+
+      // Create an array in which the presence flags are stored.
+      typename presence::TYPE presence_[presence::SIZE] = {0};
+
+      EmbeddedProto::boolean isTransmitterGateway_ = false;
+      GatewayCommand gatewayCommand_ = static_cast<GatewayCommand>(0);
+      SlaveCommand slaveCommand_ = static_cast<SlaveCommand>(0);
+
+};
+
+class MeasurementStreamRequest final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    MeasurementStreamRequest() = default;
+    MeasurementStreamRequest(const MeasurementStreamRequest& rhs )
+    {
+      set_FragmentSizeMax(rhs.get_FragmentSizeMax());
+    }
+
+    MeasurementStreamRequest(const MeasurementStreamRequest&& rhs ) noexcept
+    {
+      set_FragmentSizeMax(rhs.get_FragmentSizeMax());
+    }
+
+    ~MeasurementStreamRequest() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      FRAGMENTSIZEMAX = 1
+    };
+
+    MeasurementStreamRequest& operator=(const MeasurementStreamRequest& rhs)
+    {
+      set_FragmentSizeMax(rhs.get_FragmentSizeMax());
+      return *this;
+    }
+
+    MeasurementStreamRequest& operator=(const MeasurementStreamRequest&& rhs) noexcept
+    {
+      set_FragmentSizeMax(rhs.get_FragmentSizeMax());
+      return *this;
+    }
+
+    inline void clear_FragmentSizeMax() { FragmentSizeMax_.clear(); }
+    inline void set_FragmentSizeMax(const EmbeddedProto::uint32& value) { FragmentSizeMax_ = value; }
+    inline void set_FragmentSizeMax(const EmbeddedProto::uint32&& value) { FragmentSizeMax_ = value; }
+    inline EmbeddedProto::uint32& mutable_FragmentSizeMax() { return FragmentSizeMax_; }
+    inline const EmbeddedProto::uint32& get_FragmentSizeMax() const { return FragmentSizeMax_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FragmentSizeMax() const { return FragmentSizeMax_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != FragmentSizeMax_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = FragmentSizeMax_.serialize_with_id(static_cast<uint32_t>(id::FRAGMENTSIZEMAX), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::FRAGMENTSIZEMAX:
+            return_value = FragmentSizeMax_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_FragmentSizeMax();
 
     }
 
     private:
 
 
-      EmbeddedProto::uint32 spreadingFactorRx_ = 0U;
-      EmbeddedProto::uint32 spreadingFactorTx_ = 0U;
+      EmbeddedProto::uint32 FragmentSizeMax_ = 0U;
+
+};
+
+template<uint32_t FragmentPayload_LENGTH>
+class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    MeasurementStreamFragment() = default;
+    MeasurementStreamFragment(const MeasurementStreamFragment& rhs )
+    {
+      set_FragmentPayload(rhs.get_FragmentPayload());
+    }
+
+    MeasurementStreamFragment(const MeasurementStreamFragment&& rhs ) noexcept
+    {
+      set_FragmentPayload(rhs.get_FragmentPayload());
+    }
+
+    ~MeasurementStreamFragment() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      FRAGMENTPAYLOAD = 1
+    };
+
+    MeasurementStreamFragment& operator=(const MeasurementStreamFragment& rhs)
+    {
+      set_FragmentPayload(rhs.get_FragmentPayload());
+      return *this;
+    }
+
+    MeasurementStreamFragment& operator=(const MeasurementStreamFragment&& rhs) noexcept
+    {
+      set_FragmentPayload(rhs.get_FragmentPayload());
+      return *this;
+    }
+
+    inline void clear_FragmentPayload() { FragmentPayload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH>& mutable_FragmentPayload() { return FragmentPayload_; }
+    inline void set_FragmentPayload(const ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH>& rhs) { FragmentPayload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH>& get_FragmentPayload() const { return FragmentPayload_; }
+    inline const uint8_t* FragmentPayload() const { return FragmentPayload_.get_const(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = FragmentPayload_.serialize_with_id(static_cast<uint32_t>(id::FRAGMENTPAYLOAD), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::FRAGMENTPAYLOAD:
+            return_value = FragmentPayload_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_FragmentPayload();
+
+    }
+
+    private:
+
+
+      ::EmbeddedProto::FieldBytes<FragmentPayload_LENGTH> FragmentPayload_;
 
 };
 
