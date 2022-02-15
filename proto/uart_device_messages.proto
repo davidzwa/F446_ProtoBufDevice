@@ -1,0 +1,47 @@
+// This file listes the protobuffer messages used in the example to make a simple uart communcation protocol to a desktop/laptop PC.
+// Commands are send from the desktop to the microctontroller which in turn sends the reply types below.
+
+syntax = "proto3";
+
+import "shared/firmware.proto";
+import "lora_device_messages.proto";
+
+option csharp_namespace = "LoRa";
+
+message LoraMeasurement 
+{
+    uint32 Size = 1;
+    int32 Rssi = 2;
+    int32 Snr = 3;
+    uint32 SequenceNumber = 4;
+    optional bool IsMeasurementFragment = 5;
+    bool Success = 6;
+    LoRaMessage Payload = 7;
+}
+
+message BootMessage {
+    DeviceId DeviceIdentifier = 1;
+    Version FirmwareVersion = 2;
+    string AppName = 3;
+    uint32 MeasurementCount = 4;
+    bool MeasurementsDisabled = 5;
+}
+
+message AckMessage {
+    uint32 Code = 1;
+}
+
+message DebugMessage {
+    uint32 Code = 1;
+    bytes Payload = 2;
+}
+
+// The main message container
+message UartResponse {
+    oneof Body {
+        BootMessage bootMessage = 1;
+        AckMessage ackMessage = 2;
+        LoraMeasurement loraMeasurement = 3;
+        DebugMessage debugMessage = 4;
+    }
+}

@@ -1,4 +1,5 @@
 #include "radio.h"
+#include "lora_device_messages.h"
 
 #ifndef CONFIG_H__
 #define CONFIG_H__
@@ -28,7 +29,7 @@
 
 #elif defined(REGION_EU868)
 
-#define RF_FREQUENCY 868000000 // Hz
+#define RF_FREQUENCY 872000000 // Hz
 
 #elif defined(REGION_KR920)
 
@@ -54,7 +55,7 @@
 
 #if defined(USE_MODEM_LORA)
 
-#define LORA_BANDWIDTH 0        // [0: 125 kHz, \
+#define LORA_BANDWIDTH 2        // [0: 125 kHz, \
                                     //  1: 250 kHz, \
                                     //  2: 500 kHz, \
                                     //  3: Reserved]
@@ -81,10 +82,13 @@
 #error "Please define a modem in the compiler options."
 #endif
 
+// Protobuf defines
+#define MAX_LORA_BYTES (50)
+#define LORA_MSG_TEMPLATE LoRaMessage<MAX_LORA_BYTES>
+
 #define RX_TIMEOUT_VALUE 1000
 #define BUFFER_SIZE 64  // Define the payload size here
 #define MAX_APPNAME_LENGTH 20
-#define MAX_PAYLOAD_LENGTH 120
 
-#define FIRMWARE_VERSION 0x0200010A
+#define FIRMWARE_VERSION 0x0200010B
 #endif

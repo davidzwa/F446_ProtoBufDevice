@@ -3,16 +3,13 @@
 #include "ProtoWriteBuffer.h"
 #include "config.h"
 #include "delay.h"
-#include "device_messages.h"
 #include "measurements.h"
 #include "radio_phy.h"
 #include "stdio.h"
 #include "timer.h"
-#include "uart_messages.h"
 
 #define MAX_SEQUENCE_NUMBERS 5000
-#define DEFAULT_TX_PERIOD 1000
-// #define STANDALONE_TX_INFINITE 
+#define DEFAULT_TX_PERIOD 2000
 
 // Uart debugging
 static TimerEvent_t heartBeatTimer;
@@ -26,7 +23,7 @@ uint16_t periodicTxInterval = DEFAULT_TX_PERIOD;
 
 // Sequencer as test
 bool standaloneAlwaysSendPeriodically = false;
-SequenceRequestConfig sequenceRequestConfig;
+ForwardSequenceConfig forwardedSequenceConfig;
 uint16_t sequenceMessageCount = 0;
 bool sequenceTestRunning = false;
 
@@ -53,18 +50,17 @@ static void OnHeartbeatEvent(void* context) {
 
 static void OnPeriodicTx(void* context) {
     // We generate a packet as if it came from PC/UART
-    TransmitCommand<MAX_PAYLOAD_LENGTH> command;
+    LORA_MSG_TEMPLATE command;
     command.set_IsMulticast(false);
 
     // TODO REPLACE with useful payload
     uint8_t* test_message = (uint8_t*)"ZEDdify me";
     auto payload = command.mutable_Payload();
     payload.set(test_message, sizeof(test_message));
-    command.set_SequenceNumber(periodicCurrentCounter);
+    command.set_CorrelationCode(periodicCurrentCounter);
 
-    TransmitUnicast(command);
-
-    UartDebug("PeriodTX", 8);
+    TransmitLoRaMessage(command);
+    UartDebug("PeriodTX", periodicCurrentCounter, 8);
     periodicCurrentCounter++;
 
     if (periodicCurrentCounter > sequenceNumberLimit) {
@@ -72,8 +68,7 @@ static void OnPeriodicTx(void* context) {
             // We start again with new counter
             periodicCurrentCounter = 0;
             TimerReset(&periodicTxTimer);
-        }
-        else {
+        } else {
             // We will send the data once
             // RequestStreamMeasurements();
             TimerStop(&periodicTxTimer);
@@ -108,14 +103,13 @@ void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod) {
         sequenceNumberLimit = MAX_SEQUENCE_NUMBERS;
 
         ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
-    }
-    else {
+    } else {
         standaloneAlwaysSendPeriodically = false;
         TimerStop(&periodicTxTimer);
     }
 }
 
-void SetSequenceRequestConfig(const SequenceRequestConfig& config) {
+void SetSequenceRequestConfig(const ForwardSequenceConfig& config) {
     if (sequenceTestRunning) return;
 
     // Check equality - TODO write utility
@@ -123,7 +117,7 @@ void SetSequenceRequestConfig(const SequenceRequestConfig& config) {
 
     // Call copy constructor
     ClearMeasurements();
-    sequenceRequestConfig = config;
+    forwardedSequenceConfig = config;
     sequenceMessageCount = 0;
 
     // TimerSetValue(&sequenceTimer, sequenceRequestConfig.get_Interval());

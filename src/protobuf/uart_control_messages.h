@@ -29,8 +29,8 @@
  */
 
 // This file is generated. Please do not edit!
-#ifndef UART_MESSAGES_H
-#define UART_MESSAGES_H
+#ifndef UART_CONTROL_MESSAGES_H
+#define UART_CONTROL_MESSAGES_H
 
 #include <cstdint>
 #include <MessageInterface.h>
@@ -44,311 +44,9 @@
 #include <limits>
 
 // Include external proto definitions
+#include <lora_device_messages.h>
 #include <shared/lora_phy.h>
 
-
-template<uint32_t Payload_LENGTH>
-class TransmitCommand final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    TransmitCommand() = default;
-    TransmitCommand(const TransmitCommand& rhs )
-    {
-      set_IsMulticast(rhs.get_IsMulticast());
-      set_DeviceId(rhs.get_DeviceId());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      set_Period(rhs.get_Period());
-      set_MaxPacketCount(rhs.get_MaxPacketCount());
-      set_Payload(rhs.get_Payload());
-    }
-
-    TransmitCommand(const TransmitCommand&& rhs ) noexcept
-    {
-      set_IsMulticast(rhs.get_IsMulticast());
-      set_DeviceId(rhs.get_DeviceId());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      set_Period(rhs.get_Period());
-      set_MaxPacketCount(rhs.get_MaxPacketCount());
-      set_Payload(rhs.get_Payload());
-    }
-
-    ~TransmitCommand() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      ISMULTICAST = 1,
-      DEVICEID = 2,
-      SEQUENCENUMBER = 3,
-      PERIOD = 4,
-      MAXPACKETCOUNT = 5,
-      PAYLOAD = 6
-    };
-
-    TransmitCommand& operator=(const TransmitCommand& rhs)
-    {
-      set_IsMulticast(rhs.get_IsMulticast());
-      set_DeviceId(rhs.get_DeviceId());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      set_Period(rhs.get_Period());
-      set_MaxPacketCount(rhs.get_MaxPacketCount());
-      set_Payload(rhs.get_Payload());
-      return *this;
-    }
-
-    TransmitCommand& operator=(const TransmitCommand&& rhs) noexcept
-    {
-      set_IsMulticast(rhs.get_IsMulticast());
-      set_DeviceId(rhs.get_DeviceId());
-      set_SequenceNumber(rhs.get_SequenceNumber());
-      set_Period(rhs.get_Period());
-      set_MaxPacketCount(rhs.get_MaxPacketCount());
-      set_Payload(rhs.get_Payload());
-      return *this;
-    }
-
-    inline void clear_IsMulticast() { IsMulticast_.clear(); }
-    inline void set_IsMulticast(const EmbeddedProto::boolean& value) { IsMulticast_ = value; }
-    inline void set_IsMulticast(const EmbeddedProto::boolean&& value) { IsMulticast_ = value; }
-    inline EmbeddedProto::boolean& mutable_IsMulticast() { return IsMulticast_; }
-    inline const EmbeddedProto::boolean& get_IsMulticast() const { return IsMulticast_; }
-    inline EmbeddedProto::boolean::FIELD_TYPE IsMulticast() const { return IsMulticast_.get(); }
-
-    inline void clear_DeviceId() { DeviceId_.clear(); }
-    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
-    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
-    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
-    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
-
-    inline void clear_SequenceNumber() { SequenceNumber_.clear(); }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32& value) { SequenceNumber_ = value; }
-    inline void set_SequenceNumber(const EmbeddedProto::uint32&& value) { SequenceNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_SequenceNumber() { return SequenceNumber_; }
-    inline const EmbeddedProto::uint32& get_SequenceNumber() const { return SequenceNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE SequenceNumber() const { return SequenceNumber_.get(); }
-
-    inline bool has_Period() const
-    {
-      return 0 != (presence::mask(presence::fields::PERIOD) & presence_[presence::index(presence::fields::PERIOD)]);
-    }
-    inline void clear_Period()
-    {
-      presence_[presence::index(presence::fields::PERIOD)] &= ~(presence::mask(presence::fields::PERIOD));
-      Period_.clear();
-    }
-    inline void set_Period(const EmbeddedProto::uint32& value)
-    {
-      presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
-      Period_ = value;
-    }
-    inline void set_Period(const EmbeddedProto::uint32&& value)
-    {
-      presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
-      Period_ = value;
-    }
-    inline EmbeddedProto::uint32& mutable_Period()
-    {
-      presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
-      return Period_;
-    }
-    inline const EmbeddedProto::uint32& get_Period() const { return Period_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Period() const { return Period_.get(); }
-
-    inline bool has_MaxPacketCount() const
-    {
-      return 0 != (presence::mask(presence::fields::MAXPACKETCOUNT) & presence_[presence::index(presence::fields::MAXPACKETCOUNT)]);
-    }
-    inline void clear_MaxPacketCount()
-    {
-      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] &= ~(presence::mask(presence::fields::MAXPACKETCOUNT));
-      MaxPacketCount_.clear();
-    }
-    inline void set_MaxPacketCount(const EmbeddedProto::uint32& value)
-    {
-      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
-      MaxPacketCount_ = value;
-    }
-    inline void set_MaxPacketCount(const EmbeddedProto::uint32&& value)
-    {
-      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
-      MaxPacketCount_ = value;
-    }
-    inline EmbeddedProto::uint32& mutable_MaxPacketCount()
-    {
-      presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
-      return MaxPacketCount_;
-    }
-    inline const EmbeddedProto::uint32& get_MaxPacketCount() const { return MaxPacketCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MaxPacketCount() const { return MaxPacketCount_.get(); }
-
-    inline void clear_Payload() { Payload_.clear(); }
-    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
-    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
-    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
-    inline const uint8_t* Payload() const { return Payload_.get_const(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((false != IsMulticast_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = IsMulticast_.serialize_with_id(static_cast<uint32_t>(id::ISMULTICAST), buffer, false);
-      }
-
-      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
-      }
-
-      if((0U != SequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = SequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCENUMBER), buffer, false);
-      }
-
-      if(has_Period() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Period_.serialize_with_id(static_cast<uint32_t>(id::PERIOD), buffer, true);
-      }
-
-      if(has_MaxPacketCount() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MaxPacketCount_.serialize_with_id(static_cast<uint32_t>(id::MAXPACKETCOUNT), buffer, true);
-      }
-
-      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-      {
-        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::ISMULTICAST:
-            return_value = IsMulticast_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::DEVICEID:
-            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::SEQUENCENUMBER:
-            return_value = SequenceNumber_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::PERIOD:
-            presence_[presence::index(presence::fields::PERIOD)] |= presence::mask(presence::fields::PERIOD);
-            return_value = Period_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::MAXPACKETCOUNT:
-            presence_[presence::index(presence::fields::MAXPACKETCOUNT)] |= presence::mask(presence::fields::MAXPACKETCOUNT);
-            return_value = MaxPacketCount_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::PAYLOAD:
-            return_value = Payload_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_IsMulticast();
-      clear_DeviceId();
-      clear_SequenceNumber();
-      clear_Period();
-      clear_MaxPacketCount();
-      clear_Payload();
-
-    }
-
-    private:
-
-      // Define constants for tracking the presence of fields.
-      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
-      struct presence
-      {
-        // An enumeration with all the fields for which presence has to be tracked.
-        enum class fields : uint32_t
-        {
-          PERIOD,
-          MAXPACKETCOUNT
-        };
-
-        // The number of fields for which presence has to be tracked.
-        static constexpr uint32_t N_FIELDS = 2;
-
-        // Which type are we using to track presence.
-        using TYPE = uint32_t;
-
-        // How many bits are there in the presence type.
-        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
-
-        // How many variables of TYPE do we need to bit mask all presence fields.
-        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
-
-        // Obtain the index of a given field in the presence array.
-        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
-
-        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
-        static constexpr TYPE mask(const fields& field)
-        {
-          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
-        }
-      };
-
-      // Create an array in which the presence flags are stored.
-      typename presence::TYPE presence_[presence::SIZE] = {0};
-
-      EmbeddedProto::boolean IsMulticast_ = false;
-      EmbeddedProto::uint32 DeviceId_ = 0U;
-      EmbeddedProto::uint32 SequenceNumber_ = 0U;
-      EmbeddedProto::uint32 Period_ = 0U;
-      EmbeddedProto::uint32 MaxPacketCount_ = 0U;
-      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
-
-};
 
 class RequestBootInfo final: public ::EmbeddedProto::MessageInterface
 {
@@ -733,16 +431,16 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
-        case id::TRANSMITCOMMAND:
-          set_transmitCommand(rhs.get_transmitCommand());
-          break;
-
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
           break;
 
         case id::CLEARMEASUREMENTSCOMMAND:
           set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
+          break;
+
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         default:
@@ -773,16 +471,16 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
-        case id::TRANSMITCOMMAND:
-          set_transmitCommand(rhs.get_transmitCommand());
-          break;
-
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
           break;
 
         case id::CLEARMEASUREMENTSCOMMAND:
           set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
+          break;
+
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         default:
@@ -799,9 +497,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       RXCONFIG = 1,
       TXCONFIG = 2,
       DEVICECONFIGURATION = 3,
-      TRANSMITCOMMAND = 4,
-      REQUESTBOOTINFO = 5,
-      CLEARMEASUREMENTSCOMMAND = 6
+      REQUESTBOOTINFO = 4,
+      CLEARMEASUREMENTSCOMMAND = 5,
+      TRANSMITCOMMAND = 6
     };
 
     UartCommand& operator=(const UartCommand& rhs)
@@ -826,16 +524,16 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
-        case id::TRANSMITCOMMAND:
-          set_transmitCommand(rhs.get_transmitCommand());
-          break;
-
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
           break;
 
         case id::CLEARMEASUREMENTSCOMMAND:
           set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
+          break;
+
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         default:
@@ -867,16 +565,16 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
 
-        case id::TRANSMITCOMMAND:
-          set_transmitCommand(rhs.get_transmitCommand());
-          break;
-
         case id::REQUESTBOOTINFO:
           set_requestBootInfo(rhs.get_requestBootInfo());
           break;
 
         case id::CLEARMEASUREMENTSCOMMAND:
           set_clearMeasurementsCommand(rhs.get_clearMeasurementsCommand());
+          break;
+
+        case id::TRANSMITCOMMAND:
+          set_transmitCommand(rhs.get_transmitCommand());
           break;
 
         default:
@@ -1005,45 +703,6 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     inline const DeviceConfiguration& get_deviceConfiguration() const { return Body_.deviceConfiguration_; }
     inline const DeviceConfiguration& deviceConfiguration() const { return Body_.deviceConfiguration_; }
 
-    inline bool has_transmitCommand() const
-    {
-      return id::TRANSMITCOMMAND == which_Body_;
-    }
-    inline void clear_transmitCommand()
-    {
-      if(id::TRANSMITCOMMAND == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.transmitCommand_.~TransmitCommand<transmitCommand_Payload_LENGTH>();
-      }
-    }
-    inline void set_transmitCommand(const TransmitCommand<transmitCommand_Payload_LENGTH>& value)
-    {
-      if(id::TRANSMITCOMMAND != which_Body_)
-      {
-        init_Body(id::TRANSMITCOMMAND);
-      }
-      Body_.transmitCommand_ = value;
-    }
-    inline void set_transmitCommand(const TransmitCommand<transmitCommand_Payload_LENGTH>&& value)
-    {
-      if(id::TRANSMITCOMMAND != which_Body_)
-      {
-        init_Body(id::TRANSMITCOMMAND);
-      }
-      Body_.transmitCommand_ = value;
-    }
-    inline TransmitCommand<transmitCommand_Payload_LENGTH>& mutable_transmitCommand()
-    {
-      if(id::TRANSMITCOMMAND != which_Body_)
-      {
-        init_Body(id::TRANSMITCOMMAND);
-      }
-      return Body_.transmitCommand_;
-    }
-    inline const TransmitCommand<transmitCommand_Payload_LENGTH>& get_transmitCommand() const { return Body_.transmitCommand_; }
-    inline const TransmitCommand<transmitCommand_Payload_LENGTH>& transmitCommand() const { return Body_.transmitCommand_; }
-
     inline bool has_requestBootInfo() const
     {
       return id::REQUESTBOOTINFO == which_Body_;
@@ -1122,6 +781,45 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     inline const ClearMeasurementsCommand& get_clearMeasurementsCommand() const { return Body_.clearMeasurementsCommand_; }
     inline const ClearMeasurementsCommand& clearMeasurementsCommand() const { return Body_.clearMeasurementsCommand_; }
 
+    inline bool has_transmitCommand() const
+    {
+      return id::TRANSMITCOMMAND == which_Body_;
+    }
+    inline void clear_transmitCommand()
+    {
+      if(id::TRANSMITCOMMAND == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.transmitCommand_.~LoRaMessage<transmitCommand_Payload_LENGTH>();
+      }
+    }
+    inline void set_transmitCommand(const LoRaMessage<transmitCommand_Payload_LENGTH>& value)
+    {
+      if(id::TRANSMITCOMMAND != which_Body_)
+      {
+        init_Body(id::TRANSMITCOMMAND);
+      }
+      Body_.transmitCommand_ = value;
+    }
+    inline void set_transmitCommand(const LoRaMessage<transmitCommand_Payload_LENGTH>&& value)
+    {
+      if(id::TRANSMITCOMMAND != which_Body_)
+      {
+        init_Body(id::TRANSMITCOMMAND);
+      }
+      Body_.transmitCommand_ = value;
+    }
+    inline LoRaMessage<transmitCommand_Payload_LENGTH>& mutable_transmitCommand()
+    {
+      if(id::TRANSMITCOMMAND != which_Body_)
+      {
+        init_Body(id::TRANSMITCOMMAND);
+      }
+      return Body_.transmitCommand_;
+    }
+    inline const LoRaMessage<transmitCommand_Payload_LENGTH>& get_transmitCommand() const { return Body_.transmitCommand_; }
+    inline const LoRaMessage<transmitCommand_Payload_LENGTH>& transmitCommand() const { return Body_.transmitCommand_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1150,13 +848,6 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
-        case id::TRANSMITCOMMAND:
-          if(has_transmitCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = Body_.transmitCommand_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCOMMAND), buffer, true);
-          }
-          break;
-
         case id::REQUESTBOOTINFO:
           if(has_requestBootInfo() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -1168,6 +859,13 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           if(has_clearMeasurementsCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.clearMeasurementsCommand_.serialize_with_id(static_cast<uint32_t>(id::CLEARMEASUREMENTSCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::TRANSMITCOMMAND:
+          if(has_transmitCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.transmitCommand_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCOMMAND), buffer, true);
           }
           break;
 
@@ -1206,11 +904,6 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
             break;
 
-          case id::TRANSMITCOMMAND:
-            return_value = deserialize_Body(id::TRANSMITCOMMAND, Body_.transmitCommand_, buffer, wire_type);
-
-            break;
-
           case id::REQUESTBOOTINFO:
             return_value = deserialize_Body(id::REQUESTBOOTINFO, Body_.requestBootInfo_, buffer, wire_type);
 
@@ -1218,6 +911,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
           case id::CLEARMEASUREMENTSCOMMAND:
             return_value = deserialize_Body(id::CLEARMEASUREMENTSCOMMAND, Body_.clearMeasurementsCommand_, buffer, wire_type);
+
+            break;
+
+          case id::TRANSMITCOMMAND:
+            return_value = deserialize_Body(id::TRANSMITCOMMAND, Body_.transmitCommand_, buffer, wire_type);
 
             break;
 
@@ -1266,9 +964,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         RadioRxConfig rxConfig_;
         RadioTxConfig txConfig_;
         DeviceConfiguration deviceConfiguration_;
-        TransmitCommand<transmitCommand_Payload_LENGTH> transmitCommand_;
         RequestBootInfo requestBootInfo_;
         ClearMeasurementsCommand clearMeasurementsCommand_;
+        LoRaMessage<transmitCommand_Payload_LENGTH> transmitCommand_;
       };
       Body Body_;
 
@@ -1298,11 +996,6 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::DEVICECONFIGURATION;
             break;
 
-          case id::TRANSMITCOMMAND:
-            new(&Body_.transmitCommand_) TransmitCommand<transmitCommand_Payload_LENGTH>;
-            which_Body_ = id::TRANSMITCOMMAND;
-            break;
-
           case id::REQUESTBOOTINFO:
             new(&Body_.requestBootInfo_) RequestBootInfo;
             which_Body_ = id::REQUESTBOOTINFO;
@@ -1311,6 +1004,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           case id::CLEARMEASUREMENTSCOMMAND:
             new(&Body_.clearMeasurementsCommand_) ClearMeasurementsCommand;
             which_Body_ = id::CLEARMEASUREMENTSCOMMAND;
+            break;
+
+          case id::TRANSMITCOMMAND:
+            new(&Body_.transmitCommand_) LoRaMessage<transmitCommand_Payload_LENGTH>;
+            which_Body_ = id::TRANSMITCOMMAND;
             break;
 
           default:
@@ -1333,14 +1031,14 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           case id::DEVICECONFIGURATION:
             Body_.deviceConfiguration_.~DeviceConfiguration(); // NOSONAR Unions require this.
             break;
-          case id::TRANSMITCOMMAND:
-            Body_.transmitCommand_.~TransmitCommand<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.
-            break;
           case id::REQUESTBOOTINFO:
             Body_.requestBootInfo_.~RequestBootInfo(); // NOSONAR Unions require this.
             break;
           case id::CLEARMEASUREMENTSCOMMAND:
             Body_.clearMeasurementsCommand_.~ClearMeasurementsCommand(); // NOSONAR Unions require this.
+            break;
+          case id::TRANSMITCOMMAND:
+            Body_.transmitCommand_.~LoRaMessage<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           default:
             break;
@@ -1366,4 +1064,4 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
 };
 
-#endif // UART_MESSAGES_H
+#endif // UART_CONTROL_MESSAGES_H

@@ -7,11 +7,19 @@ import "shared/experiment_config.proto";
 option csharp_namespace = "LoRa";
 
 message LoRaMessage {
-    CommandType command = 1;
-    uint32 SequenceNumber = 2;
+    bool IsMulticast = 1; 
+    uint32 DeviceId = 2;
+    uint32 CorrelationCode = 3;
+    bytes Payload = 4;
+    
     oneof Body {
-        SpreadingFactorConfig spreadingFactorConfig = 3;
-        SequenceRequestConfig sequenceRequestConfig = 4;
-        bytes payload = 5;
+        ForwardSequenceConfig sequenceConfig = 5;
+        ForwardRadioConfigUpdate forwardRadioConfigUpdate = 6;
+        ForwardExperimentCommand forwardExperimentCommand = 7; // Set role TX/RX, play/pause or switch to predefined experiment
+        MeasurementStreamRequest measurementStreamRequest = 8;
+        MeasurementStreamFragment measurementStreamFragment = 9;
+        
+        // Avoid if possible
+        // 
     }
 }

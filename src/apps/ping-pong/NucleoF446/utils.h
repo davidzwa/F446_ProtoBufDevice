@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "device_messages.h"
+#include "firmware.h"
 
 #ifndef UTILS_H__
 #define UTILS_H__
