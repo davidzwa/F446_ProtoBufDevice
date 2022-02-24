@@ -21,6 +21,7 @@
 #include "board.h"
 #include "cli.h"
 #include "config.h"
+#include "decoding/rlnc_decoder.h"
 #include "delay.h"
 #include "measurements.h"
 #include "nvmm.h"
