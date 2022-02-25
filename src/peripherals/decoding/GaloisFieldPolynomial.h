@@ -22,7 +22,6 @@
 
 #include <assert.h>
 
-#include <iostream>
 #include <vector>
 
 #include "GaloisField.h"
@@ -72,8 +71,6 @@ class GaloisFieldPolynomial {
     bool operator!=(const GaloisFieldPolynomial& polynomial) const;
 
     GaloisFieldPolynomial derivative();
-
-    friend std::ostream& operator<<(std::ostream& os, const GaloisFieldPolynomial& polynomial);
 
    private:
     void simplify(GaloisFieldPolynomial& polynomial);

@@ -15,11 +15,6 @@ GaloisFieldElement::GaloisFieldElement(const GaloisFieldElement& gfe) {
     poly_value = gfe.poly_value;
 }
 
-std::ostream& operator<<(std::ostream& os, const GaloisFieldElement& gfe) {
-    os << gfe.poly_value;
-    return os;
-}
-
 GaloisFieldElement operator+(const GaloisFieldElement& a, const GaloisFieldElement& b) {
     GaloisFieldElement result = a;
     result += b;

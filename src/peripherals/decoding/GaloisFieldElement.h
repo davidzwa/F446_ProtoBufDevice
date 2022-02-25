@@ -20,7 +20,6 @@
 #ifndef INCLUDE_GALOISFIELDELEMENT_H
 #define INCLUDE_GALOISFIELDELEMENT_H
 
-#include <iostream>
 #include <vector>
 
 #include "GaloisField.h"
@@ -144,8 +143,6 @@ class GaloisFieldElement {
     inline GFSymbol inverse() const {
         return gf->inverse(poly_value);
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const GaloisFieldElement& gfe);
 
    private:
     GaloisField* gf;

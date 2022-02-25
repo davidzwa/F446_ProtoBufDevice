@@ -256,12 +256,4 @@ GFSymbol GaloisField::gen_inverse(const GFSymbol& val) {
     return alpha_to[fast_modulus(field_size - index_of[val])];
 }
 
-std::ostream& operator<<(std::ostream& os, const GaloisField& gf) {
-    for (unsigned int i = 0; i < gf.field_size + 1; i++) {
-        os << i << "\t" << gf.alpha_to[i] << "\t" << gf.index_of[i] << std::endl;
-    }
-
-    return os;
-}
-
 }  // namespace galois

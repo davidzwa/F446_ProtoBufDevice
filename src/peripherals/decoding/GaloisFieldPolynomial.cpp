@@ -477,26 +477,4 @@ GaloisFieldPolynomial gcd(const GaloisFieldPolynomial& a, const GaloisFieldPolyn
         return GaloisFieldPolynomial();
 }
 
-std::ostream& operator<<(std::ostream& os, const GaloisFieldPolynomial& polynomial) {
-    if (polynomial.deg() >= 0) {
-        /*
-         for (unsigned int i = 0; i < polynomial.poly.size(); i++)
-         {
-            os << polynomial.poly[i].index()
-               << ((i != (polynomial.deg())) ? " " : "");
-         }
-
-         std::cout << " poly form: ";
-*/
-        for (unsigned int i = 0; i < polynomial.poly.size(); i++) {
-            os << polynomial.poly[i].poly()
-               << " "
-               << "x^"
-               << i
-               << ((i != (polynomial.deg())) ? " + " : "");
-        }
-    }
-    return os;
-}
-
 }  // namespace galois

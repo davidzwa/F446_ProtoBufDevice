@@ -21,10 +21,12 @@
 
 #include <string.h>
 
-#include <iostream>
 #include <vector>
 
 namespace galois {
+
+// Optimize RAM
+#define NO_GFLUT
 
 typedef int GFSymbol;
 const GFSymbol GFERROR = -1;
@@ -120,8 +122,6 @@ class GaloisField {
         return alpha_to[fast_modulus(field_size - index_of[val])];
 #endif
     }
-
-    friend std::ostream& operator<<(std::ostream& os, const GaloisField& gf);
 
    private:
     void generate_field(const unsigned int* prim_poly);
