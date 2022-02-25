@@ -393,7 +393,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_FrameCount(rhs.get_FrameCount());
-      set_FieldSize(rhs.get_FieldSize());
+      set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
@@ -405,7 +405,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_FrameCount(rhs.get_FrameCount());
-      set_FieldSize(rhs.get_FieldSize());
+      set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
@@ -420,7 +420,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       GENERATIONCOUNT = 2,
       FRAMESIZE = 3,
       FRAMECOUNT = 4,
-      FIELDSIZE = 5,
+      FIELDDEGREE = 5,
       FIELDPOLY = 6,
       LFSRSEED = 7,
       LFSRPOLY = 8
@@ -432,7 +432,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_FrameCount(rhs.get_FrameCount());
-      set_FieldSize(rhs.get_FieldSize());
+      set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
@@ -445,7 +445,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_FrameCount(rhs.get_FrameCount());
-      set_FieldSize(rhs.get_FieldSize());
+      set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
@@ -480,12 +480,12 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_FrameCount() const { return FrameCount_; }
     inline EmbeddedProto::uint32::FIELD_TYPE FrameCount() const { return FrameCount_.get(); }
 
-    inline void clear_FieldSize() { FieldSize_.clear(); }
-    inline void set_FieldSize(const EmbeddedProto::uint32& value) { FieldSize_ = value; }
-    inline void set_FieldSize(const EmbeddedProto::uint32&& value) { FieldSize_ = value; }
-    inline EmbeddedProto::uint32& mutable_FieldSize() { return FieldSize_; }
-    inline const EmbeddedProto::uint32& get_FieldSize() const { return FieldSize_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE FieldSize() const { return FieldSize_.get(); }
+    inline void clear_FieldDegree() { FieldDegree_.clear(); }
+    inline void set_FieldDegree(const EmbeddedProto::uint32& value) { FieldDegree_ = value; }
+    inline void set_FieldDegree(const EmbeddedProto::uint32&& value) { FieldDegree_ = value; }
+    inline EmbeddedProto::uint32& mutable_FieldDegree() { return FieldDegree_; }
+    inline const EmbeddedProto::uint32& get_FieldDegree() const { return FieldDegree_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FieldDegree() const { return FieldDegree_.get(); }
 
     inline void clear_FieldPoly() { FieldPoly_.clear(); }
     inline void set_FieldPoly(const EmbeddedProto::uint32& value) { FieldPoly_ = value; }
@@ -533,9 +533,9 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
         return_value = FrameCount_.serialize_with_id(static_cast<uint32_t>(id::FRAMECOUNT), buffer, false);
       }
 
-      if((0U != FieldSize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != FieldDegree_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = FieldSize_.serialize_with_id(static_cast<uint32_t>(id::FIELDSIZE), buffer, false);
+        return_value = FieldDegree_.serialize_with_id(static_cast<uint32_t>(id::FIELDDEGREE), buffer, false);
       }
 
       if((0U != FieldPoly_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
@@ -585,8 +585,8 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
             return_value = FrameCount_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::FIELDSIZE:
-            return_value = FieldSize_.deserialize_check_type(buffer, wire_type);
+          case id::FIELDDEGREE:
+            return_value = FieldDegree_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::FIELDPOLY:
@@ -634,7 +634,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       clear_GenerationCount();
       clear_FrameSize();
       clear_FrameCount();
-      clear_FieldSize();
+      clear_FieldDegree();
       clear_FieldPoly();
       clear_LfsrSeed();
       clear_LfsrPoly();
@@ -648,7 +648,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 GenerationCount_ = 0U;
       EmbeddedProto::uint32 FrameSize_ = 0U;
       EmbeddedProto::uint32 FrameCount_ = 0U;
-      EmbeddedProto::uint32 FieldSize_ = 0U;
+      EmbeddedProto::uint32 FieldDegree_ = 0U;
       EmbeddedProto::uint32 FieldPoly_ = 0U;
       EmbeddedProto::uint32 LfsrSeed_ = 0U;
       EmbeddedProto::uint32 LfsrPoly_ = 0U;

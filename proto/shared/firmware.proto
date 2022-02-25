@@ -20,7 +20,7 @@ message RlncInitConfigFragment {
     uint32 GenerationCount = 2;
     uint32 FrameSize = 3;
     uint32 FrameCount = 4;
-    uint32 FieldSize = 5;
+    uint32 FieldDegree = 5;
     uint32 FieldPoly = 6;
     uint32 LfsrSeed = 7;
     uint32 LfsrPoly = 8;
