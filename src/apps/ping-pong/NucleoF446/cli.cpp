@@ -144,6 +144,7 @@ void ProcessCliCommand() {
         UartSendAck(1);
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
+        // TODO verify if within SF/ToA limits?
         LoRaMessage<MAX_LORA_BYTES> command = uartCommand.get_transmitCommand();
         TransmitLoRaMessage(command);
         UartSendAck(1);
@@ -162,7 +163,8 @@ void ProcessCliCommand() {
         else {
             UartSendAck(1);
         }
-    } else if (uartCommand.has_deviceConfiguration()) {
+    }
+    else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
         bool alwaysSend = config.get_EnableAlwaysSend();
         auto alwaysSendPeriod = config.get_AlwaysSendPeriod();

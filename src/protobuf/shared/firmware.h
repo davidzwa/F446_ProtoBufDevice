@@ -383,11 +383,11 @@ class DeviceId final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
+class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    RlncInitConfigFragment() = default;
-    RlncInitConfigFragment(const RlncInitConfigFragment& rhs )
+    RlncInitConfigCommand() = default;
+    RlncInitConfigCommand(const RlncInitConfigCommand& rhs )
     {
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
@@ -399,7 +399,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
     }
 
-    RlncInitConfigFragment(const RlncInitConfigFragment&& rhs ) noexcept
+    RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
     {
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
@@ -411,7 +411,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
     }
 
-    ~RlncInitConfigFragment() override = default;
+    ~RlncInitConfigCommand() override = default;
 
     enum class id : uint32_t
     {
@@ -426,7 +426,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       LFSRPOLY = 8
     };
 
-    RlncInitConfigFragment& operator=(const RlncInitConfigFragment& rhs)
+    RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
     {
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
@@ -439,7 +439,7 @@ class RlncInitConfigFragment final: public ::EmbeddedProto::MessageInterface
       return *this;
     }
 
-    RlncInitConfigFragment& operator=(const RlncInitConfigFragment&& rhs) noexcept
+    RlncInitConfigCommand& operator=(const RlncInitConfigCommand&& rhs) noexcept
     {
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
@@ -743,23 +743,23 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class RlncStateUpdateFragment final: public ::EmbeddedProto::MessageInterface
+class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    RlncStateUpdateFragment() = default;
-    RlncStateUpdateFragment(const RlncStateUpdateFragment& rhs )
+    RlncStateUpdate() = default;
+    RlncStateUpdate(const RlncStateUpdate& rhs )
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
       set_LfsrState(rhs.get_LfsrState());
     }
 
-    RlncStateUpdateFragment(const RlncStateUpdateFragment&& rhs ) noexcept
+    RlncStateUpdate(const RlncStateUpdate&& rhs ) noexcept
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
       set_LfsrState(rhs.get_LfsrState());
     }
 
-    ~RlncStateUpdateFragment() override = default;
+    ~RlncStateUpdate() override = default;
 
     enum class id : uint32_t
     {
@@ -768,14 +768,14 @@ class RlncStateUpdateFragment final: public ::EmbeddedProto::MessageInterface
       LFSRSTATE = 2
     };
 
-    RlncStateUpdateFragment& operator=(const RlncStateUpdateFragment& rhs)
+    RlncStateUpdate& operator=(const RlncStateUpdate& rhs)
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
       set_LfsrState(rhs.get_LfsrState());
       return *this;
     }
 
-    RlncStateUpdateFragment& operator=(const RlncStateUpdateFragment&& rhs) noexcept
+    RlncStateUpdate& operator=(const RlncStateUpdate&& rhs) noexcept
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
       set_LfsrState(rhs.get_LfsrState());
@@ -877,31 +877,31 @@ class RlncStateUpdateFragment final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class RlncTerminationFragment final: public ::EmbeddedProto::MessageInterface
+class RlncTerminationCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    RlncTerminationFragment() = default;
-    RlncTerminationFragment(const RlncTerminationFragment& rhs )
+    RlncTerminationCommand() = default;
+    RlncTerminationCommand(const RlncTerminationCommand& rhs )
     {
     }
 
-    RlncTerminationFragment(const RlncTerminationFragment&& rhs ) noexcept
+    RlncTerminationCommand(const RlncTerminationCommand&& rhs ) noexcept
     {
     }
 
-    ~RlncTerminationFragment() override = default;
+    ~RlncTerminationCommand() override = default;
 
     enum class id : uint32_t
     {
       NOT_SET = 0,
     };
 
-    RlncTerminationFragment& operator=(const RlncTerminationFragment& rhs)
+    RlncTerminationCommand& operator=(const RlncTerminationCommand& rhs)
     {
       return *this;
     }
 
-    RlncTerminationFragment& operator=(const RlncTerminationFragment&& rhs) noexcept
+    RlncTerminationCommand& operator=(const RlncTerminationCommand&& rhs) noexcept
     {
       return *this;
     }

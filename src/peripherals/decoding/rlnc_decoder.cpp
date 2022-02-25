@@ -1,7 +1,12 @@
 #include "rlnc_decoder.h"
 
-// #include <cstdlib>
-// #include <iomanip>
+#include "config.h"
+
+LORA_MSG_TEMPLATE rlncDecodingConfig;
+
+void InitRlncDecodingSession(LORA_MSG_TEMPLATE rlncInitConfig) {
+    rlncDecodingConfig = rlncInitConfig;
+}
 
 /*
 Galois Field of type GF(2^8)

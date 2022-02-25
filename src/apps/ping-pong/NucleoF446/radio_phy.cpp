@@ -7,6 +7,7 @@
 #include "cli.h"
 #include "config.h"
 #include "lora_device_messages.h"
+#include "rlnc_decoder.h"
 #include "measurements.h"
 #include "tasks.h"
 
@@ -135,7 +136,10 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
         // TODO filter based on device id
         // StreamMeasurements();
     } 
-    
+    else if (loraPhyMessage.has_rlncInitConfigCommand()) {
+        InitRlncDecodingSession(loraPhyMessage.get_rlncInitConfigCommand());
+    }
+
     UartSendLoRaRx(loraPhyMessage, sequenceNumber, rssi, snr, false);
 
     // Ensure that the message is not re-used

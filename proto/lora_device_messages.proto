@@ -20,10 +20,10 @@ message LoRaMessage {
         MeasurementStreamRequest measurementStreamRequest = 8;
         MeasurementStreamFragment measurementStreamFragment = 9;
         
-        RlncInitConfigFragment rlncInitConfigFragment = 10;
+        RlncInitConfigCommand rlncInitConfigCommand = 10;
         RlncEncodedFragment rlncEncodedFragment = 11;
-        RlncStateUpdateFragment rlncStateUpdateFragment = 12;
-        RlncTerminationFragment rlncTerminationFragment = 13;
+        RlncStateUpdate rlncStateUpdate = 12;
+        RlncTerminationCommand rlncTerminationCommand = 13;
         
         // Avoid if possible
         // 

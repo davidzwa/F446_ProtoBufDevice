@@ -3,6 +3,7 @@
 
 #include "GaloisFieldElement.h"
 
-void RowReduce(float A[][4]);
+void InitRlncDecodingSession();
+// void RowReduce(float A[][4]);
 
 #endif  // RLNC_DECODER_H__
