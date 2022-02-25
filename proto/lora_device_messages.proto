@@ -3,6 +3,7 @@
 syntax = "proto3";
 
 import "shared/experiment_config.proto";
+import "shared/firmware.proto";
 
 option csharp_namespace = "LoRa";
 
@@ -18,6 +19,11 @@ message LoRaMessage {
         ForwardExperimentCommand forwardExperimentCommand = 7; // Set role TX/RX, play/pause or switch to predefined experiment
         MeasurementStreamRequest measurementStreamRequest = 8;
         MeasurementStreamFragment measurementStreamFragment = 9;
+        
+        RlncInitConfigFragment rlncInitConfigFragment = 10;
+        RlncEncodedFragment rlncEncodedFragment = 11;
+        RlncStateUpdateFragment rlncStateUpdateFragment = 12;
+        RlncTerminationFragment rlncTerminationFragment = 13;
         
         // Avoid if possible
         // 

@@ -45,6 +45,7 @@
 
 // Include external proto definitions
 #include <shared/experiment_config.h>
+#include <shared/firmware.h>
 
 
 template<uint32_t Payload_LENGTH>
@@ -84,6 +85,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::MEASUREMENTSTREAMFRAGMENT:
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
+          break;
+
+        case id::RLNCINITCONFIGFRAGMENT:
+          set_rlncInitConfigFragment(rhs.get_rlncInitConfigFragment());
+          break;
+
+        case id::RLNCENCODEDFRAGMENT:
+          set_rlncEncodedFragment(rhs.get_rlncEncodedFragment());
+          break;
+
+        case id::RLNCSTATEUPDATEFRAGMENT:
+          set_rlncStateUpdateFragment(rhs.get_rlncStateUpdateFragment());
+          break;
+
+        case id::RLNCTERMINATIONFRAGMENT:
+          set_rlncTerminationFragment(rhs.get_rlncTerminationFragment());
           break;
 
         default:
@@ -126,6 +143,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
+        case id::RLNCINITCONFIGFRAGMENT:
+          set_rlncInitConfigFragment(rhs.get_rlncInitConfigFragment());
+          break;
+
+        case id::RLNCENCODEDFRAGMENT:
+          set_rlncEncodedFragment(rhs.get_rlncEncodedFragment());
+          break;
+
+        case id::RLNCSTATEUPDATEFRAGMENT:
+          set_rlncStateUpdateFragment(rhs.get_rlncStateUpdateFragment());
+          break;
+
+        case id::RLNCTERMINATIONFRAGMENT:
+          set_rlncTerminationFragment(rhs.get_rlncTerminationFragment());
+          break;
+
         default:
           break;
       }
@@ -145,7 +178,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       FORWARDRADIOCONFIGUPDATE = 6,
       FORWARDEXPERIMENTCOMMAND = 7,
       MEASUREMENTSTREAMREQUEST = 8,
-      MEASUREMENTSTREAMFRAGMENT = 9
+      MEASUREMENTSTREAMFRAGMENT = 9,
+      RLNCINITCONFIGFRAGMENT = 10,
+      RLNCENCODEDFRAGMENT = 11,
+      RLNCSTATEUPDATEFRAGMENT = 12,
+      RLNCTERMINATIONFRAGMENT = 13
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -180,6 +217,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::MEASUREMENTSTREAMFRAGMENT:
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
+          break;
+
+        case id::RLNCINITCONFIGFRAGMENT:
+          set_rlncInitConfigFragment(rhs.get_rlncInitConfigFragment());
+          break;
+
+        case id::RLNCENCODEDFRAGMENT:
+          set_rlncEncodedFragment(rhs.get_rlncEncodedFragment());
+          break;
+
+        case id::RLNCSTATEUPDATEFRAGMENT:
+          set_rlncStateUpdateFragment(rhs.get_rlncStateUpdateFragment());
+          break;
+
+        case id::RLNCTERMINATIONFRAGMENT:
+          set_rlncTerminationFragment(rhs.get_rlncTerminationFragment());
           break;
 
         default:
@@ -221,6 +274,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::MEASUREMENTSTREAMFRAGMENT:
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
+          break;
+
+        case id::RLNCINITCONFIGFRAGMENT:
+          set_rlncInitConfigFragment(rhs.get_rlncInitConfigFragment());
+          break;
+
+        case id::RLNCENCODEDFRAGMENT:
+          set_rlncEncodedFragment(rhs.get_rlncEncodedFragment());
+          break;
+
+        case id::RLNCSTATEUPDATEFRAGMENT:
+          set_rlncStateUpdateFragment(rhs.get_rlncStateUpdateFragment());
+          break;
+
+        case id::RLNCTERMINATIONFRAGMENT:
+          set_rlncTerminationFragment(rhs.get_rlncTerminationFragment());
           break;
 
         default:
@@ -454,6 +523,162 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const MeasurementStreamFragment& get_measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
     inline const MeasurementStreamFragment& measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
 
+    inline bool has_rlncInitConfigFragment() const
+    {
+      return id::RLNCINITCONFIGFRAGMENT == which_Body_;
+    }
+    inline void clear_rlncInitConfigFragment()
+    {
+      if(id::RLNCINITCONFIGFRAGMENT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncInitConfigFragment_.~RlncInitConfigFragment();
+      }
+    }
+    inline void set_rlncInitConfigFragment(const RlncInitConfigFragment& value)
+    {
+      if(id::RLNCINITCONFIGFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCINITCONFIGFRAGMENT);
+      }
+      Body_.rlncInitConfigFragment_ = value;
+    }
+    inline void set_rlncInitConfigFragment(const RlncInitConfigFragment&& value)
+    {
+      if(id::RLNCINITCONFIGFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCINITCONFIGFRAGMENT);
+      }
+      Body_.rlncInitConfigFragment_ = value;
+    }
+    inline RlncInitConfigFragment& mutable_rlncInitConfigFragment()
+    {
+      if(id::RLNCINITCONFIGFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCINITCONFIGFRAGMENT);
+      }
+      return Body_.rlncInitConfigFragment_;
+    }
+    inline const RlncInitConfigFragment& get_rlncInitConfigFragment() const { return Body_.rlncInitConfigFragment_; }
+    inline const RlncInitConfigFragment& rlncInitConfigFragment() const { return Body_.rlncInitConfigFragment_; }
+
+    inline bool has_rlncEncodedFragment() const
+    {
+      return id::RLNCENCODEDFRAGMENT == which_Body_;
+    }
+    inline void clear_rlncEncodedFragment()
+    {
+      if(id::RLNCENCODEDFRAGMENT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncEncodedFragment_.~RlncEncodedFragment();
+      }
+    }
+    inline void set_rlncEncodedFragment(const RlncEncodedFragment& value)
+    {
+      if(id::RLNCENCODEDFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCENCODEDFRAGMENT);
+      }
+      Body_.rlncEncodedFragment_ = value;
+    }
+    inline void set_rlncEncodedFragment(const RlncEncodedFragment&& value)
+    {
+      if(id::RLNCENCODEDFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCENCODEDFRAGMENT);
+      }
+      Body_.rlncEncodedFragment_ = value;
+    }
+    inline RlncEncodedFragment& mutable_rlncEncodedFragment()
+    {
+      if(id::RLNCENCODEDFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCENCODEDFRAGMENT);
+      }
+      return Body_.rlncEncodedFragment_;
+    }
+    inline const RlncEncodedFragment& get_rlncEncodedFragment() const { return Body_.rlncEncodedFragment_; }
+    inline const RlncEncodedFragment& rlncEncodedFragment() const { return Body_.rlncEncodedFragment_; }
+
+    inline bool has_rlncStateUpdateFragment() const
+    {
+      return id::RLNCSTATEUPDATEFRAGMENT == which_Body_;
+    }
+    inline void clear_rlncStateUpdateFragment()
+    {
+      if(id::RLNCSTATEUPDATEFRAGMENT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncStateUpdateFragment_.~RlncStateUpdateFragment();
+      }
+    }
+    inline void set_rlncStateUpdateFragment(const RlncStateUpdateFragment& value)
+    {
+      if(id::RLNCSTATEUPDATEFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCSTATEUPDATEFRAGMENT);
+      }
+      Body_.rlncStateUpdateFragment_ = value;
+    }
+    inline void set_rlncStateUpdateFragment(const RlncStateUpdateFragment&& value)
+    {
+      if(id::RLNCSTATEUPDATEFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCSTATEUPDATEFRAGMENT);
+      }
+      Body_.rlncStateUpdateFragment_ = value;
+    }
+    inline RlncStateUpdateFragment& mutable_rlncStateUpdateFragment()
+    {
+      if(id::RLNCSTATEUPDATEFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCSTATEUPDATEFRAGMENT);
+      }
+      return Body_.rlncStateUpdateFragment_;
+    }
+    inline const RlncStateUpdateFragment& get_rlncStateUpdateFragment() const { return Body_.rlncStateUpdateFragment_; }
+    inline const RlncStateUpdateFragment& rlncStateUpdateFragment() const { return Body_.rlncStateUpdateFragment_; }
+
+    inline bool has_rlncTerminationFragment() const
+    {
+      return id::RLNCTERMINATIONFRAGMENT == which_Body_;
+    }
+    inline void clear_rlncTerminationFragment()
+    {
+      if(id::RLNCTERMINATIONFRAGMENT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncTerminationFragment_.~RlncTerminationFragment();
+      }
+    }
+    inline void set_rlncTerminationFragment(const RlncTerminationFragment& value)
+    {
+      if(id::RLNCTERMINATIONFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCTERMINATIONFRAGMENT);
+      }
+      Body_.rlncTerminationFragment_ = value;
+    }
+    inline void set_rlncTerminationFragment(const RlncTerminationFragment&& value)
+    {
+      if(id::RLNCTERMINATIONFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCTERMINATIONFRAGMENT);
+      }
+      Body_.rlncTerminationFragment_ = value;
+    }
+    inline RlncTerminationFragment& mutable_rlncTerminationFragment()
+    {
+      if(id::RLNCTERMINATIONFRAGMENT != which_Body_)
+      {
+        init_Body(id::RLNCTERMINATIONFRAGMENT);
+      }
+      return Body_.rlncTerminationFragment_;
+    }
+    inline const RlncTerminationFragment& get_rlncTerminationFragment() const { return Body_.rlncTerminationFragment_; }
+    inline const RlncTerminationFragment& rlncTerminationFragment() const { return Body_.rlncTerminationFragment_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -513,6 +738,34 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           if(has_measurementStreamFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.measurementStreamFragment_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSTREAMFRAGMENT), buffer, true);
+          }
+          break;
+
+        case id::RLNCINITCONFIGFRAGMENT:
+          if(has_rlncInitConfigFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncInitConfigFragment_.serialize_with_id(static_cast<uint32_t>(id::RLNCINITCONFIGFRAGMENT), buffer, true);
+          }
+          break;
+
+        case id::RLNCENCODEDFRAGMENT:
+          if(has_rlncEncodedFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncEncodedFragment_.serialize_with_id(static_cast<uint32_t>(id::RLNCENCODEDFRAGMENT), buffer, true);
+          }
+          break;
+
+        case id::RLNCSTATEUPDATEFRAGMENT:
+          if(has_rlncStateUpdateFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncStateUpdateFragment_.serialize_with_id(static_cast<uint32_t>(id::RLNCSTATEUPDATEFRAGMENT), buffer, true);
+          }
+          break;
+
+        case id::RLNCTERMINATIONFRAGMENT:
+          if(has_rlncTerminationFragment() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncTerminationFragment_.serialize_with_id(static_cast<uint32_t>(id::RLNCTERMINATIONFRAGMENT), buffer, true);
           }
           break;
 
@@ -577,6 +830,26 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::RLNCINITCONFIGFRAGMENT:
+            return_value = deserialize_Body(id::RLNCINITCONFIGFRAGMENT, Body_.rlncInitConfigFragment_, buffer, wire_type);
+
+            break;
+
+          case id::RLNCENCODEDFRAGMENT:
+            return_value = deserialize_Body(id::RLNCENCODEDFRAGMENT, Body_.rlncEncodedFragment_, buffer, wire_type);
+
+            break;
+
+          case id::RLNCSTATEUPDATEFRAGMENT:
+            return_value = deserialize_Body(id::RLNCSTATEUPDATEFRAGMENT, Body_.rlncStateUpdateFragment_, buffer, wire_type);
+
+            break;
+
+          case id::RLNCTERMINATIONFRAGMENT:
+            return_value = deserialize_Body(id::RLNCTERMINATIONFRAGMENT, Body_.rlncTerminationFragment_, buffer, wire_type);
+
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -632,6 +905,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         ForwardExperimentCommand forwardExperimentCommand_;
         MeasurementStreamRequest measurementStreamRequest_;
         MeasurementStreamFragment measurementStreamFragment_;
+        RlncInitConfigFragment rlncInitConfigFragment_;
+        RlncEncodedFragment rlncEncodedFragment_;
+        RlncStateUpdateFragment rlncStateUpdateFragment_;
+        RlncTerminationFragment rlncTerminationFragment_;
       };
       Body Body_;
 
@@ -671,6 +948,26 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::MEASUREMENTSTREAMFRAGMENT;
             break;
 
+          case id::RLNCINITCONFIGFRAGMENT:
+            new(&Body_.rlncInitConfigFragment_) RlncInitConfigFragment;
+            which_Body_ = id::RLNCINITCONFIGFRAGMENT;
+            break;
+
+          case id::RLNCENCODEDFRAGMENT:
+            new(&Body_.rlncEncodedFragment_) RlncEncodedFragment;
+            which_Body_ = id::RLNCENCODEDFRAGMENT;
+            break;
+
+          case id::RLNCSTATEUPDATEFRAGMENT:
+            new(&Body_.rlncStateUpdateFragment_) RlncStateUpdateFragment;
+            which_Body_ = id::RLNCSTATEUPDATEFRAGMENT;
+            break;
+
+          case id::RLNCTERMINATIONFRAGMENT:
+            new(&Body_.rlncTerminationFragment_) RlncTerminationFragment;
+            which_Body_ = id::RLNCTERMINATIONFRAGMENT;
+            break;
+
           default:
             break;
          }
@@ -696,6 +993,18 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::MEASUREMENTSTREAMFRAGMENT:
             Body_.measurementStreamFragment_.~MeasurementStreamFragment(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCINITCONFIGFRAGMENT:
+            Body_.rlncInitConfigFragment_.~RlncInitConfigFragment(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCENCODEDFRAGMENT:
+            Body_.rlncEncodedFragment_.~RlncEncodedFragment(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCSTATEUPDATEFRAGMENT:
+            Body_.rlncStateUpdateFragment_.~RlncStateUpdateFragment(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCTERMINATIONFRAGMENT:
+            Body_.rlncTerminationFragment_.~RlncTerminationFragment(); // NOSONAR Unions require this.
             break;
           default:
             break;

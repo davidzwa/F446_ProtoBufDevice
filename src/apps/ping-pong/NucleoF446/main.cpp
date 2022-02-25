@@ -16,8 +16,6 @@
  *   Includes a UART CLI
  */
 
-#include <string.h>
-
 #include "board.h"
 #include "cli.h"
 #include "config.h"

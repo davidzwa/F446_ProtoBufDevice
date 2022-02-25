@@ -14,3 +14,28 @@ message DeviceId {
     uint32 Id1 = 2;
     uint32 Id2 = 3;
 }
+
+message RlncInitConfigFragment {
+    uint32 GenerationSize = 1;
+    uint32 GenerationCount = 2;
+    uint32 FrameSize = 3;
+    uint32 FrameCount = 4;
+    uint32 FieldSize = 5;
+    uint32 FieldPoly = 6;
+    uint32 LfsrSeed = 7;
+    uint32 LfsrPoly = 8;
+}
+
+message RlncEncodedFragment {
+    // This is a marker field
+}
+
+message RlncStateUpdateFragment {
+    uint32 GenerationIndex = 1;
+    uint32 LfsrState = 2;
+}
+
+message RlncTerminationFragment {
+    // This is a marker field - for now
+    // Might add debugging flags
+}
