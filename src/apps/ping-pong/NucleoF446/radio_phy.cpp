@@ -137,7 +137,12 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
         // StreamMeasurements();
     } 
     else if (loraPhyMessage.has_rlncInitConfigCommand()) {
-        InitRlncDecodingSession(loraPhyMessage.get_rlncInitConfigCommand());
+        auto initConfigCommand = loraPhyMessage.get_rlncInitConfigCommand();
+        InitRlncDecodingSession(initConfigCommand);
+    }
+    else if (loraPhyMessage.has_rlncStateUpdate()) {
+        auto rlncStateUpdate = loraPhyMessage.get_rlncStateUpdate();
+        UpdateRlncDecodingState(rlncStateUpdate);
     }
 
     UartSendLoRaRx(loraPhyMessage, sequenceNumber, rssi, snr, false);
