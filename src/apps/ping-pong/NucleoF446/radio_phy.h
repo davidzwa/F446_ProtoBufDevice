@@ -9,12 +9,14 @@
 
 void InitRadioPhy();
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor);
-
 void TransmitLoRaMessage(LORA_MSG_TEMPLATE& message);
 
 void TxSequenceCommand(uint8_t *serialBuf, uint8_t bufSize);
 void TxSequenceTestTimerCallback(void *context);
 void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs);
 void TxTestProcess();
+
+// For handling uart test messages through our processing pipeline
+void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr);
 
 #endif // RADIO_PHY__H__

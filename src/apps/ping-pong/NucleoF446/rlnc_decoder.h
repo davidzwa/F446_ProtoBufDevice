@@ -2,6 +2,7 @@
 #define RLNC_DECODER_H__
 
 #include <vector>
+#include <stdint.h>
 
 #include "GaloisFieldElement.h"
 #include "LinearFeedbackShiftRegister.h"
@@ -28,13 +29,20 @@ class RlncDecoder {
 
    private:
     void PrepareFragmentStorage();
-    RlncDecodingResult DecodeFragments();
+    void ClearDecodingMatrix();
+    RlncDecodingResult
+    DecodeFragments();
     void StoreDecodingResult(RlncDecodingResult& decodingResult);
     LFSR* lfsr;
     uint8_t generationIndex;
     bool terminated;
     RlncInitConfigCommand rlncDecodingConfig;
+    
+    // Static storage
     vector<RlncFrame> generationFrames;
+
+    // Expensive matrix
+    vector<vector<SYMB>> decodingMatrix;
 };
 
 #endif  // RLNC_DECODER_H__

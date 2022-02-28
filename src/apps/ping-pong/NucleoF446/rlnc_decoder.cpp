@@ -5,6 +5,9 @@
 RlncDecoder::RlncDecoder() {
     lfsr = new LFSR(LFSR_DEFAULT_SEED);
     terminated = true;
+    
+    // Make this matrix statically allocated - ensure it's larger than needed
+    decodingMatrix = vector(10, vector<SYMB>(12));
 }
 
 void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig) {
@@ -29,6 +32,14 @@ void RlncDecoder::PrepareFragmentStorage() {
     generationFrames.clear();
     // Quite conservative (2 overhead) - does not assume any dependent vectors arrive
     generationFrames.reserve(rlncDecodingConfig.get_GenerationSize() + 2);
+}
+
+void RlncDecoder::ClearDecodingMatrix() {
+    for (int i = 0; i < decodingMatrix.size();i++) {
+        decodingMatrix[i].clear();
+    }
+
+    decodingMatrix.clear();
 }
 
 void RlncDecoder::ProcessRlncFragment(SYMB* payload, uint8_t payloadLength) {
@@ -63,6 +74,7 @@ void RlncDecoder::UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate) {
     generationIndex = rlncStateUpdate.get_GenerationIndex();
 
     // Prepare for next generation
+    ClearDecodingMatrix();
     PrepareFragmentStorage();
 }
 

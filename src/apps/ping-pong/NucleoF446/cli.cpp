@@ -10,13 +10,13 @@
 #include "ProtoWriteBuffer.h"
 #include "config.h"
 #include "delay.h"
-#include "uart_control_messages.h"
-#include "uart_device_messages.h"
 #include "measurements.h"
 #include "radio_config.h"
 #include "radio_phy.h"
-#include "uart.h"
 #include "tasks.h"
+#include "uart.h"
+#include "uart_control_messages.h"
+#include "uart_device_messages.h"
 #include "utilities.h"
 #include "utils.h"
 
@@ -38,9 +38,9 @@ RadioTxConfig txConf;
 UartCommand<MAX_LORA_BYTES> uartCommand;
 
 extern Uart_t Uart2;
-Uart_t *uart = &Uart2;
+Uart_t* uart = &Uart2;
 void UartISR(UartNotifyId_t id);
-void UartSend(uint8_t *buffer, size_t length);
+void UartSend(uint8_t* buffer, size_t length);
 
 void InitCli(bool withISR = true) {
     if (withISR) {
@@ -56,7 +56,7 @@ uint8_t GetLastChar(uint8_t offset) {
     return uart->FifoRx.Data[uart->FifoRx.End - offset];
 }
 
-void UartSend(uint8_t *buffer, size_t length) {
+void UartSend(uint8_t* buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
     UartPutChar(uart, 0xFF);
@@ -72,7 +72,7 @@ void UartISR(UartNotifyId_t id) {
 
     if (IsFifoEmpty(&uart->FifoRx)) {
         // Illegal scenario
-        return; 
+        return;
     }
 
     if (GetFifoRxLength() > PACKET_SIZE_LIMIT) {
@@ -145,10 +145,17 @@ void ProcessCliCommand() {
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
         // TODO verify if within SF/ToA limits?
-        LoRaMessage<MAX_LORA_BYTES> command = uartCommand.get_transmitCommand();
-        TransmitLoRaMessage(command);
-        UartSendAck(1);
-        
+        LORA_MSG_TEMPLATE command = uartCommand.get_transmitCommand();
+
+        // Immediately dump the payload 'as if LoRa received it' 
+        if (uartCommand.get_doNotProxyCommand()) {
+            HandleLoRaProtoPayload(command, -1, -1);
+            UartSendAck(2);
+        } else {
+            TransmitLoRaMessage(command);
+            UartSendAck(1);
+        }
+
         // This is moved to separate uart control command
         // if (command.has_Period() && command.get_Period() > 50) {
         // TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
@@ -159,12 +166,10 @@ void ProcessCliCommand() {
 
         if (uartCommand.get_clearMeasurementsCommand().get_SendBootAfter()) {
             UartSendBoot();
-        }
-        else {
+        } else {
             UartSendAck(1);
         }
-    }
-    else if (uartCommand.has_deviceConfiguration()) {
+    } else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
         bool alwaysSend = config.get_EnableAlwaysSend();
         auto alwaysSendPeriod = config.get_AlwaysSendPeriod();
@@ -177,7 +182,7 @@ void ProcessCliCommand() {
     uartCommand.clear();
 }
 
-void UartResponseSend(UartResponse<PROTO_LIMITS> & response) {
+void UartResponseSend(UartResponse<PROTO_LIMITS>& response) {
     // First the length
     writeBuffer.push((uint8_t)response.serialized_size());
     // Push the data
@@ -212,18 +217,18 @@ void UartSendLoRaRxError() {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& loraMessage = uartResponse.mutable_loraMeasurement();
     loraMessage.set_Success(false);
-    
+
     UartResponseSend(uartResponse);
 }
 
-void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
+void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool isMeasurementFragment) {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& loraMeasurement = uartResponse.mutable_loraMeasurement();
     loraMeasurement.set_Rssi(rssi);
     loraMeasurement.set_IsMeasurementFragment(isMeasurementFragment);
     loraMeasurement.set_Success(true);
     loraMeasurement.set_Snr(snr);
-    loraMeasurement.set_SequenceNumber(sequenceNumber);
+    loraMeasurement.set_SequenceNumber(message.get_CorrelationCode());
     loraMeasurement.set_Payload(message);
 
     UartResponseSend(uartResponse);

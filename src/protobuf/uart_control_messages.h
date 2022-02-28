@@ -411,6 +411,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     UartCommand() = default;
     UartCommand(const UartCommand& rhs )
     {
+      set_doNotProxyCommand(rhs.get_doNotProxyCommand());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -451,6 +452,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
     UartCommand(const UartCommand&& rhs ) noexcept
     {
+      set_doNotProxyCommand(rhs.get_doNotProxyCommand());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -499,11 +501,13 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       DEVICECONFIGURATION = 3,
       REQUESTBOOTINFO = 4,
       CLEARMEASUREMENTSCOMMAND = 5,
-      TRANSMITCOMMAND = 6
+      TRANSMITCOMMAND = 6,
+      DONOTPROXYCOMMAND = 7
     };
 
     UartCommand& operator=(const UartCommand& rhs)
     {
+      set_doNotProxyCommand(rhs.get_doNotProxyCommand());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -545,6 +549,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
     UartCommand& operator=(const UartCommand&& rhs) noexcept
     {
+      set_doNotProxyCommand(rhs.get_doNotProxyCommand());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -583,6 +588,13 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
       return *this;
     }
+
+    inline void clear_doNotProxyCommand() { doNotProxyCommand_.clear(); }
+    inline void set_doNotProxyCommand(const EmbeddedProto::boolean& value) { doNotProxyCommand_ = value; }
+    inline void set_doNotProxyCommand(const EmbeddedProto::boolean&& value) { doNotProxyCommand_ = value; }
+    inline EmbeddedProto::boolean& mutable_doNotProxyCommand() { return doNotProxyCommand_; }
+    inline const EmbeddedProto::boolean& get_doNotProxyCommand() const { return doNotProxyCommand_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE doNotProxyCommand() const { return doNotProxyCommand_.get(); }
 
     id get_which_Body() const { return which_Body_; }
 
@@ -825,6 +837,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
+      if((false != doNotProxyCommand_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = doNotProxyCommand_.serialize_with_id(static_cast<uint32_t>(id::DONOTPROXYCOMMAND), buffer, false);
+      }
+
       switch(which_Body_)
       {
         case id::RXCONFIG:
@@ -889,6 +906,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
+          case id::DONOTPROXYCOMMAND:
+            return_value = doNotProxyCommand_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::RXCONFIG:
             return_value = deserialize_Body(id::RXCONFIG, Body_.rxConfig_, buffer, wire_type);
 
@@ -948,6 +969,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
+      clear_doNotProxyCommand();
       clear_Body();
 
     }
@@ -955,6 +977,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     private:
 
 
+      EmbeddedProto::boolean doNotProxyCommand_ = false;
 
       id which_Body_ = id::NOT_SET;
       union Body

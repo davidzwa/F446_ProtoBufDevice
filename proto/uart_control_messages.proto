@@ -34,4 +34,7 @@ message UartCommand {
         // Request a LoRa transmission - generic
         LoRaMessage transmitCommand = 6;
     } 
+
+    // Do not proxy the LoRa command - for debugging purposes
+    bool doNotProxyCommand = 7;
 } 

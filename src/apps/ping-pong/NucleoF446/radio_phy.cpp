@@ -113,6 +113,17 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
         return;
     }
 
+    // Processing
+    HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
+
+    Radio.Rx(0);
+}
+
+/**
+ * @brief Proto processor for LoRa messages - makes testing easier
+ * 
+ */
+void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
     auto sequenceNumber = loraPhyMessage.get_CorrelationCode();
     RegisterNewMeasurement(sequenceNumber, rssi, snr);
 
@@ -136,23 +147,20 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     } else if (loraPhyMessage.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();
-    } 
-    else if (loraPhyMessage.has_rlncInitConfigCommand()) {
+    } else if (loraPhyMessage.has_rlncInitConfigCommand()) {
         auto initConfigCommand = loraPhyMessage.get_rlncInitConfigCommand();
         decoder.InitRlncDecodingSession(initConfigCommand);
-    }
-    else if (loraPhyMessage.has_rlncStateUpdate()) {
+    } else if (loraPhyMessage.has_rlncStateUpdate()) {
         auto rlncStateUpdate = loraPhyMessage.get_rlncStateUpdate();
         decoder.UpdateRlncDecodingState(rlncStateUpdate);
     }
 
-    UartSendLoRaRx(loraPhyMessage, sequenceNumber, rssi, snr, false);
+    // Send the RX event back over UART (if enabled)
+    UartSendLoRaRx(loraPhyMessage, rssi, snr, false);
 
     // Ensure that the message is not re-used
     readLoraBuffer.clear();
     loraPhyMessage.clear();
-
-    Radio.Rx(0);
 }
 
 void OnRxTimeout(void) {
