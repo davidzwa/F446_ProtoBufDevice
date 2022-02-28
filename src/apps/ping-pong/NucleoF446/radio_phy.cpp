@@ -14,6 +14,7 @@
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
 LoRaMessage<MAX_LORA_BYTES> loraPhyMessage;
+RlncDecoder decoder;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
@@ -138,11 +139,11 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     } 
     else if (loraPhyMessage.has_rlncInitConfigCommand()) {
         auto initConfigCommand = loraPhyMessage.get_rlncInitConfigCommand();
-        InitRlncDecodingSession(initConfigCommand);
+        decoder.InitRlncDecodingSession(initConfigCommand);
     }
     else if (loraPhyMessage.has_rlncStateUpdate()) {
         auto rlncStateUpdate = loraPhyMessage.get_rlncStateUpdate();
-        UpdateRlncDecodingState(rlncStateUpdate);
+        decoder.UpdateRlncDecodingState(rlncStateUpdate);
     }
 
     UartSendLoRaRx(loraPhyMessage, sequenceNumber, rssi, snr, false);

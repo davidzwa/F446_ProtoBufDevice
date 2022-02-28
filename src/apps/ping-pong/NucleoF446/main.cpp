@@ -40,11 +40,6 @@ int main(void) {
     // This must be called remotely/over UART
     // ClearStorage();
 
-    UartDebug("Data", GetNextLFSRState(), 4);
-    UartDebug("Data", GetNextLFSRState(), 4);
-    UartDebug("Data", GetNextLFSRState(), 4);
-    UartDebug("Data", GetNextLFSRState(), 4);
-
     Radio.Rx(0);
     while (1) {
         // Process Radio IRQ
