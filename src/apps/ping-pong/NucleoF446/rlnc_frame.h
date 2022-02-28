@@ -3,23 +3,25 @@
 
 #include <stdint.h>
 
+#include <vector>
+
+using namespace std;
+
+#define SYMB uint8_t
+
 class RlncFrame {
    public:
-    RlncFrame(uint8_t* payload, uint8_t size) {
-        this->payload = payload;
-        this->payloadSize = size;
+    RlncFrame(SYMB* encBuffer, uint8_t encSize, SYMB* payload, uint8_t size) {
+        for (uint8_t i; i < encSize; i++) {
+            this->augVector.push_back(encBuffer[i]);
+        }
+
+        for (uint8_t i; i < size; i++) {
+            this->augVector.push_back(payload[i]);
+        }
     }
 
-    void SetEncodingVector(uint8_t* encodingVector, uint8_t size) {
-        this->encodingVector = encodingVector;
-        this->encodingVectorSize = size;
-    }
-
-   private:
-    uint8_t* payload;
-    uint8_t payloadSize;
-    uint8_t* encodingVector;
-    uint8_t encodingVectorSize;
+    vector<SYMB> augVector;
 };
 
 #endif

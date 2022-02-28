@@ -24,8 +24,5 @@ message LoRaMessage {
         RlncEncodedFragment rlncEncodedFragment = 11;
         RlncStateUpdate rlncStateUpdate = 12;
         RlncTerminationCommand rlncTerminationCommand = 13;
-        
-        // Avoid if possible
-        // 
     }
 }

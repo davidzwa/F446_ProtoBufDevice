@@ -19,8 +19,8 @@
 #ifndef INCLUDE_GALOISFIELD_H
 #define INCLUDE_GALOISFIELD_H
 
+#include <stdint.h>
 #include <string.h>
-
 #include <vector>
 
 namespace galois {
@@ -28,7 +28,7 @@ namespace galois {
 // Optimize RAM
 #define NO_GFLUT
 
-typedef int GFSymbol;
+typedef uint8_t GFSymbol;
 const GFSymbol GFERROR = -1;
 
 class GaloisField {
