@@ -7,4 +7,6 @@
 void InitRlncDecodingSession(RlncInitConfigCommand& configCommand);
 void UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate);
 
+uint8_t GetNextLFSRState();
+
 #endif  // RLNC_DECODER_H__

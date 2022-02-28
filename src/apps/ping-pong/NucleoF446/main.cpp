@@ -23,6 +23,7 @@
 #include "measurements.h"
 #include "nvmm.h"
 #include "radio_phy.h"
+#include "rlnc_decoder.h"
 #include "tasks.h"
 #include "utils.h"
 
@@ -38,6 +39,11 @@ int main(void) {
 
     // This must be called remotely/over UART
     // ClearStorage();
+
+    UartDebug("Data", GetNextLFSRState(), 4);
+    UartDebug("Data", GetNextLFSRState(), 4);
+    UartDebug("Data", GetNextLFSRState(), 4);
+    UartDebug("Data", GetNextLFSRState(), 4);
 
     Radio.Rx(0);
     while (1) {

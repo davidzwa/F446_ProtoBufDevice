@@ -14,4 +14,4 @@
 :: Description:
 ::  Fetch probe info of st-link
 
-.\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-info.exe --probe
+.\\tools\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-info.exe --probe

@@ -4,7 +4,7 @@
 #include "rlnc_decoder.h"
 
 RlncInitConfigCommand rlncDecodingConfig;
-LFSR lsfr;
+LFSR lfsr(0x08);
 
 void InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig) {
     rlncDecodingConfig = rlncInitConfig;
@@ -12,6 +12,10 @@ void InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig) {
 
 void UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate) {
 
+}
+
+uint8_t GetNextLFSRState() {
+    return lfsr.Generate();
 }
 
 // /*

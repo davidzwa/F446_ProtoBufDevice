@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+/**
+ * @brief fixated LFSR verified with C# unit tests
+ * 
+ */
 class LFSR {
    public:
     LFSR(uint8_t seed);
