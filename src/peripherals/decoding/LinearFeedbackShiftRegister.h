@@ -5,9 +5,10 @@
 
 class LFSR {
    public:
-    LFSR();
+    LFSR(uint8_t seed);
     void Reset();
     uint8_t Generate();
+    void GenerateMany(uint8_t* output, uint16_t count);
     uint32_t GeneratedValuesCount;
     uint8_t Seed;
     uint8_t State;
