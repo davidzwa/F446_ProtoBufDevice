@@ -1,25 +1,105 @@
 #include "rlnc_decoder.h"
 
-#include "LinearFeedbackShiftRegister.h"
-#include "config.h"
-
-RlncInitConfigCommand rlncDecodingConfig;
-LFSR lfsr(0x08);
+// State
 
 RlncDecoder::RlncDecoder() {
+    lfsr = new LFSR(LFSR_DEFAULT_SEED);
+    terminated = true;
 }
 
 void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig) {
+    // TODO error out if already running a decoding session?
+    // TODO what if generationSize is too big? Device will crash most probably...
+
+    // Save state config
     rlncDecodingConfig = rlncInitConfig;
+
+    terminated = false;
+    generationIndex = 0;
+
+    // Apply to LFSR
+    lfsr->Seed = rlncInitConfig.get_LfsrSeed();
+    lfsr->Reset();
+
+    // Prepare storage for the configured generation
+    PrepareFragmentStorage();
 }
 
-void RlncDecoder::ProcessRlncFragment(RlncEncodedFragment& rlncEncodedFragment) {
+void RlncDecoder::PrepareFragmentStorage() {
+    generationFrames.clear();
+    // Quite conservative (2 overhead) - does not assume any dependent vectors arrive
+    generationFrames.reserve(rlncDecodingConfig.get_GenerationSize() + 2);
+}
+
+void RlncDecoder::ProcessRlncFragment(SYMB* payload, uint8_t payloadLength) {
+    // Process the fragment
+    RlncFrame frame(payload, payloadLength);
+    
+    // Fetch the encoding vector length
+    auto generationSize = rlncDecodingConfig.get_GenerationSize();
+
+    // Generate the encoding vector
+    SYMB encodingVector[(uint8_t)generationSize];
+    lfsr->GenerateMany(encodingVector, generationSize);
+
+    // Combine the two into RlncFrame
+    frame.SetEncodingVector(encodingVector, generationSize);
+
+    // Store the frame in safe memory
+    generationFrames.push_back(frame);
+
+    if (generationFrames.size() >= generationSize) {
+        // Enough packets have arrived to attempt decoding with high probability
+        auto decodingResult = DecodeFragments();
+
+        // Delegate to Flash, UART or LoRa
+        StoreDecodingResult(decodingResult);
+    }
 }
 
 void RlncDecoder::UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate) {
+    // Update state
+    lfsr->State = rlncStateUpdate.get_LfsrState();
+    generationIndex = rlncStateUpdate.get_GenerationIndex();
+
+    // Prepare for next generation
+    PrepareFragmentStorage();
 }
 
 void RlncDecoder::TerminateRlnc(RlncTerminationCommand& RlncTerminationCommand) {
+    // Reduce memory usage
+    generationFrames.clear();
+    generationIndex = 0;
+
+    // Debugging flag for tracking the state
+    terminated = true;
+}
+
+RlncDecodingResult RlncDecoder::DecodeFragments() {
+    RlncDecodingResult result;
+
+    // Create augmented matrix from frame and enc vector
+    // generationFrames.size() * (size(frame) + size(enc))
+    // GSymbol[][]
+
+    // RREF the augmented matrix
+
+    // Verify decoding success and do packet integrity check
+
+    // Pass the result to be stored/propagated
+    result.success = true;
+    return result;
+}
+
+void RlncDecoder::StoreDecodingResult(RlncDecodingResult& decodingResult) {
+    // Bring the generation decoded result to 'flash', 'UART', 'LoRa' or evaporate it
+    if (!decodingResult.success) {
+        // Store failure?
+        return;
+    } else {
+        // Store success
+        return;
+    }
 }
 
 /**
@@ -27,10 +107,9 @@ void RlncDecoder::TerminateRlnc(RlncTerminationCommand& RlncTerminationCommand) 
  *
  * @return uint8_t pseudo-random value
  */
-uint8_t RlncDecoder::GetNextLFSRState() {
-    return lfsr.Generate();
+SYMB RlncDecoder::GetNextLFSRState() {
+    return lfsr->Generate();
 }
-
 /*
 Galois Field of type GF(2^8)
 p(x) = 1x^8+1x^7+0x^6+0x^5+0x^4+0x^3+1x^2+1x^1+1x^0
