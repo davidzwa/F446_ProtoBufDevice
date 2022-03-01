@@ -1,11 +1,14 @@
 #include "ProtoWriteBuffer.h"
 #include "config.h"
-#include "radio.h"
-#include "stdint.h"
 #include "lora_device_messages.h"
+#include "radio.h"
+#include "rlnc_decoder.h"
+#include "stdint.h"
 
 #ifndef RADIO_PHY__H__
 #define RADIO_PHY__H__
+
+static RlncDecoder decoder;
 
 void InitRadioPhy();
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor);

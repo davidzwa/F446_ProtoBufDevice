@@ -23,7 +23,6 @@
 #include "measurements.h"
 #include "nvmm.h"
 #include "radio_phy.h"
-#include "rlnc_decoder.h"
 #include "tasks.h"
 #include "utils.h"
 

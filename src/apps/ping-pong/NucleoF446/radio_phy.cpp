@@ -7,14 +7,12 @@
 #include "cli.h"
 #include "config.h"
 #include "lora_device_messages.h"
-#include "rlnc_decoder.h"
 #include "measurements.h"
 #include "tasks.h"
 
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
 LoRaMessage<MAX_LORA_BYTES> loraPhyMessage;
-RlncDecoder decoder;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
