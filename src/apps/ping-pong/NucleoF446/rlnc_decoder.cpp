@@ -56,7 +56,7 @@ void RlncDecoder::ClearDecodingMatrix() {
     storedPackets = 0;
 }
 
-void RlncDecoder::ProcessRlncFragment(SYMB* payload, uint8_t payloadLength) {
+void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     // Fetch the encoding vector length
     auto generationSize = rlncDecodingConfig.get_GenerationSize();
 
@@ -66,7 +66,7 @@ void RlncDecoder::ProcessRlncFragment(SYMB* payload, uint8_t payloadLength) {
 
     // Process the fragment as augmented vector from frame and enc vector
     // generationFrames.size() * (size(frame) + size(enc))
-    RlncFrame frame(encodingVector, generationSize, payload, payloadLength);
+    RlncFrame frame(encodingVector, generationSize, message.Payload(), message.get_Payload().get_length());
 
     // Store the frame in safe memory
     generationFrames.push_back(frame);

@@ -19,7 +19,7 @@ class RlncDecoder {
     RlncDecoder();
 
     void InitRlncDecodingSession(RlncInitConfigCommand& configCommand);
-    void ProcessRlncFragment(SYMB* payload, uint8_t payloadLength);
+    void ProcessRlncFragment(LORA_MSG_TEMPLATE& message);
     void UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate);
     void TerminateRlnc(RlncTerminationCommand& RlncTerminationCommand);
 

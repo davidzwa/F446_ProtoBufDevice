@@ -151,6 +151,8 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
     } else if (loraPhyMessage.has_rlncStateUpdate()) {
         auto rlncStateUpdate = loraPhyMessage.get_rlncStateUpdate();
         decoder.UpdateRlncDecodingState(rlncStateUpdate);
+    } else if (loraPhyMessage.has_rlncEncodedFragment()) {
+        decoder.ProcessRlncFragment(loraPhyMessage);
     }
 
     // Send the RX event back over UART (if enabled)

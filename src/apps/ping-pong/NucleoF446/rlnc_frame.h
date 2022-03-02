@@ -11,7 +11,7 @@ using namespace std;
 
 class RlncFrame {
    public:
-    RlncFrame(SYMB* encBuffer, uint8_t encSize, SYMB* payload, uint8_t size) {
+    RlncFrame(SYMB* encBuffer, uint8_t encSize, const SYMB* payload, const uint32_t size) {
         for (uint8_t i; i < encSize; i++) {
             this->augVector.push_back(encBuffer[i]);
         }
