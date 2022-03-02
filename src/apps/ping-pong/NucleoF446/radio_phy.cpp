@@ -12,7 +12,7 @@
 
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
-LoRaMessage<MAX_LORA_BYTES> loraPhyMessage;
+LORA_MSG_TEMPLATE loraPhyMessage;
 
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
@@ -122,11 +122,11 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
  * 
  */
 void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
-    auto sequenceNumber = loraPhyMessage.get_CorrelationCode();
+    auto sequenceNumber = message.get_CorrelationCode();
     RegisterNewMeasurement(sequenceNumber, rssi, snr);
 
-    if (loraPhyMessage.has_forwardRadioConfigUpdate()) {
-        auto configMessage = loraPhyMessage.get_forwardRadioConfigUpdate();
+    if (message.has_forwardRadioConfigUpdate()) {
+        auto configMessage = message.get_forwardRadioConfigUpdate();
         if (configMessage.has_radioRxConfig()) {
             auto config = configMessage.get_radioRxConfig();
             // TODO
@@ -137,30 +137,30 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             // TODO apply
             // UpdateRadioTxConfig();
         }
-        if (loraPhyMessage.has_sequenceConfig()) {
-            SetSequenceRequestConfig(loraPhyMessage.get_sequenceConfig());
+        if (message.has_sequenceConfig()) {
+            SetSequenceRequestConfig(message.get_sequenceConfig());
 
             // TODO send ACK if success
         }
-    } else if (loraPhyMessage.has_measurementStreamRequest()) {
+    } else if (message.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();
-    } else if (loraPhyMessage.has_rlncInitConfigCommand()) {
-        auto initConfigCommand = loraPhyMessage.get_rlncInitConfigCommand();
+    } else if (message.has_rlncInitConfigCommand()) {
+        auto initConfigCommand = message.get_rlncInitConfigCommand();
         decoder.InitRlncDecodingSession(initConfigCommand);
-    } else if (loraPhyMessage.has_rlncStateUpdate()) {
-        auto rlncStateUpdate = loraPhyMessage.get_rlncStateUpdate();
+    } else if (message.has_rlncStateUpdate()) {
+        auto rlncStateUpdate = message.get_rlncStateUpdate();
         decoder.UpdateRlncDecodingState(rlncStateUpdate);
-    } else if (loraPhyMessage.has_rlncEncodedFragment()) {
-        decoder.ProcessRlncFragment(loraPhyMessage);
+    } else if (message.has_rlncEncodedFragment()) {
+        decoder.ProcessRlncFragment(message);
     }
 
     // Send the RX event back over UART (if enabled)
-    UartSendLoRaRx(loraPhyMessage, rssi, snr, false);
+    UartSendLoRaRx(message, rssi, snr, false);
 
     // Ensure that the message is not re-used
     readLoraBuffer.clear();
-    loraPhyMessage.clear();
+    message.clear();
 }
 
 void OnRxTimeout(void) {

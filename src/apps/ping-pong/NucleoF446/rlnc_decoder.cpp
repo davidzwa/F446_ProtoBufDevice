@@ -39,6 +39,8 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
 
     // Prepare storage for the configured generation
     PrepareFragmentStorage();
+    
+    ClearDecodingMatrix();
 }
 
 void RlncDecoder::PrepareFragmentStorage() {
@@ -173,7 +175,7 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
     for (uint8_t col = 0; col < totalColCount - augmentedCols; col++) {
         auto pivotRow = FindPivot(numPivots, col, totalRowCount);
 
-        if (pivotRow.has_value())
+        if (!pivotRow.has_value())
             continue;  // no pivots, go to another column
 
         ReduceRow(pivotRow.value(), col, totalColCount);

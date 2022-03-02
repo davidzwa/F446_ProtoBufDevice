@@ -150,7 +150,6 @@ void ProcessCliCommand() {
         // Immediately dump the payload 'as if LoRa received it' 
         if (uartCommand.get_doNotProxyCommand()) {
             HandleLoRaProtoPayload(command, -1, -1);
-            UartSendAck(2);
         } else {
             TransmitLoRaMessage(command);
             UartSendAck(1);
