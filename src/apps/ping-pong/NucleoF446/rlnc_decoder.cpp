@@ -209,6 +209,10 @@ void RlncDecoder::SwitchRows(uint8_t row1, uint8_t row2, uint8_t colCount) {
     if (row1 == row2) return;
 
     for (auto col = 0; col < colCount; col++) {
+        // Error
+        // Row1 == 0x0
+        // Row2 == 0x10?
+        // colCount = 4?
         swap(decodingMatrix[row1][col], decodingMatrix[row2][col]);
     }
 }
