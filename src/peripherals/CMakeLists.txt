@@ -45,6 +45,10 @@ else()
     message(STATUS "Did not add ZED tsl2561 I2C peripheral (C++)")
 endif()
 
+file (GLOB GALOIS_LIB "decoding/*.cpp")
+list(APPEND ${PROJECT_NAME}_SOURCES ${GALOIS_LIB})
+message(STATUS "Added A. Partow Galois FF arithmetic (C++)")
+list(APPEND ${PROJECT_NAME}_SOURCES "placeholder.cpp")
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
@@ -61,6 +65,7 @@ if(BME_68X)
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/bme68x)    
 endif()
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/decoding)
 
 target_include_directories( ${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

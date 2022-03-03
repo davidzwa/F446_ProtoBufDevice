@@ -1,22 +1,20 @@
 /*
-*    __________ ____
-*   |__  / ____|  _ \ 
-*     / /|  _| | | | |
-*    / /_| |___| |_| |
-*   /____|_____|____/ 
-*  Copyright (C) 2020 - 2021
-* 
-*  License:  Revised BSD License, see LICENSE.TXT file included in the project
-*  Authors:  David Zwart (ZED), Niels Hokke (ZED)
-*  Version: 0.1.1
-*  Date 20 Sept 2021
-* 
-*  Description:
-*   Ping pong application for experimenting with LoRa
-*   Includes a UART CLI
-*/
-
-#include <string.h>
+ *    __________ ____
+ *   |__  / ____|  _ \
+ *     / /|  _| | | | |
+ *    / /_| |___| |_| |
+ *   /____|_____|____/
+ *  Copyright (C) 2020 - 2022
+ *
+ *  License:  Revised BSD License, see LICENSE.TXT file included in the project
+ *  Authors:  David Zwart (ZED), Niels Hokke (ZED)
+ *  Version: 0.1.1
+ *  Date 20 Sept 2021
+ *
+ *  Description:
+ *   Ping pong application for experimenting with LoRa
+ *   Includes a UART CLI
+ */
 
 #include "board.h"
 #include "cli.h"
@@ -40,6 +38,12 @@ int main(void) {
 
     // This must be called remotely/over UART
     // ClearStorage();
+
+    // Uart debugging
+    // UartDebug("1234", 0, 4);
+    // UartDebug("1234", 0, 4);
+    // UartDebug("1234", 0, 4);
+    // UartDebug("1234", 0, 4);
 
     Radio.Rx(0);
     while (1) {

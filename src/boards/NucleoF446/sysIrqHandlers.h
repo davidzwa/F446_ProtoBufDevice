@@ -19,6 +19,8 @@
 #ifndef SYS_IRQ_HANDLERS_H
 #define SYS_IRQ_HANDLERS_H
 
+#define HARD_FAULT_HANDLER_ENABLED
+
 #ifdef __cplusplus
  extern "C" {
 #endif

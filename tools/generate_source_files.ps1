@@ -4,7 +4,7 @@
 #     / /|  _| | | | |
 #    / /_| |___| |_| |
 #   /____|_____|____/ 
-#  Copyright (C) 2020 - 2021
+#  Copyright (C) 2020 - 2022
 # 
 #  License:  Revised BSD License, see LICENSE.TXT file included in the project
 #  Authors:  David Zwart (ZED)
@@ -29,7 +29,7 @@ $SRC="proto"
 $PLUGIN=".\EmbeddedProto\protoc-gen-eams.bat"
 $OUT_CPP="src\protobuf"
 $OUT_PYTHON=".\tools\GatewayController\protobuf"
-$OUT_CSHARP="..\LoraGateway\Protobuf"
+$OUT_CSHARP="..\LoraGateway\LoraGateway.Terminal\Protobuf"
 
 echo "Ensuring output folders exist (C++, Python, C#)"
 mkdir ${OUT_CPP} -ErrorAction SilentlyContinue

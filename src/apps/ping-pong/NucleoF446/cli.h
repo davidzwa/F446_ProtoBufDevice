@@ -4,7 +4,7 @@
 *     / /|  _| | | | |
 *    / /_| |___| |_| |
 *   /____|_____|____/ 
-*  Copyright (C) 2020 - 2021
+*  Copyright (C) 2020 - 2022
 * 
 *  License:  Revised BSD License, see LICENSE.TXT file included in the project
 *  Authors:  David Zwart (ZED), Niels Hokke (ZED)
@@ -36,9 +36,11 @@ void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFact
 void ApplyConfigIfPending();
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
+void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber);
+void UartThrow(const char* payload, size_t length);
 void UartDebug(const char* payload, uint32_t code, size_t length);
 void UartSendLoRaRxError();
-void UartSendLoRaRx(LORA_MSG_TEMPLATE& nessage, uint32_t sequenceNumber, int16_t rssi, int8_t snr, bool isMeasurementFragment);
+void UartSendLoRaRx(LORA_MSG_TEMPLATE& nessage, int16_t rssi, int8_t snr, bool isMeasurementFragment);
 void PrintSettings();
 
 #ifdef __cplusplus

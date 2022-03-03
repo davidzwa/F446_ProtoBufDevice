@@ -353,7 +353,6 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t AppName_LENGTH>
 class BootMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -362,7 +361,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     {
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_AppName(rhs.get_AppName());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
     }
@@ -371,7 +369,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     {
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_AppName(rhs.get_AppName());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
     }
@@ -383,16 +380,14 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       NOT_SET = 0,
       DEVICEIDENTIFIER = 1,
       FIRMWAREVERSION = 2,
-      APPNAME = 3,
-      MEASUREMENTCOUNT = 4,
-      MEASUREMENTSDISABLED = 5
+      MEASUREMENTCOUNT = 3,
+      MEASUREMENTSDISABLED = 4
     };
 
     BootMessage& operator=(const BootMessage& rhs)
     {
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_AppName(rhs.get_AppName());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       return *this;
@@ -402,7 +397,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     {
       set_DeviceIdentifier(rhs.get_DeviceIdentifier());
       set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_AppName(rhs.get_AppName());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       return *this;
@@ -421,12 +415,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     inline Version& mutable_FirmwareVersion() { return FirmwareVersion_; }
     inline const Version& get_FirmwareVersion() const { return FirmwareVersion_; }
     inline const Version& FirmwareVersion() const { return FirmwareVersion_; }
-
-    inline void clear_AppName() { AppName_.clear(); }
-    inline ::EmbeddedProto::FieldString<AppName_LENGTH>& mutable_AppName() { return AppName_; }
-    inline void set_AppName(const ::EmbeddedProto::FieldString<AppName_LENGTH>& rhs) { AppName_.set(rhs); }
-    inline const ::EmbeddedProto::FieldString<AppName_LENGTH>& get_AppName() const { return AppName_; }
-    inline const char* AppName() const { return AppName_.get_const(); }
 
     inline void clear_MeasurementCount() { MeasurementCount_.clear(); }
     inline void set_MeasurementCount(const EmbeddedProto::uint32& value) { MeasurementCount_ = value; }
@@ -455,11 +443,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
         return_value = FirmwareVersion_.serialize_with_id(static_cast<uint32_t>(id::FIRMWAREVERSION), buffer, false);
-      }
-
-      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-      {
-        return_value = AppName_.serialize_with_id(static_cast<uint32_t>(id::APPNAME), buffer, false);
       }
 
       if((0U != MeasurementCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
@@ -494,10 +477,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
 
           case id::FIRMWAREVERSION:
             return_value = FirmwareVersion_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::APPNAME:
-            return_value = AppName_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::MEASUREMENTCOUNT:
@@ -539,7 +518,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     {
       clear_DeviceIdentifier();
       clear_FirmwareVersion();
-      clear_AppName();
       clear_MeasurementCount();
       clear_MeasurementsDisabled();
 
@@ -550,7 +528,6 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
 
       DeviceId DeviceIdentifier_;
       Version FirmwareVersion_;
-      ::EmbeddedProto::FieldString<AppName_LENGTH> AppName_;
       EmbeddedProto::uint32 MeasurementCount_ = 0U;
       EmbeddedProto::boolean MeasurementsDisabled_ = false;
 
@@ -667,43 +644,37 @@ class AckMessage final: public ::EmbeddedProto::MessageInterface
 
 };
 
-template<uint32_t Payload_LENGTH>
-class DebugMessage final: public ::EmbeddedProto::MessageInterface
+class ExceptionMessage final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    DebugMessage() = default;
-    DebugMessage(const DebugMessage& rhs )
+    ExceptionMessage() = default;
+    ExceptionMessage(const ExceptionMessage& rhs )
     {
       set_Code(rhs.get_Code());
-      set_Payload(rhs.get_Payload());
     }
 
-    DebugMessage(const DebugMessage&& rhs ) noexcept
+    ExceptionMessage(const ExceptionMessage&& rhs ) noexcept
     {
       set_Code(rhs.get_Code());
-      set_Payload(rhs.get_Payload());
     }
 
-    ~DebugMessage() override = default;
+    ~ExceptionMessage() override = default;
 
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      CODE = 1,
-      PAYLOAD = 2
+      CODE = 1
     };
 
-    DebugMessage& operator=(const DebugMessage& rhs)
+    ExceptionMessage& operator=(const ExceptionMessage& rhs)
     {
       set_Code(rhs.get_Code());
-      set_Payload(rhs.get_Payload());
       return *this;
     }
 
-    DebugMessage& operator=(const DebugMessage&& rhs) noexcept
+    ExceptionMessage& operator=(const ExceptionMessage&& rhs) noexcept
     {
       set_Code(rhs.get_Code());
-      set_Payload(rhs.get_Payload());
       return *this;
     }
 
@@ -714,12 +685,6 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_Code() const { return Code_; }
     inline EmbeddedProto::uint32::FIELD_TYPE Code() const { return Code_.get(); }
 
-    inline void clear_Payload() { Payload_.clear(); }
-    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
-    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
-    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
-    inline const uint8_t* Payload() const { return Payload_.get_const(); }
-
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -728,11 +693,6 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
       if((0U != Code_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Code_.serialize_with_id(static_cast<uint32_t>(id::CODE), buffer, false);
-      }
-
-      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-      {
-        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
       }
 
       return return_value;
@@ -753,10 +713,6 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
         {
           case id::CODE:
             return_value = Code_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::PAYLOAD:
-            return_value = Payload_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -789,7 +745,6 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_Code();
-      clear_Payload();
 
     }
 
@@ -797,19 +752,309 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::uint32 Code_ = 0U;
-      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
 };
 
-template<uint32_t bootMessage_AppName_LENGTH, 
-uint32_t loraMeasurement_Payload_Payload_LENGTH, 
-uint32_t debugMessage_Payload_LENGTH>
+class DebugMessage final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DebugMessage() = default;
+    DebugMessage(const DebugMessage& rhs )
+    {
+      set_Code(rhs.get_Code());
+    }
+
+    DebugMessage(const DebugMessage&& rhs ) noexcept
+    {
+      set_Code(rhs.get_Code());
+    }
+
+    ~DebugMessage() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      CODE = 1
+    };
+
+    DebugMessage& operator=(const DebugMessage& rhs)
+    {
+      set_Code(rhs.get_Code());
+      return *this;
+    }
+
+    DebugMessage& operator=(const DebugMessage&& rhs) noexcept
+    {
+      set_Code(rhs.get_Code());
+      return *this;
+    }
+
+    inline void clear_Code() { Code_.clear(); }
+    inline void set_Code(const EmbeddedProto::uint32& value) { Code_ = value; }
+    inline void set_Code(const EmbeddedProto::uint32&& value) { Code_ = value; }
+    inline EmbeddedProto::uint32& mutable_Code() { return Code_; }
+    inline const EmbeddedProto::uint32& get_Code() const { return Code_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Code() const { return Code_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != Code_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Code_.serialize_with_id(static_cast<uint32_t>(id::CODE), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::CODE:
+            return_value = Code_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Code();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 Code_ = 0U;
+
+};
+
+class DecodingResult final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DecodingResult() = default;
+    DecodingResult(const DecodingResult& rhs )
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+    }
+
+    DecodingResult(const DecodingResult&& rhs ) noexcept
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+    }
+
+    ~DecodingResult() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      SUCCESS = 1,
+      MATRIXRANK = 2,
+      FIRSTDECODEDNUMBER = 3,
+      LASTDECODEDNUMBER = 4
+    };
+
+    DecodingResult& operator=(const DecodingResult& rhs)
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      return *this;
+    }
+
+    DecodingResult& operator=(const DecodingResult&& rhs) noexcept
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      return *this;
+    }
+
+    inline void clear_Success() { Success_.clear(); }
+    inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
+    inline void set_Success(const EmbeddedProto::boolean&& value) { Success_ = value; }
+    inline EmbeddedProto::boolean& mutable_Success() { return Success_; }
+    inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
+
+    inline void clear_MatrixRank() { MatrixRank_.clear(); }
+    inline void set_MatrixRank(const EmbeddedProto::boolean& value) { MatrixRank_ = value; }
+    inline void set_MatrixRank(const EmbeddedProto::boolean&& value) { MatrixRank_ = value; }
+    inline EmbeddedProto::boolean& mutable_MatrixRank() { return MatrixRank_; }
+    inline const EmbeddedProto::boolean& get_MatrixRank() const { return MatrixRank_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE MatrixRank() const { return MatrixRank_.get(); }
+
+    inline void clear_FirstDecodedNumber() { FirstDecodedNumber_.clear(); }
+    inline void set_FirstDecodedNumber(const EmbeddedProto::uint32& value) { FirstDecodedNumber_ = value; }
+    inline void set_FirstDecodedNumber(const EmbeddedProto::uint32&& value) { FirstDecodedNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_FirstDecodedNumber() { return FirstDecodedNumber_; }
+    inline const EmbeddedProto::uint32& get_FirstDecodedNumber() const { return FirstDecodedNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FirstDecodedNumber() const { return FirstDecodedNumber_.get(); }
+
+    inline void clear_LastDecodedNumber() { LastDecodedNumber_.clear(); }
+    inline void set_LastDecodedNumber(const EmbeddedProto::uint32& value) { LastDecodedNumber_ = value; }
+    inline void set_LastDecodedNumber(const EmbeddedProto::uint32&& value) { LastDecodedNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_LastDecodedNumber() { return LastDecodedNumber_; }
+    inline const EmbeddedProto::uint32& get_LastDecodedNumber() const { return LastDecodedNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LastDecodedNumber() const { return LastDecodedNumber_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
+      }
+
+      if((false != MatrixRank_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MatrixRank_.serialize_with_id(static_cast<uint32_t>(id::MATRIXRANK), buffer, false);
+      }
+
+      if((0U != FirstDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = FirstDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::FIRSTDECODEDNUMBER), buffer, false);
+      }
+
+      if((0U != LastDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LastDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::LASTDECODEDNUMBER), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::SUCCESS:
+            return_value = Success_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MATRIXRANK:
+            return_value = MatrixRank_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::FIRSTDECODEDNUMBER:
+            return_value = FirstDecodedNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LASTDECODEDNUMBER:
+            return_value = LastDecodedNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Success();
+      clear_MatrixRank();
+      clear_FirstDecodedNumber();
+      clear_LastDecodedNumber();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean Success_ = false;
+      EmbeddedProto::boolean MatrixRank_ = false;
+      EmbeddedProto::uint32 FirstDecodedNumber_ = 0U;
+      EmbeddedProto::uint32 LastDecodedNumber_ = 0U;
+
+};
+
+template<uint32_t Payload_LENGTH, 
+uint32_t loraMeasurement_Payload_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
   public:
     UartResponse() = default;
     UartResponse(const UartResponse& rhs )
     {
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -832,6 +1077,14 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DEBUGMESSAGE:
           set_debugMessage(rhs.get_debugMessage());
+          break;
+
+        case id::EXCEPTIONMESSAGE:
+          set_exceptionMessage(rhs.get_exceptionMessage());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
           break;
 
         default:
@@ -842,6 +1095,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
     UartResponse(const UartResponse&& rhs ) noexcept
     {
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -864,6 +1118,14 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DEBUGMESSAGE:
           set_debugMessage(rhs.get_debugMessage());
+          break;
+
+        case id::EXCEPTIONMESSAGE:
+          set_exceptionMessage(rhs.get_exceptionMessage());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
           break;
 
         default:
@@ -877,14 +1139,18 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      BOOTMESSAGE = 1,
-      ACKMESSAGE = 2,
-      LORAMEASUREMENT = 3,
-      DEBUGMESSAGE = 4
+      PAYLOAD = 1,
+      BOOTMESSAGE = 2,
+      ACKMESSAGE = 3,
+      LORAMEASUREMENT = 4,
+      DEBUGMESSAGE = 5,
+      EXCEPTIONMESSAGE = 6,
+      DECODINGRESULT = 7
     };
 
     UartResponse& operator=(const UartResponse& rhs)
     {
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -907,6 +1173,14 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DEBUGMESSAGE:
           set_debugMessage(rhs.get_debugMessage());
+          break;
+
+        case id::EXCEPTIONMESSAGE:
+          set_exceptionMessage(rhs.get_exceptionMessage());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
           break;
 
         default:
@@ -918,6 +1192,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
     UartResponse& operator=(const UartResponse&& rhs) noexcept
     {
+      set_Payload(rhs.get_Payload());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -942,12 +1217,26 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_debugMessage(rhs.get_debugMessage());
           break;
 
+        case id::EXCEPTIONMESSAGE:
+          set_exceptionMessage(rhs.get_exceptionMessage());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
+          break;
+
         default:
           break;
       }
 
       return *this;
     }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
 
     id get_which_Body() const { return which_Body_; }
 
@@ -960,10 +1249,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(id::BOOTMESSAGE == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.bootMessage_.~BootMessage<bootMessage_AppName_LENGTH>();
+        Body_.bootMessage_.~BootMessage();
       }
     }
-    inline void set_bootMessage(const BootMessage<bootMessage_AppName_LENGTH>& value)
+    inline void set_bootMessage(const BootMessage& value)
     {
       if(id::BOOTMESSAGE != which_Body_)
       {
@@ -971,7 +1260,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.bootMessage_ = value;
     }
-    inline void set_bootMessage(const BootMessage<bootMessage_AppName_LENGTH>&& value)
+    inline void set_bootMessage(const BootMessage&& value)
     {
       if(id::BOOTMESSAGE != which_Body_)
       {
@@ -979,7 +1268,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.bootMessage_ = value;
     }
-    inline BootMessage<bootMessage_AppName_LENGTH>& mutable_bootMessage()
+    inline BootMessage& mutable_bootMessage()
     {
       if(id::BOOTMESSAGE != which_Body_)
       {
@@ -987,8 +1276,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.bootMessage_;
     }
-    inline const BootMessage<bootMessage_AppName_LENGTH>& get_bootMessage() const { return Body_.bootMessage_; }
-    inline const BootMessage<bootMessage_AppName_LENGTH>& bootMessage() const { return Body_.bootMessage_; }
+    inline const BootMessage& get_bootMessage() const { return Body_.bootMessage_; }
+    inline const BootMessage& bootMessage() const { return Body_.bootMessage_; }
 
     inline bool has_ackMessage() const
     {
@@ -1077,10 +1366,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(id::DEBUGMESSAGE == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.debugMessage_.~DebugMessage<debugMessage_Payload_LENGTH>();
+        Body_.debugMessage_.~DebugMessage();
       }
     }
-    inline void set_debugMessage(const DebugMessage<debugMessage_Payload_LENGTH>& value)
+    inline void set_debugMessage(const DebugMessage& value)
     {
       if(id::DEBUGMESSAGE != which_Body_)
       {
@@ -1088,7 +1377,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.debugMessage_ = value;
     }
-    inline void set_debugMessage(const DebugMessage<debugMessage_Payload_LENGTH>&& value)
+    inline void set_debugMessage(const DebugMessage&& value)
     {
       if(id::DEBUGMESSAGE != which_Body_)
       {
@@ -1096,7 +1385,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.debugMessage_ = value;
     }
-    inline DebugMessage<debugMessage_Payload_LENGTH>& mutable_debugMessage()
+    inline DebugMessage& mutable_debugMessage()
     {
       if(id::DEBUGMESSAGE != which_Body_)
       {
@@ -1104,13 +1393,96 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.debugMessage_;
     }
-    inline const DebugMessage<debugMessage_Payload_LENGTH>& get_debugMessage() const { return Body_.debugMessage_; }
-    inline const DebugMessage<debugMessage_Payload_LENGTH>& debugMessage() const { return Body_.debugMessage_; }
+    inline const DebugMessage& get_debugMessage() const { return Body_.debugMessage_; }
+    inline const DebugMessage& debugMessage() const { return Body_.debugMessage_; }
+
+    inline bool has_exceptionMessage() const
+    {
+      return id::EXCEPTIONMESSAGE == which_Body_;
+    }
+    inline void clear_exceptionMessage()
+    {
+      if(id::EXCEPTIONMESSAGE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.exceptionMessage_.~ExceptionMessage();
+      }
+    }
+    inline void set_exceptionMessage(const ExceptionMessage& value)
+    {
+      if(id::EXCEPTIONMESSAGE != which_Body_)
+      {
+        init_Body(id::EXCEPTIONMESSAGE);
+      }
+      Body_.exceptionMessage_ = value;
+    }
+    inline void set_exceptionMessage(const ExceptionMessage&& value)
+    {
+      if(id::EXCEPTIONMESSAGE != which_Body_)
+      {
+        init_Body(id::EXCEPTIONMESSAGE);
+      }
+      Body_.exceptionMessage_ = value;
+    }
+    inline ExceptionMessage& mutable_exceptionMessage()
+    {
+      if(id::EXCEPTIONMESSAGE != which_Body_)
+      {
+        init_Body(id::EXCEPTIONMESSAGE);
+      }
+      return Body_.exceptionMessage_;
+    }
+    inline const ExceptionMessage& get_exceptionMessage() const { return Body_.exceptionMessage_; }
+    inline const ExceptionMessage& exceptionMessage() const { return Body_.exceptionMessage_; }
+
+    inline bool has_decodingResult() const
+    {
+      return id::DECODINGRESULT == which_Body_;
+    }
+    inline void clear_decodingResult()
+    {
+      if(id::DECODINGRESULT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.decodingResult_.~DecodingResult();
+      }
+    }
+    inline void set_decodingResult(const DecodingResult& value)
+    {
+      if(id::DECODINGRESULT != which_Body_)
+      {
+        init_Body(id::DECODINGRESULT);
+      }
+      Body_.decodingResult_ = value;
+    }
+    inline void set_decodingResult(const DecodingResult&& value)
+    {
+      if(id::DECODINGRESULT != which_Body_)
+      {
+        init_Body(id::DECODINGRESULT);
+      }
+      Body_.decodingResult_ = value;
+    }
+    inline DecodingResult& mutable_decodingResult()
+    {
+      if(id::DECODINGRESULT != which_Body_)
+      {
+        init_Body(id::DECODINGRESULT);
+      }
+      return Body_.decodingResult_;
+    }
+    inline const DecodingResult& get_decodingResult() const { return Body_.decodingResult_; }
+    inline const DecodingResult& decodingResult() const { return Body_.decodingResult_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+      }
 
       switch(which_Body_)
       {
@@ -1142,6 +1514,20 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::EXCEPTIONMESSAGE:
+          if(has_exceptionMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.exceptionMessage_.serialize_with_id(static_cast<uint32_t>(id::EXCEPTIONMESSAGE), buffer, true);
+          }
+          break;
+
+        case id::DECODINGRESULT:
+          if(has_decodingResult() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.decodingResult_.serialize_with_id(static_cast<uint32_t>(id::DECODINGRESULT), buffer, true);
+          }
+          break;
+
         default:
           break;
       }
@@ -1162,6 +1548,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
+          case id::PAYLOAD:
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::BOOTMESSAGE:
             return_value = deserialize_Body(id::BOOTMESSAGE, Body_.bootMessage_, buffer, wire_type);
 
@@ -1179,6 +1569,16 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
           case id::DEBUGMESSAGE:
             return_value = deserialize_Body(id::DEBUGMESSAGE, Body_.debugMessage_, buffer, wire_type);
+
+            break;
+
+          case id::EXCEPTIONMESSAGE:
+            return_value = deserialize_Body(id::EXCEPTIONMESSAGE, Body_.exceptionMessage_, buffer, wire_type);
+
+            break;
+
+          case id::DECODINGRESULT:
+            return_value = deserialize_Body(id::DECODINGRESULT, Body_.decodingResult_, buffer, wire_type);
 
             break;
 
@@ -1211,6 +1611,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
+      clear_Payload();
       clear_Body();
 
     }
@@ -1218,16 +1619,19 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     private:
 
 
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
       id which_Body_ = id::NOT_SET;
       union Body
       {
         Body() {}
         ~Body() {}
-        BootMessage<bootMessage_AppName_LENGTH> bootMessage_;
+        BootMessage bootMessage_;
         AckMessage ackMessage_;
         LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH> loraMeasurement_;
-        DebugMessage<debugMessage_Payload_LENGTH> debugMessage_;
+        DebugMessage debugMessage_;
+        ExceptionMessage exceptionMessage_;
+        DecodingResult decodingResult_;
       };
       Body Body_;
 
@@ -1243,7 +1647,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         switch(field_id)
         {
           case id::BOOTMESSAGE:
-            new(&Body_.bootMessage_) BootMessage<bootMessage_AppName_LENGTH>;
+            new(&Body_.bootMessage_) BootMessage;
             which_Body_ = id::BOOTMESSAGE;
             break;
 
@@ -1258,8 +1662,18 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::DEBUGMESSAGE:
-            new(&Body_.debugMessage_) DebugMessage<debugMessage_Payload_LENGTH>;
+            new(&Body_.debugMessage_) DebugMessage;
             which_Body_ = id::DEBUGMESSAGE;
+            break;
+
+          case id::EXCEPTIONMESSAGE:
+            new(&Body_.exceptionMessage_) ExceptionMessage;
+            which_Body_ = id::EXCEPTIONMESSAGE;
+            break;
+
+          case id::DECODINGRESULT:
+            new(&Body_.decodingResult_) DecodingResult;
+            which_Body_ = id::DECODINGRESULT;
             break;
 
           default:
@@ -1274,7 +1688,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         switch(which_Body_)
         {
           case id::BOOTMESSAGE:
-            Body_.bootMessage_.~BootMessage<bootMessage_AppName_LENGTH>(); // NOSONAR Unions require this.
+            Body_.bootMessage_.~BootMessage(); // NOSONAR Unions require this.
             break;
           case id::ACKMESSAGE:
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
@@ -1283,7 +1697,13 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::DEBUGMESSAGE:
-            Body_.debugMessage_.~DebugMessage<debugMessage_Payload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.debugMessage_.~DebugMessage(); // NOSONAR Unions require this.
+            break;
+          case id::EXCEPTIONMESSAGE:
+            Body_.exceptionMessage_.~ExceptionMessage(); // NOSONAR Unions require this.
+            break;
+          case id::DECODINGRESULT:
+            Body_.decodingResult_.~DecodingResult(); // NOSONAR Unions require this.
             break;
           default:
             break;

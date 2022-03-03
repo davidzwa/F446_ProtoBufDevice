@@ -4,7 +4,7 @@
 ::    / /|  _| | | | |
 ::   / /_| |___| |_| |
 ::  /____|_____|____/ 
-:: Copyright (C) 2020 - 2021
+:: Copyright (C) 2020 - 2022
 ::
 :: License:  Revised BSD License, see LICENSE.TXT file included in the project
 :: Authors:  David Zwart (ZED)

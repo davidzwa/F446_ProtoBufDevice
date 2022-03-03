@@ -3,6 +3,7 @@
 syntax = "proto3";
 
 import "shared/experiment_config.proto";
+import "shared/firmware.proto";
 
 option csharp_namespace = "LoRa";
 
@@ -19,7 +20,9 @@ message LoRaMessage {
         MeasurementStreamRequest measurementStreamRequest = 8;
         MeasurementStreamFragment measurementStreamFragment = 9;
         
-        // Avoid if possible
-        // 
+        RlncInitConfigCommand rlncInitConfigCommand = 10;
+        RlncEncodedFragment rlncEncodedFragment = 11;
+        RlncStateUpdate rlncStateUpdate = 12;
+        RlncTerminationCommand rlncTerminationCommand = 13;
     }
 }
