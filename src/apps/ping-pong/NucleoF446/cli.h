@@ -36,6 +36,7 @@ void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFact
 void ApplyConfigIfPending();
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
+void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber);
 void UartThrow(const char* payload, size_t length);
 void UartDebug(const char* payload, uint32_t code, size_t length);
 void UartSendLoRaRxError();

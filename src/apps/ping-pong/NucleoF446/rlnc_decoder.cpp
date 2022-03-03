@@ -43,7 +43,7 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
 
     // Prepare storage for the configured generation
     PrepareFragmentStorage();
-    
+
     ClearDecodingMatrix();
 }
 
@@ -113,11 +113,14 @@ RlncDecodingResult RlncDecoder::DecodeFragments() {
     result.generationIndex = generationIndex;
 
     // Get the symbols to skip in RREF
+    auto encVectorLength = rlncDecodingConfig.get_GenerationSize();
     auto fragmentSymbols = rlncDecodingConfig.get_FrameSize();
     ReduceMatrix(fragmentSymbols);
 
     // Verify decoding success and do packet integrity check
-
+    auto rank = DetermineMatrixRank();
+    auto firstNumber = decodingMatrix[0][encVectorLength + 4];
+    UartSendDecodingResult(true, rank, firstNumber, 0xFF);
     // Pass the result to be stored/propagated
     result.success = true;
     return result;
@@ -169,7 +172,7 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
     auto totalColCount = decodingMatrix[0].size();
 
     if (augmentedCols >= totalColCount) {
-        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION)-1);
+        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION) - 1);
         throw "Bad matrix augmentation size";
     }
 

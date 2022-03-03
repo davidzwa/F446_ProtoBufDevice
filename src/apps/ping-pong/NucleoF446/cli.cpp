@@ -147,7 +147,7 @@ void ProcessCliCommand() {
         // TODO verify if within SF/ToA limits?
         LORA_MSG_TEMPLATE command = uartCommand.get_transmitCommand();
 
-        // Immediately dump the payload 'as if LoRa received it' 
+        // Immediately dump the payload 'as if LoRa received it'
         if (uartCommand.get_doNotProxyCommand()) {
             HandleLoRaProtoPayload(command, -1, -1);
         } else {
@@ -202,6 +202,17 @@ void UartSendAck(uint8_t code) {
     UartResponseSend(uartResponse);
 }
 
+void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& decodingResult = uartResponse.mutable_decodingResult();
+    decodingResult.set_Success(success);
+    decodingResult.set_MatrixRank(matrixRank);
+    decodingResult.set_FirstDecodedNumber(firstDecodedNumber);
+    decodingResult.set_LastDecodedNumber(lastDecodedNumber);
+
+    UartResponseSend(uartResponse);
+}
+
 void UartThrow(const char* payload, size_t length) {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& exceptionPayload = uartResponse.mutable_Payload();
@@ -236,8 +247,8 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
     loraMeasurement.set_Success(true);
     loraMeasurement.set_Snr(snr);
     loraMeasurement.set_SequenceNumber(message.get_CorrelationCode());
-    
-    // TODO UART proto error 
+
+    // TODO UART proto error
     // loraMeasurement.set_Payload(message);
 
     UartResponseSend(uartResponse);

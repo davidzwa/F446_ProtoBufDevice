@@ -38,15 +38,24 @@ message DebugMessage {
     uint32 Code = 1;
 }
 
+message DecodingResult {
+    bool Success = 1;
+    uint32 MatrixRank = 2;
+
+    // We check the internal payload
+    uint32 FirstDecodedNumber = 3;
+    uint32 LastDecodedNumber = 4;
+}
+
 // The main message container
 message UartResponse {
+    bytes Payload = 1;
     oneof Body {
-        BootMessage bootMessage = 1;
-        AckMessage ackMessage = 2;
-        LoraMeasurement loraMeasurement = 3;
-        DebugMessage debugMessage = 4;
-        ExceptionMessage exceptionMessage = 5;
+        BootMessage bootMessage = 2;
+        AckMessage ackMessage = 3;
+        LoraMeasurement loraMeasurement = 4;
+        DebugMessage debugMessage = 5;
+        ExceptionMessage exceptionMessage = 6;
+        DecodingResult decodingResult = 7;
     }
-
-    bytes Payload = 6;
 }
