@@ -146,13 +146,15 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         // TODO filter based on device id
         // StreamMeasurements();
     } else if (message.has_rlncInitConfigCommand()) {
-        auto initConfigCommand = message.get_rlncInitConfigCommand();
+        auto initConfigCommand = message.mutable_rlncInitConfigCommand();
         decoder.InitRlncDecodingSession(initConfigCommand);
     } else if (message.has_rlncStateUpdate()) {
         auto rlncStateUpdate = message.get_rlncStateUpdate();
         decoder.UpdateRlncDecodingState(rlncStateUpdate);
     } else if (message.has_rlncEncodedFragment()) {
         decoder.ProcessRlncFragment(message);
+    } else if (message.has_rlncTerminationCommand()) {
+        decoder.TerminateRlnc(message.get_rlncTerminationCommand());
     }
 
     // Send the RX event back over UART (if enabled)

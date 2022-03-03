@@ -42,9 +42,8 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
     lfsr->Reset();
 
     // Prepare storage for the configured generation
-    PrepareFragmentStorage();
-
     ClearDecodingMatrix();
+    PrepareFragmentStorage();   
 }
 
 void RlncDecoder::PrepareFragmentStorage() {
@@ -88,7 +87,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     }
 }
 
-void RlncDecoder::UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate) {
+void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
     // Update state
     lfsr->State = rlncStateUpdate.get_LfsrState();
     generationIndex = rlncStateUpdate.get_GenerationIndex();
@@ -98,7 +97,7 @@ void RlncDecoder::UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate) {
     PrepareFragmentStorage();
 }
 
-void RlncDecoder::TerminateRlnc(RlncTerminationCommand& RlncTerminationCommand) {
+void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCommand) {
     // Reduce memory usage
     generationFrames.clear();
     generationIndex = 0;
@@ -137,11 +136,13 @@ void RlncDecoder::StoreDecodingResult(RlncDecodingResult& decodingResult) {
     }
 }
 
-void RlncDecoder::AddFrameAsMatrixRow(uint8_t row) {
-    auto source = generationFrames[row].augVector;
+void RlncDecoder::AddFrameAsMatrixRow(uint8_t rowIndex) {
+    auto source = generationFrames[rowIndex].augVector;
 
     // TODO test whether this copies correctly
-    this->decodingMatrix[row].assign(source.begin(), source.end());
+    vector<galois::GFSymbol> newData;
+    newData.assign(source.begin(), source.end());
+    this->decodingMatrix.push_back(newData);
 
     // Keep track of reduced/non-reduced packets equally
     storedPackets++;
@@ -204,6 +205,10 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
 }
 
 optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t rowCount) {
+    if (rowCount == 0) {
+        throw "Illegal rowcount given";
+    }
+    
     for (uint8_t i = startRow; i < rowCount; i++) {
         if (decodingMatrix[i][col] != nil.poly())
             return i;
