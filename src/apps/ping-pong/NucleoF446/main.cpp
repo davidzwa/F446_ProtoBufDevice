@@ -36,11 +36,18 @@ int main(void) {
     InitTimedTasks();
     InitRadioPhy();
 
+    unsigned int prim_poly[9] = {1, 0, 0, 0, 1, 1, 1, 0, 1};
+    galois::GaloisField gf(8, prim_poly);
+    // Reused symbols in decoding
+    const galois::GaloisFieldElement pivot(&gf, 1);
+    const galois::GaloisFieldElement val(&gf, 4);
+    auto result = pivot / val;
+
     // This must be called remotely/over UART
     // ClearStorage();
 
     // Uart debugging
-    // UartDebug("1234", 0, 4);
+    UartDebug("VAL", result.poly(), 3);
     // UartDebug("1234", 0, 4);
     // UartDebug("1234", 0, 4);
     // UartDebug("1234", 0, 4);
