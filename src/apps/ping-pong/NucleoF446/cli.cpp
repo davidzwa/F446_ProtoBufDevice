@@ -236,7 +236,9 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
     loraMeasurement.set_Success(true);
     loraMeasurement.set_Snr(snr);
     loraMeasurement.set_SequenceNumber(message.get_CorrelationCode());
-    loraMeasurement.set_Payload(message);
+    
+    // TODO UART proto error 
+    // loraMeasurement.set_Payload(message);
 
     UartResponseSend(uartResponse);
 }
@@ -244,7 +246,8 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
 void UartSendBoot() {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& bootMessage = uartResponse.mutable_bootMessage();
-    uartResponse.mutable_Payload().set((uint8_t*)APP_NAME, sizeof(APP_NAME));
+    // Problematic (sizeof not working, or last char not accepted)
+    uartResponse.mutable_Payload().set((uint8_t*)APP_NAME, 13);
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
     bootMessage.set_MeasurementCount(GetMeasurementCount());
     bootMessage.set_MeasurementsDisabled(IsStorageDirtyAndLocked());

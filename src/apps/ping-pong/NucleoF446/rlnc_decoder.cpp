@@ -168,8 +168,8 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
     auto totalRowCount = decodingMatrix.size();
     auto totalColCount = decodingMatrix[0].size();
 
-    if (totalColCount >= augmentedCols) {
-        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION));
+    if (augmentedCols >= totalColCount) {
+        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION)-1);
         throw "Bad matrix augmentation size";
     }
 
