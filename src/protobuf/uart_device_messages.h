@@ -923,11 +923,11 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
 
     inline void clear_MatrixRank() { MatrixRank_.clear(); }
-    inline void set_MatrixRank(const EmbeddedProto::boolean& value) { MatrixRank_ = value; }
-    inline void set_MatrixRank(const EmbeddedProto::boolean&& value) { MatrixRank_ = value; }
-    inline EmbeddedProto::boolean& mutable_MatrixRank() { return MatrixRank_; }
-    inline const EmbeddedProto::boolean& get_MatrixRank() const { return MatrixRank_; }
-    inline EmbeddedProto::boolean::FIELD_TYPE MatrixRank() const { return MatrixRank_.get(); }
+    inline void set_MatrixRank(const EmbeddedProto::uint32& value) { MatrixRank_ = value; }
+    inline void set_MatrixRank(const EmbeddedProto::uint32&& value) { MatrixRank_ = value; }
+    inline EmbeddedProto::uint32& mutable_MatrixRank() { return MatrixRank_; }
+    inline const EmbeddedProto::uint32& get_MatrixRank() const { return MatrixRank_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MatrixRank() const { return MatrixRank_.get(); }
 
     inline void clear_FirstDecodedNumber() { FirstDecodedNumber_.clear(); }
     inline void set_FirstDecodedNumber(const EmbeddedProto::uint32& value) { FirstDecodedNumber_ = value; }
@@ -953,7 +953,7 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
         return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
       }
 
-      if((false != MatrixRank_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != MatrixRank_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = MatrixRank_.serialize_with_id(static_cast<uint32_t>(id::MATRIXRANK), buffer, false);
       }
@@ -1040,7 +1040,7 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::boolean Success_ = false;
-      EmbeddedProto::boolean MatrixRank_ = false;
+      EmbeddedProto::uint32 MatrixRank_ = 0U;
       EmbeddedProto::uint32 FirstDecodedNumber_ = 0U;
       EmbeddedProto::uint32 LastDecodedNumber_ = 0U;
 
