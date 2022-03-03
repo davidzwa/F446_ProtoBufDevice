@@ -1,6 +1,8 @@
 
 #include "LinearFeedbackShiftRegister.h"
 
+using namespace std;
+
 LFSR::LFSR(uint8_t seed) {
     Seed = seed;
     this->Reset();
@@ -11,9 +13,9 @@ void LFSR::Reset() {
     this->GeneratedValuesCount = 0;
 }
 
-void LFSR::GenerateMany(uint8_t* output, uint16_t count) {
+void LFSR::GenerateMany(vector<uint8_t>& output, uint16_t count) {
     for (int i = 0; i < count; i++) {
-        output[i] = this->Generate();
+        output.push_back(this->Generate());
     }
 }
 

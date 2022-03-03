@@ -22,18 +22,20 @@ message LoraMeasurement
 message BootMessage {
     DeviceId DeviceIdentifier = 1;
     Version FirmwareVersion = 2;
-    string AppName = 3;
-    uint32 MeasurementCount = 4;
-    bool MeasurementsDisabled = 5;
+    uint32 MeasurementCount = 3;
+    bool MeasurementsDisabled = 4;
 }
 
 message AckMessage {
     uint32 Code = 1;
 }
 
+message ExceptionMessage {
+    uint32 Code = 1;
+}
+
 message DebugMessage {
     uint32 Code = 1;
-    bytes Payload = 2;
 }
 
 // The main message container
@@ -43,5 +45,8 @@ message UartResponse {
         AckMessage ackMessage = 2;
         LoraMeasurement loraMeasurement = 3;
         DebugMessage debugMessage = 4;
+        ExceptionMessage exceptionMessage = 5;
     }
+
+    bytes Payload = 6;
 }

@@ -11,12 +11,12 @@ using namespace std;
 
 class RlncFrame {
    public:
-    RlncFrame(SYMB* encBuffer, uint8_t encSize, const SYMB* payload, const uint32_t size) {
-        for (uint8_t i; i < encSize; i++) {
-            this->augVector.push_back(encBuffer[i]);
+    RlncFrame(vector<SYMB> encodingVector, const SYMB* payload, const uint32_t size) {
+        for (uint8_t i = 0; i < encodingVector.size(); i++) {
+            this->augVector.push_back(encodingVector[i]);
         }
 
-        for (uint8_t i; i < size; i++) {
+        for (uint8_t i = 0; i < size; i++) {
             this->augVector.push_back(payload[i]);
         }
     }

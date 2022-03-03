@@ -1,5 +1,7 @@
 #include "rlnc_decoder.h"
 
+#include "cli.h"
+
 /*
 Galois Field of type GF(2^8)
 p(x) = 1x^8+1x^7+0x^6+0x^5+0x^4+0x^3+1x^2+1x^1+1x^0
@@ -10,6 +12,8 @@ galois::GaloisField gf(8, prim_poly);
 // Reused symbols in decoding
 const galois::GaloisFieldElement nil(&gf, 0);
 const galois::GaloisFieldElement pivot(&gf, 1);
+
+#define AUGM_EXCEPTION "Bad matrix augmentation size"
 
 #define MAX_GEN_SIZE 5
 #define MAX_OVERHEAD 2
@@ -63,12 +67,12 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     auto generationSize = rlncDecodingConfig.get_GenerationSize();
 
     // Generate the encoding vector
-    SYMB encodingVector[(uint8_t)generationSize];
+    vector<SYMB> encodingVector;
     lfsr->GenerateMany(encodingVector, generationSize);
 
     // Process the fragment as augmented vector from frame and enc vector
     // generationFrames.size() * (size(frame) + size(enc))
-    RlncFrame frame(encodingVector, generationSize, message.Payload(), message.get_Payload().get_length());
+    RlncFrame frame(encodingVector, message.Payload(), message.get_Payload().get_length());
 
     // Store the frame in safe memory
     generationFrames.push_back(frame);
@@ -108,10 +112,9 @@ RlncDecodingResult RlncDecoder::DecodeFragments() {
     RlncDecodingResult result;
     result.generationIndex = generationIndex;
 
-    // Generation size equals the encoded vector length
-    auto generationSize = rlncDecodingConfig.get_GenerationSize();
+    // Get the symbols to skip in RREF
     auto fragmentSymbols = rlncDecodingConfig.get_FrameSize();
-    ReduceMatrix(generationSize + fragmentSymbols);
+    ReduceMatrix(fragmentSymbols);
 
     // Verify decoding success and do packet integrity check
 
@@ -166,6 +169,7 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
     auto totalColCount = decodingMatrix[0].size();
 
     if (totalColCount >= augmentedCols) {
+        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION));
         throw "Bad matrix augmentation size";
     }
 

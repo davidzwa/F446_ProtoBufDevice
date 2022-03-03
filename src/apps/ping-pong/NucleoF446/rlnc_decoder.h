@@ -2,7 +2,6 @@
 #define RLNC_DECODER_H__
 
 #include <stdint.h>
-
 #include <vector>
 
 #include "GaloisFieldElement.h"

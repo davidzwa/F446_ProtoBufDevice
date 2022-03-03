@@ -20,7 +20,7 @@
 #include "utilities.h"
 #include "utils.h"
 
-#define PROTO_LIMITS MAX_APPNAME_LENGTH, MAX_LORA_BYTES, MAX_LORA_BYTES
+#define PROTO_LIMITS MAX_LORA_BYTES, MAX_LORA_BYTES
 #define PACKET_SIZE_LIMIT 256
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
@@ -202,11 +202,19 @@ void UartSendAck(uint8_t code) {
     UartResponseSend(uartResponse);
 }
 
+void UartThrow(const char* payload, size_t length) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    auto& exceptionPayload = uartResponse.mutable_Payload();
+    exceptionPayload.set((uint8_t*)payload, length);
+
+    UartResponseSend(uartResponse);
+}
+
 void UartDebug(const char* payload, uint32_t code, size_t length) {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& debugMessage = uartResponse.mutable_debugMessage();
     debugMessage.set_Code(code);
-    auto& debugPayload = debugMessage.mutable_Payload();
+    auto& debugPayload = uartResponse.mutable_Payload();
     debugPayload.set((uint8_t*)payload, length);
 
     UartResponseSend(uartResponse);
@@ -236,7 +244,7 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
 void UartSendBoot() {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& bootMessage = uartResponse.mutable_bootMessage();
-    bootMessage.mutable_AppName() = APP_NAME;
+    uartResponse.mutable_Payload().set((uint8_t*)APP_NAME, sizeof(APP_NAME));
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
     bootMessage.set_MeasurementCount(GetMeasurementCount());
     bootMessage.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
