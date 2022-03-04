@@ -40,14 +40,20 @@ int main(void) {
     galois::GaloisField gf(8, prim_poly);
     // Reused symbols in decoding
     const galois::GaloisFieldElement pivot(&gf, 1);
-    const galois::GaloisFieldElement val(&gf, 4);
-    auto result = pivot / val;
+    // const galois::GaloisFieldElement val(&gf, 4);
+    // auto result = pivot / val;
 
     // This must be called remotely/over UART
     // ClearStorage();
 
     // Uart debugging
-    UartDebug("VAL", result.poly(), 3);
+    for (int i = 1; i<255; i++) {
+        const galois::GaloisFieldElement val(&gf, i);
+        auto result = pivot / val;
+        UartDebug("1/VAL", result.poly(), 5);
+        DelayMs(1);
+    }
+    
     // UartDebug("1234", 0, 4);
     // UartDebug("1234", 0, 4);
     // UartDebug("1234", 0, 4);
