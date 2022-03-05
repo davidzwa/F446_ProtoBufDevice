@@ -1,6 +1,6 @@
 #include "rlnc_decoder.h"
 
-// #include "utilities.h"
+#include "utilities.h"
 #include "cli.h"
 
 unsigned int prim_poly = 0x11D;
@@ -104,7 +104,7 @@ RlncDecodingResult RlncDecoder::DecodeFragments() {
     RlncDecodingResult result;
     result.generationIndex = generationIndex;
     
-    // CRITICAL_SECTION_BEGIN();
+    CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
     auto encVectorLength = rlncDecodingConfig.get_GenerationSize();
@@ -113,10 +113,11 @@ RlncDecodingResult RlncDecoder::DecodeFragments() {
     
     // Verify decoding success and do packet integrity check
     auto rank = DetermineMatrixRank();
-    auto firstNumber = decodingMatrix[0][encVectorLength + 4];
-    UartSendDecodingResult(true, rank, firstNumber, 0xFF);
+    auto firstNumber = decodingMatrix[0][encVectorLength + 3];
+    auto lastNumber = rank != 0 ? decodingMatrix[rank-1][encVectorLength + 3] : 0xFF;
+    UartSendDecodingResult(true, rank, firstNumber, lastNumber);
 
-    // CRITICAL_SECTION_END();
+    CRITICAL_SECTION_END();
 
     // Pass the result to be stored/propagated
     result.success = true;
@@ -163,6 +164,7 @@ uint8_t RlncDecoder::DetermineMatrixRank() {
         if (currentRowAllZeroes) return i;
     }
 
+    // If no row is all-0 we have full rank
     return generationSize;
 }
 
@@ -243,5 +245,10 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
 
     if (decodingMatrix[row][pivotCol] == galois::nil) {
         return;
+    }
+
+    auto coefficient = decodingMatrix[row][pivotCol];
+    for (int col = pivotCol; col < colCount; col++) {
+        decodingMatrix[row][col] = gf.sub(decodingMatrix[row][col], gf.mul(decodingMatrix[pivotRow][col], coefficient));
     }
 }
