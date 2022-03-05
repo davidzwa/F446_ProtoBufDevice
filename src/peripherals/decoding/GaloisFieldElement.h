@@ -128,20 +128,12 @@ class GaloisFieldElement {
         return (poly_value > v);
     }
 
-    inline GFSymbol index() const {
-        return gf->index(poly_value);
-    }
-
     inline GFSymbol poly() const {
         return poly_value;
     }
 
     inline GaloisField* field() const {
         return gf;
-    }
-
-    inline GFSymbol inverse() const {
-        return gf->inverse(poly_value);
     }
 
    private:

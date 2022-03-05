@@ -19,8 +19,8 @@ class RlncDecoder {
 
     void InitRlncDecodingSession(RlncInitConfigCommand& configCommand);
     void ProcessRlncFragment(LORA_MSG_TEMPLATE& message);
-    void UpdateRlncDecodingState(RlncStateUpdate& rlncStateUpdate);
-    void TerminateRlnc(RlncTerminationCommand& RlncTerminationCommand);
+    void UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate);
+    void TerminateRlnc(const RlncTerminationCommand& RlncTerminationCommand);
 
     // Debugging function
     // SYMB RlncDecoder::GetNextLFSRState() {
