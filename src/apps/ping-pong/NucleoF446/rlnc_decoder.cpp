@@ -143,7 +143,7 @@ void RlncDecoder::AddFrameAsMatrixRow(uint8_t rowIndex) {
     this->decodingMatrix.push_back(newData);
 
     // Keep track of reduced/non-reduced packets equally
-    storedPackets++;
+    ++storedPackets;
 }
 
 uint8_t RlncDecoder::DetermineMatrixRank() {

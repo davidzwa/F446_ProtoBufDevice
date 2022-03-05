@@ -34,8 +34,6 @@ const GFSymbol unity(1);
 class GaloisField {
    public:
     GaloisField(const int pwr, const unsigned int primitive_poly);
-    GFSymbol* antiLogLUT;  // aka exponential or anti-log
-    GFSymbol* logLUT;      // aka log
 
     inline unsigned int size() const {
         return Order;
@@ -89,9 +87,12 @@ class GaloisField {
 
    private:
     unsigned int power;
-    unsigned int Order;
+    long Order;
     unsigned int prim_poly_hash;
     unsigned int primitivePoly;
+
+    GFSymbol* antiLogLUT;  // aka exponential or anti-log
+    GFSymbol* logLUT;      // aka log
 
     // Generator is a special chosen value to loop over the whole field during multiplication
     const GFSymbol generator = 0x02;

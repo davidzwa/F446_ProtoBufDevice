@@ -4,7 +4,7 @@ namespace galois {
 
 GaloisField::GaloisField(const int pwr, const unsigned int primitivePoly) {
     power = pwr;
-    Order = (2^pwr);
+    Order = (1 << power);
     antiLogLUT = new GFSymbol[Order](); // () initializes them to 0
     logLUT = new GFSymbol[Order]();
     this->primitivePoly = primitivePoly;
