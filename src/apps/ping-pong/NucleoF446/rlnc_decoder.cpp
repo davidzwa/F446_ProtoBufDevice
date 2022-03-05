@@ -1,17 +1,10 @@
 #include "rlnc_decoder.h"
 
+// #include "utilities.h"
 #include "cli.h"
 
-/*
-Galois Field of type GF(2^8)
-p(x) = 1x^8+1x^7+0x^6+0x^5+0x^4+0x^3+1x^2+1x^1+1x^0
-        1    1    0    0    0    0    1    1    1
-*/
-unsigned int prim_poly[9] = {1, 0, 0, 0, 1, 1, 1, 0, 1};
+unsigned int prim_poly = 0x11D;
 galois::GaloisField gf(8, prim_poly);
-// Reused symbols in decoding
-const galois::GaloisFieldElement nil(&gf, 0);
-const galois::GaloisFieldElement pivot(&gf, 1);
 
 #define AUGM_EXCEPTION "Bad matrix augmentation size"
 
@@ -110,16 +103,21 @@ void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCom
 RlncDecodingResult RlncDecoder::DecodeFragments() {
     RlncDecodingResult result;
     result.generationIndex = generationIndex;
+    
+    // CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
     auto encVectorLength = rlncDecodingConfig.get_GenerationSize();
     auto fragmentSymbols = rlncDecodingConfig.get_FrameSize();
     ReduceMatrix(fragmentSymbols);
-
+    
     // Verify decoding success and do packet integrity check
     auto rank = DetermineMatrixRank();
     auto firstNumber = decodingMatrix[0][encVectorLength + 4];
     UartSendDecodingResult(true, rank, firstNumber, 0xFF);
+
+    // CRITICAL_SECTION_END();
+
     // Pass the result to be stored/propagated
     result.success = true;
     return result;
@@ -194,7 +192,6 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
         numPivots++;
 
         // Require Reduced form unconditionally
-        // if (form == MatrixReductionForm.ReducedRowEchelonForm)
         for (uint8_t tmpRow = 0; tmpRow < pivotRow.value(); tmpRow++)
             EliminateRow(tmpRow, pivotRow.value(), col, totalColCount);
 
@@ -210,7 +207,7 @@ optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t 
     }
     
     for (uint8_t i = startRow; i < rowCount; i++) {
-        if (decodingMatrix[i][col] != nil.poly())
+        if (decodingMatrix[i][col] != galois::nil)
             return i;
     }
 
@@ -230,11 +227,12 @@ void RlncDecoder::SwitchRows(uint8_t row1, uint8_t row2, uint8_t colCount) {
 }
 
 void RlncDecoder::ReduceRow(uint8_t row, uint8_t col, uint8_t colCount) {
-    auto coefficient = pivot / galois::GaloisFieldElement(&gf, decodingMatrix[row][col]);
-    if (coefficient == pivot) return;
+    auto coefficient = gf.div(galois::unity, decodingMatrix[row][col]);
+
+    if (coefficient == galois::unity) return;
 
     for (; col < colCount; col++) {
-        decodingMatrix[row][col] *= coefficient.poly();
+        decodingMatrix[row][col] = gf.mul(decodingMatrix[row][col], coefficient);
     }
 }
 
@@ -243,7 +241,7 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
         return;
     }
 
-    if (galois::GaloisFieldElement(&gf, decodingMatrix[row][pivotCol]) == nil) {
+    if (decodingMatrix[row][pivotCol] == galois::nil) {
         return;
     }
 }
