@@ -9,6 +9,7 @@
 #include "lora_device_messages.h"
 #include "measurements.h"
 #include "tasks.h"
+#include "utils.h"
 
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
@@ -142,6 +143,29 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
 
             // TODO send ACK if success
         }
+    } else if (message.has_forwardExperimentCommand()) {
+        auto msg = message.get_forwardExperimentCommand();
+        auto slaveCommand = msg.get_slaveCommand();
+        if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
+            if (message.get_IsMulticast()) {
+                bool isDeviceId = IsDeviceId(message.get_DeviceId());
+                UartDebug("MC", isDeviceId, 2);
+            }
+            ClearMeasurements();
+
+            UartSendBoot();
+        }
+        else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
+            if (message.get_IsMulticast()) {
+                UartDebug("MCSKIP", 0, 6);
+            } else {
+                UartSendBoot();
+            }
+        }
+        else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
+            // TODO
+        }
+
     } else if (message.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();

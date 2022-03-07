@@ -12,4 +12,6 @@ bool IsValidSpreadingFactor(uint8_t spreadingFactor);
 
 DeviceId GetDeviceId();
 
+bool IsDeviceId(const uint32_t& compareId);
+
 #endif // UTILS_H__

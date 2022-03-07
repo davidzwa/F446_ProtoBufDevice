@@ -15,3 +15,8 @@ DeviceId GetDeviceId() {
 
     return deviceId;
 }
+
+bool IsDeviceId(const uint32_t& compareId) {
+    auto currentId = GetDeviceId();
+    return compareId == currentId.Id0();
+}

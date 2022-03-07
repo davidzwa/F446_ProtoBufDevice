@@ -83,14 +83,14 @@
 #endif
 
 // Protobuf defines
-#define MAX_LORA_BYTES (30)
+#define MAX_LORA_BYTES (35)
 #define LORA_MSG_TEMPLATE LoRaMessage<MAX_LORA_BYTES>
 
 // RLNC defines
 #define LFSR_DEFAULT_SEED 0x08
 
 #define RX_TIMEOUT_VALUE 1000
-#define BUFFER_SIZE 64  // Define the payload size here
+#define BUFFER_SIZE 100  // Define the payload size here
 
 #define FIRMWARE_VERSION 0x0200010B
 #endif
