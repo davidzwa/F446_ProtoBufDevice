@@ -158,10 +158,6 @@ void ProcessCliCommand() {
             TransmitLoRaMessage(command);
             UartSendAck(1);
         }
-
-        // This is moved to separate uart control command
-        // if (command.has_Period() && command.get_Period() > 50) {
-        // TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
     } else if (uartCommand.has_clearMeasurementsCommand()) {
@@ -176,7 +172,8 @@ void ProcessCliCommand() {
         auto config = uartCommand.get_deviceConfiguration();
         bool alwaysSend = config.get_EnableAlwaysSend();
         auto alwaysSendPeriod = config.get_AlwaysSendPeriod();
-        ApplyAlwaysSendPeriodically(alwaysSend, alwaysSendPeriod);
+        auto limitedPacketCount = config.get_LimitedSendCount();
+        ApplyAlwaysSendPeriodically(alwaysSend, alwaysSendPeriod, limitedPacketCount);
         UartSendAck(1);
     } else {
         UartSendAck(250);

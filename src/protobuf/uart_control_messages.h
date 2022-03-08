@@ -167,12 +167,14 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     {
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
     }
 
     DeviceConfiguration(const DeviceConfiguration&& rhs ) noexcept
     {
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
     }
 
     ~DeviceConfiguration() override = default;
@@ -181,13 +183,15 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       ENABLEALWAYSSEND = 1,
-      ALWAYSSENDPERIOD = 2
+      ALWAYSSENDPERIOD = 2,
+      LIMITEDSENDCOUNT = 3
     };
 
     DeviceConfiguration& operator=(const DeviceConfiguration& rhs)
     {
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
       return *this;
     }
 
@@ -195,6 +199,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     {
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
       return *this;
     }
 
@@ -212,6 +217,13 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_AlwaysSendPeriod() const { return AlwaysSendPeriod_; }
     inline EmbeddedProto::uint32::FIELD_TYPE AlwaysSendPeriod() const { return AlwaysSendPeriod_.get(); }
 
+    inline void clear_LimitedSendCount() { LimitedSendCount_.clear(); }
+    inline void set_LimitedSendCount(const EmbeddedProto::uint32& value) { LimitedSendCount_ = value; }
+    inline void set_LimitedSendCount(const EmbeddedProto::uint32&& value) { LimitedSendCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_LimitedSendCount() { return LimitedSendCount_; }
+    inline const EmbeddedProto::uint32& get_LimitedSendCount() const { return LimitedSendCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LimitedSendCount() const { return LimitedSendCount_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -225,6 +237,11 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       if((0U != AlwaysSendPeriod_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = AlwaysSendPeriod_.serialize_with_id(static_cast<uint32_t>(id::ALWAYSSENDPERIOD), buffer, false);
+      }
+
+      if((0U != LimitedSendCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LimitedSendCount_.serialize_with_id(static_cast<uint32_t>(id::LIMITEDSENDCOUNT), buffer, false);
       }
 
       return return_value;
@@ -249,6 +266,10 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
 
           case id::ALWAYSSENDPERIOD:
             return_value = AlwaysSendPeriod_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LIMITEDSENDCOUNT:
+            return_value = LimitedSendCount_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -282,6 +303,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     {
       clear_EnableAlwaysSend();
       clear_AlwaysSendPeriod();
+      clear_LimitedSendCount();
 
     }
 
@@ -290,6 +312,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
 
       EmbeddedProto::boolean EnableAlwaysSend_ = false;
       EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
+      EmbeddedProto::uint32 LimitedSendCount_ = 0U;
 
 };
 

@@ -23,7 +23,6 @@ uint16_t periodicTxInterval = DEFAULT_TX_PERIOD;
 
 // Sequencer as test
 bool standaloneAlwaysSendPeriodically = false;
-ForwardSequenceConfig forwardedSequenceConfig;
 uint16_t sequenceMessageCount = 0;
 bool sequenceTestRunning = false;
 
@@ -78,23 +77,10 @@ static void OnPeriodicTx(void* context) {
     }
 }
 
-void TogglePeriodicTx(uint16_t timerPeriod, uint16_t maxPacketCount) {
-    periodicCurrentCounter = 0;
-
-    // Period < 50 Too fast (chance of radio overrun) and nice way to disable the periodic timer
-    auto result = ApplyPeriodicTxIntervalSafely(timerPeriod);
-    if (result) {
-        sequenceNumberLimit = maxPacketCount;
-    }
-}
-
-// static void OnPingSlotEvent(void* context) {
-// }
-
 /**
  * Send periodically indefinitely
  * */
-void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod) {
+void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod, uint32_t limitedSendCount) {
     standaloneAlwaysSendPeriodically = alwaysSend;
 
     if (standaloneAlwaysSendPeriodically) {
@@ -105,22 +91,16 @@ void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod) {
         ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
     } else {
         standaloneAlwaysSendPeriodically = false;
-        TimerStop(&periodicTxTimer);
+        sequenceNumberLimit = limitedSendCount;
+        periodicCurrentCounter = 0;
+
+        if (limitedSendCount == 0) {
+            TimerStop(&periodicTxTimer);
+        }
+        else {
+            ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
+        }
     }
-}
-
-void SetSequenceRequestConfig(const ForwardSequenceConfig& config) {
-    if (sequenceTestRunning) return;
-
-    // Check equality - TODO write utility
-    // if (!config->get_DeviceId() ) return;
-
-    // Call copy constructor
-    ClearMeasurements();
-    forwardedSequenceConfig = config;
-    sequenceMessageCount = 0;
-
-    // TimerSetValue(&sequenceTimer, sequenceRequestConfig.get_Interval());
 }
 
 void InitTimedTasks() {

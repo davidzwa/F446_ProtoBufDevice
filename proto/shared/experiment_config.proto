@@ -17,14 +17,14 @@ option csharp_namespace = "LoRa";
 //     SequenceResponse = 8;
 // }
 
-message ForwardSequenceConfig {
-    // Whether to silence at sequence count limit
-    bool Indefinite = 1;
-    // When sequence counter rollover occurs 
-    uint32 SequenceCountLimit = 2;
-    // Period <50 will disable it
-    uint32 Period = 3;
-}
+// message ForwardSequenceConfig {
+//     // Whether to silence at sequence count limit
+//     bool Indefinite = 1;
+//     // When sequence counter rollover occurs 
+//     uint32 SequenceCountLimit = 2;
+//     // Period <50 will disable it
+//     uint32 Period = 3;
+// }
 
 message ForwardRadioConfigUpdate {
     // We can configure either RX, TX or both

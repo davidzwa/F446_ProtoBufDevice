@@ -138,11 +138,11 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             // TODO apply
             // UpdateRadioTxConfig();
         }
-        if (message.has_sequenceConfig()) {
-            SetSequenceRequestConfig(message.get_sequenceConfig());
+        // if (message.has_sequenceConfig()) {
+        //     SetSequenceRequestConfig(message.get_sequenceConfig());
 
-            // TODO send ACK if success
-        }
+        //     // TODO send ACK if success
+        // }
     } else if (message.has_forwardExperimentCommand()) {
         auto msg = message.get_forwardExperimentCommand();
         auto slaveCommand = msg.get_slaveCommand();
@@ -157,7 +157,7 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         }
         else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
             if (message.get_IsMulticast()) {
-                UartDebug("MCSKIP", 0, 6);
+                UartDebug("MCSKIP", 1, 6);
             } else {
                 UartSendBoot();
             }

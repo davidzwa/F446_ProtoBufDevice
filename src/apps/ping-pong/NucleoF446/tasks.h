@@ -4,9 +4,7 @@
 #ifndef TIMERS__H__
 #define TIMERS__H__
 
-void SetSequenceRequestConfig(const ForwardSequenceConfig& config);
-void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t period);
-void TogglePeriodicTx(uint16_t timerPeriod, uint16_t maxPacketCount);
+void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t period, uint32_t maxPacketCount);
 void InitTimedTasks();
 
 #endif  // TIMERS__H__

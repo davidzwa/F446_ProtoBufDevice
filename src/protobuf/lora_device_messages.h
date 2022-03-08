@@ -67,10 +67,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
         case id::FORWARDRADIOCONFIGUPDATE:
           set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
@@ -123,10 +119,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
         case id::FORWARDRADIOCONFIGUPDATE:
           set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
@@ -174,7 +166,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       DEVICEID = 2,
       CORRELATIONCODE = 3,
       PAYLOAD = 4,
-      SEQUENCECONFIG = 5,
       FORWARDRADIOCONFIGUPDATE = 6,
       FORWARDEXPERIMENTCOMMAND = 7,
       MEASUREMENTSTREAMREQUEST = 8,
@@ -199,10 +190,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
         case id::FORWARDRADIOCONFIGUPDATE:
           set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
@@ -256,10 +243,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
         case id::FORWARDRADIOCONFIGUPDATE:
           set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
           break;
@@ -327,45 +310,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const uint8_t* Payload() const { return Payload_.get_const(); }
 
     id get_which_Body() const { return which_Body_; }
-
-    inline bool has_sequenceConfig() const
-    {
-      return id::SEQUENCECONFIG == which_Body_;
-    }
-    inline void clear_sequenceConfig()
-    {
-      if(id::SEQUENCECONFIG == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.sequenceConfig_.~ForwardSequenceConfig();
-      }
-    }
-    inline void set_sequenceConfig(const ForwardSequenceConfig& value)
-    {
-      if(id::SEQUENCECONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCECONFIG);
-      }
-      Body_.sequenceConfig_ = value;
-    }
-    inline void set_sequenceConfig(const ForwardSequenceConfig&& value)
-    {
-      if(id::SEQUENCECONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCECONFIG);
-      }
-      Body_.sequenceConfig_ = value;
-    }
-    inline ForwardSequenceConfig& mutable_sequenceConfig()
-    {
-      if(id::SEQUENCECONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCECONFIG);
-      }
-      return Body_.sequenceConfig_;
-    }
-    inline const ForwardSequenceConfig& get_sequenceConfig() const { return Body_.sequenceConfig_; }
-    inline const ForwardSequenceConfig& sequenceConfig() const { return Body_.sequenceConfig_; }
 
     inline bool has_forwardRadioConfigUpdate() const
     {
@@ -706,13 +650,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(which_Body_)
       {
-        case id::SEQUENCECONFIG:
-          if(has_sequenceConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = Body_.sequenceConfig_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCECONFIG), buffer, true);
-          }
-          break;
-
         case id::FORWARDRADIOCONFIGUPDATE:
           if(has_forwardRadioConfigUpdate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -805,11 +742,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             return_value = Payload_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::SEQUENCECONFIG:
-            return_value = deserialize_Body(id::SEQUENCECONFIG, Body_.sequenceConfig_, buffer, wire_type);
-
-            break;
-
           case id::FORWARDRADIOCONFIGUPDATE:
             return_value = deserialize_Body(id::FORWARDRADIOCONFIGUPDATE, Body_.forwardRadioConfigUpdate_, buffer, wire_type);
 
@@ -900,7 +832,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       {
         Body() {}
         ~Body() {}
-        ForwardSequenceConfig sequenceConfig_;
         ForwardRadioConfigUpdate forwardRadioConfigUpdate_;
         ForwardExperimentCommand forwardExperimentCommand_;
         MeasurementStreamRequest measurementStreamRequest_;
@@ -923,11 +854,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         // C++11 unions only support nontrivial members when you explicitly call the placement new statement.
         switch(field_id)
         {
-          case id::SEQUENCECONFIG:
-            new(&Body_.sequenceConfig_) ForwardSequenceConfig;
-            which_Body_ = id::SEQUENCECONFIG;
-            break;
-
           case id::FORWARDRADIOCONFIGUPDATE:
             new(&Body_.forwardRadioConfigUpdate_) ForwardRadioConfigUpdate;
             which_Body_ = id::FORWARDRADIOCONFIGUPDATE;
@@ -979,9 +905,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       {
         switch(which_Body_)
         {
-          case id::SEQUENCECONFIG:
-            Body_.sequenceConfig_.~ForwardSequenceConfig(); // NOSONAR Unions require this.
-            break;
           case id::FORWARDRADIOCONFIGUPDATE:
             Body_.forwardRadioConfigUpdate_.~ForwardRadioConfigUpdate(); // NOSONAR Unions require this.
             break;

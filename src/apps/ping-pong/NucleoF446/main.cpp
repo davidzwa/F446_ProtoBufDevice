@@ -53,34 +53,6 @@ int main(void) {
     // UartDebug("Mult", gf.mul(result, val), 4);
     // UartDebug("Mul2", gf.mul(result, val2), 4);
 
-    // for (int i = 1; i<255; i++) {
-    //     const galois::GFSymbol val(i);
-    //     UartDebug("Inv", gf.div(unity, val), 3);
-    //     DelayMs(1);
-    // }
-
-    // Something wrong with inverse()
-    // for (int i = 1; i<255; i++) {
-    //     UartDebug("Inv2", gf.inverse(i), 4);
-    //     DelayMs(1);
-    // }
-
-    // for (int i = 1; i<255; i++) {
-    //     // const galois::GFSymbol val(i);
-    //     UartDebug("Log", gf.logLUT[i],3);
-    //     DelayMs(1);
-    // }
-    
-    // for (int i = 1; i<255; i++) {
-    //     // const galois::GFSymbol val(i);
-    //     UartDebug("Alog", gf.antiLogLUT[i], 4);
-    //     DelayMs(1);
-    // }
-
-    // UartDebug("1234", 0, 4);
-    // UartDebug("1234", 0, 4);
-    // UartDebug("1234", 0, 4);
-
     Radio.Rx(0);
     while (1) {
         // Process Radio IRQ
