@@ -4,19 +4,6 @@ import "shared/lora_phy.proto";
 
 option csharp_namespace = "LoRa";
 
-// Try to avoid this as it breaks orthogonal packet structure
-// enum MessageType {
-//     Configuration = 0;
-//     MultiCast = 1;
-//     MultiCastAck = 2;
-//     UniCast = 3;
-//     UniCastAck = 4;
-//     MeasurementStreamRequest = 5;
-//     MeasurementStreamFragmentReply = 6;
-//     SequenceRequest = 7;
-//     SequenceResponse = 8;
-// }
-
 // message ForwardSequenceConfig {
 //     // Whether to silence at sequence count limit
 //     bool Indefinite = 1;
