@@ -39,6 +39,12 @@ message ForwardExperimentCommand {
     optional SlaveCommand slaveCommand = 3;
 }
 
+message ExperimentResponse {
+    uint32 MeasurementCount = 1;
+    bool MeasurementsDisabled = 2;
+    bool WasCleared = 3;
+}
+
 message MeasurementStreamRequest {
     uint32 FragmentSizeMax = 1;
 }

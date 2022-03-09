@@ -547,6 +547,163 @@ class ForwardExperimentCommand final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class ExperimentResponse final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    ExperimentResponse() = default;
+    ExperimentResponse(const ExperimentResponse& rhs )
+    {
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_WasCleared(rhs.get_WasCleared());
+    }
+
+    ExperimentResponse(const ExperimentResponse&& rhs ) noexcept
+    {
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_WasCleared(rhs.get_WasCleared());
+    }
+
+    ~ExperimentResponse() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      MEASUREMENTCOUNT = 1,
+      MEASUREMENTSDISABLED = 2,
+      WASCLEARED = 3
+    };
+
+    ExperimentResponse& operator=(const ExperimentResponse& rhs)
+    {
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_WasCleared(rhs.get_WasCleared());
+      return *this;
+    }
+
+    ExperimentResponse& operator=(const ExperimentResponse&& rhs) noexcept
+    {
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_WasCleared(rhs.get_WasCleared());
+      return *this;
+    }
+
+    inline void clear_MeasurementCount() { MeasurementCount_.clear(); }
+    inline void set_MeasurementCount(const EmbeddedProto::uint32& value) { MeasurementCount_ = value; }
+    inline void set_MeasurementCount(const EmbeddedProto::uint32&& value) { MeasurementCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_MeasurementCount() { return MeasurementCount_; }
+    inline const EmbeddedProto::uint32& get_MeasurementCount() const { return MeasurementCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MeasurementCount() const { return MeasurementCount_.get(); }
+
+    inline void clear_MeasurementsDisabled() { MeasurementsDisabled_.clear(); }
+    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean& value) { MeasurementsDisabled_ = value; }
+    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean&& value) { MeasurementsDisabled_ = value; }
+    inline EmbeddedProto::boolean& mutable_MeasurementsDisabled() { return MeasurementsDisabled_; }
+    inline const EmbeddedProto::boolean& get_MeasurementsDisabled() const { return MeasurementsDisabled_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE MeasurementsDisabled() const { return MeasurementsDisabled_.get(); }
+
+    inline void clear_WasCleared() { WasCleared_.clear(); }
+    inline void set_WasCleared(const EmbeddedProto::boolean& value) { WasCleared_ = value; }
+    inline void set_WasCleared(const EmbeddedProto::boolean&& value) { WasCleared_ = value; }
+    inline EmbeddedProto::boolean& mutable_WasCleared() { return WasCleared_; }
+    inline const EmbeddedProto::boolean& get_WasCleared() const { return WasCleared_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE WasCleared() const { return WasCleared_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != MeasurementCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MeasurementCount_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTCOUNT), buffer, false);
+      }
+
+      if((false != MeasurementsDisabled_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MeasurementsDisabled_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSDISABLED), buffer, false);
+      }
+
+      if((false != WasCleared_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = WasCleared_.serialize_with_id(static_cast<uint32_t>(id::WASCLEARED), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::MEASUREMENTCOUNT:
+            return_value = MeasurementCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MEASUREMENTSDISABLED:
+            return_value = MeasurementsDisabled_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::WASCLEARED:
+            return_value = WasCleared_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_MeasurementCount();
+      clear_MeasurementsDisabled();
+      clear_WasCleared();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 MeasurementCount_ = 0U;
+      EmbeddedProto::boolean MeasurementsDisabled_ = false;
+      EmbeddedProto::boolean WasCleared_ = false;
+
+};
+
 class MeasurementStreamRequest final: public ::EmbeddedProto::MessageInterface
 {
   public:

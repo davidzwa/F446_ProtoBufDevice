@@ -22,7 +22,7 @@ int8_t lastSnrValue = 0;
  * \brief Radio interupts
  */
 void OnTxDone(void);
-void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
+void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr);
 void OnTxTimeout(void);
 void OnRxTimeout(void);
 void OnRxError(void);
@@ -96,7 +96,7 @@ void OnTxTimeout(void) {
     // }
 }
 
-void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
+void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     // Tracks RSSI and SNR
     lastRssiValue = rssi;
     lastSnrValue = snr;
@@ -120,11 +120,20 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
 /**
  * @brief Proto processor for LoRa messages - makes testing easier
- * 
+ *
  */
 void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
     auto sequenceNumber = message.get_CorrelationCode();
     RegisterNewMeasurement(sequenceNumber, rssi, snr);
+
+    // Debug whether this was multicast or not
+    bool isDeviceId = IsDeviceId(message.get_DeviceId());
+    if (message.get_IsMulticast()) {
+        UartDebug("MC", isDeviceId + 200, 2);
+    }
+    else {
+        UartDebug("UC", isDeviceId + 100, 2);
+    }
 
     if (message.has_forwardRadioConfigUpdate()) {
         auto configMessage = message.get_forwardRadioConfigUpdate();
@@ -147,24 +156,28 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         auto msg = message.get_forwardExperimentCommand();
         auto slaveCommand = msg.get_slaveCommand();
         if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
-            if (message.get_IsMulticast()) {
-                bool isDeviceId = IsDeviceId(message.get_DeviceId());
-                UartDebug("MC", isDeviceId, 2);
-            }
             ClearMeasurements();
 
-            UartSendBoot();
-        }
-        else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
             if (message.get_IsMulticast()) {
                 UartDebug("MCSKIP", 1, 6);
-            } else {
-                UartSendBoot();
             }
-        }
-        else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
-            // TODO
-        }
+            else {
+                UartDebug("ACK", 1, 3);
+                TransmitLoRaFlashInfo(true);
+            }
+
+                // UartSendBoot();
+            } else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
+                if (message.get_IsMulticast()) {
+                    UartDebug("MCSKIP", 2, 6);
+                } else {
+                    UartDebug("ACK", 1, 3);
+                    TransmitLoRaFlashInfo(false);
+                    // UartSendBoot();
+                }
+            } else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
+                // TODO
+            }
 
     } else if (message.has_measurementStreamRequest()) {
         // TODO filter based on device id
@@ -195,6 +208,20 @@ void OnRxTimeout(void) {
 
 void OnRxError(void) {
     Radio.Rx(0);
+}
+
+void TransmitLoRaFlashInfo(bool wasCleared) {
+    LORA_MSG_TEMPLATE message;
+    // Suppress response
+    message.set_IsMulticast(true);
+
+    // message.set_IsMulticast(false);
+    auto expResponse = message.mutable_experimentResponse();
+    expResponse.set_WasCleared(wasCleared);
+    expResponse.set_MeasurementCount(GetMeasurementCount());
+    expResponse.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
+
+    TransmitLoRaMessage(message);
 }
 
 void TransmitLoRaMessage(LORA_MSG_TEMPLATE& message) {

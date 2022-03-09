@@ -146,13 +146,10 @@ void ProcessCliCommand() {
     } else if (uartCommand.has_transmitCommand()) {
         // TODO verify if within SF/ToA limits?
         LORA_MSG_TEMPLATE command = uartCommand.get_transmitCommand();
-
         auto targetDeviceId = command.get_DeviceId();
-        if (IsDeviceId(targetDeviceId)) {
-            UartDebug("HEY", 1, 3);
-        }
+
         // Immediately dump the payload 'as if LoRa received it'
-        if (uartCommand.get_doNotProxyCommand()) {
+        if (IsDeviceId(targetDeviceId) || uartCommand.get_doNotProxyCommand()) {
             HandleLoRaProtoPayload(command, -1, -1);
         } else {
             TransmitLoRaMessage(command);

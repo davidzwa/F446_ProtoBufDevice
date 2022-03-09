@@ -75,6 +75,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
           break;
 
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
+          break;
+
         case id::MEASUREMENTSTREAMREQUEST:
           set_measurementStreamRequest(rhs.get_measurementStreamRequest());
           break;
@@ -127,6 +131,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
           break;
 
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
+          break;
+
         case id::MEASUREMENTSTREAMREQUEST:
           set_measurementStreamRequest(rhs.get_measurementStreamRequest());
           break;
@@ -166,8 +174,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       DEVICEID = 2,
       CORRELATIONCODE = 3,
       PAYLOAD = 4,
-      FORWARDRADIOCONFIGUPDATE = 6,
-      FORWARDEXPERIMENTCOMMAND = 7,
+      FORWARDRADIOCONFIGUPDATE = 5,
+      FORWARDEXPERIMENTCOMMAND = 6,
+      EXPERIMENTRESPONSE = 7,
       MEASUREMENTSTREAMREQUEST = 8,
       MEASUREMENTSTREAMFRAGMENT = 9,
       RLNCINITCONFIGCOMMAND = 10,
@@ -196,6 +205,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::FORWARDEXPERIMENTCOMMAND:
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
           break;
 
         case id::MEASUREMENTSTREAMREQUEST:
@@ -249,6 +262,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::FORWARDEXPERIMENTCOMMAND:
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
           break;
 
         case id::MEASUREMENTSTREAMREQUEST:
@@ -388,6 +405,45 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     }
     inline const ForwardExperimentCommand& get_forwardExperimentCommand() const { return Body_.forwardExperimentCommand_; }
     inline const ForwardExperimentCommand& forwardExperimentCommand() const { return Body_.forwardExperimentCommand_; }
+
+    inline bool has_experimentResponse() const
+    {
+      return id::EXPERIMENTRESPONSE == which_Body_;
+    }
+    inline void clear_experimentResponse()
+    {
+      if(id::EXPERIMENTRESPONSE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.experimentResponse_.~ExperimentResponse();
+      }
+    }
+    inline void set_experimentResponse(const ExperimentResponse& value)
+    {
+      if(id::EXPERIMENTRESPONSE != which_Body_)
+      {
+        init_Body(id::EXPERIMENTRESPONSE);
+      }
+      Body_.experimentResponse_ = value;
+    }
+    inline void set_experimentResponse(const ExperimentResponse&& value)
+    {
+      if(id::EXPERIMENTRESPONSE != which_Body_)
+      {
+        init_Body(id::EXPERIMENTRESPONSE);
+      }
+      Body_.experimentResponse_ = value;
+    }
+    inline ExperimentResponse& mutable_experimentResponse()
+    {
+      if(id::EXPERIMENTRESPONSE != which_Body_)
+      {
+        init_Body(id::EXPERIMENTRESPONSE);
+      }
+      return Body_.experimentResponse_;
+    }
+    inline const ExperimentResponse& get_experimentResponse() const { return Body_.experimentResponse_; }
+    inline const ExperimentResponse& experimentResponse() const { return Body_.experimentResponse_; }
 
     inline bool has_measurementStreamRequest() const
     {
@@ -664,6 +720,13 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::EXPERIMENTRESPONSE:
+          if(has_experimentResponse() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.experimentResponse_.serialize_with_id(static_cast<uint32_t>(id::EXPERIMENTRESPONSE), buffer, true);
+          }
+          break;
+
         case id::MEASUREMENTSTREAMREQUEST:
           if(has_measurementStreamRequest() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -752,6 +815,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::EXPERIMENTRESPONSE:
+            return_value = deserialize_Body(id::EXPERIMENTRESPONSE, Body_.experimentResponse_, buffer, wire_type);
+
+            break;
+
           case id::MEASUREMENTSTREAMREQUEST:
             return_value = deserialize_Body(id::MEASUREMENTSTREAMREQUEST, Body_.measurementStreamRequest_, buffer, wire_type);
 
@@ -834,6 +902,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         ForwardRadioConfigUpdate forwardRadioConfigUpdate_;
         ForwardExperimentCommand forwardExperimentCommand_;
+        ExperimentResponse experimentResponse_;
         MeasurementStreamRequest measurementStreamRequest_;
         MeasurementStreamFragment measurementStreamFragment_;
         RlncInitConfigCommand rlncInitConfigCommand_;
@@ -862,6 +931,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           case id::FORWARDEXPERIMENTCOMMAND:
             new(&Body_.forwardExperimentCommand_) ForwardExperimentCommand;
             which_Body_ = id::FORWARDEXPERIMENTCOMMAND;
+            break;
+
+          case id::EXPERIMENTRESPONSE:
+            new(&Body_.experimentResponse_) ExperimentResponse;
+            which_Body_ = id::EXPERIMENTRESPONSE;
             break;
 
           case id::MEASUREMENTSTREAMREQUEST:
@@ -910,6 +984,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::FORWARDEXPERIMENTCOMMAND:
             Body_.forwardExperimentCommand_.~ForwardExperimentCommand(); // NOSONAR Unions require this.
+            break;
+          case id::EXPERIMENTRESPONSE:
+            Body_.experimentResponse_.~ExperimentResponse(); // NOSONAR Unions require this.
             break;
           case id::MEASUREMENTSTREAMREQUEST:
             Body_.measurementStreamRequest_.~MeasurementStreamRequest(); // NOSONAR Unions require this.

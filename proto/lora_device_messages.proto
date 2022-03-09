@@ -14,9 +14,9 @@ message LoRaMessage {
     bytes Payload = 4;
     
     oneof Body {
-        // ForwardSequenceConfig sequenceConfig = 5;
-        ForwardRadioConfigUpdate forwardRadioConfigUpdate = 6;
-        ForwardExperimentCommand forwardExperimentCommand = 7; // Set role TX/RX, play/pause or switch to predefined experiment
+        ForwardRadioConfigUpdate forwardRadioConfigUpdate = 5;
+        ForwardExperimentCommand forwardExperimentCommand = 6; // Set role TX/RX, play/pause or switch to predefined experiment
+        ExperimentResponse experimentResponse = 7;
         MeasurementStreamRequest measurementStreamRequest = 8;
         MeasurementStreamFragment measurementStreamFragment = 9;
         
