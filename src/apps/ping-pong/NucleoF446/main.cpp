@@ -35,10 +35,11 @@ int main(void) {
     InitRadioConfig();
     InitTimedTasks();
     InitRadioPhy();
+    // ApplyRadioConfig();
 
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);
-    
+
     // This must be called remotely/over UART
     // ClearStorage();
 

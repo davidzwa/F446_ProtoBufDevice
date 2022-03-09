@@ -134,14 +134,13 @@ void ProcessCliCommand() {
     newCommandReceived = false;
 
     if (uartCommand.has_rxConfig()) {
-        printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
         rxConf = uartCommand.get_rxConfig();
         UartSendAck(1);
         // TODO apply
     } else if (uartCommand.has_txConfig()) {
-        printf("ID %ld\n\0", (uint32_t)uartCommand.get_which_Body());
         txConf = uartCommand.get_txConfig();
-        UartSendAck(1);
+        SetTxPower(txConf.get_Power());
+        UartSendAck(txConf.get_Power());
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
         // TODO verify if within SF/ToA limits?
@@ -331,6 +330,12 @@ void ApplyRadioConfig() {
     ApplyRadioRxConfig();
 
     Radio.Rx(RX_TIMEOUT_VALUE);
+}
+
+void SetTxPower(int8_t power) {
+    txConf.set_Power(power);
+
+    ApplyRadioTxConfig();
 }
 
 void PrintSettings() {

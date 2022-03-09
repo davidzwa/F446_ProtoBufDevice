@@ -5,9 +5,9 @@ import numpy as np
 print(os.getcwd())
 
 # 128 64 32 16 
-read_size = 1024 * 16
-subprocess.run(
-    f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
+# read_size = 1024 * 16
+# subprocess.run(
+#     f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
@@ -63,8 +63,8 @@ print(f"{counter} measurements found, total packets missed {cum_seq_missed}")
 fig, ax1 = plt.subplots()
 ax1.set_title("Signal strength and SNR ~20m SF7 TX0")
 ax1.set_ylabel("RSSI [dBm]")
+ax1.boxplot(data_set_rrsi)
 ax1.plot(data_set_rrsi)
-
 # ax2 = ax1.twinx()
 # ax2.boxplot([2, data_set_snr])
 # ax2.set_ylabel("SNR [dBm]")

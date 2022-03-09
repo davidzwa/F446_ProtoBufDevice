@@ -577,11 +577,11 @@ class RadioTxConfig final: public ::EmbeddedProto::MessageInterface
     inline RadioModems Modem() const { return Modem_; }
 
     inline void clear_Power() { Power_.clear(); }
-    inline void set_Power(const EmbeddedProto::uint32& value) { Power_ = value; }
-    inline void set_Power(const EmbeddedProto::uint32&& value) { Power_ = value; }
-    inline EmbeddedProto::uint32& mutable_Power() { return Power_; }
-    inline const EmbeddedProto::uint32& get_Power() const { return Power_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Power() const { return Power_.get(); }
+    inline void set_Power(const EmbeddedProto::int32& value) { Power_ = value; }
+    inline void set_Power(const EmbeddedProto::int32&& value) { Power_ = value; }
+    inline EmbeddedProto::int32& mutable_Power() { return Power_; }
+    inline const EmbeddedProto::int32& get_Power() const { return Power_; }
+    inline EmbeddedProto::int32::FIELD_TYPE Power() const { return Power_.get(); }
 
     inline void clear_Fdev() { Fdev_.clear(); }
     inline void set_Fdev(const EmbeddedProto::uint32& value) { Fdev_ = value; }
@@ -672,7 +672,7 @@ class RadioTxConfig final: public ::EmbeddedProto::MessageInterface
         return_value = value.serialize_with_id(static_cast<uint32_t>(id::MODEM), buffer, false);
       }
 
-      if((0U != Power_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0 != Power_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Power_.serialize_with_id(static_cast<uint32_t>(id::POWER), buffer, false);
       }
@@ -862,7 +862,7 @@ class RadioTxConfig final: public ::EmbeddedProto::MessageInterface
 
 
       RadioModems Modem_ = static_cast<RadioModems>(0);
-      EmbeddedProto::uint32 Power_ = 0U;
+      EmbeddedProto::int32 Power_ = 0;
       EmbeddedProto::uint32 Fdev_ = 0U;
       EmbeddedProto::uint32 Bandwidth_ = 0U;
       EmbeddedProto::uint32 DataRate_ = 0U;
