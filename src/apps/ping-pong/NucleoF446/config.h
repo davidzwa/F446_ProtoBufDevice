@@ -90,7 +90,7 @@
 #define LFSR_DEFAULT_SEED 0x08
 
 #define RX_TIMEOUT_VALUE 1000
-#define BUFFER_SIZE 100  // Define the payload size here
+#define RADIO_BUFFER_SIZE 100  // Define the payload size here
 
 #define NETWORK_RESPONSE_ID 0x12345678
 #define FIRMWARE_VERSION 0x02000200

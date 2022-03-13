@@ -5,8 +5,8 @@
 #include "ProtoReadBuffer.h"
 #include "ProtoWriteBuffer.h"
 #include "cli.h"
-#include "delay.h"
 #include "config.h"
+#include "delay.h"
 #include "lora_device_messages.h"
 #include "measurements.h"
 #include "tasks.h"
@@ -56,7 +56,7 @@ void InitRadioPhy() {
                       LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
                       0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
 
-    Radio.SetMaxPayloadLength(MODEM_LORA, BUFFER_SIZE);
+    Radio.SetMaxPayloadLength(MODEM_LORA, RADIO_BUFFER_SIZE);
 
 #elif defined(USE_MODEM_FSK)
 
