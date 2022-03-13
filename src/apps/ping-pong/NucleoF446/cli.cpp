@@ -20,13 +20,15 @@
 #include "utilities.h"
 #include "utils.h"
 
+#define PKT_START 0xFF
+#define PKT_END 0x00
 #define PROTO_LIMITS MAX_LORA_BYTES, MAX_LORA_BYTES
 #define PACKET_SIZE_LIMIT 256
+
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
 uint8_t packetSize;
 uint16_t actualSize;
-uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
 const size_t offset = 1;  // End byte
 
@@ -59,10 +61,10 @@ uint8_t GetLastChar(uint8_t offset) {
 void UartSend(uint8_t* buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
-    UartPutChar(uart, 0xFF);
+    UartPutChar(uart, PKT_START);
     UartPutChar(uart, encodedSize);
     UartPutBuffer(uart, encodedBuffer, encodedSize);
-    UartPutChar(uart, 0x0);
+    UartPutChar(uart, PKT_END);
 }
 
 void UartISR(UartNotifyId_t id) {
@@ -80,7 +82,7 @@ void UartISR(UartNotifyId_t id) {
         FifoFlush(&uart->FifoRx);
     }
 
-    if (packetBufferingLength == 0 && GetLastChar(0) == 0xFF) {
+    if (packetBufferingLength == 0 && GetLastChar(0) == PKT_START) {
         FifoPop(&uart->FifoRx);
         packetBufferingLength++;
         return;
@@ -92,7 +94,7 @@ void UartISR(UartNotifyId_t id) {
     packetBufferingLength++;
 
     // This is a very weak check
-    if (GetFifoRxLength() >= packetSize + 1 || GetLastChar(0) == packetEndMarker) {
+    if (GetFifoRxLength() >= packetSize + 1 || GetLastChar(0) == PKT_END) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {
             return;  // Error occurred
@@ -184,9 +186,10 @@ void UartResponseSend(UartResponse<PROTO_LIMITS>& response) {
     // Push the data
     auto result = response.serialize(writeBuffer);
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        // Send the buffer in COBS encoded form
-        writeBuffer.push(packetEndMarker);
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+    }
+    else {
+        // UartDebug("PROTO")
     }
     writeBuffer.clear();
 }

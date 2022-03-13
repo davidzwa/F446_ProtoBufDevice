@@ -92,5 +92,5 @@
 #define RX_TIMEOUT_VALUE 1000
 #define BUFFER_SIZE 100  // Define the payload size here
 
-#define FIRMWARE_VERSION 0x0200010C
+#define FIRMWARE_VERSION 0x0200010E
 #endif
