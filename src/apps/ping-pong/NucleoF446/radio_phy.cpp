@@ -5,6 +5,7 @@
 #include "ProtoReadBuffer.h"
 #include "ProtoWriteBuffer.h"
 #include "cli.h"
+#include "delay.h"
 #include "config.h"
 #include "lora_device_messages.h"
 #include "measurements.h"
@@ -78,22 +79,10 @@ void InitRadioPhy() {
 
 void OnTxDone(void) {
     ApplyConfigIfPending();
-
-    // if (!isExecutingCommand) {
-    //     Radio.Rx(RX_TIMEOUT_VALUE);
-    // } else {
-    Radio.Sleep();
-    // }
 }
 
 void OnTxTimeout(void) {
     ApplyConfigIfPending();
-
-    // if (!isExecutingCommand) {
-    //     Radio.Rx(RX_TIMEOUT_VALUE);
-    // } else {
-    Radio.Sleep();
-    // }
 }
 
 void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
@@ -213,13 +202,14 @@ void OnRxError(void) {
 void TransmitLoRaFlashInfo(bool wasCleared) {
     LORA_MSG_TEMPLATE message;
     // Suppress response
-    message.set_IsMulticast(true);
-
-    // message.set_IsMulticast(false);
+    message.set_IsMulticast(false);
+    message.set_DeviceId(NETWORK_RESPONSE_ID);
     auto expResponse = message.mutable_experimentResponse();
     expResponse.set_WasCleared(wasCleared);
     expResponse.set_MeasurementCount(GetMeasurementCount());
     expResponse.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
+    
+    DelayMs(1);
 
     TransmitLoRaMessage(message);
 }

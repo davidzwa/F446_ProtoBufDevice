@@ -332,7 +332,7 @@ void ApplyRadioConfig() {
     ApplyRadioTxConfig();
     ApplyRadioRxConfig();
 
-    Radio.Rx(RX_TIMEOUT_VALUE);
+    Radio.Rx(0);
 }
 
 void SetTxPower(int8_t power) {
