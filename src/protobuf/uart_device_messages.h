@@ -48,7 +48,7 @@
 #include <lora_device_messages.h>
 
 
-template<uint32_t Payload_Payload_LENGTH>
+template<uint32_t DownlinkPayload_Payload_LENGTH>
 class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -61,7 +61,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
     }
 
     LoraMeasurement(const LoraMeasurement&& rhs ) noexcept
@@ -72,7 +72,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
     }
 
     ~LoraMeasurement() override = default;
@@ -86,7 +86,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       SEQUENCENUMBER = 4,
       ISMEASUREMENTFRAGMENT = 5,
       SUCCESS = 6,
-      PAYLOAD = 7
+      DOWNLINKPAYLOAD = 7
     };
 
     LoraMeasurement& operator=(const LoraMeasurement& rhs)
@@ -97,7 +97,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
       return *this;
     }
 
@@ -109,7 +109,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
       return *this;
     }
 
@@ -175,12 +175,12 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
     inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
 
-    inline void clear_Payload() { Payload_.clear(); }
-    inline void set_Payload(const LoRaMessage<Payload_Payload_LENGTH>& value) { Payload_ = value; }
-    inline void set_Payload(const LoRaMessage<Payload_Payload_LENGTH>&& value) { Payload_ = value; }
-    inline LoRaMessage<Payload_Payload_LENGTH>& mutable_Payload() { return Payload_; }
-    inline const LoRaMessage<Payload_Payload_LENGTH>& get_Payload() const { return Payload_; }
-    inline const LoRaMessage<Payload_Payload_LENGTH>& Payload() const { return Payload_; }
+    inline void clear_DownlinkPayload() { DownlinkPayload_.clear(); }
+    inline void set_DownlinkPayload(const LoRaMessage<DownlinkPayload_Payload_LENGTH>& value) { DownlinkPayload_ = value; }
+    inline void set_DownlinkPayload(const LoRaMessage<DownlinkPayload_Payload_LENGTH>&& value) { DownlinkPayload_ = value; }
+    inline LoRaMessage<DownlinkPayload_Payload_LENGTH>& mutable_DownlinkPayload() { return DownlinkPayload_; }
+    inline const LoRaMessage<DownlinkPayload_Payload_LENGTH>& get_DownlinkPayload() const { return DownlinkPayload_; }
+    inline const LoRaMessage<DownlinkPayload_Payload_LENGTH>& DownlinkPayload() const { return DownlinkPayload_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -219,7 +219,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
-        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+        return_value = DownlinkPayload_.serialize_with_id(static_cast<uint32_t>(id::DOWNLINKPAYLOAD), buffer, false);
       }
 
       return return_value;
@@ -263,8 +263,8 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
             return_value = Success_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::PAYLOAD:
-            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+          case id::DOWNLINKPAYLOAD:
+            return_value = DownlinkPayload_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -302,7 +302,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       clear_SequenceNumber();
       clear_IsMeasurementFragment();
       clear_Success();
-      clear_Payload();
+      clear_DownlinkPayload();
 
     }
 
@@ -349,7 +349,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 SequenceNumber_ = 0U;
       EmbeddedProto::boolean IsMeasurementFragment_ = false;
       EmbeddedProto::boolean Success_ = false;
-      LoRaMessage<Payload_Payload_LENGTH> Payload_;
+      LoRaMessage<DownlinkPayload_Payload_LENGTH> DownlinkPayload_;
 
 };
 
@@ -1047,7 +1047,7 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
 };
 
 template<uint32_t Payload_LENGTH, 
-uint32_t loraMeasurement_Payload_Payload_LENGTH>
+uint32_t loraMeasurement_DownlinkPayload_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -1327,10 +1327,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(id::LORAMEASUREMENT == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>();
+        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>();
       }
     }
-    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& value)
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1338,7 +1338,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.loraMeasurement_ = value;
     }
-    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>&& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>&& value)
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1346,7 +1346,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.loraMeasurement_ = value;
     }
-    inline LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& mutable_loraMeasurement()
+    inline LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& mutable_loraMeasurement()
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1354,8 +1354,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.loraMeasurement_;
     }
-    inline const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
-    inline const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
 
     inline bool has_debugMessage() const
     {
@@ -1628,7 +1628,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         BootMessage bootMessage_;
         AckMessage ackMessage_;
-        LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH> loraMeasurement_;
+        LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH> loraMeasurement_;
         DebugMessage debugMessage_;
         ExceptionMessage exceptionMessage_;
         DecodingResult decodingResult_;
@@ -1657,7 +1657,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::LORAMEASUREMENT:
-            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>;
+            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>;
             which_Body_ = id::LORAMEASUREMENT;
             break;
 
@@ -1694,7 +1694,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
             break;
           case id::LORAMEASUREMENT:
-            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::DEBUGMESSAGE:
             Body_.debugMessage_.~DebugMessage(); // NOSONAR Unions require this.

@@ -24,6 +24,10 @@ message ClearMeasurementsCommand {
     bool SendBootAfter = 1;
 }
 
+message LoRaReset {
+    
+}
+
 message UartCommand { 
     oneof Body { 
         // Configure the gateway device over UART
@@ -35,8 +39,9 @@ message UartCommand {
         ClearMeasurementsCommand clearMeasurementsCommand = 5;
         // Request a LoRa transmission - generic
         LoRaMessage transmitCommand = 6;
+        LoRaReset resetRadio = 7;
     } 
 
     // Do not proxy the LoRa command - for debugging purposes
-    bool doNotProxyCommand = 7;
+    bool doNotProxyCommand = 8;
 } 

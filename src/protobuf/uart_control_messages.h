@@ -427,6 +427,94 @@ class ClearMeasurementsCommand final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class LoRaReset final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    LoRaReset() = default;
+    LoRaReset(const LoRaReset& rhs )
+    {
+    }
+
+    LoRaReset(const LoRaReset&& rhs ) noexcept
+    {
+    }
+
+    ~LoRaReset() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+    };
+
+    LoRaReset& operator=(const LoRaReset& rhs)
+    {
+      return *this;
+    }
+
+    LoRaReset& operator=(const LoRaReset&& rhs) noexcept
+    {
+      return *this;
+    }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+
+    }
+
+    private:
+
+
+
+};
+
 template<uint32_t transmitCommand_Payload_LENGTH>
 class UartCommand final: public ::EmbeddedProto::MessageInterface
 {
@@ -465,6 +553,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::TRANSMITCOMMAND:
           set_transmitCommand(rhs.get_transmitCommand());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
           break;
 
         default:
@@ -508,6 +600,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           set_transmitCommand(rhs.get_transmitCommand());
           break;
 
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
+          break;
+
         default:
           break;
       }
@@ -525,7 +621,8 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
       REQUESTBOOTINFO = 4,
       CLEARMEASUREMENTSCOMMAND = 5,
       TRANSMITCOMMAND = 6,
-      DONOTPROXYCOMMAND = 7
+      RESETRADIO = 7,
+      DONOTPROXYCOMMAND = 8
     };
 
     UartCommand& operator=(const UartCommand& rhs)
@@ -561,6 +658,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::TRANSMITCOMMAND:
           set_transmitCommand(rhs.get_transmitCommand());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
           break;
 
         default:
@@ -603,6 +704,10 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
         case id::TRANSMITCOMMAND:
           set_transmitCommand(rhs.get_transmitCommand());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
           break;
 
         default:
@@ -855,6 +960,45 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
     inline const LoRaMessage<transmitCommand_Payload_LENGTH>& get_transmitCommand() const { return Body_.transmitCommand_; }
     inline const LoRaMessage<transmitCommand_Payload_LENGTH>& transmitCommand() const { return Body_.transmitCommand_; }
 
+    inline bool has_resetRadio() const
+    {
+      return id::RESETRADIO == which_Body_;
+    }
+    inline void clear_resetRadio()
+    {
+      if(id::RESETRADIO == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.resetRadio_.~LoRaReset();
+      }
+    }
+    inline void set_resetRadio(const LoRaReset& value)
+    {
+      if(id::RESETRADIO != which_Body_)
+      {
+        init_Body(id::RESETRADIO);
+      }
+      Body_.resetRadio_ = value;
+    }
+    inline void set_resetRadio(const LoRaReset&& value)
+    {
+      if(id::RESETRADIO != which_Body_)
+      {
+        init_Body(id::RESETRADIO);
+      }
+      Body_.resetRadio_ = value;
+    }
+    inline LoRaReset& mutable_resetRadio()
+    {
+      if(id::RESETRADIO != which_Body_)
+      {
+        init_Body(id::RESETRADIO);
+      }
+      return Body_.resetRadio_;
+    }
+    inline const LoRaReset& get_resetRadio() const { return Body_.resetRadio_; }
+    inline const LoRaReset& resetRadio() const { return Body_.resetRadio_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -906,6 +1050,13 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
           if(has_transmitCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.transmitCommand_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::RESETRADIO:
+          if(has_resetRadio() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.resetRadio_.serialize_with_id(static_cast<uint32_t>(id::RESETRADIO), buffer, true);
           }
           break;
 
@@ -963,6 +1114,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::RESETRADIO:
+            return_value = deserialize_Body(id::RESETRADIO, Body_.resetRadio_, buffer, wire_type);
+
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -1013,6 +1169,7 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
         RequestBootInfo requestBootInfo_;
         ClearMeasurementsCommand clearMeasurementsCommand_;
         LoRaMessage<transmitCommand_Payload_LENGTH> transmitCommand_;
+        LoRaReset resetRadio_;
       };
       Body Body_;
 
@@ -1057,6 +1214,11 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::TRANSMITCOMMAND;
             break;
 
+          case id::RESETRADIO:
+            new(&Body_.resetRadio_) LoRaReset;
+            which_Body_ = id::RESETRADIO;
+            break;
+
           default:
             break;
          }
@@ -1085,6 +1247,9 @@ class UartCommand final: public ::EmbeddedProto::MessageInterface
             break;
           case id::TRANSMITCOMMAND:
             Body_.transmitCommand_.~LoRaMessage<transmitCommand_Payload_LENGTH>(); // NOSONAR Unions require this.
+            break;
+          case id::RESETRADIO:
+            Body_.resetRadio_.~LoRaReset(); // NOSONAR Unions require this.
             break;
           default:
             break;

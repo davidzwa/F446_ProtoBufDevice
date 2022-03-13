@@ -79,10 +79,14 @@ void InitRadioPhy() {
 
 void OnTxDone(void) {
     ApplyConfigIfPending();
+
+    UartDebug("LORATX-DONE", 400, 11);
 }
 
 void OnTxTimeout(void) {
     ApplyConfigIfPending();
+
+    UartDebug("LORATX-TIMEOUT", 400, 14);
 }
 
 void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
@@ -119,8 +123,7 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
     bool isDeviceId = IsDeviceId(message.get_DeviceId());
     if (message.get_IsMulticast()) {
         UartDebug("MC", isDeviceId + 200, 2);
-    }
-    else {
+    } else {
         UartDebug("UC", isDeviceId + 100, 2);
     }
 
@@ -149,8 +152,7 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
 
             if (message.get_IsMulticast()) {
                 UartDebug("MCSKIP", 1, 6);
-            }
-            else {
+            } else {
                 UartDebug("ACK", 1, 3);
                 TransmitLoRaFlashInfo(true);
             }

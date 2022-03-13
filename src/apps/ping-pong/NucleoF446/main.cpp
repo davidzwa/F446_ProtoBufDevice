@@ -37,6 +37,8 @@ int main(void) {
     InitRadioPhy();
     // ApplyRadioConfig();
 
+    UartDebug(COMPILE_TS, 0 ,sizeof(COMPILE_TS));
+
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);
 

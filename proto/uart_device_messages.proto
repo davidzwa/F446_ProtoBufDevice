@@ -16,7 +16,7 @@ message LoraMeasurement
     uint32 SequenceNumber = 4;
     optional bool IsMeasurementFragment = 5;
     bool Success = 6;
-    LoRaMessage Payload = 7;
+    LoRaMessage DownlinkPayload = 7;
 }
 
 message BootMessage {

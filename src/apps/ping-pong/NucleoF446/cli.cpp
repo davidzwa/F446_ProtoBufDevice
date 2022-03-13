@@ -158,6 +158,9 @@ void ProcessCliCommand() {
         }
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
+    } else if (uartCommand.has_resetRadio()) {
+        // Clears the radio chip and transmit queue
+        InitRadioPhy();
     } else if (uartCommand.has_clearMeasurementsCommand()) {
         ClearMeasurements();
 
@@ -247,9 +250,7 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
     loraMeasurement.set_Success(true);
     loraMeasurement.set_Snr(snr);
     loraMeasurement.set_SequenceNumber(message.get_CorrelationCode());
-
-    // TODO UART proto error
-    // loraMeasurement.set_Payload(message);
+    loraMeasurement.set_DownlinkPayload(message);
 
     UartResponseSend(uartResponse);
 }

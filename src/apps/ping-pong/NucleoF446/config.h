@@ -93,5 +93,6 @@
 #define BUFFER_SIZE 100  // Define the payload size here
 
 #define NETWORK_RESPONSE_ID 0x12345678
-#define FIRMWARE_VERSION 0x0200010E
+#define FIRMWARE_VERSION 0x02000200
+#define COMPILE_TS __TIMESTAMP__
 #endif
