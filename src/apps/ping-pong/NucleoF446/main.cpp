@@ -31,10 +31,12 @@ int main(void) {
     BoardInitPeriph();
     InitCli(true);
     InitializeMeasurements();
-    UartSendBoot();
     InitRadioConfig();
     InitTimedTasks();
     InitRadioPhy();
+
+    UartSendBoot();
+
     // ApplyRadioConfig();
 
     UartDebug(COMPILE_TS, 0 ,sizeof(COMPILE_TS));

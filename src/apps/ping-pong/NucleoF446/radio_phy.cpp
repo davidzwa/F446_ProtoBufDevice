@@ -164,7 +164,7 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 if (message.get_IsMulticast()) {
                     UartDebug("MCSKIP", 2, 6);
                 } else {
-                    UartDebug("ACK", 1, 3);
+                    UartDebug("LORA-ACK", 1, 8);
                     TransmitLoRaFlashInfo(false);
                     // UartSendBoot();
                 }
@@ -212,8 +212,6 @@ void TransmitLoRaFlashInfo(bool wasCleared) {
     expResponse.set_WasCleared(wasCleared);
     expResponse.set_MeasurementCount(GetMeasurementCount());
     expResponse.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
-    
-    DelayMs(1);
 
     TransmitLoRaMessage(message);
 }
