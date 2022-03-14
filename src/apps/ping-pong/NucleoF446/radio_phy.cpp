@@ -81,12 +81,14 @@ void OnTxDone(void) {
     ApplyConfigIfPending();
 
     UartDebug("LORATX-DONE", 400, 11);
+    Radio.Rx(0);
 }
 
 void OnTxTimeout(void) {
     ApplyConfigIfPending();
 
     UartDebug("LORATX-TIMEOUT", 400, 14);
+    Radio.Rx(0);
 }
 
 void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
@@ -108,18 +110,22 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Processing
-    HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
+    auto isResponding = HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
 
-    Radio.Rx(0);
+    if (!isResponding) {
+        Radio.Rx(0);
+    }
 }
 
 /**
  * @brief Proto processor for LoRa messages - makes testing easier
  *
  */
-void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
+bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
     auto sequenceNumber = message.get_CorrelationCode();
     RegisterNewMeasurement(sequenceNumber, rssi, snr);
+
+    auto hasResponseTx = false;
 
     // Debug whether this was multicast or not
     bool isDeviceId = IsDeviceId(message.get_DeviceId());
@@ -156,6 +162,7 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 UartDebug("MCSKIP", 1, 6);
             } else {
                 UartDebug("ACK", 1, 3);
+                hasResponseTx = true;
                 TransmitLoRaFlashInfo(true);
             }
 
@@ -165,6 +172,8 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                     UartDebug("MCSKIP", 2, 6);
                 } else {
                     UartDebug("LORA-ACK", 1, 8);
+
+                    hasResponseTx = true;
                     TransmitLoRaFlashInfo(false);
                     // UartSendBoot();
                 }
@@ -193,6 +202,8 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
     // Ensure that the message is not re-used
     readLoraBuffer.clear();
     message.clear();
+
+    return hasResponseTx;
 }
 
 void OnRxTimeout(void) {

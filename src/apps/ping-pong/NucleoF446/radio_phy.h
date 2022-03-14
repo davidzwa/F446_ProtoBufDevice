@@ -21,6 +21,6 @@ void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs);
 void TxTestProcess();
 
 // For handling uart test messages through our processing pipeline
-void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr);
+bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr);
 
 #endif // RADIO_PHY__H__
