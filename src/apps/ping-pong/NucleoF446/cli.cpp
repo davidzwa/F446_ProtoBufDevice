@@ -282,7 +282,7 @@ void InitRadioTxConfigLoRa() {
     txConf.set_CodeRate(LORA_CODINGRATE);
     txConf.set_PreambleLen(LORA_PREAMBLE_LENGTH);
     txConf.set_FixLen(LORA_FIX_LENGTH_PAYLOAD_ON);
-    txConf.set_CrcOn(false);
+    txConf.set_CrcOn(LORA_CRC_ON);
     txConf.set_FreqHopOn(0);
     txConf.set_HopPeriod(0);
     txConf.set_IqInverted(LORA_IQ_INVERSION_ON);
@@ -298,11 +298,11 @@ void InitRadioRxConfigLoRa() {
     rxConf.set_PreambleLen(LORA_PREAMBLE_LENGTH);
     rxConf.set_FixLen(LORA_FIX_LENGTH_PAYLOAD_ON);
     rxConf.set_PayloadLen(0);
-    rxConf.set_CrcOn(false);
+    rxConf.set_CrcOn(LORA_CRC_ON);
     rxConf.set_FreqHopOn(0);
     rxConf.set_HopPeriod(0);
     rxConf.set_IqInverted(LORA_IQ_INVERSION_ON);
-    rxConf.set_RxContinuous(true);
+    rxConf.set_RxContinuous(LORA_CONT_LISTEN);
 }
 
 void InitRadioConfig() {

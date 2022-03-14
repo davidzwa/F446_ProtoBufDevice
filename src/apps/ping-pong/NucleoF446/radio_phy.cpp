@@ -49,12 +49,12 @@ void InitRadioPhy() {
     Radio.SetTxConfig(MODEM_LORA, TX_OUTPUT_POWER, 0, LORA_BANDWIDTH,
                       LORA_SPREADING_FACTOR, LORA_CODINGRATE,
                       LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
-                      true, 0, 0, LORA_IQ_INVERSION_ON, 3000);
+                      LORA_CRC_ON, 0, 0, LORA_IQ_INVERSION_ON, RX_TIMEOUT_VALUE);
 
     Radio.SetRxConfig(MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
                       LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
                       LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
-                      0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
+                      0, LORA_CRC_ON, 0, 0, LORA_IQ_INVERSION_ON, LORA_CONT_LISTEN);
 
     Radio.SetMaxPayloadLength(MODEM_LORA, RADIO_BUFFER_SIZE);
 

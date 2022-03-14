@@ -68,6 +68,8 @@
 #define LORA_SYMBOL_TIMEOUT 5   // Symbols
 #define LORA_FIX_LENGTH_PAYLOAD_ON false
 #define LORA_IQ_INVERSION_ON false
+#define LORA_CRC_ON true
+#define LORA_CONT_LISTEN true
 
 #elif defined(USE_MODEM_FSK)
 
