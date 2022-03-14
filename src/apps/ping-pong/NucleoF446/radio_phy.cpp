@@ -134,47 +134,56 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         UartDebug("UC", isDeviceId + 100, 2);
     }
 
-    if (message.has_deviceConfiguration()) {
-        auto config = message.get_deviceConfiguration();
-        SetTxConfig(config);
-        ApplyAlwaysSendPeriodically(config);
-
-    } else if (message.has_forwardExperimentCommand()) {
-        auto msg = message.get_forwardExperimentCommand();
-        auto slaveCommand = msg.get_slaveCommand();
-        if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
-            ClearMeasurements();
+    // Exception for multicast stop command
+    if ((!isDeviceId || isMulticast) && message.has_deviceConfiguration()) {
+        auto deviceConf = message.get_deviceConfiguration();
+        if (!deviceConf.get_EnableAlwaysSend()) {
+            ApplyAlwaysSendPeriodically(deviceConf);
         }
-        // No unique extra feature
-        // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
-        // }
-        // Not built yet
-        // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
-        //     // TODO
-        // }
-
-        if (!isMulticast) {
-            UartDebug("LORA-ACK", 1, 7);
-            hasResponseTx = true;
-            TransmitLoRaFlashInfo(true);
-        }
-
     }
-    // Not built yet
-    // else if (message.has_measurementStreamRequest()) {
-    // TODO filter based on device id
-    // StreamMeasurements();
-    // }
-    else if (message.has_rlncInitConfigCommand()) {
-        auto initConfigCommand = message.mutable_rlncInitConfigCommand();
-        decoder.InitRlncDecodingSession(initConfigCommand);
-    } else if (message.has_rlncStateUpdate()) {
-        auto rlncStateUpdate = message.get_rlncStateUpdate();
-        decoder.UpdateRlncDecodingState(rlncStateUpdate);
-    } else if (message.has_rlncEncodedFragment()) {
-        decoder.ProcessRlncFragment(message);
-    } else if (message.has_rlncTerminationCommand()) {
-        decoder.TerminateRlnc(message.get_rlncTerminationCommand());
+    else if (isDeviceId) {
+        if (message.has_deviceConfiguration()) {
+            auto config = message.get_deviceConfiguration();
+            SetTxConfig(config);
+            ApplyAlwaysSendPeriodically(config);
+            UartDebug("DevConf", 0, 7);
+        } else if (message.has_forwardExperimentCommand()) {
+            auto msg = message.get_forwardExperimentCommand();
+            auto slaveCommand = msg.get_slaveCommand();
+            if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
+                ClearMeasurements();
+            }
+            // No unique extra feature
+            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
+            // }
+            // Not built yet
+            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
+            //     // TODO
+            // }
+
+            if (!isMulticast) {
+                UartDebug("LORA-ACK", 1, 7);
+                hasResponseTx = true;
+                TransmitLoRaFlashInfo(true);
+            }
+
+        }
+        // Not built yet
+        // else if (message.has_measurementStreamRequest()) {
+        // TODO filter based on device id
+        // StreamMeasurements();
+        // }
+        else if (message.has_rlncInitConfigCommand()) {
+            auto initConfigCommand = message.mutable_rlncInitConfigCommand();
+            decoder.InitRlncDecodingSession(initConfigCommand);
+        } else if (message.has_rlncStateUpdate()) {
+            auto rlncStateUpdate = message.get_rlncStateUpdate();
+            decoder.UpdateRlncDecodingState(rlncStateUpdate);
+        } else if (message.has_rlncEncodedFragment()) {
+            decoder.ProcessRlncFragment(message);
+        } else if (message.has_rlncTerminationCommand()) {
+            decoder.TerminateRlnc(message.get_rlncTerminationCommand());
+        }
     }
 
     // Send the RX event back over UART (if enabled)
