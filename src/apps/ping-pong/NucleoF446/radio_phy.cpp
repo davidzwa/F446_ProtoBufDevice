@@ -94,6 +94,8 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     lastRssiValue = rssi;
     lastSnrValue = snr;
 
+    UartDebug("LORARX-DONE", 0, 11);
+
     for (uint16_t i = 0; i < size; i++) {
         readLoraBuffer.push(payload[i]);
     }

@@ -23,7 +23,8 @@ class RadioQueue {
         buffer.clear();
 
         if (messageQueue.size() > MAX_QUEUE_ELEM) {
-            throw "Queue overrun";
+            // throw "Queue overrun";
+            return;
         }
 
         message.serialize(buffer);
