@@ -78,15 +78,11 @@ void InitRadioPhy() {
 }
 
 void OnTxDone(void) {
-    ApplyConfigIfPending();
-
     UartDebug("LORATX-DONE", 400, 11);
     Radio.Rx(0);
 }
 
 void OnTxTimeout(void) {
-    ApplyConfigIfPending();
-
     UartDebug("LORATX-TIMEOUT", 400, 14);
     Radio.Rx(0);
 }

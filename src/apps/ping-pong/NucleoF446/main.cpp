@@ -22,6 +22,7 @@
 #include "delay.h"
 #include "measurements.h"
 #include "nvmm.h"
+#include "radio_config.h"
 #include "radio_phy.h"
 #include "tasks.h"
 #include "utils.h"
@@ -31,15 +32,16 @@ int main(void) {
     BoardInitPeriph();
     InitCli(true);
     InitializeMeasurements();
-    InitRadioConfig();
-    InitTimedTasks();
+    InitRadioTxConfigLoRa();
+    InitRadioRxConfigLoRa();
     InitRadioPhy();
+    InitTimedTasks();
 
     UartSendBoot();
 
     // ApplyRadioConfig();
 
-    UartDebug(COMPILE_TS, 0 ,sizeof(COMPILE_TS));
+    UartDebug(COMPILE_TS, 0, sizeof(COMPILE_TS));
 
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);

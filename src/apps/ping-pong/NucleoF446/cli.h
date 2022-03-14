@@ -31,11 +31,11 @@ void InitCli(bool withISR);
 bool IsCliCommandReady();
 void ProcessCliCommand();
 
-void InitRadioConfig();
-void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFactorTx, bool reconnect);
-void ApplyRadioConfig ();
-void ApplyConfigIfPending();
-void SetTxPower(int8_t power);
+// void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFactorTx, bool reconnect);
+// void ApplyRadioConfig ();
+// void ApplyConfigIfPending();
+// void SetTxPower(int8_t power);
+
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
 void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber);
