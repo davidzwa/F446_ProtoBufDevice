@@ -45,15 +45,11 @@ void SetTxPower(int8_t power) {
 }
 
 void ApplyRadioTxConfig() {
-    // Radio.SetChannel(RF_FREQUENCY);
-
     Radio.SetTxConfig(
         (RadioModems_t)txConf.Modem(), txConf.Power(), txConf.Fdev(), txConf.Bandwidth(),
         txConf.DataRate(), txConf.CodeRate(),
         txConf.PreambleLen(), txConf.FixLen(),
         txConf.CrcOn(), txConf.FreqHopOn(), txConf.HopPeriod(), txConf.IqInverted(), txConf.Timeout());
-
-    // Radio.SetMaxPayloadLength(MODEM_LORA, RADIO_BUFFER_SIZE);
 }
 
 void ApplyRadioRxConfig() {
