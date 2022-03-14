@@ -80,8 +80,10 @@ static void OnPeriodicTx(void* context) {
 /**
  * Send periodically indefinitely
  * */
-void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t alwaysSendPeriod, uint32_t limitedSendCount) {
-    standaloneAlwaysSendPeriodically = alwaysSend;
+void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
+    standaloneAlwaysSendPeriodically = configuration.get_EnableAlwaysSend();
+    auto alwaysSendPeriod = configuration.get_AlwaysSendPeriod();
+    auto limitedSendCount = configuration.get_LimitedSendCount();
 
     if (standaloneAlwaysSendPeriodically) {
         standaloneAlwaysSendPeriodically = true;
@@ -110,13 +112,6 @@ void InitTimedTasks() {
     TimerSetValue(&heartBeatTimer, 30000);
     TimerSetValue(&periodicTxTimer, periodicTxInterval);
 
-#ifdef STANDALONE_TX_INFINITE
-    standaloneAlwaysSendPeriodically = true;
-    periodicCurrentCounter = 0;
-    TimerStart(&periodicTxTimer);
-#else
     standaloneAlwaysSendPeriodically = false;
-#endif
-
     TimerStart(&heartBeatTimer);
 }

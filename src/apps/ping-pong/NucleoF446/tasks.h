@@ -4,7 +4,7 @@
 #ifndef TIMERS__H__
 #define TIMERS__H__
 
-void ApplyAlwaysSendPeriodically(bool alwaysSend, uint32_t period, uint32_t maxPacketCount);
+void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration);
 void InitTimedTasks();
 
 #endif  // TIMERS__H__

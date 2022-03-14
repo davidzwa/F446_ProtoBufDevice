@@ -10,5 +10,6 @@ void ApplyRadioTxConfig();
 void ApplyRadioRxConfig();
 
 void SetTxPower(int8_t power);
+void SetTxConfig(DeviceConfiguration& config);
 
 #endif  // RADIO_CONFIG_H

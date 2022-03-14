@@ -4,6 +4,7 @@
 syntax = "proto3";
 
 import "shared/firmware.proto";
+import "shared/experiment_config.proto";
 import "lora_device_messages.proto";
 
 option csharp_namespace = "LoRa";
@@ -19,13 +20,6 @@ message LoraMeasurement
     LoRaMessage DownlinkPayload = 7;
 }
 
-message BootMessage {
-    DeviceId DeviceIdentifier = 1;
-    Version FirmwareVersion = 2;
-    uint32 MeasurementCount = 3;
-    bool MeasurementsDisabled = 4;
-}
-
 message AckMessage {
     uint32 Code = 1;
 }
@@ -36,15 +30,6 @@ message ExceptionMessage {
 
 message DebugMessage {
     uint32 Code = 1;
-}
-
-message DecodingResult {
-    bool Success = 1;
-    uint32 MatrixRank = 2;
-
-    // We check the internal payload
-    uint32 FirstDecodedNumber = 3;
-    uint32 LastDecodedNumber = 4;
 }
 
 // The main message container

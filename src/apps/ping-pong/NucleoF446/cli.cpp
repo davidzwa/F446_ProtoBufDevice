@@ -133,11 +133,12 @@ void ProcessCliCommand() {
     // We dont want to process twice, so we immediately set it to false
     newCommandReceived = false;
 
-    if (uartCommand.has_rxConfig()) {
-        // rxConf = uartCommand.get_rxConfig();
-        UartSendAck(1);
-        // TODO apply
-    } else if (uartCommand.has_txConfig()) {
+    // if (uartCommand.has_rxConfig()) {
+    //     // rxConf = uartCommand.get_rxConfig();
+    //     UartSendAck(1);
+    //     // TODO apply
+    // } else 
+    if (uartCommand.has_txConfig()) {
         auto txConf = uartCommand.get_txConfig();
         SetTxPower(txConf.get_Power());
         UartSendAck(txConf.get_Power());
@@ -156,9 +157,6 @@ void ProcessCliCommand() {
         }
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
-    } else if (uartCommand.has_resetRadio()) {
-        // Clears the radio chip and transmit queue
-        InitRadioPhy();
     } else if (uartCommand.has_clearMeasurementsCommand()) {
         ClearMeasurements();
 
@@ -169,10 +167,8 @@ void ProcessCliCommand() {
         }
     } else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
-        bool alwaysSend = config.get_EnableAlwaysSend();
-        auto alwaysSendPeriod = config.get_AlwaysSendPeriod();
-        auto limitedPacketCount = config.get_LimitedSendCount();
-        ApplyAlwaysSendPeriodically(alwaysSend, alwaysSendPeriod, limitedPacketCount);
+        SetTxConfig(config);
+        ApplyAlwaysSendPeriodically(config);
         UartSendAck(1);
     } else {
         UartSendAck(250);
@@ -255,7 +251,6 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
 void UartSendBoot() {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& bootMessage = uartResponse.mutable_bootMessage();
-    // Problematic (sizeof not working, or last char not accepted)
     uartResponse.mutable_Payload().set((uint8_t*)APP_NAME, 13);
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
     bootMessage.set_MeasurementCount(GetMeasurementCount());

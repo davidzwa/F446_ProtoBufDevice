@@ -383,6 +383,186 @@ class DeviceId final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class BootMessage final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    BootMessage() = default;
+    BootMessage(const BootMessage& rhs )
+    {
+      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
+      set_FirmwareVersion(rhs.get_FirmwareVersion());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+    }
+
+    BootMessage(const BootMessage&& rhs ) noexcept
+    {
+      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
+      set_FirmwareVersion(rhs.get_FirmwareVersion());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+    }
+
+    ~BootMessage() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      DEVICEIDENTIFIER = 1,
+      FIRMWAREVERSION = 2,
+      MEASUREMENTCOUNT = 3,
+      MEASUREMENTSDISABLED = 4
+    };
+
+    BootMessage& operator=(const BootMessage& rhs)
+    {
+      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
+      set_FirmwareVersion(rhs.get_FirmwareVersion());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      return *this;
+    }
+
+    BootMessage& operator=(const BootMessage&& rhs) noexcept
+    {
+      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
+      set_FirmwareVersion(rhs.get_FirmwareVersion());
+      set_MeasurementCount(rhs.get_MeasurementCount());
+      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      return *this;
+    }
+
+    inline void clear_DeviceIdentifier() { DeviceIdentifier_.clear(); }
+    inline void set_DeviceIdentifier(const DeviceId& value) { DeviceIdentifier_ = value; }
+    inline void set_DeviceIdentifier(const DeviceId&& value) { DeviceIdentifier_ = value; }
+    inline DeviceId& mutable_DeviceIdentifier() { return DeviceIdentifier_; }
+    inline const DeviceId& get_DeviceIdentifier() const { return DeviceIdentifier_; }
+    inline const DeviceId& DeviceIdentifier() const { return DeviceIdentifier_; }
+
+    inline void clear_FirmwareVersion() { FirmwareVersion_.clear(); }
+    inline void set_FirmwareVersion(const Version& value) { FirmwareVersion_ = value; }
+    inline void set_FirmwareVersion(const Version&& value) { FirmwareVersion_ = value; }
+    inline Version& mutable_FirmwareVersion() { return FirmwareVersion_; }
+    inline const Version& get_FirmwareVersion() const { return FirmwareVersion_; }
+    inline const Version& FirmwareVersion() const { return FirmwareVersion_; }
+
+    inline void clear_MeasurementCount() { MeasurementCount_.clear(); }
+    inline void set_MeasurementCount(const EmbeddedProto::uint32& value) { MeasurementCount_ = value; }
+    inline void set_MeasurementCount(const EmbeddedProto::uint32&& value) { MeasurementCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_MeasurementCount() { return MeasurementCount_; }
+    inline const EmbeddedProto::uint32& get_MeasurementCount() const { return MeasurementCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MeasurementCount() const { return MeasurementCount_.get(); }
+
+    inline void clear_MeasurementsDisabled() { MeasurementsDisabled_.clear(); }
+    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean& value) { MeasurementsDisabled_ = value; }
+    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean&& value) { MeasurementsDisabled_ = value; }
+    inline EmbeddedProto::boolean& mutable_MeasurementsDisabled() { return MeasurementsDisabled_; }
+    inline const EmbeddedProto::boolean& get_MeasurementsDisabled() const { return MeasurementsDisabled_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE MeasurementsDisabled() const { return MeasurementsDisabled_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = DeviceIdentifier_.serialize_with_id(static_cast<uint32_t>(id::DEVICEIDENTIFIER), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = FirmwareVersion_.serialize_with_id(static_cast<uint32_t>(id::FIRMWAREVERSION), buffer, false);
+      }
+
+      if((0U != MeasurementCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MeasurementCount_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTCOUNT), buffer, false);
+      }
+
+      if((false != MeasurementsDisabled_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MeasurementsDisabled_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSDISABLED), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::DEVICEIDENTIFIER:
+            return_value = DeviceIdentifier_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::FIRMWAREVERSION:
+            return_value = FirmwareVersion_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MEASUREMENTCOUNT:
+            return_value = MeasurementCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MEASUREMENTSDISABLED:
+            return_value = MeasurementsDisabled_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_DeviceIdentifier();
+      clear_FirmwareVersion();
+      clear_MeasurementCount();
+      clear_MeasurementsDisabled();
+
+    }
+
+    private:
+
+
+      DeviceId DeviceIdentifier_;
+      Version FirmwareVersion_;
+      EmbeddedProto::uint32 MeasurementCount_ = 0U;
+      EmbeddedProto::boolean MeasurementsDisabled_ = false;
+
+};
+
 class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:

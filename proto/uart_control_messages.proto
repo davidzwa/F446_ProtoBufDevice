@@ -7,25 +7,10 @@ import "lora_device_messages.proto";
 import "shared/lora_phy.proto";
 
 option csharp_namespace = "LoRa";
- 
-message RequestBootInfo { 
-    bool Request = 1; 
-} 
- 
-message DeviceConfiguration {
-    bool EnableAlwaysSend = 1;
-    uint32 AlwaysSendPeriod = 2;
-    // Ignored if EnableAlwaysSend is true
-    uint32 LimitedSendCount = 3;
-}
 
 message ClearMeasurementsCommand {
     // No content to report
     bool SendBootAfter = 1;
-}
-
-message LoRaReset {
-    
 }
 
 message UartCommand { 
@@ -37,9 +22,9 @@ message UartCommand {
         // Request the info presented at boot
         RequestBootInfo requestBootInfo = 4; 
         ClearMeasurementsCommand clearMeasurementsCommand = 5;
-        // Request a LoRa transmission - generic
+        
+        // Request a LoRa transmission - wraps similar commands as above
         LoRaMessage transmitCommand = 6;
-        LoRaReset resetRadio = 7;
     } 
 
     // Do not proxy the LoRa command - for debugging purposes
