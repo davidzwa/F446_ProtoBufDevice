@@ -6,17 +6,44 @@ import "shared/experiment_config.proto";
 import "shared/firmware.proto";
 
 option csharp_namespace = "LoRa";
+ 
+// Shared with uart_control
+message RequestBootInfo { 
+    bool Request = 1; 
+} 
+
+// Shared with uart_control
+message DeviceConfiguration {
+    bool EnableAlwaysSend = 1;
+    uint32 AlwaysSendPeriod = 2;
+    
+    // Ignored if EnableAlwaysSend is true
+    uint32 LimitedSendCount = 3;
+
+    // TX power, BW and SF
+    int32 TxPower = 4;
+    uint32 TxBandwidth = 5;
+    uint32 TxDataRate = 6;
+}
+
+message LoRaReset {
+    
+}
+
+message LoRaAck {
+    uint32 DeviceId = 1;
+}
 
 message LoRaMessage {
-    bool IsMulticast = 1; 
+    bool IsMulticast = 1;
+    
     uint32 DeviceId = 2;
     uint32 CorrelationCode = 3;
     bytes Payload = 4;
     
     oneof Body {
-        ForwardSequenceConfig sequenceConfig = 5;
-        ForwardRadioConfigUpdate forwardRadioConfigUpdate = 6;
-        ForwardExperimentCommand forwardExperimentCommand = 7; // Set role TX/RX, play/pause or switch to predefined experiment
+        ForwardExperimentCommand forwardExperimentCommand = 6; // Set role TX/RX, play/pause or switch to predefined experiment
+        ExperimentResponse experimentResponse = 7;
         MeasurementStreamRequest measurementStreamRequest = 8;
         MeasurementStreamFragment measurementStreamFragment = 9;
         
@@ -24,5 +51,12 @@ message LoRaMessage {
         RlncEncodedFragment rlncEncodedFragment = 11;
         RlncStateUpdate rlncStateUpdate = 12;
         RlncTerminationCommand rlncTerminationCommand = 13;
+        DecodingResult decodingResult = 14;
+
+        DeviceConfiguration deviceConfiguration = 15;
+        RequestBootInfo requestBootInfo = 16;
+        BootMessage bootMessage = 17;
+        LoRaReset resetRadio = 18;
+        LoRaAck ack = 19;
     }
 }

@@ -20,21 +20,21 @@
 #include "utilities.h"
 #include "utils.h"
 
+#define PKT_START 0xFF
+#define PKT_END 0x00
 #define PROTO_LIMITS MAX_LORA_BYTES, MAX_LORA_BYTES
 #define PACKET_SIZE_LIMIT 256
+
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
 uint8_t packetSize;
 uint16_t actualSize;
-uint8_t packetEndMarker = '\0';
 bool pendingConfigChange = false;
 const size_t offset = 1;  // End byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
 bool newCommandReceived = false;
-RadioRxConfig rxConf;
-RadioTxConfig txConf;
 UartCommand<MAX_LORA_BYTES> uartCommand;
 
 extern Uart_t Uart2;
@@ -59,10 +59,10 @@ uint8_t GetLastChar(uint8_t offset) {
 void UartSend(uint8_t* buffer, size_t length) {
     uint8_t encodedBuffer[length * 2];
     size_t encodedSize = COBS::encode(buffer, length, encodedBuffer);
-    UartPutChar(uart, 0xFF);
+    UartPutChar(uart, PKT_START);
     UartPutChar(uart, encodedSize);
     UartPutBuffer(uart, encodedBuffer, encodedSize);
-    UartPutChar(uart, 0x0);
+    UartPutChar(uart, PKT_END);
 }
 
 void UartISR(UartNotifyId_t id) {
@@ -80,7 +80,7 @@ void UartISR(UartNotifyId_t id) {
         FifoFlush(&uart->FifoRx);
     }
 
-    if (packetBufferingLength == 0 && GetLastChar(0) == 0xFF) {
+    if (packetBufferingLength == 0 && GetLastChar(0) == PKT_START) {
         FifoPop(&uart->FifoRx);
         packetBufferingLength++;
         return;
@@ -92,7 +92,7 @@ void UartISR(UartNotifyId_t id) {
     packetBufferingLength++;
 
     // This is a very weak check
-    if (GetFifoRxLength() >= packetSize + 1 || GetLastChar(0) == packetEndMarker) {
+    if (GetFifoRxLength() >= packetSize + 1 || GetLastChar(0) == PKT_END) {
         bool result = UartGetBuffer(uart, encodedBuffer, PACKET_SIZE_LIMIT, &actualSize);
         if (result == 1) {
             return;  // Error occurred
@@ -133,31 +133,28 @@ void ProcessCliCommand() {
     // We dont want to process twice, so we immediately set it to false
     newCommandReceived = false;
 
-    if (uartCommand.has_rxConfig()) {
-        printf("ID %ld\n", (uint32_t)uartCommand.get_which_Body());
-        rxConf = uartCommand.get_rxConfig();
-        UartSendAck(1);
-        // TODO apply
-    } else if (uartCommand.has_txConfig()) {
-        printf("ID %ld\n\0", (uint32_t)uartCommand.get_which_Body());
-        txConf = uartCommand.get_txConfig();
-        UartSendAck(1);
+    // if (uartCommand.has_rxConfig()) {
+    //     // rxConf = uartCommand.get_rxConfig();
+    //     UartSendAck(1);
+    //     // TODO apply
+    // } else 
+    if (uartCommand.has_txConfig()) {
+        auto txConf = uartCommand.get_txConfig();
+        SetTxPower(txConf.get_Power());
+        UartSendAck(txConf.get_Power());
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
         // TODO verify if within SF/ToA limits?
         LORA_MSG_TEMPLATE command = uartCommand.get_transmitCommand();
+        auto targetDeviceId = command.get_DeviceId();
 
         // Immediately dump the payload 'as if LoRa received it'
-        if (uartCommand.get_doNotProxyCommand()) {
+        if (IsDeviceId(targetDeviceId) || uartCommand.get_doNotProxyCommand()) {
             HandleLoRaProtoPayload(command, -1, -1);
         } else {
             TransmitLoRaMessage(command);
             UartSendAck(1);
         }
-
-        // This is moved to separate uart control command
-        // if (command.has_Period() && command.get_Period() > 50) {
-        // TogglePeriodicTx(command.get_Period(), command.get_MaxPacketCount());
     } else if (uartCommand.has_requestBootInfo()) {
         UartSendBoot();
     } else if (uartCommand.has_clearMeasurementsCommand()) {
@@ -170,9 +167,8 @@ void ProcessCliCommand() {
         }
     } else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
-        bool alwaysSend = config.get_EnableAlwaysSend();
-        auto alwaysSendPeriod = config.get_AlwaysSendPeriod();
-        ApplyAlwaysSendPeriodically(alwaysSend, alwaysSendPeriod);
+        SetTxConfig(config);
+        ApplyAlwaysSendPeriodically(config);
         UartSendAck(1);
     } else {
         UartSendAck(250);
@@ -187,9 +183,9 @@ void UartResponseSend(UartResponse<PROTO_LIMITS>& response) {
     // Push the data
     auto result = response.serialize(writeBuffer);
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
-        // Send the buffer in COBS encoded form
-        writeBuffer.push(packetEndMarker);
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
+    } else {
+        // UartDebug("PROTO")
     }
     writeBuffer.clear();
 }
@@ -247,9 +243,7 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
     loraMeasurement.set_Success(true);
     loraMeasurement.set_Snr(snr);
     loraMeasurement.set_SequenceNumber(message.get_CorrelationCode());
-
-    // TODO UART proto error
-    // loraMeasurement.set_Payload(message);
+    loraMeasurement.set_DownlinkPayload(message);
 
     UartResponseSend(uartResponse);
 }
@@ -257,7 +251,6 @@ void UartSendLoRaRx(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr, bool i
 void UartSendBoot() {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& bootMessage = uartResponse.mutable_bootMessage();
-    // Problematic (sizeof not working, or last char not accepted)
     uartResponse.mutable_Payload().set((uint8_t*)APP_NAME, 13);
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
     bootMessage.set_MeasurementCount(GetMeasurementCount());
@@ -270,93 +263,4 @@ void UartSendBoot() {
     version.set_Revision(appVersion.Fields.Revision);
 
     UartResponseSend(uartResponse);
-}
-
-void InitRadioTxConfigLoRa() {
-    txConf.set_Modem(RadioModems::MODEM_LORA);
-    txConf.set_Power(TX_OUTPUT_POWER);
-    txConf.set_Fdev(0);
-    txConf.set_Bandwidth(LORA_BANDWIDTH);
-    txConf.set_DataRate(LORA_SPREADING_FACTOR);
-    txConf.set_CodeRate(LORA_CODINGRATE);
-    txConf.set_PreambleLen(LORA_PREAMBLE_LENGTH);
-    txConf.set_FixLen(LORA_FIX_LENGTH_PAYLOAD_ON);
-    txConf.set_CrcOn(false);
-    txConf.set_FreqHopOn(0);
-    txConf.set_HopPeriod(0);
-    txConf.set_IqInverted(LORA_IQ_INVERSION_ON);
-    txConf.set_Timeout(RX_TIMEOUT_VALUE);
-}
-
-void InitRadioRxConfigLoRa() {
-    rxConf.set_Modem(RadioModems::MODEM_LORA);
-    rxConf.set_Bandwidth(LORA_BANDWIDTH);
-    rxConf.set_DataRate(LORA_SPREADING_FACTOR);
-    rxConf.set_CodeRate(LORA_CODINGRATE);
-    rxConf.set_BandwidthAfc(0);
-    rxConf.set_PreambleLen(LORA_PREAMBLE_LENGTH);
-    rxConf.set_FixLen(LORA_FIX_LENGTH_PAYLOAD_ON);
-    rxConf.set_PayloadLen(0);
-    rxConf.set_CrcOn(false);
-    rxConf.set_FreqHopOn(0);
-    rxConf.set_HopPeriod(0);
-    rxConf.set_IqInverted(LORA_IQ_INVERSION_ON);
-    rxConf.set_RxContinuous(true);
-}
-
-void InitRadioConfig() {
-    InitRadioTxConfigLoRa();
-    InitRadioRxConfigLoRa();
-}
-
-void ApplyRadioTxConfig() {
-    Radio.SetTxConfig(
-        (RadioModems_t)txConf.Modem(), txConf.Power(), txConf.Fdev(), txConf.Bandwidth(),
-        txConf.DataRate(), txConf.CodeRate(),
-        txConf.PreambleLen(), txConf.FixLen(),
-        txConf.CrcOn(), txConf.FreqHopOn(), txConf.HopPeriod(), txConf.IqInverted(), txConf.Timeout());
-
-    Radio.SetChannel(RF_FREQUENCY);
-}
-
-void ApplyRadioRxConfig() {
-    Radio.SetRxConfig(
-        (RadioModems_t)rxConf.Modem(), rxConf.Bandwidth(),
-        rxConf.DataRate(), rxConf.CodeRate(),
-        rxConf.BandwidthAfc(), rxConf.PreambleLen(),
-        rxConf.SymbTimeout(), rxConf.FixLen(), rxConf.PayloadLen(),
-        rxConf.CrcOn(), rxConf.FreqHopOn(), rxConf.HopPeriod(), rxConf.IqInverted(), rxConf.RxContinuous());
-}
-
-void ApplyRadioConfig() {
-    ApplyRadioTxConfig();
-    ApplyRadioRxConfig();
-
-    Radio.Rx(RX_TIMEOUT_VALUE);
-}
-
-void PrintSettings() {
-    printf("--RADIO SETTINGS--\nModem:%d\n\tPower:%ld\n\tFdev:%lu\n\tBandwidth:%lu\n\tDataRate:%lu\n\tCodeRate:%lu\n\tPreambleLen:%lu\n\tFixLen:%d\n\tCrCOn:%d\n\tFreqHopOn:%d\n\tHopPeriod:%lu\n\tIqInverted:%d\n\tTimeout:%lu\n--END OF RADIO SETTINGS--\n",
-           (int)txConf.Modem(), txConf.Power(), txConf.Fdev(), txConf.Bandwidth(), txConf.DataRate(), txConf.CodeRate(), txConf.PreambleLen(),
-           txConf.FixLen(), txConf.CrcOn(), txConf.FreqHopOn(), txConf.HopPeriod(), txConf.IqInverted(), txConf.Timeout());
-
-    // TODO RX settings
-    // , % ld, % ld, % d, % ld, % d, % d, % d, % d, % d, % d, % d, % d
-    // printf("", rxConfig.Modem, rxConfig.Bandwidth, rxConfig.DataRate, rxConfig.CodeRate, rxConfig.BandwidthAfc, rxConfig.PreambleLen, rxConfig.FixLen, rxConfig.PayloadLen, rxConfig.CrcOn, rxConfig.FreqHopOn, rxConfig.HopPeriod, rxConfig.IqInverted, rxConfig.RxContinuous);
-}
-
-void UpdateRadioSpreadingFactor(uint8_t spreadingFactorRx, uint8_t spreadingFactorTx, bool reconnect) {
-    txConf.set_DataRate(spreadingFactorTx);
-    rxConf.set_DataRate(spreadingFactorRx);
-
-    if (reconnect) {
-        ApplyRadioConfig();
-    }
-}
-
-void ApplyConfigIfPending() {
-    if (!pendingConfigChange)
-        return;
-    pendingConfigChange = false;
-    ApplyRadioConfig();
 }

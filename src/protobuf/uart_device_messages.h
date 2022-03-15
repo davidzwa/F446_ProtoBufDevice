@@ -45,10 +45,11 @@
 
 // Include external proto definitions
 #include <shared/firmware.h>
+#include <shared/experiment_config.h>
 #include <lora_device_messages.h>
 
 
-template<uint32_t Payload_Payload_LENGTH>
+template<uint32_t DownlinkPayload_Payload_LENGTH>
 class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -61,7 +62,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
     }
 
     LoraMeasurement(const LoraMeasurement&& rhs ) noexcept
@@ -72,7 +73,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
     }
 
     ~LoraMeasurement() override = default;
@@ -86,7 +87,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       SEQUENCENUMBER = 4,
       ISMEASUREMENTFRAGMENT = 5,
       SUCCESS = 6,
-      PAYLOAD = 7
+      DOWNLINKPAYLOAD = 7
     };
 
     LoraMeasurement& operator=(const LoraMeasurement& rhs)
@@ -97,7 +98,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
       return *this;
     }
 
@@ -109,7 +110,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       set_SequenceNumber(rhs.get_SequenceNumber());
       set_IsMeasurementFragment(rhs.get_IsMeasurementFragment());
       set_Success(rhs.get_Success());
-      set_Payload(rhs.get_Payload());
+      set_DownlinkPayload(rhs.get_DownlinkPayload());
       return *this;
     }
 
@@ -175,12 +176,12 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
     inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
 
-    inline void clear_Payload() { Payload_.clear(); }
-    inline void set_Payload(const LoRaMessage<Payload_Payload_LENGTH>& value) { Payload_ = value; }
-    inline void set_Payload(const LoRaMessage<Payload_Payload_LENGTH>&& value) { Payload_ = value; }
-    inline LoRaMessage<Payload_Payload_LENGTH>& mutable_Payload() { return Payload_; }
-    inline const LoRaMessage<Payload_Payload_LENGTH>& get_Payload() const { return Payload_; }
-    inline const LoRaMessage<Payload_Payload_LENGTH>& Payload() const { return Payload_; }
+    inline void clear_DownlinkPayload() { DownlinkPayload_.clear(); }
+    inline void set_DownlinkPayload(const LoRaMessage<DownlinkPayload_Payload_LENGTH>& value) { DownlinkPayload_ = value; }
+    inline void set_DownlinkPayload(const LoRaMessage<DownlinkPayload_Payload_LENGTH>&& value) { DownlinkPayload_ = value; }
+    inline LoRaMessage<DownlinkPayload_Payload_LENGTH>& mutable_DownlinkPayload() { return DownlinkPayload_; }
+    inline const LoRaMessage<DownlinkPayload_Payload_LENGTH>& get_DownlinkPayload() const { return DownlinkPayload_; }
+    inline const LoRaMessage<DownlinkPayload_Payload_LENGTH>& DownlinkPayload() const { return DownlinkPayload_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -219,7 +220,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
-        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+        return_value = DownlinkPayload_.serialize_with_id(static_cast<uint32_t>(id::DOWNLINKPAYLOAD), buffer, false);
       }
 
       return return_value;
@@ -263,8 +264,8 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
             return_value = Success_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::PAYLOAD:
-            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+          case id::DOWNLINKPAYLOAD:
+            return_value = DownlinkPayload_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -302,7 +303,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       clear_SequenceNumber();
       clear_IsMeasurementFragment();
       clear_Success();
-      clear_Payload();
+      clear_DownlinkPayload();
 
     }
 
@@ -349,187 +350,7 @@ class LoraMeasurement final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 SequenceNumber_ = 0U;
       EmbeddedProto::boolean IsMeasurementFragment_ = false;
       EmbeddedProto::boolean Success_ = false;
-      LoRaMessage<Payload_Payload_LENGTH> Payload_;
-
-};
-
-class BootMessage final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    BootMessage() = default;
-    BootMessage(const BootMessage& rhs )
-    {
-      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
-      set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_MeasurementCount(rhs.get_MeasurementCount());
-      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
-    }
-
-    BootMessage(const BootMessage&& rhs ) noexcept
-    {
-      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
-      set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_MeasurementCount(rhs.get_MeasurementCount());
-      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
-    }
-
-    ~BootMessage() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      DEVICEIDENTIFIER = 1,
-      FIRMWAREVERSION = 2,
-      MEASUREMENTCOUNT = 3,
-      MEASUREMENTSDISABLED = 4
-    };
-
-    BootMessage& operator=(const BootMessage& rhs)
-    {
-      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
-      set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_MeasurementCount(rhs.get_MeasurementCount());
-      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
-      return *this;
-    }
-
-    BootMessage& operator=(const BootMessage&& rhs) noexcept
-    {
-      set_DeviceIdentifier(rhs.get_DeviceIdentifier());
-      set_FirmwareVersion(rhs.get_FirmwareVersion());
-      set_MeasurementCount(rhs.get_MeasurementCount());
-      set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
-      return *this;
-    }
-
-    inline void clear_DeviceIdentifier() { DeviceIdentifier_.clear(); }
-    inline void set_DeviceIdentifier(const DeviceId& value) { DeviceIdentifier_ = value; }
-    inline void set_DeviceIdentifier(const DeviceId&& value) { DeviceIdentifier_ = value; }
-    inline DeviceId& mutable_DeviceIdentifier() { return DeviceIdentifier_; }
-    inline const DeviceId& get_DeviceIdentifier() const { return DeviceIdentifier_; }
-    inline const DeviceId& DeviceIdentifier() const { return DeviceIdentifier_; }
-
-    inline void clear_FirmwareVersion() { FirmwareVersion_.clear(); }
-    inline void set_FirmwareVersion(const Version& value) { FirmwareVersion_ = value; }
-    inline void set_FirmwareVersion(const Version&& value) { FirmwareVersion_ = value; }
-    inline Version& mutable_FirmwareVersion() { return FirmwareVersion_; }
-    inline const Version& get_FirmwareVersion() const { return FirmwareVersion_; }
-    inline const Version& FirmwareVersion() const { return FirmwareVersion_; }
-
-    inline void clear_MeasurementCount() { MeasurementCount_.clear(); }
-    inline void set_MeasurementCount(const EmbeddedProto::uint32& value) { MeasurementCount_ = value; }
-    inline void set_MeasurementCount(const EmbeddedProto::uint32&& value) { MeasurementCount_ = value; }
-    inline EmbeddedProto::uint32& mutable_MeasurementCount() { return MeasurementCount_; }
-    inline const EmbeddedProto::uint32& get_MeasurementCount() const { return MeasurementCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MeasurementCount() const { return MeasurementCount_.get(); }
-
-    inline void clear_MeasurementsDisabled() { MeasurementsDisabled_.clear(); }
-    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean& value) { MeasurementsDisabled_ = value; }
-    inline void set_MeasurementsDisabled(const EmbeddedProto::boolean&& value) { MeasurementsDisabled_ = value; }
-    inline EmbeddedProto::boolean& mutable_MeasurementsDisabled() { return MeasurementsDisabled_; }
-    inline const EmbeddedProto::boolean& get_MeasurementsDisabled() const { return MeasurementsDisabled_; }
-    inline EmbeddedProto::boolean::FIELD_TYPE MeasurementsDisabled() const { return MeasurementsDisabled_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-      {
-        return_value = DeviceIdentifier_.serialize_with_id(static_cast<uint32_t>(id::DEVICEIDENTIFIER), buffer, false);
-      }
-
-      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-      {
-        return_value = FirmwareVersion_.serialize_with_id(static_cast<uint32_t>(id::FIRMWAREVERSION), buffer, false);
-      }
-
-      if((0U != MeasurementCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MeasurementCount_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTCOUNT), buffer, false);
-      }
-
-      if((false != MeasurementsDisabled_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MeasurementsDisabled_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSDISABLED), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::DEVICEIDENTIFIER:
-            return_value = DeviceIdentifier_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::FIRMWAREVERSION:
-            return_value = FirmwareVersion_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::MEASUREMENTCOUNT:
-            return_value = MeasurementCount_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::MEASUREMENTSDISABLED:
-            return_value = MeasurementsDisabled_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_DeviceIdentifier();
-      clear_FirmwareVersion();
-      clear_MeasurementCount();
-      clear_MeasurementsDisabled();
-
-    }
-
-    private:
-
-
-      DeviceId DeviceIdentifier_;
-      Version FirmwareVersion_;
-      EmbeddedProto::uint32 MeasurementCount_ = 0U;
-      EmbeddedProto::boolean MeasurementsDisabled_ = false;
+      LoRaMessage<DownlinkPayload_Payload_LENGTH> DownlinkPayload_;
 
 };
 
@@ -866,188 +687,8 @@ class DebugMessage final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class DecodingResult final: public ::EmbeddedProto::MessageInterface
-{
-  public:
-    DecodingResult() = default;
-    DecodingResult(const DecodingResult& rhs )
-    {
-      set_Success(rhs.get_Success());
-      set_MatrixRank(rhs.get_MatrixRank());
-      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
-      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
-    }
-
-    DecodingResult(const DecodingResult&& rhs ) noexcept
-    {
-      set_Success(rhs.get_Success());
-      set_MatrixRank(rhs.get_MatrixRank());
-      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
-      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
-    }
-
-    ~DecodingResult() override = default;
-
-    enum class id : uint32_t
-    {
-      NOT_SET = 0,
-      SUCCESS = 1,
-      MATRIXRANK = 2,
-      FIRSTDECODEDNUMBER = 3,
-      LASTDECODEDNUMBER = 4
-    };
-
-    DecodingResult& operator=(const DecodingResult& rhs)
-    {
-      set_Success(rhs.get_Success());
-      set_MatrixRank(rhs.get_MatrixRank());
-      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
-      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
-      return *this;
-    }
-
-    DecodingResult& operator=(const DecodingResult&& rhs) noexcept
-    {
-      set_Success(rhs.get_Success());
-      set_MatrixRank(rhs.get_MatrixRank());
-      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
-      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
-      return *this;
-    }
-
-    inline void clear_Success() { Success_.clear(); }
-    inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
-    inline void set_Success(const EmbeddedProto::boolean&& value) { Success_ = value; }
-    inline EmbeddedProto::boolean& mutable_Success() { return Success_; }
-    inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
-    inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
-
-    inline void clear_MatrixRank() { MatrixRank_.clear(); }
-    inline void set_MatrixRank(const EmbeddedProto::uint32& value) { MatrixRank_ = value; }
-    inline void set_MatrixRank(const EmbeddedProto::uint32&& value) { MatrixRank_ = value; }
-    inline EmbeddedProto::uint32& mutable_MatrixRank() { return MatrixRank_; }
-    inline const EmbeddedProto::uint32& get_MatrixRank() const { return MatrixRank_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MatrixRank() const { return MatrixRank_.get(); }
-
-    inline void clear_FirstDecodedNumber() { FirstDecodedNumber_.clear(); }
-    inline void set_FirstDecodedNumber(const EmbeddedProto::uint32& value) { FirstDecodedNumber_ = value; }
-    inline void set_FirstDecodedNumber(const EmbeddedProto::uint32&& value) { FirstDecodedNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_FirstDecodedNumber() { return FirstDecodedNumber_; }
-    inline const EmbeddedProto::uint32& get_FirstDecodedNumber() const { return FirstDecodedNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE FirstDecodedNumber() const { return FirstDecodedNumber_.get(); }
-
-    inline void clear_LastDecodedNumber() { LastDecodedNumber_.clear(); }
-    inline void set_LastDecodedNumber(const EmbeddedProto::uint32& value) { LastDecodedNumber_ = value; }
-    inline void set_LastDecodedNumber(const EmbeddedProto::uint32&& value) { LastDecodedNumber_ = value; }
-    inline EmbeddedProto::uint32& mutable_LastDecodedNumber() { return LastDecodedNumber_; }
-    inline const EmbeddedProto::uint32& get_LastDecodedNumber() const { return LastDecodedNumber_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LastDecodedNumber() const { return LastDecodedNumber_.get(); }
-
-
-    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
-      }
-
-      if((0U != MatrixRank_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MatrixRank_.serialize_with_id(static_cast<uint32_t>(id::MATRIXRANK), buffer, false);
-      }
-
-      if((0U != FirstDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = FirstDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::FIRSTDECODEDNUMBER), buffer, false);
-      }
-
-      if((0U != LastDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = LastDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::LASTDECODEDNUMBER), buffer, false);
-      }
-
-      return return_value;
-    };
-
-    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
-    {
-      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
-      uint32_t id_number = 0;
-      id id_tag = id::NOT_SET;
-
-      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
-      {
-        id_tag = static_cast<id>(id_number);
-        switch(id_tag)
-        {
-          case id::SUCCESS:
-            return_value = Success_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::MATRIXRANK:
-            return_value = MatrixRank_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::FIRSTDECODEDNUMBER:
-            return_value = FirstDecodedNumber_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::LASTDECODEDNUMBER:
-            return_value = LastDecodedNumber_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::NOT_SET:
-            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
-            break;
-
-          default:
-            return_value = skip_unknown_field(buffer, wire_type);
-            break;
-        }
-
-        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
-        {
-          // Read the next tag.
-          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
-        }
-      }
-
-      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
-      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
-         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
-         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
-      {
-        return_value = tag_value;
-      }
-
-      return return_value;
-    };
-
-    void clear() override
-    {
-      clear_Success();
-      clear_MatrixRank();
-      clear_FirstDecodedNumber();
-      clear_LastDecodedNumber();
-
-    }
-
-    private:
-
-
-      EmbeddedProto::boolean Success_ = false;
-      EmbeddedProto::uint32 MatrixRank_ = 0U;
-      EmbeddedProto::uint32 FirstDecodedNumber_ = 0U;
-      EmbeddedProto::uint32 LastDecodedNumber_ = 0U;
-
-};
-
 template<uint32_t Payload_LENGTH, 
-uint32_t loraMeasurement_Payload_Payload_LENGTH>
+uint32_t loraMeasurement_DownlinkPayload_Payload_LENGTH>
 class UartResponse final: public ::EmbeddedProto::MessageInterface
 {
   public:
@@ -1327,10 +968,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(id::LORAMEASUREMENT == which_Body_)
       {
         which_Body_ = id::NOT_SET;
-        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>();
+        Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>();
       }
     }
-    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& value)
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1338,7 +979,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.loraMeasurement_ = value;
     }
-    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>&& value)
+    inline void set_loraMeasurement(const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>&& value)
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1346,7 +987,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       Body_.loraMeasurement_ = value;
     }
-    inline LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& mutable_loraMeasurement()
+    inline LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& mutable_loraMeasurement()
     {
       if(id::LORAMEASUREMENT != which_Body_)
       {
@@ -1354,8 +995,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       }
       return Body_.loraMeasurement_;
     }
-    inline const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
-    inline const LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& get_loraMeasurement() const { return Body_.loraMeasurement_; }
+    inline const LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>& loraMeasurement() const { return Body_.loraMeasurement_; }
 
     inline bool has_debugMessage() const
     {
@@ -1628,7 +1269,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ~Body() {}
         BootMessage bootMessage_;
         AckMessage ackMessage_;
-        LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH> loraMeasurement_;
+        LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH> loraMeasurement_;
         DebugMessage debugMessage_;
         ExceptionMessage exceptionMessage_;
         DecodingResult decodingResult_;
@@ -1657,7 +1298,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
 
           case id::LORAMEASUREMENT:
-            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>;
+            new(&Body_.loraMeasurement_) LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>;
             which_Body_ = id::LORAMEASUREMENT;
             break;
 
@@ -1694,7 +1335,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             Body_.ackMessage_.~AckMessage(); // NOSONAR Unions require this.
             break;
           case id::LORAMEASUREMENT:
-            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_Payload_Payload_LENGTH>(); // NOSONAR Unions require this.
+            Body_.loraMeasurement_.~LoraMeasurement<loraMeasurement_DownlinkPayload_Payload_LENGTH>(); // NOSONAR Unions require this.
             break;
           case id::DEBUGMESSAGE:
             Body_.debugMessage_.~DebugMessage(); // NOSONAR Unions require this.

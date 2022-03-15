@@ -15,6 +15,13 @@ message DeviceId {
     uint32 Id2 = 3;
 }
 
+message BootMessage {
+    DeviceId DeviceIdentifier = 1;
+    Version FirmwareVersion = 2;
+    uint32 MeasurementCount = 3;
+    bool MeasurementsDisabled = 4;
+}
+
 message RlncInitConfigCommand {
     uint32 GenerationSize = 1;
     uint32 GenerationCount = 2;

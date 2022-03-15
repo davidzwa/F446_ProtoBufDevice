@@ -22,6 +22,7 @@
 #include "delay.h"
 #include "measurements.h"
 #include "nvmm.h"
+#include "radio_config.h"
 #include "radio_phy.h"
 #include "tasks.h"
 #include "utils.h"
@@ -31,14 +32,20 @@ int main(void) {
     BoardInitPeriph();
     InitCli(true);
     InitializeMeasurements();
-    UartSendBoot();
-    InitRadioConfig();
-    InitTimedTasks();
+    InitRadioTxConfigLoRa();
+    InitRadioRxConfigLoRa();
     InitRadioPhy();
+    InitTimedTasks();
+
+    UartSendBoot();
+
+    // ApplyRadioConfig();
+
+    UartDebug(__TIMESTAMP__, 0, sizeof(__TIMESTAMP__));
 
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);
-    
+
     // This must be called remotely/over UART
     // ClearStorage();
 
@@ -52,34 +59,6 @@ int main(void) {
     // UartDebug("MInv", result, 4);
     // UartDebug("Mult", gf.mul(result, val), 4);
     // UartDebug("Mul2", gf.mul(result, val2), 4);
-
-    // for (int i = 1; i<255; i++) {
-    //     const galois::GFSymbol val(i);
-    //     UartDebug("Inv", gf.div(unity, val), 3);
-    //     DelayMs(1);
-    // }
-
-    // Something wrong with inverse()
-    // for (int i = 1; i<255; i++) {
-    //     UartDebug("Inv2", gf.inverse(i), 4);
-    //     DelayMs(1);
-    // }
-
-    // for (int i = 1; i<255; i++) {
-    //     // const galois::GFSymbol val(i);
-    //     UartDebug("Log", gf.logLUT[i],3);
-    //     DelayMs(1);
-    // }
-    
-    // for (int i = 1; i<255; i++) {
-    //     // const galois::GFSymbol val(i);
-    //     UartDebug("Alog", gf.antiLogLUT[i], 4);
-    //     DelayMs(1);
-    // }
-
-    // UartDebug("1234", 0, 4);
-    // UartDebug("1234", 0, 4);
-    // UartDebug("1234", 0, 4);
 
     Radio.Rx(0);
     while (1) {

@@ -48,6 +48,542 @@
 #include <shared/firmware.h>
 
 
+class RequestBootInfo final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RequestBootInfo() = default;
+    RequestBootInfo(const RequestBootInfo& rhs )
+    {
+      set_Request(rhs.get_Request());
+    }
+
+    RequestBootInfo(const RequestBootInfo&& rhs ) noexcept
+    {
+      set_Request(rhs.get_Request());
+    }
+
+    ~RequestBootInfo() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      REQUEST = 1
+    };
+
+    RequestBootInfo& operator=(const RequestBootInfo& rhs)
+    {
+      set_Request(rhs.get_Request());
+      return *this;
+    }
+
+    RequestBootInfo& operator=(const RequestBootInfo&& rhs) noexcept
+    {
+      set_Request(rhs.get_Request());
+      return *this;
+    }
+
+    inline void clear_Request() { Request_.clear(); }
+    inline void set_Request(const EmbeddedProto::boolean& value) { Request_ = value; }
+    inline void set_Request(const EmbeddedProto::boolean&& value) { Request_ = value; }
+    inline EmbeddedProto::boolean& mutable_Request() { return Request_; }
+    inline const EmbeddedProto::boolean& get_Request() const { return Request_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Request() const { return Request_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != Request_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Request_.serialize_with_id(static_cast<uint32_t>(id::REQUEST), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::REQUEST:
+            return_value = Request_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Request();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean Request_ = false;
+
+};
+
+class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DeviceConfiguration() = default;
+    DeviceConfiguration(const DeviceConfiguration& rhs )
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+    }
+
+    DeviceConfiguration(const DeviceConfiguration&& rhs ) noexcept
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+    }
+
+    ~DeviceConfiguration() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      ENABLEALWAYSSEND = 1,
+      ALWAYSSENDPERIOD = 2,
+      LIMITEDSENDCOUNT = 3,
+      TXPOWER = 4,
+      TXBANDWIDTH = 5,
+      TXDATARATE = 6
+    };
+
+    DeviceConfiguration& operator=(const DeviceConfiguration& rhs)
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+      return *this;
+    }
+
+    DeviceConfiguration& operator=(const DeviceConfiguration&& rhs) noexcept
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+      return *this;
+    }
+
+    inline void clear_EnableAlwaysSend() { EnableAlwaysSend_.clear(); }
+    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean& value) { EnableAlwaysSend_ = value; }
+    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean&& value) { EnableAlwaysSend_ = value; }
+    inline EmbeddedProto::boolean& mutable_EnableAlwaysSend() { return EnableAlwaysSend_; }
+    inline const EmbeddedProto::boolean& get_EnableAlwaysSend() const { return EnableAlwaysSend_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE EnableAlwaysSend() const { return EnableAlwaysSend_.get(); }
+
+    inline void clear_AlwaysSendPeriod() { AlwaysSendPeriod_.clear(); }
+    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32& value) { AlwaysSendPeriod_ = value; }
+    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32&& value) { AlwaysSendPeriod_ = value; }
+    inline EmbeddedProto::uint32& mutable_AlwaysSendPeriod() { return AlwaysSendPeriod_; }
+    inline const EmbeddedProto::uint32& get_AlwaysSendPeriod() const { return AlwaysSendPeriod_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE AlwaysSendPeriod() const { return AlwaysSendPeriod_.get(); }
+
+    inline void clear_LimitedSendCount() { LimitedSendCount_.clear(); }
+    inline void set_LimitedSendCount(const EmbeddedProto::uint32& value) { LimitedSendCount_ = value; }
+    inline void set_LimitedSendCount(const EmbeddedProto::uint32&& value) { LimitedSendCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_LimitedSendCount() { return LimitedSendCount_; }
+    inline const EmbeddedProto::uint32& get_LimitedSendCount() const { return LimitedSendCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LimitedSendCount() const { return LimitedSendCount_.get(); }
+
+    inline void clear_TxPower() { TxPower_.clear(); }
+    inline void set_TxPower(const EmbeddedProto::int32& value) { TxPower_ = value; }
+    inline void set_TxPower(const EmbeddedProto::int32&& value) { TxPower_ = value; }
+    inline EmbeddedProto::int32& mutable_TxPower() { return TxPower_; }
+    inline const EmbeddedProto::int32& get_TxPower() const { return TxPower_; }
+    inline EmbeddedProto::int32::FIELD_TYPE TxPower() const { return TxPower_.get(); }
+
+    inline void clear_TxBandwidth() { TxBandwidth_.clear(); }
+    inline void set_TxBandwidth(const EmbeddedProto::uint32& value) { TxBandwidth_ = value; }
+    inline void set_TxBandwidth(const EmbeddedProto::uint32&& value) { TxBandwidth_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxBandwidth() { return TxBandwidth_; }
+    inline const EmbeddedProto::uint32& get_TxBandwidth() const { return TxBandwidth_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxBandwidth() const { return TxBandwidth_.get(); }
+
+    inline void clear_TxDataRate() { TxDataRate_.clear(); }
+    inline void set_TxDataRate(const EmbeddedProto::uint32& value) { TxDataRate_ = value; }
+    inline void set_TxDataRate(const EmbeddedProto::uint32&& value) { TxDataRate_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxDataRate() { return TxDataRate_; }
+    inline const EmbeddedProto::uint32& get_TxDataRate() const { return TxDataRate_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxDataRate() const { return TxDataRate_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != EnableAlwaysSend_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = EnableAlwaysSend_.serialize_with_id(static_cast<uint32_t>(id::ENABLEALWAYSSEND), buffer, false);
+      }
+
+      if((0U != AlwaysSendPeriod_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = AlwaysSendPeriod_.serialize_with_id(static_cast<uint32_t>(id::ALWAYSSENDPERIOD), buffer, false);
+      }
+
+      if((0U != LimitedSendCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LimitedSendCount_.serialize_with_id(static_cast<uint32_t>(id::LIMITEDSENDCOUNT), buffer, false);
+      }
+
+      if((0 != TxPower_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxPower_.serialize_with_id(static_cast<uint32_t>(id::TXPOWER), buffer, false);
+      }
+
+      if((0U != TxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXBANDWIDTH), buffer, false);
+      }
+
+      if((0U != TxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXDATARATE), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::ENABLEALWAYSSEND:
+            return_value = EnableAlwaysSend_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ALWAYSSENDPERIOD:
+            return_value = AlwaysSendPeriod_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LIMITEDSENDCOUNT:
+            return_value = LimitedSendCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXPOWER:
+            return_value = TxPower_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXBANDWIDTH:
+            return_value = TxBandwidth_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXDATARATE:
+            return_value = TxDataRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_EnableAlwaysSend();
+      clear_AlwaysSendPeriod();
+      clear_LimitedSendCount();
+      clear_TxPower();
+      clear_TxBandwidth();
+      clear_TxDataRate();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean EnableAlwaysSend_ = false;
+      EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
+      EmbeddedProto::uint32 LimitedSendCount_ = 0U;
+      EmbeddedProto::int32 TxPower_ = 0;
+      EmbeddedProto::uint32 TxBandwidth_ = 0U;
+      EmbeddedProto::uint32 TxDataRate_ = 0U;
+
+};
+
+class LoRaReset final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    LoRaReset() = default;
+    LoRaReset(const LoRaReset& rhs )
+    {
+    }
+
+    LoRaReset(const LoRaReset&& rhs ) noexcept
+    {
+    }
+
+    ~LoRaReset() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+    };
+
+    LoRaReset& operator=(const LoRaReset& rhs)
+    {
+      return *this;
+    }
+
+    LoRaReset& operator=(const LoRaReset&& rhs) noexcept
+    {
+      return *this;
+    }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+
+    }
+
+    private:
+
+
+
+};
+
+class LoRaAck final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    LoRaAck() = default;
+    LoRaAck(const LoRaAck& rhs )
+    {
+      set_DeviceId(rhs.get_DeviceId());
+    }
+
+    LoRaAck(const LoRaAck&& rhs ) noexcept
+    {
+      set_DeviceId(rhs.get_DeviceId());
+    }
+
+    ~LoRaAck() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      DEVICEID = 1
+    };
+
+    LoRaAck& operator=(const LoRaAck& rhs)
+    {
+      set_DeviceId(rhs.get_DeviceId());
+      return *this;
+    }
+
+    LoRaAck& operator=(const LoRaAck&& rhs) noexcept
+    {
+      set_DeviceId(rhs.get_DeviceId());
+      return *this;
+    }
+
+    inline void clear_DeviceId() { DeviceId_.clear(); }
+    inline void set_DeviceId(const EmbeddedProto::uint32& value) { DeviceId_ = value; }
+    inline void set_DeviceId(const EmbeddedProto::uint32&& value) { DeviceId_ = value; }
+    inline EmbeddedProto::uint32& mutable_DeviceId() { return DeviceId_; }
+    inline const EmbeddedProto::uint32& get_DeviceId() const { return DeviceId_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId() const { return DeviceId_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != DeviceId_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DeviceId_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::DEVICEID:
+            return_value = DeviceId_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_DeviceId();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 DeviceId_ = 0U;
+
+};
+
 template<uint32_t Payload_LENGTH>
 class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 {
@@ -67,16 +603,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
-        case id::FORWARDRADIOCONFIGUPDATE:
-          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
-          break;
-
         case id::FORWARDEXPERIMENTCOMMAND:
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
           break;
 
         case id::MEASUREMENTSTREAMREQUEST:
@@ -101,6 +633,30 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::RLNCTERMINATIONCOMMAND:
           set_rlncTerminationCommand(rhs.get_rlncTerminationCommand());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
+          break;
+
+        case id::REQUESTBOOTINFO:
+          set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::BOOTMESSAGE:
+          set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
+          break;
+
+        case id::ACK:
+          set_ack(rhs.get_ack());
           break;
 
         default:
@@ -123,16 +679,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
-        case id::FORWARDRADIOCONFIGUPDATE:
-          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
-          break;
-
         case id::FORWARDEXPERIMENTCOMMAND:
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
           break;
 
         case id::MEASUREMENTSTREAMREQUEST:
@@ -157,6 +709,30 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::RLNCTERMINATIONCOMMAND:
           set_rlncTerminationCommand(rhs.get_rlncTerminationCommand());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
+          break;
+
+        case id::REQUESTBOOTINFO:
+          set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::BOOTMESSAGE:
+          set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
+          break;
+
+        case id::ACK:
+          set_ack(rhs.get_ack());
           break;
 
         default:
@@ -174,15 +750,20 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       DEVICEID = 2,
       CORRELATIONCODE = 3,
       PAYLOAD = 4,
-      SEQUENCECONFIG = 5,
-      FORWARDRADIOCONFIGUPDATE = 6,
-      FORWARDEXPERIMENTCOMMAND = 7,
+      FORWARDEXPERIMENTCOMMAND = 6,
+      EXPERIMENTRESPONSE = 7,
       MEASUREMENTSTREAMREQUEST = 8,
       MEASUREMENTSTREAMFRAGMENT = 9,
       RLNCINITCONFIGCOMMAND = 10,
       RLNCENCODEDFRAGMENT = 11,
       RLNCSTATEUPDATE = 12,
-      RLNCTERMINATIONCOMMAND = 13
+      RLNCTERMINATIONCOMMAND = 13,
+      DECODINGRESULT = 14,
+      DEVICECONFIGURATION = 15,
+      REQUESTBOOTINFO = 16,
+      BOOTMESSAGE = 17,
+      RESETRADIO = 18,
+      ACK = 19
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -199,16 +780,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
-        case id::FORWARDRADIOCONFIGUPDATE:
-          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
-          break;
-
         case id::FORWARDEXPERIMENTCOMMAND:
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
           break;
 
         case id::MEASUREMENTSTREAMREQUEST:
@@ -233,6 +810,30 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::RLNCTERMINATIONCOMMAND:
           set_rlncTerminationCommand(rhs.get_rlncTerminationCommand());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
+          break;
+
+        case id::REQUESTBOOTINFO:
+          set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::BOOTMESSAGE:
+          set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
+          break;
+
+        case id::ACK:
+          set_ack(rhs.get_ack());
           break;
 
         default:
@@ -256,16 +857,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(rhs.get_which_Body())
       {
-        case id::SEQUENCECONFIG:
-          set_sequenceConfig(rhs.get_sequenceConfig());
-          break;
-
-        case id::FORWARDRADIOCONFIGUPDATE:
-          set_forwardRadioConfigUpdate(rhs.get_forwardRadioConfigUpdate());
-          break;
-
         case id::FORWARDEXPERIMENTCOMMAND:
           set_forwardExperimentCommand(rhs.get_forwardExperimentCommand());
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          set_experimentResponse(rhs.get_experimentResponse());
           break;
 
         case id::MEASUREMENTSTREAMREQUEST:
@@ -290,6 +887,30 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::RLNCTERMINATIONCOMMAND:
           set_rlncTerminationCommand(rhs.get_rlncTerminationCommand());
+          break;
+
+        case id::DECODINGRESULT:
+          set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DEVICECONFIGURATION:
+          set_deviceConfiguration(rhs.get_deviceConfiguration());
+          break;
+
+        case id::REQUESTBOOTINFO:
+          set_requestBootInfo(rhs.get_requestBootInfo());
+          break;
+
+        case id::BOOTMESSAGE:
+          set_bootMessage(rhs.get_bootMessage());
+          break;
+
+        case id::RESETRADIO:
+          set_resetRadio(rhs.get_resetRadio());
+          break;
+
+        case id::ACK:
+          set_ack(rhs.get_ack());
           break;
 
         default:
@@ -327,84 +948,6 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const uint8_t* Payload() const { return Payload_.get_const(); }
 
     id get_which_Body() const { return which_Body_; }
-
-    inline bool has_sequenceConfig() const
-    {
-      return id::SEQUENCECONFIG == which_Body_;
-    }
-    inline void clear_sequenceConfig()
-    {
-      if(id::SEQUENCECONFIG == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.sequenceConfig_.~ForwardSequenceConfig();
-      }
-    }
-    inline void set_sequenceConfig(const ForwardSequenceConfig& value)
-    {
-      if(id::SEQUENCECONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCECONFIG);
-      }
-      Body_.sequenceConfig_ = value;
-    }
-    inline void set_sequenceConfig(const ForwardSequenceConfig&& value)
-    {
-      if(id::SEQUENCECONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCECONFIG);
-      }
-      Body_.sequenceConfig_ = value;
-    }
-    inline ForwardSequenceConfig& mutable_sequenceConfig()
-    {
-      if(id::SEQUENCECONFIG != which_Body_)
-      {
-        init_Body(id::SEQUENCECONFIG);
-      }
-      return Body_.sequenceConfig_;
-    }
-    inline const ForwardSequenceConfig& get_sequenceConfig() const { return Body_.sequenceConfig_; }
-    inline const ForwardSequenceConfig& sequenceConfig() const { return Body_.sequenceConfig_; }
-
-    inline bool has_forwardRadioConfigUpdate() const
-    {
-      return id::FORWARDRADIOCONFIGUPDATE == which_Body_;
-    }
-    inline void clear_forwardRadioConfigUpdate()
-    {
-      if(id::FORWARDRADIOCONFIGUPDATE == which_Body_)
-      {
-        which_Body_ = id::NOT_SET;
-        Body_.forwardRadioConfigUpdate_.~ForwardRadioConfigUpdate();
-      }
-    }
-    inline void set_forwardRadioConfigUpdate(const ForwardRadioConfigUpdate& value)
-    {
-      if(id::FORWARDRADIOCONFIGUPDATE != which_Body_)
-      {
-        init_Body(id::FORWARDRADIOCONFIGUPDATE);
-      }
-      Body_.forwardRadioConfigUpdate_ = value;
-    }
-    inline void set_forwardRadioConfigUpdate(const ForwardRadioConfigUpdate&& value)
-    {
-      if(id::FORWARDRADIOCONFIGUPDATE != which_Body_)
-      {
-        init_Body(id::FORWARDRADIOCONFIGUPDATE);
-      }
-      Body_.forwardRadioConfigUpdate_ = value;
-    }
-    inline ForwardRadioConfigUpdate& mutable_forwardRadioConfigUpdate()
-    {
-      if(id::FORWARDRADIOCONFIGUPDATE != which_Body_)
-      {
-        init_Body(id::FORWARDRADIOCONFIGUPDATE);
-      }
-      return Body_.forwardRadioConfigUpdate_;
-    }
-    inline const ForwardRadioConfigUpdate& get_forwardRadioConfigUpdate() const { return Body_.forwardRadioConfigUpdate_; }
-    inline const ForwardRadioConfigUpdate& forwardRadioConfigUpdate() const { return Body_.forwardRadioConfigUpdate_; }
 
     inline bool has_forwardExperimentCommand() const
     {
@@ -444,6 +987,45 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     }
     inline const ForwardExperimentCommand& get_forwardExperimentCommand() const { return Body_.forwardExperimentCommand_; }
     inline const ForwardExperimentCommand& forwardExperimentCommand() const { return Body_.forwardExperimentCommand_; }
+
+    inline bool has_experimentResponse() const
+    {
+      return id::EXPERIMENTRESPONSE == which_Body_;
+    }
+    inline void clear_experimentResponse()
+    {
+      if(id::EXPERIMENTRESPONSE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.experimentResponse_.~ExperimentResponse();
+      }
+    }
+    inline void set_experimentResponse(const ExperimentResponse& value)
+    {
+      if(id::EXPERIMENTRESPONSE != which_Body_)
+      {
+        init_Body(id::EXPERIMENTRESPONSE);
+      }
+      Body_.experimentResponse_ = value;
+    }
+    inline void set_experimentResponse(const ExperimentResponse&& value)
+    {
+      if(id::EXPERIMENTRESPONSE != which_Body_)
+      {
+        init_Body(id::EXPERIMENTRESPONSE);
+      }
+      Body_.experimentResponse_ = value;
+    }
+    inline ExperimentResponse& mutable_experimentResponse()
+    {
+      if(id::EXPERIMENTRESPONSE != which_Body_)
+      {
+        init_Body(id::EXPERIMENTRESPONSE);
+      }
+      return Body_.experimentResponse_;
+    }
+    inline const ExperimentResponse& get_experimentResponse() const { return Body_.experimentResponse_; }
+    inline const ExperimentResponse& experimentResponse() const { return Body_.experimentResponse_; }
 
     inline bool has_measurementStreamRequest() const
     {
@@ -679,6 +1261,240 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const RlncTerminationCommand& get_rlncTerminationCommand() const { return Body_.rlncTerminationCommand_; }
     inline const RlncTerminationCommand& rlncTerminationCommand() const { return Body_.rlncTerminationCommand_; }
 
+    inline bool has_decodingResult() const
+    {
+      return id::DECODINGRESULT == which_Body_;
+    }
+    inline void clear_decodingResult()
+    {
+      if(id::DECODINGRESULT == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.decodingResult_.~DecodingResult();
+      }
+    }
+    inline void set_decodingResult(const DecodingResult& value)
+    {
+      if(id::DECODINGRESULT != which_Body_)
+      {
+        init_Body(id::DECODINGRESULT);
+      }
+      Body_.decodingResult_ = value;
+    }
+    inline void set_decodingResult(const DecodingResult&& value)
+    {
+      if(id::DECODINGRESULT != which_Body_)
+      {
+        init_Body(id::DECODINGRESULT);
+      }
+      Body_.decodingResult_ = value;
+    }
+    inline DecodingResult& mutable_decodingResult()
+    {
+      if(id::DECODINGRESULT != which_Body_)
+      {
+        init_Body(id::DECODINGRESULT);
+      }
+      return Body_.decodingResult_;
+    }
+    inline const DecodingResult& get_decodingResult() const { return Body_.decodingResult_; }
+    inline const DecodingResult& decodingResult() const { return Body_.decodingResult_; }
+
+    inline bool has_deviceConfiguration() const
+    {
+      return id::DEVICECONFIGURATION == which_Body_;
+    }
+    inline void clear_deviceConfiguration()
+    {
+      if(id::DEVICECONFIGURATION == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.deviceConfiguration_.~DeviceConfiguration();
+      }
+    }
+    inline void set_deviceConfiguration(const DeviceConfiguration& value)
+    {
+      if(id::DEVICECONFIGURATION != which_Body_)
+      {
+        init_Body(id::DEVICECONFIGURATION);
+      }
+      Body_.deviceConfiguration_ = value;
+    }
+    inline void set_deviceConfiguration(const DeviceConfiguration&& value)
+    {
+      if(id::DEVICECONFIGURATION != which_Body_)
+      {
+        init_Body(id::DEVICECONFIGURATION);
+      }
+      Body_.deviceConfiguration_ = value;
+    }
+    inline DeviceConfiguration& mutable_deviceConfiguration()
+    {
+      if(id::DEVICECONFIGURATION != which_Body_)
+      {
+        init_Body(id::DEVICECONFIGURATION);
+      }
+      return Body_.deviceConfiguration_;
+    }
+    inline const DeviceConfiguration& get_deviceConfiguration() const { return Body_.deviceConfiguration_; }
+    inline const DeviceConfiguration& deviceConfiguration() const { return Body_.deviceConfiguration_; }
+
+    inline bool has_requestBootInfo() const
+    {
+      return id::REQUESTBOOTINFO == which_Body_;
+    }
+    inline void clear_requestBootInfo()
+    {
+      if(id::REQUESTBOOTINFO == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.requestBootInfo_.~RequestBootInfo();
+      }
+    }
+    inline void set_requestBootInfo(const RequestBootInfo& value)
+    {
+      if(id::REQUESTBOOTINFO != which_Body_)
+      {
+        init_Body(id::REQUESTBOOTINFO);
+      }
+      Body_.requestBootInfo_ = value;
+    }
+    inline void set_requestBootInfo(const RequestBootInfo&& value)
+    {
+      if(id::REQUESTBOOTINFO != which_Body_)
+      {
+        init_Body(id::REQUESTBOOTINFO);
+      }
+      Body_.requestBootInfo_ = value;
+    }
+    inline RequestBootInfo& mutable_requestBootInfo()
+    {
+      if(id::REQUESTBOOTINFO != which_Body_)
+      {
+        init_Body(id::REQUESTBOOTINFO);
+      }
+      return Body_.requestBootInfo_;
+    }
+    inline const RequestBootInfo& get_requestBootInfo() const { return Body_.requestBootInfo_; }
+    inline const RequestBootInfo& requestBootInfo() const { return Body_.requestBootInfo_; }
+
+    inline bool has_bootMessage() const
+    {
+      return id::BOOTMESSAGE == which_Body_;
+    }
+    inline void clear_bootMessage()
+    {
+      if(id::BOOTMESSAGE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.bootMessage_.~BootMessage();
+      }
+    }
+    inline void set_bootMessage(const BootMessage& value)
+    {
+      if(id::BOOTMESSAGE != which_Body_)
+      {
+        init_Body(id::BOOTMESSAGE);
+      }
+      Body_.bootMessage_ = value;
+    }
+    inline void set_bootMessage(const BootMessage&& value)
+    {
+      if(id::BOOTMESSAGE != which_Body_)
+      {
+        init_Body(id::BOOTMESSAGE);
+      }
+      Body_.bootMessage_ = value;
+    }
+    inline BootMessage& mutable_bootMessage()
+    {
+      if(id::BOOTMESSAGE != which_Body_)
+      {
+        init_Body(id::BOOTMESSAGE);
+      }
+      return Body_.bootMessage_;
+    }
+    inline const BootMessage& get_bootMessage() const { return Body_.bootMessage_; }
+    inline const BootMessage& bootMessage() const { return Body_.bootMessage_; }
+
+    inline bool has_resetRadio() const
+    {
+      return id::RESETRADIO == which_Body_;
+    }
+    inline void clear_resetRadio()
+    {
+      if(id::RESETRADIO == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.resetRadio_.~LoRaReset();
+      }
+    }
+    inline void set_resetRadio(const LoRaReset& value)
+    {
+      if(id::RESETRADIO != which_Body_)
+      {
+        init_Body(id::RESETRADIO);
+      }
+      Body_.resetRadio_ = value;
+    }
+    inline void set_resetRadio(const LoRaReset&& value)
+    {
+      if(id::RESETRADIO != which_Body_)
+      {
+        init_Body(id::RESETRADIO);
+      }
+      Body_.resetRadio_ = value;
+    }
+    inline LoRaReset& mutable_resetRadio()
+    {
+      if(id::RESETRADIO != which_Body_)
+      {
+        init_Body(id::RESETRADIO);
+      }
+      return Body_.resetRadio_;
+    }
+    inline const LoRaReset& get_resetRadio() const { return Body_.resetRadio_; }
+    inline const LoRaReset& resetRadio() const { return Body_.resetRadio_; }
+
+    inline bool has_ack() const
+    {
+      return id::ACK == which_Body_;
+    }
+    inline void clear_ack()
+    {
+      if(id::ACK == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.ack_.~LoRaAck();
+      }
+    }
+    inline void set_ack(const LoRaAck& value)
+    {
+      if(id::ACK != which_Body_)
+      {
+        init_Body(id::ACK);
+      }
+      Body_.ack_ = value;
+    }
+    inline void set_ack(const LoRaAck&& value)
+    {
+      if(id::ACK != which_Body_)
+      {
+        init_Body(id::ACK);
+      }
+      Body_.ack_ = value;
+    }
+    inline LoRaAck& mutable_ack()
+    {
+      if(id::ACK != which_Body_)
+      {
+        init_Body(id::ACK);
+      }
+      return Body_.ack_;
+    }
+    inline const LoRaAck& get_ack() const { return Body_.ack_; }
+    inline const LoRaAck& ack() const { return Body_.ack_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -706,24 +1522,17 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
       switch(which_Body_)
       {
-        case id::SEQUENCECONFIG:
-          if(has_sequenceConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = Body_.sequenceConfig_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCECONFIG), buffer, true);
-          }
-          break;
-
-        case id::FORWARDRADIOCONFIGUPDATE:
-          if(has_forwardRadioConfigUpdate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-          {
-            return_value = Body_.forwardRadioConfigUpdate_.serialize_with_id(static_cast<uint32_t>(id::FORWARDRADIOCONFIGUPDATE), buffer, true);
-          }
-          break;
-
         case id::FORWARDEXPERIMENTCOMMAND:
           if(has_forwardExperimentCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.forwardExperimentCommand_.serialize_with_id(static_cast<uint32_t>(id::FORWARDEXPERIMENTCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::EXPERIMENTRESPONSE:
+          if(has_experimentResponse() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.experimentResponse_.serialize_with_id(static_cast<uint32_t>(id::EXPERIMENTRESPONSE), buffer, true);
           }
           break;
 
@@ -769,6 +1578,48 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::DECODINGRESULT:
+          if(has_decodingResult() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.decodingResult_.serialize_with_id(static_cast<uint32_t>(id::DECODINGRESULT), buffer, true);
+          }
+          break;
+
+        case id::DEVICECONFIGURATION:
+          if(has_deviceConfiguration() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.deviceConfiguration_.serialize_with_id(static_cast<uint32_t>(id::DEVICECONFIGURATION), buffer, true);
+          }
+          break;
+
+        case id::REQUESTBOOTINFO:
+          if(has_requestBootInfo() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.requestBootInfo_.serialize_with_id(static_cast<uint32_t>(id::REQUESTBOOTINFO), buffer, true);
+          }
+          break;
+
+        case id::BOOTMESSAGE:
+          if(has_bootMessage() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.bootMessage_.serialize_with_id(static_cast<uint32_t>(id::BOOTMESSAGE), buffer, true);
+          }
+          break;
+
+        case id::RESETRADIO:
+          if(has_resetRadio() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.resetRadio_.serialize_with_id(static_cast<uint32_t>(id::RESETRADIO), buffer, true);
+          }
+          break;
+
+        case id::ACK:
+          if(has_ack() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.ack_.serialize_with_id(static_cast<uint32_t>(id::ACK), buffer, true);
+          }
+          break;
+
         default:
           break;
       }
@@ -805,18 +1656,13 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             return_value = Payload_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::SEQUENCECONFIG:
-            return_value = deserialize_Body(id::SEQUENCECONFIG, Body_.sequenceConfig_, buffer, wire_type);
-
-            break;
-
-          case id::FORWARDRADIOCONFIGUPDATE:
-            return_value = deserialize_Body(id::FORWARDRADIOCONFIGUPDATE, Body_.forwardRadioConfigUpdate_, buffer, wire_type);
-
-            break;
-
           case id::FORWARDEXPERIMENTCOMMAND:
             return_value = deserialize_Body(id::FORWARDEXPERIMENTCOMMAND, Body_.forwardExperimentCommand_, buffer, wire_type);
+
+            break;
+
+          case id::EXPERIMENTRESPONSE:
+            return_value = deserialize_Body(id::EXPERIMENTRESPONSE, Body_.experimentResponse_, buffer, wire_type);
 
             break;
 
@@ -847,6 +1693,36 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
           case id::RLNCTERMINATIONCOMMAND:
             return_value = deserialize_Body(id::RLNCTERMINATIONCOMMAND, Body_.rlncTerminationCommand_, buffer, wire_type);
+
+            break;
+
+          case id::DECODINGRESULT:
+            return_value = deserialize_Body(id::DECODINGRESULT, Body_.decodingResult_, buffer, wire_type);
+
+            break;
+
+          case id::DEVICECONFIGURATION:
+            return_value = deserialize_Body(id::DEVICECONFIGURATION, Body_.deviceConfiguration_, buffer, wire_type);
+
+            break;
+
+          case id::REQUESTBOOTINFO:
+            return_value = deserialize_Body(id::REQUESTBOOTINFO, Body_.requestBootInfo_, buffer, wire_type);
+
+            break;
+
+          case id::BOOTMESSAGE:
+            return_value = deserialize_Body(id::BOOTMESSAGE, Body_.bootMessage_, buffer, wire_type);
+
+            break;
+
+          case id::RESETRADIO:
+            return_value = deserialize_Body(id::RESETRADIO, Body_.resetRadio_, buffer, wire_type);
+
+            break;
+
+          case id::ACK:
+            return_value = deserialize_Body(id::ACK, Body_.ack_, buffer, wire_type);
 
             break;
 
@@ -900,15 +1776,20 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       {
         Body() {}
         ~Body() {}
-        ForwardSequenceConfig sequenceConfig_;
-        ForwardRadioConfigUpdate forwardRadioConfigUpdate_;
         ForwardExperimentCommand forwardExperimentCommand_;
+        ExperimentResponse experimentResponse_;
         MeasurementStreamRequest measurementStreamRequest_;
         MeasurementStreamFragment measurementStreamFragment_;
         RlncInitConfigCommand rlncInitConfigCommand_;
         RlncEncodedFragment rlncEncodedFragment_;
         RlncStateUpdate rlncStateUpdate_;
         RlncTerminationCommand rlncTerminationCommand_;
+        DecodingResult decodingResult_;
+        DeviceConfiguration deviceConfiguration_;
+        RequestBootInfo requestBootInfo_;
+        BootMessage bootMessage_;
+        LoRaReset resetRadio_;
+        LoRaAck ack_;
       };
       Body Body_;
 
@@ -923,19 +1804,14 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         // C++11 unions only support nontrivial members when you explicitly call the placement new statement.
         switch(field_id)
         {
-          case id::SEQUENCECONFIG:
-            new(&Body_.sequenceConfig_) ForwardSequenceConfig;
-            which_Body_ = id::SEQUENCECONFIG;
-            break;
-
-          case id::FORWARDRADIOCONFIGUPDATE:
-            new(&Body_.forwardRadioConfigUpdate_) ForwardRadioConfigUpdate;
-            which_Body_ = id::FORWARDRADIOCONFIGUPDATE;
-            break;
-
           case id::FORWARDEXPERIMENTCOMMAND:
             new(&Body_.forwardExperimentCommand_) ForwardExperimentCommand;
             which_Body_ = id::FORWARDEXPERIMENTCOMMAND;
+            break;
+
+          case id::EXPERIMENTRESPONSE:
+            new(&Body_.experimentResponse_) ExperimentResponse;
+            which_Body_ = id::EXPERIMENTRESPONSE;
             break;
 
           case id::MEASUREMENTSTREAMREQUEST:
@@ -968,6 +1844,36 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::RLNCTERMINATIONCOMMAND;
             break;
 
+          case id::DECODINGRESULT:
+            new(&Body_.decodingResult_) DecodingResult;
+            which_Body_ = id::DECODINGRESULT;
+            break;
+
+          case id::DEVICECONFIGURATION:
+            new(&Body_.deviceConfiguration_) DeviceConfiguration;
+            which_Body_ = id::DEVICECONFIGURATION;
+            break;
+
+          case id::REQUESTBOOTINFO:
+            new(&Body_.requestBootInfo_) RequestBootInfo;
+            which_Body_ = id::REQUESTBOOTINFO;
+            break;
+
+          case id::BOOTMESSAGE:
+            new(&Body_.bootMessage_) BootMessage;
+            which_Body_ = id::BOOTMESSAGE;
+            break;
+
+          case id::RESETRADIO:
+            new(&Body_.resetRadio_) LoRaReset;
+            which_Body_ = id::RESETRADIO;
+            break;
+
+          case id::ACK:
+            new(&Body_.ack_) LoRaAck;
+            which_Body_ = id::ACK;
+            break;
+
           default:
             break;
          }
@@ -979,14 +1885,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       {
         switch(which_Body_)
         {
-          case id::SEQUENCECONFIG:
-            Body_.sequenceConfig_.~ForwardSequenceConfig(); // NOSONAR Unions require this.
-            break;
-          case id::FORWARDRADIOCONFIGUPDATE:
-            Body_.forwardRadioConfigUpdate_.~ForwardRadioConfigUpdate(); // NOSONAR Unions require this.
-            break;
           case id::FORWARDEXPERIMENTCOMMAND:
             Body_.forwardExperimentCommand_.~ForwardExperimentCommand(); // NOSONAR Unions require this.
+            break;
+          case id::EXPERIMENTRESPONSE:
+            Body_.experimentResponse_.~ExperimentResponse(); // NOSONAR Unions require this.
             break;
           case id::MEASUREMENTSTREAMREQUEST:
             Body_.measurementStreamRequest_.~MeasurementStreamRequest(); // NOSONAR Unions require this.
@@ -1005,6 +1908,24 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::RLNCTERMINATIONCOMMAND:
             Body_.rlncTerminationCommand_.~RlncTerminationCommand(); // NOSONAR Unions require this.
+            break;
+          case id::DECODINGRESULT:
+            Body_.decodingResult_.~DecodingResult(); // NOSONAR Unions require this.
+            break;
+          case id::DEVICECONFIGURATION:
+            Body_.deviceConfiguration_.~DeviceConfiguration(); // NOSONAR Unions require this.
+            break;
+          case id::REQUESTBOOTINFO:
+            Body_.requestBootInfo_.~RequestBootInfo(); // NOSONAR Unions require this.
+            break;
+          case id::BOOTMESSAGE:
+            Body_.bootMessage_.~BootMessage(); // NOSONAR Unions require this.
+            break;
+          case id::RESETRADIO:
+            Body_.resetRadio_.~LoRaReset(); // NOSONAR Unions require this.
+            break;
+          case id::ACK:
+            Body_.ack_.~LoRaAck(); // NOSONAR Unions require this.
             break;
           default:
             break;

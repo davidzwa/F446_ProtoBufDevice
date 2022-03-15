@@ -5,53 +5,16 @@
 #define CONFIG_H__
 
 #define APP_NAME "LoRaMulticast"
-// #define STANDALONE_TX_INFINITE
 
-#if defined(REGION_AS923)
-
-#define RF_FREQUENCY 923000000 // Hz
-
-#elif defined(REGION_AU915)
-
-#define RF_FREQUENCY 915000000 // Hz
-
-#elif defined(REGION_CN470)
-
-#define RF_FREQUENCY 470000000 // Hz
-
-#elif defined(REGION_CN779)
-
-#define RF_FREQUENCY 779000000 // Hz
-
-#elif defined(REGION_EU433)
-
+#if defined(REGION_EU433)
 #define RF_FREQUENCY 433000000 // Hz
-
 #elif defined(REGION_EU868)
-
 #define RF_FREQUENCY 872000000 // Hz
-
-#elif defined(REGION_KR920)
-
-#define RF_FREQUENCY 920000000 // Hz
-
-#elif defined(REGION_IN865)
-
-#define RF_FREQUENCY 865000000 // Hz
-
-#elif defined(REGION_US915)
-
-#define RF_FREQUENCY 915000000 // Hz
-
-#elif defined(REGION_RU864)
-
-#define RF_FREQUENCY 864000000 // Hz
-
 #else
 #error "Please define a frequency band in the compiler options."
 #endif
 
-#define TX_OUTPUT_POWER 14 // dBm
+#define TX_OUTPUT_POWER -17 // dBm [-17 to 14]
 
 #if defined(USE_MODEM_LORA)
 
@@ -68,6 +31,8 @@
 #define LORA_SYMBOL_TIMEOUT 5   // Symbols
 #define LORA_FIX_LENGTH_PAYLOAD_ON false
 #define LORA_IQ_INVERSION_ON false
+#define LORA_CRC_ON true
+#define LORA_CONT_LISTEN true
 
 #elif defined(USE_MODEM_FSK)
 
@@ -83,14 +48,15 @@
 #endif
 
 // Protobuf defines
-#define MAX_LORA_BYTES (30)
+#define MAX_LORA_BYTES (35)
 #define LORA_MSG_TEMPLATE LoRaMessage<MAX_LORA_BYTES>
 
 // RLNC defines
 #define LFSR_DEFAULT_SEED 0x08
 
 #define RX_TIMEOUT_VALUE 1000
-#define BUFFER_SIZE 64  // Define the payload size here
+#define RADIO_BUFFER_SIZE 100  // Define the payload size here
 
-#define FIRMWARE_VERSION 0x0200010B
+#define NETWORK_RESPONSE_ID 0x12345678
+#define FIRMWARE_VERSION 0x02000205
 #endif

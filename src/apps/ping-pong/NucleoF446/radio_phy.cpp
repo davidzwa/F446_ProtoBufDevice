@@ -6,9 +6,12 @@
 #include "ProtoWriteBuffer.h"
 #include "cli.h"
 #include "config.h"
+#include "delay.h"
 #include "lora_device_messages.h"
 #include "measurements.h"
+#include "radio_config.h"
 #include "tasks.h"
+#include "utils.h"
 
 ProtoReadBuffer readLoraBuffer;
 ProtoWriteBuffer writeLoraBuffer;
@@ -21,7 +24,7 @@ int8_t lastSnrValue = 0;
  * \brief Radio interupts
  */
 void OnTxDone(void);
-void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr);
+void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr);
 void OnTxTimeout(void);
 void OnRxTimeout(void);
 void OnRxError(void);
@@ -47,14 +50,14 @@ void InitRadioPhy() {
     Radio.SetTxConfig(MODEM_LORA, TX_OUTPUT_POWER, 0, LORA_BANDWIDTH,
                       LORA_SPREADING_FACTOR, LORA_CODINGRATE,
                       LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
-                      true, 0, 0, LORA_IQ_INVERSION_ON, 3000);
+                      LORA_CRC_ON, 0, 0, LORA_IQ_INVERSION_ON, RX_TIMEOUT_VALUE);
 
     Radio.SetRxConfig(MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
                       LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
                       LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
-                      0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
+                      0, LORA_CRC_ON, 0, 0, LORA_IQ_INVERSION_ON, LORA_CONT_LISTEN);
 
-    Radio.SetMaxPayloadLength(MODEM_LORA, BUFFER_SIZE);
+    Radio.SetMaxPayloadLength(MODEM_LORA, RADIO_BUFFER_SIZE);
 
 #elif defined(USE_MODEM_FSK)
 
@@ -76,29 +79,21 @@ void InitRadioPhy() {
 }
 
 void OnTxDone(void) {
-    ApplyConfigIfPending();
-
-    // if (!isExecutingCommand) {
-    //     Radio.Rx(RX_TIMEOUT_VALUE);
-    // } else {
-    Radio.Sleep();
-    // }
+    UartDebug("LORATX-DONE", 400, 11);
+    Radio.Rx(0);
 }
 
 void OnTxTimeout(void) {
-    ApplyConfigIfPending();
-
-    // if (!isExecutingCommand) {
-    //     Radio.Rx(RX_TIMEOUT_VALUE);
-    // } else {
-    Radio.Sleep();
-    // }
+    UartDebug("LORATX-TIMEOUT", 400, 14);
+    Radio.Rx(0);
 }
 
-void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
+void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     // Tracks RSSI and SNR
     lastRssiValue = rssi;
     lastSnrValue = snr;
+
+    UartDebug("LORARX-DONE", 0, 11);
 
     for (uint16_t i = 0; i < size; i++) {
         readLoraBuffer.push(payload[i]);
@@ -112,49 +107,87 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Processing
-    HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
+    auto isResponding = HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
 
-    Radio.Rx(0);
+    if (!isResponding) {
+        Radio.Rx(0);
+    }
 }
 
 /**
  * @brief Proto processor for LoRa messages - makes testing easier
- * 
+ *
  */
-void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
-    auto sequenceNumber = message.get_CorrelationCode();
-    RegisterNewMeasurement(sequenceNumber, rssi, snr);
+bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
+    auto hasResponseTx = false;
 
-    if (message.has_forwardRadioConfigUpdate()) {
-        auto configMessage = message.get_forwardRadioConfigUpdate();
-        if (configMessage.has_radioRxConfig()) {
-            auto config = configMessage.get_radioRxConfig();
-            // TODO
-            // UpdateRadioRxConfig();
-        }
-        if (configMessage.has_radioTxConfig()) {
-            auto config = configMessage.get_radioTxConfig();
-            // TODO apply
-            // UpdateRadioTxConfig();
-        }
-        if (message.has_sequenceConfig()) {
-            SetSequenceRequestConfig(message.get_sequenceConfig());
+    // Debug whether this was multicast or not
+    bool isDeviceId = IsDeviceId(message.get_DeviceId());
+    bool isMulticast = message.get_IsMulticast();
+    if (isMulticast) {
+        UartDebug("MC", isDeviceId + 200, 2);
 
-            // TODO send ACK if success
+        // Only multicast is registered as measurement
+        auto sequenceNumber = message.get_CorrelationCode();
+        RegisterNewMeasurement(sequenceNumber, rssi, snr);
+    } else {
+        UartDebug("UC", isDeviceId + 100, 2);
+    }
+
+    // Exception for multicast stop command
+    if ((!isDeviceId || isMulticast) && message.has_deviceConfiguration()) {
+        auto deviceConf = message.get_deviceConfiguration();
+        if (IsSending()) {
+            StopPeriodicTransmit();
         }
-    } else if (message.has_measurementStreamRequest()) {
+    } else if (isDeviceId) {
+        if (message.has_deviceConfiguration()) {
+            auto config = message.get_deviceConfiguration();
+            if (IsSending()) {
+                StopPeriodicTransmit();
+                UartDebug("DevConfStop", 0, 12);
+            } else {
+                SetTxConfig(config);
+                ApplyAlwaysSendPeriodically(config);
+                UartDebug("DevConf", 0, 7);
+            }
+        } else if (message.has_forwardExperimentCommand()) {
+            auto msg = message.get_forwardExperimentCommand();
+            auto slaveCommand = msg.get_slaveCommand();
+            if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
+                ClearMeasurements();
+            }
+            // No unique extra feature
+            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
+            // }
+            // Not built yet
+            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
+            //     // TODO
+            // }
+
+            if (!isMulticast) {
+                UartDebug("LORA-ACK", 1, 7);
+                hasResponseTx = true;
+                TransmitLoRaFlashInfo(true);
+            }
+
+        }
+        // Not built yet
+        // else if (message.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();
-    } else if (message.has_rlncInitConfigCommand()) {
-        auto initConfigCommand = message.mutable_rlncInitConfigCommand();
-        decoder.InitRlncDecodingSession(initConfigCommand);
-    } else if (message.has_rlncStateUpdate()) {
-        auto rlncStateUpdate = message.get_rlncStateUpdate();
-        decoder.UpdateRlncDecodingState(rlncStateUpdate);
-    } else if (message.has_rlncEncodedFragment()) {
-        decoder.ProcessRlncFragment(message);
-    } else if (message.has_rlncTerminationCommand()) {
-        decoder.TerminateRlnc(message.get_rlncTerminationCommand());
+        // }
+        else if (message.has_rlncInitConfigCommand()) {
+            auto initConfigCommand = message.mutable_rlncInitConfigCommand();
+            decoder.InitRlncDecodingSession(initConfigCommand);
+        } else if (message.has_rlncStateUpdate()) {
+            auto rlncStateUpdate = message.get_rlncStateUpdate();
+            decoder.UpdateRlncDecodingState(rlncStateUpdate);
+        } else if (message.has_rlncEncodedFragment()) {
+            decoder.ProcessRlncFragment(message);
+        } else if (message.has_rlncTerminationCommand()) {
+            decoder.TerminateRlnc(message.get_rlncTerminationCommand());
+        }
     }
 
     // Send the RX event back over UART (if enabled)
@@ -163,6 +196,8 @@ void HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
     // Ensure that the message is not re-used
     readLoraBuffer.clear();
     message.clear();
+
+    return hasResponseTx;
 }
 
 void OnRxTimeout(void) {
@@ -171,6 +206,27 @@ void OnRxTimeout(void) {
 
 void OnRxError(void) {
     Radio.Rx(0);
+}
+
+void TransmitLoRaFlashInfo(bool wasCleared) {
+    LORA_MSG_TEMPLATE message;
+    // Suppress response
+    message.set_IsMulticast(false);
+    message.set_DeviceId(NETWORK_RESPONSE_ID);
+    auto& expResponse = message.mutable_experimentResponse();
+    expResponse.set_WasCleared(wasCleared);
+    expResponse.set_MeasurementCount(GetMeasurementCount());
+    expResponse.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
+
+    TransmitLoRaMessage(message);
+}
+
+void TransmitLoRaAck() {
+    LORA_MSG_TEMPLATE message;
+    auto& ack = message.mutable_ack();
+    ack.set_DeviceId(NETWORK_RESPONSE_ID);
+
+    TransmitLoRaMessage(message);
 }
 
 void TransmitLoRaMessage(LORA_MSG_TEMPLATE& message) {

@@ -28,7 +28,7 @@ message RadioRxConfig
 message RadioTxConfig  
 { 
     RadioModems Modem = 1; 
-    uint32 Power = 2; 
+    int32 Power = 2; 
     uint32 Fdev = 3; 
     uint32 Bandwidth = 4; 
     uint32 DataRate = 5; 
