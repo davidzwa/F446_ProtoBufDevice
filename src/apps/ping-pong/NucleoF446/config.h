@@ -22,7 +22,7 @@
                                     //  1: 250 kHz, \
                                     //  2: 500 kHz, \
                                     //  3: Reserved]
-#define LORA_SPREADING_FACTOR 10 // [SF7..SF12]
+#define LORA_SPREADING_FACTOR 8 // [SF7..SF12]
 #define LORA_CODINGRATE 2       // [1: 4/5, \
                                     //  2: 4/6, \
                                     //  3: 4/7, \
@@ -58,6 +58,6 @@
 #define RADIO_BUFFER_SIZE 100  // Define the payload size here
 
 #define NETWORK_RESPONSE_ID 0x12345678
-#define FIRMWARE_VERSION 0x02000204
+#define FIRMWARE_VERSION 0x02000205
 #define COMPILE_TS __TIMESTAMP__
 #endif

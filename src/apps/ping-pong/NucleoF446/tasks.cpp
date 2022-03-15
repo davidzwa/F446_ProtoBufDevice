@@ -10,6 +10,7 @@
 
 #define MAX_SEQUENCE_NUMBERS 5000
 #define DEFAULT_TX_PERIOD 2000
+#define HEARTHBEAT_PERIOD 60000
 
 // Uart debugging
 static TimerEvent_t heartBeatTimer;
@@ -26,17 +27,34 @@ bool standaloneAlwaysSendPeriodically = false;
 uint16_t sequenceMessageCount = 0;
 bool sequenceTestRunning = false;
 
+bool IsSending() {
+    return periodicTxTimer.IsStarted;
+}
+
+void StartSending(bool reset) {
+    if (reset) {
+        TimerReset(&periodicTxTimer);
+    }
+    else {
+        TimerStart(&periodicTxTimer);
+    }
+}
+
+void StopSending() {
+    TimerStop(&periodicTxTimer);
+}
+
 bool ApplyPeriodicTxIntervalSafely(uint32_t period) {
     // Period < 50 Too fast (chance of radio overrun) and nice way to disable the periodic timer
     if (period < 50) {
         periodicCurrentCounter = 0;
-        TimerStop(&periodicTxTimer);
+        StopSending();
 
         return false;
     } else {
         periodicTxInterval = period;
         TimerSetValue(&periodicTxTimer, periodicTxInterval);
-        TimerReset(&periodicTxTimer);
+        StartSending(true);
 
         return true;
     }
@@ -44,7 +62,7 @@ bool ApplyPeriodicTxIntervalSafely(uint32_t period) {
 
 static void OnHeartbeatEvent(void* context) {
     UartSendBoot();
-    TimerReset(&heartBeatTimer);
+    StartSending(true);
 }
 
 static void OnPeriodicTx(void* context) {
@@ -66,14 +84,14 @@ static void OnPeriodicTx(void* context) {
         if (standaloneAlwaysSendPeriodically) {
             // We start again with new counter
             periodicCurrentCounter = 0;
-            TimerReset(&periodicTxTimer);
+            StartSending(true);
         } else {
             // We will send the data once
             // RequestStreamMeasurements();
-            TimerStop(&periodicTxTimer);
+            StopSending();
         }
     } else {
-        TimerReset(&periodicTxTimer);
+        StartSending(true);
     }
 }
 
@@ -88,7 +106,7 @@ void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
     if (standaloneAlwaysSendPeriodically) {
         standaloneAlwaysSendPeriodically = true;
         periodicCurrentCounter = 0;
-        sequenceNumberLimit = MAX_SEQUENCE_NUMBERS;
+        sequenceNumberLimit = limitedSendCount; // Sequence looparound 
 
         ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
     } else {
@@ -97,7 +115,7 @@ void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
         periodicCurrentCounter = 0;
 
         if (limitedSendCount == 0) {
-            TimerStop(&periodicTxTimer);
+            StopSending();
         }
         else {
             ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
@@ -109,7 +127,7 @@ void InitTimedTasks() {
     TimerInit(&heartBeatTimer, OnHeartbeatEvent);
     TimerInit(&periodicTxTimer, OnPeriodicTx);
 
-    TimerSetValue(&heartBeatTimer, 30000);
+    TimerSetValue(&heartBeatTimer, HEARTHBEAT_PERIOD);
     TimerSetValue(&periodicTxTimer, periodicTxInterval);
 
     standaloneAlwaysSendPeriodically = false;

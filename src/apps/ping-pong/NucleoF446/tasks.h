@@ -4,6 +4,8 @@
 #ifndef TIMERS__H__
 #define TIMERS__H__
 
+bool IsSending();
+void StopSending();
 void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration);
 void InitTimedTasks();
 

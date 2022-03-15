@@ -8,8 +8,8 @@
 #include "config.h"
 #include "delay.h"
 #include "lora_device_messages.h"
-#include "radio_config.h"
 #include "measurements.h"
+#include "radio_config.h"
 #include "tasks.h"
 #include "utils.h"
 
@@ -137,16 +137,20 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
     // Exception for multicast stop command
     if ((!isDeviceId || isMulticast) && message.has_deviceConfiguration()) {
         auto deviceConf = message.get_deviceConfiguration();
-        if (!deviceConf.get_EnableAlwaysSend()) {
-            ApplyAlwaysSendPeriodically(deviceConf);
+        if (IsSending()) {
+            StopSending();
         }
-    }
-    else if (isDeviceId) {
+    } else if (isDeviceId) {
         if (message.has_deviceConfiguration()) {
             auto config = message.get_deviceConfiguration();
-            SetTxConfig(config);
-            ApplyAlwaysSendPeriodically(config);
-            UartDebug("DevConf", 0, 7);
+            if (IsSending()) {
+                StopSending();
+                UartDebug("DevConfStop", 0, 12);
+            } else {
+                SetTxConfig(config);
+                ApplyAlwaysSendPeriodically(config);
+                UartDebug("DevConf", 0, 7);
+            }
         } else if (message.has_forwardExperimentCommand()) {
             auto msg = message.get_forwardExperimentCommand();
             auto slaveCommand = msg.get_slaveCommand();

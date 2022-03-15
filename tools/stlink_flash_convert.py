@@ -6,8 +6,8 @@ print(os.getcwd())
 
 # 128 64 32 16
 read_size = 1024 * 16
-# subprocess.run(
-#     f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
+subprocess.run(
+    f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
@@ -27,8 +27,8 @@ def index_to_time(index):
     return index / RATE / 60
 
 
-path = "G:/My Drive/Study/Thesis/Mar 2022/Datasets/4_a2"
-path2 = "../data/nucleo"
+# path = "G:/My Drive/Study/Thesis/Mar 2022/Datasets/4_a2"
+path = "../data/nucleo"
 file = open(path, "rb")
 header = file.read(4)
 reserved1 = file.read(4)
