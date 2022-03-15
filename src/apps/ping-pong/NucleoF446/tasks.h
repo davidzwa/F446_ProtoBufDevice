@@ -5,7 +5,7 @@
 #define TIMERS__H__
 
 bool IsSending();
-void StopSending();
+void StopPeriodicTransmit();
 void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration);
 void InitTimedTasks();
 

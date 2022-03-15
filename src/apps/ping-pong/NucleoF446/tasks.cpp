@@ -31,7 +31,7 @@ bool IsSending() {
     return periodicTxTimer.IsStarted;
 }
 
-void StartSending(bool reset) {
+void StartPeriodicTransmit(bool reset) {
     if (reset) {
         TimerReset(&periodicTxTimer);
     }
@@ -40,7 +40,7 @@ void StartSending(bool reset) {
     }
 }
 
-void StopSending() {
+void StopPeriodicTransmit() {
     TimerStop(&periodicTxTimer);
 }
 
@@ -48,13 +48,13 @@ bool ApplyPeriodicTxIntervalSafely(uint32_t period) {
     // Period < 50 Too fast (chance of radio overrun) and nice way to disable the periodic timer
     if (period < 50) {
         periodicCurrentCounter = 0;
-        StopSending();
+        StopPeriodicTransmit();
 
         return false;
     } else {
         periodicTxInterval = period;
         TimerSetValue(&periodicTxTimer, periodicTxInterval);
-        StartSending(true);
+        StartPeriodicTransmit(true);
 
         return true;
     }
@@ -62,13 +62,13 @@ bool ApplyPeriodicTxIntervalSafely(uint32_t period) {
 
 static void OnHeartbeatEvent(void* context) {
     UartSendBoot();
-    StartSending(true);
+    TimerStart(&heartBeatTimer);
 }
 
 static void OnPeriodicTx(void* context) {
     // We generate a packet as if it came from PC/UART
     LORA_MSG_TEMPLATE command;
-    command.set_IsMulticast(false);
+    command.set_IsMulticast(true);
 
     // TODO REPLACE with useful payload
     uint8_t* test_message = (uint8_t*)"ZEDdify me";
@@ -84,14 +84,14 @@ static void OnPeriodicTx(void* context) {
         if (standaloneAlwaysSendPeriodically) {
             // We start again with new counter
             periodicCurrentCounter = 0;
-            StartSending(true);
+            StartPeriodicTransmit(true);
         } else {
             // We will send the data once
             // RequestStreamMeasurements();
-            StopSending();
+            StopPeriodicTransmit();
         }
     } else {
-        StartSending(true);
+        StartPeriodicTransmit(true);
     }
 }
 
@@ -115,7 +115,7 @@ void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
         periodicCurrentCounter = 0;
 
         if (limitedSendCount == 0) {
-            StopSending();
+            StopPeriodicTransmit();
         }
         else {
             ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);

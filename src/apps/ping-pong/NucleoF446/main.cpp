@@ -41,7 +41,7 @@ int main(void) {
 
     // ApplyRadioConfig();
 
-    UartDebug(COMPILE_TS, 0, sizeof(COMPILE_TS));
+    UartDebug(__TIMESTAMP__, 0, sizeof(__TIMESTAMP__));
 
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);

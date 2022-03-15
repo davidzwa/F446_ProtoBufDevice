@@ -138,13 +138,13 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
     if ((!isDeviceId || isMulticast) && message.has_deviceConfiguration()) {
         auto deviceConf = message.get_deviceConfiguration();
         if (IsSending()) {
-            StopSending();
+            StopPeriodicTransmit();
         }
     } else if (isDeviceId) {
         if (message.has_deviceConfiguration()) {
             auto config = message.get_deviceConfiguration();
             if (IsSending()) {
-                StopSending();
+                StopPeriodicTransmit();
                 UartDebug("DevConfStop", 0, 12);
             } else {
                 SetTxConfig(config);
