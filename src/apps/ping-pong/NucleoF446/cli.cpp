@@ -137,19 +137,23 @@ void ProcessCliCommand() {
     //     // rxConf = uartCommand.get_rxConfig();
     //     UartSendAck(1);
     //     // TODO apply
-    // } else 
+    // } else
     if (uartCommand.has_txConfig()) {
         auto txConf = uartCommand.get_txConfig();
         SetTxPower(txConf.get_Power());
         UartSendAck(txConf.get_Power());
         // TODO apply
     } else if (uartCommand.has_transmitCommand()) {
-        // TODO verify if within SF/ToA limits?
         LORA_MSG_TEMPLATE command = uartCommand.get_transmitCommand();
         auto targetDeviceId = command.get_DeviceId();
 
         // Immediately dump the payload 'as if LoRa received it'
-        if (IsDeviceId(targetDeviceId) || uartCommand.get_doNotProxyCommand()) {
+        if (IsDeviceId(targetDeviceId) && uartCommand.get_DoNotProxyCommand()) {
+            // Make sure
+            command.set_DeviceId(GetDeviceId().get_Id0());
+            HandleLoRaProtoPayload(command, -1, -1);
+        } else if (uartCommand.get_DoNotProxyCommand()) {
+            // Multicast but dont proxy = local multicast
             HandleLoRaProtoPayload(command, -1, -1);
         } else {
             TransmitLoRaMessage(command);

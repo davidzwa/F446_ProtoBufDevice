@@ -22,11 +22,11 @@
  */
 #include "adc.h"
 #include "board-config.h"
+#include "eeprom-board.h"
 #include "gpio.h"
 #include "i2c.h"
 #include "lpm-board.h"
 #include "rtc-board.h"
-#include "eeprom-board.h"
 #include "spi.h"
 #include "stm32f4xx.h"
 #include "sysIrqHandlers.h"
@@ -216,7 +216,7 @@ void BoardInitMcu(void) {
 void BoardResetMcu(void) {
     CRITICAL_SECTION_BEGIN();
 
-    //Restart system
+    // Restart system
     NVIC_SystemReset();
 }
 
@@ -379,14 +379,14 @@ void SystemClockConfig(void) {
     // RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT; // Same as MSICALIBRATION_DEFAULT
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;  // Same as MSICALIBRATION_DEFAULT
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI; // HSI instead of MSI
-    RCC_OscInitStruct.PLL.PLLM = 16; // Was 1
-    RCC_OscInitStruct.PLL.PLLN = 360; // Was 40
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;  // Was RCC_PLLP_DIV7
-    RCC_OscInitStruct.PLL.PLLQ = 7;              // Was RCC_PLLQ_DIV4
-    RCC_OscInitStruct.PLL.PLLR = 6;              // Was RCC_PLLR_DIV2
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;  // HSI instead of MSI
+    RCC_OscInitStruct.PLL.PLLM = 16;                      // Was 1
+    RCC_OscInitStruct.PLL.PLLN = 360;                     // Was 40
+    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;           // Was RCC_PLLP_DIV7
+    RCC_OscInitStruct.PLL.PLLQ = 7;                       // Was RCC_PLLQ_DIV4
+    RCC_OscInitStruct.PLL.PLLR = 6;                       // Was RCC_PLLR_DIV2
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
         assert_param(LMN_STATUS_ERROR);
     }
@@ -540,10 +540,10 @@ uint8_t GetBoardPowerSource(void) {
 }
 
 /**
-  * \brief Enters Low Power Stop Mode
-  *
-  * \note ARM exists the function when waking up
-  */
+ * \brief Enters Low Power Stop Mode
+ *
+ * \note ARM exists the function when waking up
+ */
 void LpmEnterStopMode(void) {
     CRITICAL_SECTION_BEGIN();
 
@@ -592,7 +592,7 @@ void BoardLowPowerHandler(void) {
 
     __disable_irq();
     /*!
-     * If an interrupt has occurred after __disable_irq( ), it is kept pending 
+     * If an interrupt has occurred after __disable_irq( ), it is kept pending
      * and cortex will not enter low power anyway
      */
 
