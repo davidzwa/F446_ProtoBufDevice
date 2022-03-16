@@ -35,12 +35,14 @@ message DebugMessage {
 // The main message container
 message UartResponse {
     bytes Payload = 1;
+    uint32 Crc8 = 2;
+    
     oneof Body {
-        BootMessage bootMessage = 2;
-        AckMessage ackMessage = 3;
-        LoraMeasurement loraMeasurement = 4;
-        DebugMessage debugMessage = 5;
-        ExceptionMessage exceptionMessage = 6;
-        DecodingResult decodingResult = 7;
+        BootMessage bootMessage = 3;
+        AckMessage ackMessage = 4;
+        LoraMeasurement loraMeasurement = 5;
+        DebugMessage debugMessage = 6;
+        ExceptionMessage exceptionMessage = 7;
+        DecodingResult decodingResult = 8;
     }
 }

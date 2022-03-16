@@ -164,7 +164,8 @@
         "new": "cpp",
         "stdexcept": "cpp",
         "typeinfo": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "crc8.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

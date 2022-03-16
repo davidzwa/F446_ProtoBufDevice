@@ -20,6 +20,7 @@
 #include "cli.h"
 #include "config.h"
 #include "delay.h"
+#include "Crc8.h"
 #include "measurements.h"
 #include "nvmm.h"
 #include "radio_config.h"
@@ -42,6 +43,14 @@ int main(void) {
     // ApplyRadioConfig();
 
     UartDebug(__TIMESTAMP__, 0, sizeof(__TIMESTAMP__));
+
+    uint8_t values[] = {0xFF, 0x12, 0x34, 0x00};
+    auto outcome = ComputeChecksum(values, sizeof(values));
+    UartDebug("CRC", outcome, 3);
+
+    uint8_t values2[] = {0x00, 0x12, 0x34, 0x00};
+    outcome = ComputeChecksum(values2, sizeof(values2));
+    UartDebug("CRC", outcome, 3);
 
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);
