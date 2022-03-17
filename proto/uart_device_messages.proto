@@ -35,6 +35,7 @@ message DebugMessage {
 // The main message container
 message UartResponse {
     bytes Payload = 1;
+    
     oneof Body {
         BootMessage bootMessage = 2;
         AckMessage ackMessage = 3;
@@ -42,5 +43,6 @@ message UartResponse {
         DebugMessage debugMessage = 5;
         ExceptionMessage exceptionMessage = 6;
         DecodingResult decodingResult = 7;
+        DecodingUpdate decodingUpdate = 8; // Debugging ACK
     }
 }

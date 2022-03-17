@@ -7,8 +7,8 @@ print(os.getcwd())
 # 128 64 32 16
 read_size = 1024 * 16
 # --serial 066BFF323338424E43042719
-subprocess.run(
-    f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
+# subprocess.run(
+#     f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
@@ -23,7 +23,7 @@ def equals_nullword(bytestring):
 
 
 def index_to_time(index, rate):
-    return index / rate / 60
+    return index / rate / 60 / 60
 
 
 def plot_file(path, title, rate):
@@ -96,13 +96,13 @@ def plot_file(path, title, rate):
                   label='sequence_numbers')
     ax3.legend(handles=l3+l4)
     ax3.set_title("PER over time")
-    ax3.set_xlabel('Time (min)')
+    ax3.set_xlabel('Time (h)')
 
     l1 = ax1.plot(data_indices_time, data_set_rrsi,
                   color='orange', label='RSSI')
     l2 = ax2.plot(data_indices_time, data_set_snr, label='SNR')
     ax1.legend(handles=l1+l2)
-    ax1.set_xlabel('Time (min)')
+    ax1.set_xlabel('Time (h)')
     ax1.set_title(title)
     ax1.set_ylabel("RSSI [dBm]")
     ax2.set_ylabel("SNR [dB]")
@@ -115,11 +115,11 @@ def plot_file(path, title, rate):
 
 if __name__ == '__main__':
     base1 = "../data/nucleo"
-    base = "G:/My Drive/Study/Thesis/Mar 2022/Datasets/"
+    # base = "G:/My Drive/Study/Thesis/Mar 2022/Datasets/"
 
     path0 = base1
     title0 = "RSSI and SNR Roaming"
-    rate0 = 0.1
+    rate0 = 0.5
     PER_set1 = plot_file(path0, title0, rate0)
     PER_datasets.append(PER_set1)
 

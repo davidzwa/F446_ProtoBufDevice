@@ -16,6 +16,7 @@
  *   Includes a UART CLI
  */
 
+#include "Crc8.h"
 #include "board.h"
 #include "cli.h"
 #include "config.h"
@@ -26,6 +27,17 @@
 #include "radio_phy.h"
 #include "tasks.h"
 #include "utils.h"
+#include "gpio.h"
+
+/**
+ * @brief Push button on PC13 (pin 2)
+ *
+ */
+Gpio_t button;
+
+void ButtonCallback(void* context) {
+    UartDebug("YAAS", 3, 4);
+}
 
 int main(void) {
     BoardInitMcu();
@@ -40,8 +52,19 @@ int main(void) {
     UartSendBoot();
 
     // ApplyRadioConfig();
-
     UartDebug(__TIMESTAMP__, 0, sizeof(__TIMESTAMP__));
+    
+    GpioInit(&button, PC_13, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
+    GpioSetInterrupt(&button, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, &ButtonCallback);
+
+    // CRC check
+    // uint8_t values[] = {0xFF, 0x12, 0x34, 0x00};
+    // auto outcome = ComputeChecksum(values, sizeof(values));
+    // UartDebug("CRC", outcome, 3);
+
+    // uint8_t values2[] = {0x00, 0x12, 0x34, 0x00};
+    // outcome = ComputeChecksum(values2, sizeof(values2));
+    // UartDebug("CRC", outcome, 3);
 
     // unsigned int prim_poly = 0x11D;
     // galois::GaloisField gf(8, prim_poly);
@@ -68,7 +91,13 @@ int main(void) {
         }
 
         if (IsCliCommandReady()) {
-            ProcessCliCommand();
+            if (IsCrcValid()) {
+                ProcessCliCommand();
+            }
+            else {
+                UartDebug("CRC-FAIL", 400, 8);
+                ResetCrcFailure();
+            }
         }
     }
 }

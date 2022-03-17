@@ -28,5 +28,5 @@ message UartCommand {
     } 
 
     // Do not proxy the LoRa command - for debugging purposes
-    bool doNotProxyCommand = 8;
+    bool DoNotProxyCommand = 8;
 } 

@@ -101,7 +101,7 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     auto result = loraPhyMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
-        UartSendAck(3);
+        UartDebug("PROTO-LORA-FAIL", 401, 15);
         Radio.Rx(0);
         return;
     }
@@ -166,7 +166,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             // }
 
             if (!isMulticast) {
-                UartDebug("LORA-ACK", 1, 7);
+                UartDebug("LORA-ACK", 1, 8);
                 hasResponseTx = true;
                 TransmitLoRaFlashInfo(true);
             }
@@ -177,17 +177,16 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         // TODO filter based on device id
         // StreamMeasurements();
         // }
-        else if (message.has_rlncInitConfigCommand()) {
-            auto initConfigCommand = message.mutable_rlncInitConfigCommand();
-            decoder.InitRlncDecodingSession(initConfigCommand);
-        } else if (message.has_rlncStateUpdate()) {
-            auto rlncStateUpdate = message.get_rlncStateUpdate();
-            decoder.UpdateRlncDecodingState(rlncStateUpdate);
-        } else if (message.has_rlncEncodedFragment()) {
-            decoder.ProcessRlncFragment(message);
-        } else if (message.has_rlncTerminationCommand()) {
-            decoder.TerminateRlnc(message.get_rlncTerminationCommand());
-        }
+    } else if (message.has_rlncInitConfigCommand()) {
+        auto initConfigCommand = message.mutable_rlncInitConfigCommand();
+        decoder.InitRlncDecodingSession(initConfigCommand);
+    } else if (message.has_rlncStateUpdate()) {
+        auto rlncStateUpdate = message.get_rlncStateUpdate();
+        decoder.UpdateRlncDecodingState(rlncStateUpdate);
+    } else if (message.has_rlncEncodedFragment()) {
+        decoder.ProcessRlncFragment(message);
+    } else if (message.has_rlncTerminationCommand()) {
+        decoder.TerminateRlnc(message.get_rlncTerminationCommand());
     }
 
     // Send the RX event back over UART (if enabled)

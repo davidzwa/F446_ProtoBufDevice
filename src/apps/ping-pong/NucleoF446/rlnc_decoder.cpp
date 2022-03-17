@@ -78,6 +78,14 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         // Delegate to Flash, UART or LoRa
         StoreDecodingResult(decodingResult);
     }
+
+    DecodingUpdate decodingUpdate;
+    decodingUpdate.set_Rank(DetermineMatrixRank());
+    decodingUpdate.set_CurrentGenerationIndex(generationIndex);
+    decodingUpdate.set_IsRunning(!terminated);
+    decodingUpdate.set_ReceivedFragments(generationFrames.size());
+
+    UartSendDecodingUpdate(decodingUpdate);
 }
 
 void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
@@ -98,6 +106,8 @@ void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCom
 
     // Debugging flag for tracking the state
     terminated = true;
+
+    UartDebug("RLNC_TERMINATE", 0, 14);
 }
 
 RlncDecodingResult RlncDecoder::DecodeFragments() {
