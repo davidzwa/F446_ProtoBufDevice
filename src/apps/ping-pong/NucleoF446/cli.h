@@ -29,6 +29,7 @@ extern "C" {
 void InitCli(bool withISR);
 
 bool IsCrcValid();
+void ResetCrcFailure();
 bool IsCliCommandReady();
 void ProcessCliCommand();
 

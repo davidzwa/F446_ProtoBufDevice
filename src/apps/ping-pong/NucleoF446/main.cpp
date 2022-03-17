@@ -96,6 +96,7 @@ int main(void) {
             }
             else {
                 UartDebug("CRC-FAIL", 400, 8);
+                ResetCrcFailure();
             }
         }
     }

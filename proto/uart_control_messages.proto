@@ -29,5 +29,4 @@ message UartCommand {
 
     // Do not proxy the LoRa command - for debugging purposes
     bool DoNotProxyCommand = 8;
-    uint32 Crc8 = 9;
 } 

@@ -31,7 +31,8 @@ uint8_t packetBufferingLength = 0;
 uint8_t packetSize;
 uint16_t actualSize;
 bool pendingConfigChange = false;
-const size_t offset = 1;  // End byte
+#define OFFSET_OUTER 1 // End byte
+#define OFFSET_INNER 2  // Length and crc byte
 
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
@@ -101,30 +102,41 @@ void UartISR(UartNotifyId_t id) {
         }
 
         // Remove length and type bytes
-        uint8_t packetSize = actualSize - offset;
+        uint8_t packetSize = actualSize - OFFSET_OUTER;
         uint8_t decodedBuffer[actualSize];
 
-        // Decode and store
+        // Decode 0x00
         COBS::decode(encodedBuffer, packetSize, decodedBuffer);
-        uint8_t n_bytes = decodedBuffer[0];
-        for (size_t i = offset; i <= n_bytes; i++) {
+        
+        // Store crc and length bytes
+        uint8_t crc8 = decodedBuffer[0];
+        size_t n_bytes = decodedBuffer[1];
+
+        // Store packet for deserialization
+        for (size_t i = OFFSET_INNER; i < (n_bytes + OFFSET_INNER); i++) {
             readBuffer.push(decodedBuffer[i]);
         }
 
         auto deserialize_status = uartCommand.deserialize(readBuffer);
-
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            auto commandCrc8 = uartCommand.get_Crc8();
-            checksumSuccess = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
+            auto checksumResult = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
+            checksumSuccess = crc8 == checksumResult;
 
             // Let main loop pick it up
             newCommandReceived = true;
+        }
+        else {
+            UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
         }
 
         readBuffer.clear();
         packetSize = 0;
         packetBufferingLength = 0;
     }
+}
+
+void ResetCrcFailure() {
+    newCommandReceived = false;
 }
 
 bool IsCrcValid() {
