@@ -101,7 +101,7 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     auto result = loraPhyMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
-        UartSendAck(3);
+        UartDebug("PROTO-LORA-FAIL", 401, 15);
         Radio.Rx(0);
         return;
     }
