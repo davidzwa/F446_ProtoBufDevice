@@ -696,7 +696,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     UartResponse(const UartResponse& rhs )
     {
       set_Payload(rhs.get_Payload());
-      set_Crc8(rhs.get_Crc8());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -727,6 +726,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGRESULT:
           set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
         default:
@@ -738,7 +741,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     UartResponse(const UartResponse&& rhs ) noexcept
     {
       set_Payload(rhs.get_Payload());
-      set_Crc8(rhs.get_Crc8());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -769,6 +771,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGRESULT:
           set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
         default:
@@ -783,19 +789,18 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       PAYLOAD = 1,
-      CRC8 = 2,
-      BOOTMESSAGE = 3,
-      ACKMESSAGE = 4,
-      LORAMEASUREMENT = 5,
-      DEBUGMESSAGE = 6,
-      EXCEPTIONMESSAGE = 7,
-      DECODINGRESULT = 8
+      BOOTMESSAGE = 2,
+      ACKMESSAGE = 3,
+      LORAMEASUREMENT = 4,
+      DEBUGMESSAGE = 5,
+      EXCEPTIONMESSAGE = 6,
+      DECODINGRESULT = 7,
+      DECODINGUPDATE = 8
     };
 
     UartResponse& operator=(const UartResponse& rhs)
     {
       set_Payload(rhs.get_Payload());
-      set_Crc8(rhs.get_Crc8());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -826,6 +831,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGRESULT:
           set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
         default:
@@ -838,7 +847,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     UartResponse& operator=(const UartResponse&& rhs) noexcept
     {
       set_Payload(rhs.get_Payload());
-      set_Crc8(rhs.get_Crc8());
       if(rhs.get_which_Body() != which_Body_)
       {
         // First delete the old object in the oneof.
@@ -869,6 +877,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGRESULT:
           set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
         default:
@@ -883,13 +895,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
     inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
     inline const uint8_t* Payload() const { return Payload_.get_const(); }
-
-    inline void clear_Crc8() { Crc8_.clear(); }
-    inline void set_Crc8(const EmbeddedProto::uint32& value) { Crc8_ = value; }
-    inline void set_Crc8(const EmbeddedProto::uint32&& value) { Crc8_ = value; }
-    inline EmbeddedProto::uint32& mutable_Crc8() { return Crc8_; }
-    inline const EmbeddedProto::uint32& get_Crc8() const { return Crc8_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE Crc8() const { return Crc8_.get(); }
 
     id get_which_Body() const { return which_Body_; }
 
@@ -1127,6 +1132,45 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline const DecodingResult& get_decodingResult() const { return Body_.decodingResult_; }
     inline const DecodingResult& decodingResult() const { return Body_.decodingResult_; }
 
+    inline bool has_decodingUpdate() const
+    {
+      return id::DECODINGUPDATE == which_Body_;
+    }
+    inline void clear_decodingUpdate()
+    {
+      if(id::DECODINGUPDATE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.decodingUpdate_.~DecodingUpdate();
+      }
+    }
+    inline void set_decodingUpdate(const DecodingUpdate& value)
+    {
+      if(id::DECODINGUPDATE != which_Body_)
+      {
+        init_Body(id::DECODINGUPDATE);
+      }
+      Body_.decodingUpdate_ = value;
+    }
+    inline void set_decodingUpdate(const DecodingUpdate&& value)
+    {
+      if(id::DECODINGUPDATE != which_Body_)
+      {
+        init_Body(id::DECODINGUPDATE);
+      }
+      Body_.decodingUpdate_ = value;
+    }
+    inline DecodingUpdate& mutable_decodingUpdate()
+    {
+      if(id::DECODINGUPDATE != which_Body_)
+      {
+        init_Body(id::DECODINGUPDATE);
+      }
+      return Body_.decodingUpdate_;
+    }
+    inline const DecodingUpdate& get_decodingUpdate() const { return Body_.decodingUpdate_; }
+    inline const DecodingUpdate& decodingUpdate() const { return Body_.decodingUpdate_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1135,11 +1179,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
         return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
-      }
-
-      if((0U != Crc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = Crc8_.serialize_with_id(static_cast<uint32_t>(id::CRC8), buffer, false);
       }
 
       switch(which_Body_)
@@ -1186,6 +1225,13 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::DECODINGUPDATE:
+          if(has_decodingUpdate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.decodingUpdate_.serialize_with_id(static_cast<uint32_t>(id::DECODINGUPDATE), buffer, true);
+          }
+          break;
+
         default:
           break;
       }
@@ -1208,10 +1254,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         {
           case id::PAYLOAD:
             return_value = Payload_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::CRC8:
-            return_value = Crc8_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::BOOTMESSAGE:
@@ -1241,6 +1283,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
           case id::DECODINGRESULT:
             return_value = deserialize_Body(id::DECODINGRESULT, Body_.decodingResult_, buffer, wire_type);
+
+            break;
+
+          case id::DECODINGUPDATE:
+            return_value = deserialize_Body(id::DECODINGUPDATE, Body_.decodingUpdate_, buffer, wire_type);
 
             break;
 
@@ -1274,7 +1321,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_Payload();
-      clear_Crc8();
       clear_Body();
 
     }
@@ -1283,7 +1329,6 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
 
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
-      EmbeddedProto::uint32 Crc8_ = 0U;
 
       id which_Body_ = id::NOT_SET;
       union Body
@@ -1296,6 +1341,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         DebugMessage debugMessage_;
         ExceptionMessage exceptionMessage_;
         DecodingResult decodingResult_;
+        DecodingUpdate decodingUpdate_;
       };
       Body Body_;
 
@@ -1340,6 +1386,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::DECODINGRESULT;
             break;
 
+          case id::DECODINGUPDATE:
+            new(&Body_.decodingUpdate_) DecodingUpdate;
+            which_Body_ = id::DECODINGUPDATE;
+            break;
+
           default:
             break;
          }
@@ -1368,6 +1419,9 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
           case id::DECODINGRESULT:
             Body_.decodingResult_.~DecodingResult(); // NOSONAR Unions require this.
+            break;
+          case id::DECODINGUPDATE:
+            Body_.decodingUpdate_.~DecodingUpdate(); // NOSONAR Unions require this.
             break;
           default:
             break;

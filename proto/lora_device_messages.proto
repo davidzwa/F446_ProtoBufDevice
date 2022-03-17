@@ -51,7 +51,7 @@ message LoRaMessage {
         RlncEncodedFragment rlncEncodedFragment = 11;
         RlncStateUpdate rlncStateUpdate = 12;
         RlncTerminationCommand rlncTerminationCommand = 13;
-        DecodingResult decodingResult = 14;
+        DecodingResult decodingResult = 14; // ACK
 
         DeviceConfiguration deviceConfiguration = 15;
         RequestBootInfo requestBootInfo = 16;

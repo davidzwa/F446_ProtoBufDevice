@@ -764,4 +764,253 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DecodingUpdate() = default;
+    DecodingUpdate(const DecodingUpdate& rhs )
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_SecondRowCrc8(rhs.get_SecondRowCrc8());
+      set_Rank(rhs.get_Rank());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+    }
+
+    DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_SecondRowCrc8(rhs.get_SecondRowCrc8());
+      set_Rank(rhs.get_Rank());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+    }
+
+    ~DecodingUpdate() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      MATRIXCRC8 = 1,
+      FIRSTROWCRC8 = 2,
+      SECONDROWCRC8 = 3,
+      RANK = 4,
+      RECEIVEDFRAGMENTS = 5,
+      CURRENTGENERATIONINDEX = 6,
+      ISRUNNING = 7
+    };
+
+    DecodingUpdate& operator=(const DecodingUpdate& rhs)
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_SecondRowCrc8(rhs.get_SecondRowCrc8());
+      set_Rank(rhs.get_Rank());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+      return *this;
+    }
+
+    DecodingUpdate& operator=(const DecodingUpdate&& rhs) noexcept
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_SecondRowCrc8(rhs.get_SecondRowCrc8());
+      set_Rank(rhs.get_Rank());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+      return *this;
+    }
+
+    inline void clear_MatrixCrc8() { MatrixCrc8_.clear(); }
+    inline void set_MatrixCrc8(const EmbeddedProto::uint32& value) { MatrixCrc8_ = value; }
+    inline void set_MatrixCrc8(const EmbeddedProto::uint32&& value) { MatrixCrc8_ = value; }
+    inline EmbeddedProto::uint32& mutable_MatrixCrc8() { return MatrixCrc8_; }
+    inline const EmbeddedProto::uint32& get_MatrixCrc8() const { return MatrixCrc8_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MatrixCrc8() const { return MatrixCrc8_.get(); }
+
+    inline void clear_FirstRowCrc8() { FirstRowCrc8_.clear(); }
+    inline void set_FirstRowCrc8(const EmbeddedProto::uint32& value) { FirstRowCrc8_ = value; }
+    inline void set_FirstRowCrc8(const EmbeddedProto::uint32&& value) { FirstRowCrc8_ = value; }
+    inline EmbeddedProto::uint32& mutable_FirstRowCrc8() { return FirstRowCrc8_; }
+    inline const EmbeddedProto::uint32& get_FirstRowCrc8() const { return FirstRowCrc8_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FirstRowCrc8() const { return FirstRowCrc8_.get(); }
+
+    inline void clear_SecondRowCrc8() { SecondRowCrc8_.clear(); }
+    inline void set_SecondRowCrc8(const EmbeddedProto::uint32& value) { SecondRowCrc8_ = value; }
+    inline void set_SecondRowCrc8(const EmbeddedProto::uint32&& value) { SecondRowCrc8_ = value; }
+    inline EmbeddedProto::uint32& mutable_SecondRowCrc8() { return SecondRowCrc8_; }
+    inline const EmbeddedProto::uint32& get_SecondRowCrc8() const { return SecondRowCrc8_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE SecondRowCrc8() const { return SecondRowCrc8_.get(); }
+
+    inline void clear_Rank() { Rank_.clear(); }
+    inline void set_Rank(const EmbeddedProto::uint32& value) { Rank_ = value; }
+    inline void set_Rank(const EmbeddedProto::uint32&& value) { Rank_ = value; }
+    inline EmbeddedProto::uint32& mutable_Rank() { return Rank_; }
+    inline const EmbeddedProto::uint32& get_Rank() const { return Rank_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Rank() const { return Rank_.get(); }
+
+    inline void clear_ReceivedFragments() { ReceivedFragments_.clear(); }
+    inline void set_ReceivedFragments(const EmbeddedProto::uint32& value) { ReceivedFragments_ = value; }
+    inline void set_ReceivedFragments(const EmbeddedProto::uint32&& value) { ReceivedFragments_ = value; }
+    inline EmbeddedProto::uint32& mutable_ReceivedFragments() { return ReceivedFragments_; }
+    inline const EmbeddedProto::uint32& get_ReceivedFragments() const { return ReceivedFragments_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE ReceivedFragments() const { return ReceivedFragments_.get(); }
+
+    inline void clear_CurrentGenerationIndex() { CurrentGenerationIndex_.clear(); }
+    inline void set_CurrentGenerationIndex(const EmbeddedProto::uint32& value) { CurrentGenerationIndex_ = value; }
+    inline void set_CurrentGenerationIndex(const EmbeddedProto::uint32&& value) { CurrentGenerationIndex_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentGenerationIndex() { return CurrentGenerationIndex_; }
+    inline const EmbeddedProto::uint32& get_CurrentGenerationIndex() const { return CurrentGenerationIndex_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentGenerationIndex() const { return CurrentGenerationIndex_.get(); }
+
+    inline void clear_IsRunning() { IsRunning_.clear(); }
+    inline void set_IsRunning(const EmbeddedProto::boolean& value) { IsRunning_ = value; }
+    inline void set_IsRunning(const EmbeddedProto::boolean&& value) { IsRunning_ = value; }
+    inline EmbeddedProto::boolean& mutable_IsRunning() { return IsRunning_; }
+    inline const EmbeddedProto::boolean& get_IsRunning() const { return IsRunning_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE IsRunning() const { return IsRunning_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != MatrixCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MatrixCrc8_.serialize_with_id(static_cast<uint32_t>(id::MATRIXCRC8), buffer, false);
+      }
+
+      if((0U != FirstRowCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = FirstRowCrc8_.serialize_with_id(static_cast<uint32_t>(id::FIRSTROWCRC8), buffer, false);
+      }
+
+      if((0U != SecondRowCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SecondRowCrc8_.serialize_with_id(static_cast<uint32_t>(id::SECONDROWCRC8), buffer, false);
+      }
+
+      if((0U != Rank_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Rank_.serialize_with_id(static_cast<uint32_t>(id::RANK), buffer, false);
+      }
+
+      if((0U != ReceivedFragments_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ReceivedFragments_.serialize_with_id(static_cast<uint32_t>(id::RECEIVEDFRAGMENTS), buffer, false);
+      }
+
+      if((0U != CurrentGenerationIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentGenerationIndex_.serialize_with_id(static_cast<uint32_t>(id::CURRENTGENERATIONINDEX), buffer, false);
+      }
+
+      if((false != IsRunning_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = IsRunning_.serialize_with_id(static_cast<uint32_t>(id::ISRUNNING), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::MATRIXCRC8:
+            return_value = MatrixCrc8_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::FIRSTROWCRC8:
+            return_value = FirstRowCrc8_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SECONDROWCRC8:
+            return_value = SecondRowCrc8_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RANK:
+            return_value = Rank_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RECEIVEDFRAGMENTS:
+            return_value = ReceivedFragments_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTGENERATIONINDEX:
+            return_value = CurrentGenerationIndex_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ISRUNNING:
+            return_value = IsRunning_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_MatrixCrc8();
+      clear_FirstRowCrc8();
+      clear_SecondRowCrc8();
+      clear_Rank();
+      clear_ReceivedFragments();
+      clear_CurrentGenerationIndex();
+      clear_IsRunning();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 MatrixCrc8_ = 0U;
+      EmbeddedProto::uint32 FirstRowCrc8_ = 0U;
+      EmbeddedProto::uint32 SecondRowCrc8_ = 0U;
+      EmbeddedProto::uint32 Rank_ = 0U;
+      EmbeddedProto::uint32 ReceivedFragments_ = 0U;
+      EmbeddedProto::uint32 CurrentGenerationIndex_ = 0U;
+      EmbeddedProto::boolean IsRunning_ = false;
+
+};
+
 #endif // SHARED_EXPERIMENT_CONFIG_H

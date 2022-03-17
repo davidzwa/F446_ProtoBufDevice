@@ -218,6 +218,12 @@ void UartSendAck(uint8_t code) {
     UartResponseSend(uartResponse);
 }
 
+void UartSendDecodingUpdate(DecodingUpdate& update) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    uartResponse.set_decodingUpdate(update);
+    UartResponseSend(uartResponse);
+}
+
 void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber) {
     UartResponse<PROTO_LIMITS> uartResponse;
     auto& decodingResult = uartResponse.mutable_decodingResult();
