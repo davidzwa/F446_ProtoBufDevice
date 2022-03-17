@@ -91,7 +91,12 @@ int main(void) {
         }
 
         if (IsCliCommandReady()) {
-            ProcessCliCommand();
+            if (IsCrcValid()) {
+                ProcessCliCommand();
+            }
+            else {
+                UartDebug("CRC-FAIL", 400, 8);
+            }
         }
     }
 }

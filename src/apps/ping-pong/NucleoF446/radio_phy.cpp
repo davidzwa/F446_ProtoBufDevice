@@ -166,7 +166,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             // }
 
             if (!isMulticast) {
-                UartDebug("LORA-ACK", 1, 7);
+                UartDebug("LORA-ACK", 1, 8);
                 hasResponseTx = true;
                 TransmitLoRaFlashInfo(true);
             }

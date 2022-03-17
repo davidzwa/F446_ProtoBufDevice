@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "COBS.h"
+#include "Crc8.h"
 #include "ProtoReadBuffer.h"
 #include "ProtoWriteBuffer.h"
 #include "config.h"
@@ -35,6 +36,7 @@ const size_t offset = 1;  // End byte
 ProtoReadBuffer readBuffer;
 ProtoWriteBuffer writeBuffer;
 bool newCommandReceived = false;
+bool checksumSuccess = false;
 UartCommand<MAX_LORA_BYTES> uartCommand;
 
 extern Uart_t Uart2;
@@ -110,7 +112,11 @@ void UartISR(UartNotifyId_t id) {
         }
 
         auto deserialize_status = uartCommand.deserialize(readBuffer);
+
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
+            auto commandCrc8 = uartCommand.get_Crc8();
+            checksumSuccess = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
+
             // Let main loop pick it up
             newCommandReceived = true;
         }
@@ -119,6 +125,10 @@ void UartISR(UartNotifyId_t id) {
         packetSize = 0;
         packetBufferingLength = 0;
     }
+}
+
+bool IsCrcValid() {
+    return checksumSuccess;
 }
 
 bool IsCliCommandReady() {
