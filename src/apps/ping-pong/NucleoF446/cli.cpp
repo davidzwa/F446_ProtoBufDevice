@@ -31,7 +31,7 @@ uint8_t packetBufferingLength = 0;
 uint8_t packetSize;
 uint16_t actualSize;
 bool pendingConfigChange = false;
-#define OFFSET_OUTER 1 // End byte
+#define OFFSET_OUTER 1  // End byte
 #define OFFSET_INNER 2  // Length and crc byte
 
 ProtoReadBuffer readBuffer;
@@ -107,7 +107,7 @@ void UartISR(UartNotifyId_t id) {
 
         // Decode 0x00
         COBS::decode(encodedBuffer, packetSize, decodedBuffer);
-        
+
         // Store crc and length bytes
         uint8_t crc8 = decodedBuffer[0];
         size_t n_bytes = decodedBuffer[1];
@@ -124,8 +124,7 @@ void UartISR(UartNotifyId_t id) {
 
             // Let main loop pick it up
             newCommandReceived = true;
-        }
-        else {
+        } else {
             UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
         }
 
@@ -169,13 +168,8 @@ void ProcessCliCommand() {
         LORA_MSG_TEMPLATE command = uartCommand.get_transmitCommand();
         auto targetDeviceId = command.get_DeviceId();
 
-        // Immediately dump the payload 'as if LoRa received it'
-        if (IsDeviceId(targetDeviceId) && uartCommand.get_DoNotProxyCommand()) {
-            // Make sure
-            command.set_DeviceId(GetDeviceId().get_Id0());
-            HandleLoRaProtoPayload(command, -1, -1);
-        } else if (uartCommand.get_DoNotProxyCommand()) {
-            // Multicast but dont proxy = local multicast
+        if (IsDeviceId(targetDeviceId) || uartCommand.get_DoNotProxyCommand()) {
+            // Immediately dump the payload 'as if LoRa received it' including unicast/multicast setting
             HandleLoRaProtoPayload(command, -1, -1);
         } else {
             TransmitLoRaMessage(command);
