@@ -8,7 +8,6 @@
 #include "LinearFeedbackShiftRegister.h"
 #include "config.h"
 #include "lora_device_messages.h"
-#include "rlnc_decoding_result.h"
 #include "rlnc_frame.h"
 
 using namespace std;
@@ -21,11 +20,6 @@ class RlncDecoder {
     void ProcessRlncFragment(LORA_MSG_TEMPLATE& message);
     void UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate);
     void TerminateRlnc(const RlncTerminationCommand& RlncTerminationCommand);
-
-    // Debugging function
-    // SYMB RlncDecoder::GetNextLFSRState() {
-    //     return lfsr->Generate();
-    // }
 
    protected:
     void AddFrameAsMatrixRow(uint8_t row);
@@ -40,8 +34,8 @@ class RlncDecoder {
     void PrepareFragmentStorage();
     void ClearDecodingMatrix();
     uint32_t GetEncodingVectorLength();
-    RlncDecodingResult DecodeFragments();
-    void StoreDecodingResult(RlncDecodingResult& decodingResult);
+    void DecodeFragments(DecodingResult& result);
+    void StoreDecodingResult(DecodingResult& decodingResult);
     LFSR* lfsr;
     uint8_t generationIndex;
     bool terminated;

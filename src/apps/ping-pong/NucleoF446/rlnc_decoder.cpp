@@ -94,10 +94,11 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
 
     if (generationFrames.size() >= generationSize) {
         // Enough packets have arrived to attempt decoding with high probability
-        auto decodingResult = DecodeFragments();
+        DecodingResult result;
+        DecodeFragments(result);
 
         // Delegate to Flash, UART or LoRa
-        StoreDecodingResult(decodingResult);
+        StoreDecodingResult(result);
     }
 }
 
@@ -123,10 +124,7 @@ void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCom
     UartDebug("RLNC_TERMINATE", 0, 14);
 }
 
-RlncDecodingResult RlncDecoder::DecodeFragments() {
-    RlncDecodingResult result;
-    result.generationIndex = generationIndex;
-    
+void RlncDecoder::DecodeFragments(DecodingResult& result) {
     CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
@@ -138,18 +136,19 @@ RlncDecodingResult RlncDecoder::DecodeFragments() {
     auto rank = DetermineMatrixRank();
     auto firstNumber = decodingMatrix[0][encVectorLength + 3];
     auto lastNumber = rank != 0 ? decodingMatrix[rank-1][encVectorLength + 3] : 0x00;
-    UartSendDecodingResult(true, rank, firstNumber, lastNumber);
+
+    result.set_Success(true);
+    result.set_MatrixRank(rank);
+    result.set_FirstDecodedNumber(firstNumber);
+    result.set_LastDecodedNumber(lastNumber);
+    UartSendDecodingResult(result);
 
     CRITICAL_SECTION_END();
-
-    // Pass the result to be stored/propagated
-    result.success = true;
-    return result;
 }
 
-void RlncDecoder::StoreDecodingResult(RlncDecodingResult& decodingResult) {
+void RlncDecoder::StoreDecodingResult(DecodingResult& decodingResult) {
     // Bring the generation decoded result to 'flash', 'UART', 'LoRa' or evaporate it
-    if (!decodingResult.success) {
+    if (!decodingResult.Success()) {
         // Store failure?
         return;
     } else {

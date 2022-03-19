@@ -117,11 +117,14 @@ void UartISR(UartNotifyId_t id) {
             readBuffer.push(decodedBuffer[i]);
         }
 
+        auto checksumResult = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
+        checksumSuccess = crc8 == checksumResult;
+        if (!checksumSuccess) {
+            UartDebug("CRC-FAIL", (uint32_t)checksumResult, 9);
+        }
+
         auto deserialize_status = uartCommand.deserialize(readBuffer);
         if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            auto checksumResult = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
-            checksumSuccess = crc8 == checksumResult;
-
             // Let main loop pick it up
             newCommandReceived = true;
         } else {
@@ -226,13 +229,9 @@ void UartSendDecodingUpdate(DecodingUpdate& update, uint8_t* debugPayload, size_
     UartResponseSend(uartResponse);
 }
 
-void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber) {
+void UartSendDecodingResult(DecodingResult& result) {
     UartResponse<PROTO_LIMITS> uartResponse;
-    auto& decodingResult = uartResponse.mutable_decodingResult();
-    decodingResult.set_Success(success);
-    decodingResult.set_MatrixRank(matrixRank);
-    decodingResult.set_FirstDecodedNumber(firstDecodedNumber);
-    decodingResult.set_LastDecodedNumber(lastDecodedNumber);
+    uartResponse.set_decodingResult(result);
 
     UartResponseSend(uartResponse);
 }
