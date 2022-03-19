@@ -45,7 +45,6 @@
 
 // Include external proto definitions
 #include <shared/firmware.h>
-#include <shared/experiment_config.h>
 #include <lora_device_messages.h>
 
 
