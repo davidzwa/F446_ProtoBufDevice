@@ -84,6 +84,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
     decodingUpdate.set_ReceivedFragments(generationFrames.size());
+    decodingUpdate.set_SeedState(lfsr->State);
 
     UartSendDecodingUpdate(decodingUpdate);
 }
@@ -162,7 +163,7 @@ uint8_t RlncDecoder::DetermineMatrixRank() {
     auto generationSize = rlncDecodingConfig.get_GenerationSize();
 
     bool currentRowAllZeroes = true;
-    for (uint8_t i; i < generationSize; i++) {
+    for (uint8_t i; i < decodingMatrix.size(); i++) {
         for (uint8_t j; j < generationSize; j++) {
             // If we spot one value not equal to 1, we should move on
             if (decodingMatrix[i][j] != 0) {

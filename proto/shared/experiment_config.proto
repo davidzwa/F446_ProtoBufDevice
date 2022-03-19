@@ -44,4 +44,5 @@ message DecodingUpdate {
     uint32 ReceivedFragments = 5;
     uint32 CurrentGenerationIndex = 6;
     bool IsRunning = 7;
+    uint32 SeedState = 8;
 }

@@ -177,7 +177,10 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         // TODO filter based on device id
         // StreamMeasurements();
         // }
-    } else if (message.has_rlncInitConfigCommand()) {
+    } 
+    
+    // MC or UC work the same
+    if (message.has_rlncInitConfigCommand()) {
         auto initConfigCommand = message.mutable_rlncInitConfigCommand();
         decoder.InitRlncDecodingSession(initConfigCommand);
     } else if (message.has_rlncStateUpdate()) {

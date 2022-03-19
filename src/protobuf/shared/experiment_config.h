@@ -777,6 +777,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
+      set_SeedState(rhs.get_SeedState());
     }
 
     DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
@@ -788,6 +789,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
+      set_SeedState(rhs.get_SeedState());
     }
 
     ~DecodingUpdate() override = default;
@@ -801,7 +803,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       RANK = 4,
       RECEIVEDFRAGMENTS = 5,
       CURRENTGENERATIONINDEX = 6,
-      ISRUNNING = 7
+      ISRUNNING = 7,
+      SEEDSTATE = 8
     };
 
     DecodingUpdate& operator=(const DecodingUpdate& rhs)
@@ -813,6 +816,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
+      set_SeedState(rhs.get_SeedState());
       return *this;
     }
 
@@ -825,6 +829,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
+      set_SeedState(rhs.get_SeedState());
       return *this;
     }
 
@@ -877,6 +882,13 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_IsRunning() const { return IsRunning_; }
     inline EmbeddedProto::boolean::FIELD_TYPE IsRunning() const { return IsRunning_.get(); }
 
+    inline void clear_SeedState() { SeedState_.clear(); }
+    inline void set_SeedState(const EmbeddedProto::uint32& value) { SeedState_ = value; }
+    inline void set_SeedState(const EmbeddedProto::uint32&& value) { SeedState_ = value; }
+    inline EmbeddedProto::uint32& mutable_SeedState() { return SeedState_; }
+    inline const EmbeddedProto::uint32& get_SeedState() const { return SeedState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE SeedState() const { return SeedState_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -915,6 +927,11 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       if((false != IsRunning_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = IsRunning_.serialize_with_id(static_cast<uint32_t>(id::ISRUNNING), buffer, false);
+      }
+
+      if((0U != SeedState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SeedState_.serialize_with_id(static_cast<uint32_t>(id::SEEDSTATE), buffer, false);
       }
 
       return return_value;
@@ -961,6 +978,10 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
             return_value = IsRunning_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::SEEDSTATE:
+            return_value = SeedState_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -997,6 +1018,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       clear_ReceivedFragments();
       clear_CurrentGenerationIndex();
       clear_IsRunning();
+      clear_SeedState();
 
     }
 
@@ -1010,6 +1032,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 ReceivedFragments_ = 0U;
       EmbeddedProto::uint32 CurrentGenerationIndex_ = 0U;
       EmbeddedProto::boolean IsRunning_ = false;
+      EmbeddedProto::uint32 SeedState_ = 0U;
 
 };
 
