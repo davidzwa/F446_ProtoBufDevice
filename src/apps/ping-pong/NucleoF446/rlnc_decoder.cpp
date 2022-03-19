@@ -128,16 +128,18 @@ void RlncDecoder::DecodeFragments(DecodingResult& result) {
     CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
-    auto augmentationLength = rlncDecodingConfig.get_FrameSize();
-    ReduceMatrix(augmentationLength);
+    auto augLength = rlncDecodingConfig.get_FrameSize();
+    ReduceMatrix(augLength);
     
     // Verify decoding success and do packet integrity check
     auto encVectorLength = GetEncodingVectorLength();
     auto rank = DetermineMatrixRank();
-    auto firstNumber = decodingMatrix[0][encVectorLength + 3];
-    auto lastNumber = rank != 0 ? decodingMatrix[rank-1][encVectorLength + 3] : 0x00;
+    auto numberColumn = encVectorLength + 3; // 4 bytes is fixated
+    auto firstNumber = decodingMatrix[0][numberColumn];
+    auto lastRowIndex = encVectorLength-1;
+    auto lastNumber = (uint8_t)(rank != 0 ? decodingMatrix[lastRowIndex][numberColumn] : 0x00);
 
-    result.set_Success(true);
+    result.set_Success(firstNumber == 0x00 && lastNumber == (encVectorLength-1));
     result.set_MatrixRank(rank);
     result.set_FirstDecodedNumber(firstNumber);
     result.set_LastDecodedNumber(lastNumber);

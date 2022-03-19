@@ -120,15 +120,17 @@ void UartISR(UartNotifyId_t id) {
         auto checksumResult = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
         checksumSuccess = crc8 == checksumResult;
         if (!checksumSuccess) {
-            UartDebug("CRC-FAIL", (uint32_t)checksumResult, 9);
-        }
-
-        auto deserialize_status = uartCommand.deserialize(readBuffer);
-        if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            // Let main loop pick it up
-            newCommandReceived = true;
+            // Process CRC failure
+            UartDebug((const char*)readBuffer.get_data_array(), (uint32_t)checksumResult, readBuffer.get_size());
+            UartDebug("CRC-FAIL", 400, 8);
         } else {
-            UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
+            auto deserialize_status = uartCommand.deserialize(readBuffer);
+            if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
+                // Let main loop pick it up
+                newCommandReceived = true;
+            } else {
+                UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
+            }
         }
 
         readBuffer.clear();
