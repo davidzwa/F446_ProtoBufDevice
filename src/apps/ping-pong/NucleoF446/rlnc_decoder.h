@@ -39,6 +39,7 @@ class RlncDecoder {
    private:
     void PrepareFragmentStorage();
     void ClearDecodingMatrix();
+    uint32_t GetEncodingVectorLength();
     RlncDecodingResult DecodeFragments();
     void StoreDecodingResult(RlncDecodingResult& decodingResult);
     LFSR* lfsr;

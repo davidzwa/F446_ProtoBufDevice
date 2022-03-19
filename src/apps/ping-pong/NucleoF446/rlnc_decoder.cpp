@@ -54,13 +54,25 @@ void RlncDecoder::ClearDecodingMatrix() {
     storedPackets = 0;
 }
 
+uint32_t RlncDecoder::GetEncodingVectorLength() {
+    auto generationSize = rlncDecodingConfig.get_GenerationSize();
+    auto totalFrameCount = rlncDecodingConfig.get_TotalFrameCount();
+    if (generationSize <= totalFrameCount) {
+        return generationSize;
+    }
+    else {
+        return totalFrameCount;
+    }
+}
+
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     // Fetch the encoding vector length
     auto generationSize = rlncDecodingConfig.get_GenerationSize();
+    auto totalFrameCount = rlncDecodingConfig.get_TotalFrameCount();
 
     // Generate the encoding vector
     vector<SYMB> encodingVector;
-    lfsr->GenerateMany(encodingVector, generationSize);
+    lfsr->GenerateMany(encodingVector, GetEncodingVectorLength());
 
     // Process the fragment as augmented vector from frame and enc vector
     // generationFrames.size() * (size(frame) + size(enc))
@@ -118,14 +130,14 @@ RlncDecodingResult RlncDecoder::DecodeFragments() {
     CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
-    auto encVectorLength = rlncDecodingConfig.get_GenerationSize();
-    auto fragmentSymbols = rlncDecodingConfig.get_FrameSize();
-    ReduceMatrix(fragmentSymbols);
+    auto augmentationLength = rlncDecodingConfig.get_FrameSize();
+    ReduceMatrix(augmentationLength);
     
     // Verify decoding success and do packet integrity check
+    auto encVectorLength = GetEncodingVectorLength();
     auto rank = DetermineMatrixRank();
     auto firstNumber = decodingMatrix[0][encVectorLength + 3];
-    auto lastNumber = rank != 0 ? decodingMatrix[rank-1][encVectorLength + 3] : 0xFF;
+    auto lastNumber = rank != 0 ? decodingMatrix[rank-1][encVectorLength + 3] : 0x00;
     UartSendDecodingResult(true, rank, firstNumber, lastNumber);
 
     CRITICAL_SECTION_END();
