@@ -52,7 +52,7 @@ void RlncDecoder::ReserveGenerationStorage() {
 
 void RlncDecoder::ClearGenerationStorage() {
     for (uint8_t i = 0; i < generationFrames.size(); i++) {
-        fill(generationFrames[i].augVector.begin(), generationFrames[i].augVector.end(), 0);
+        // fill(generationFrames[i].augVector.begin(), generationFrames[i].augVector.end(), 0);
         generationFrames[i].augVector.clear();
     }
     generationFrames.clear();
@@ -60,7 +60,7 @@ void RlncDecoder::ClearGenerationStorage() {
 
 void RlncDecoder::ClearDecodingMatrix() {
     for (uint8_t i = 0; i < decodingMatrix.size(); i++) {
-        fill(decodingMatrix[i].begin(), decodingMatrix[i].end(), 0);
+        // fill(decodingMatrix[i].begin(), decodingMatrix[i].end(), 0);
         decodingMatrix[i].clear();
     }
 
@@ -96,6 +96,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     RlncFrame frame(encodingVector, message.Payload(), message.get_Payload().get_length());
 
     // Store the frame in safe memory
+    // auto matrixCapacity = decodingMatrix.capacity();
     generationFrames.push_back(frame);
     // Store the frame as malleable matrix row
     auto lastRowIndex = generationFrames.size() - 1;
