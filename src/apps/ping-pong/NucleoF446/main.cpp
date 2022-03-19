@@ -36,7 +36,9 @@
 Gpio_t button;
 
 void ButtonCallback(void* context) {
-    UartDebug("YAAS", 3, 4);
+    UartDebug("PUSH-BUTTON", 0, 12);
+
+    decoder.AutoTerminateRlnc();
 }
 
 int main(void) {

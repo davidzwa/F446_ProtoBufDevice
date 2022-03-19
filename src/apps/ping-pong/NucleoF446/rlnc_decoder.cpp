@@ -182,7 +182,7 @@ void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCom
 
 void RlncDecoder::AutoTerminateRlnc() {
     // Reset state
-    generationIndex = 0xFF;
+    generationIndex = 0x0;
     lfsr->Reset();
     ClearDecodingMatrix();
     ClearGenerationStorage();

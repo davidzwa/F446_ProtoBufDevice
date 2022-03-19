@@ -20,6 +20,7 @@ class RlncDecoder {
     void InitRlncDecodingSession(RlncInitConfigCommand& configCommand);
     void ProcessRlncFragment(LORA_MSG_TEMPLATE& message);
     void UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate);
+    void AutoTerminateRlnc();
     void TerminateRlnc(const RlncTerminationCommand& RlncTerminationCommand);
 
    protected:
@@ -32,7 +33,6 @@ class RlncDecoder {
     uint8_t DetermineDecodingProgress();
 
    private:
-    void AutoTerminateRlnc();
     void ReserveGenerationStorage();
     void ClearDecodingMatrix();
     void ClearGenerationStorage();
