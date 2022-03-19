@@ -71,6 +71,15 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     // Store the frame as malleable matrix row
     AddFrameAsMatrixRow(generationFrames.size() - 1);
 
+    // Debug previous decoding action and any new packet
+    DecodingUpdate decodingUpdate;
+    decodingUpdate.set_Rank(DetermineMatrixRank());
+    decodingUpdate.set_ReceivedFragments(generationFrames.size());
+    decodingUpdate.set_CurrentGenerationIndex(generationIndex);
+    decodingUpdate.set_IsRunning(!terminated);
+    decodingUpdate.set_SeedState(lfsr->State);
+    UartSendDecodingUpdate(decodingUpdate, frame.augVector.data(), frame.augVector.size());
+
     if (generationFrames.size() >= generationSize) {
         // Enough packets have arrived to attempt decoding with high probability
         auto decodingResult = DecodeFragments();
@@ -78,15 +87,6 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         // Delegate to Flash, UART or LoRa
         StoreDecodingResult(decodingResult);
     }
-
-    DecodingUpdate decodingUpdate;
-    decodingUpdate.set_Rank(DetermineMatrixRank());
-    decodingUpdate.set_CurrentGenerationIndex(generationIndex);
-    decodingUpdate.set_IsRunning(!terminated);
-    decodingUpdate.set_ReceivedFragments(generationFrames.size());
-    decodingUpdate.set_SeedState(lfsr->State);
-
-    UartSendDecodingUpdate(decodingUpdate);
 }
 
 void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
