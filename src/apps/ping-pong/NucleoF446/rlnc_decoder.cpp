@@ -86,6 +86,9 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
 
     // Generate the encoding vector
     vector<SYMB> encodingVector;
+    auto lfsrResetState = message.get_rlncEncodedFragment().get_LfsrState();
+
+    lfsr->State = lfsrResetState;
     lfsr->GenerateMany(encodingVector, minimalFragmentCount);
 
     // Process the fragment as augmented vector from frame and enc vector
@@ -108,7 +111,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_ReceivedFragments(generationFrames.size());
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
-    decodingUpdate.set_LfsrState(lfsr->State);
+    decodingUpdate.set_UsedLfsrState(lfsrResetState);
+    decodingUpdate.set_CurrentLfsrState(lfsr->State);
     decodingUpdate.set_FirstRowCrc8(crc1);
     decodingUpdate.set_LastRowCrc8(crc2);
     decodingUpdate.set_LastRowIndex(lastRowIndex);

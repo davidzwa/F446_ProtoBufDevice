@@ -1362,7 +1362,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_LfsrState(rhs.get_LfsrState());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
     }
 
     DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
@@ -1375,7 +1376,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_LfsrState(rhs.get_LfsrState());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
     }
 
     ~DecodingUpdate() override = default;
@@ -1391,7 +1393,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       RECEIVEDFRAGMENTS = 6,
       CURRENTGENERATIONINDEX = 7,
       ISRUNNING = 8,
-      LFSRSTATE = 9
+      USEDLFSRSTATE = 9,
+      CURRENTLFSRSTATE = 10
     };
 
     DecodingUpdate& operator=(const DecodingUpdate& rhs)
@@ -1404,7 +1407,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_LfsrState(rhs.get_LfsrState());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
       return *this;
     }
 
@@ -1418,7 +1422,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_LfsrState(rhs.get_LfsrState());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
       return *this;
     }
 
@@ -1478,12 +1483,19 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_IsRunning() const { return IsRunning_; }
     inline EmbeddedProto::boolean::FIELD_TYPE IsRunning() const { return IsRunning_.get(); }
 
-    inline void clear_LfsrState() { LfsrState_.clear(); }
-    inline void set_LfsrState(const EmbeddedProto::uint32& value) { LfsrState_ = value; }
-    inline void set_LfsrState(const EmbeddedProto::uint32&& value) { LfsrState_ = value; }
-    inline EmbeddedProto::uint32& mutable_LfsrState() { return LfsrState_; }
-    inline const EmbeddedProto::uint32& get_LfsrState() const { return LfsrState_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LfsrState() const { return LfsrState_.get(); }
+    inline void clear_UsedLfsrState() { UsedLfsrState_.clear(); }
+    inline void set_UsedLfsrState(const EmbeddedProto::uint32& value) { UsedLfsrState_ = value; }
+    inline void set_UsedLfsrState(const EmbeddedProto::uint32&& value) { UsedLfsrState_ = value; }
+    inline EmbeddedProto::uint32& mutable_UsedLfsrState() { return UsedLfsrState_; }
+    inline const EmbeddedProto::uint32& get_UsedLfsrState() const { return UsedLfsrState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE UsedLfsrState() const { return UsedLfsrState_.get(); }
+
+    inline void clear_CurrentLfsrState() { CurrentLfsrState_.clear(); }
+    inline void set_CurrentLfsrState(const EmbeddedProto::uint32& value) { CurrentLfsrState_ = value; }
+    inline void set_CurrentLfsrState(const EmbeddedProto::uint32&& value) { CurrentLfsrState_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentLfsrState() { return CurrentLfsrState_; }
+    inline const EmbeddedProto::uint32& get_CurrentLfsrState() const { return CurrentLfsrState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentLfsrState() const { return CurrentLfsrState_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -1530,9 +1542,14 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
         return_value = IsRunning_.serialize_with_id(static_cast<uint32_t>(id::ISRUNNING), buffer, false);
       }
 
-      if((0U != LfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != UsedLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = LfsrState_.serialize_with_id(static_cast<uint32_t>(id::LFSRSTATE), buffer, false);
+        return_value = UsedLfsrState_.serialize_with_id(static_cast<uint32_t>(id::USEDLFSRSTATE), buffer, false);
+      }
+
+      if((0U != CurrentLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentLfsrState_.serialize_with_id(static_cast<uint32_t>(id::CURRENTLFSRSTATE), buffer, false);
       }
 
       return return_value;
@@ -1583,8 +1600,12 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
             return_value = IsRunning_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::LFSRSTATE:
-            return_value = LfsrState_.deserialize_check_type(buffer, wire_type);
+          case id::USEDLFSRSTATE:
+            return_value = UsedLfsrState_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTLFSRSTATE:
+            return_value = CurrentLfsrState_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -1624,7 +1645,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       clear_ReceivedFragments();
       clear_CurrentGenerationIndex();
       clear_IsRunning();
-      clear_LfsrState();
+      clear_UsedLfsrState();
+      clear_CurrentLfsrState();
 
     }
 
@@ -1639,7 +1661,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 ReceivedFragments_ = 0U;
       EmbeddedProto::uint32 CurrentGenerationIndex_ = 0U;
       EmbeddedProto::boolean IsRunning_ = false;
-      EmbeddedProto::uint32 LfsrState_ = 0U;
+      EmbeddedProto::uint32 UsedLfsrState_ = 0U;
+      EmbeddedProto::uint32 CurrentLfsrState_ = 0U;
 
 };
 

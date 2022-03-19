@@ -639,6 +639,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_decodingResult(rhs.get_decodingResult());
           break;
 
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
+          break;
+
         case id::DEVICECONFIGURATION:
           set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
@@ -715,6 +719,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_decodingResult(rhs.get_decodingResult());
           break;
 
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
+          break;
+
         case id::DEVICECONFIGURATION:
           set_deviceConfiguration(rhs.get_deviceConfiguration());
           break;
@@ -759,11 +767,12 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       RLNCSTATEUPDATE = 12,
       RLNCTERMINATIONCOMMAND = 13,
       DECODINGRESULT = 14,
-      DEVICECONFIGURATION = 15,
-      REQUESTBOOTINFO = 16,
-      BOOTMESSAGE = 17,
-      RESETRADIO = 18,
-      ACK = 19
+      DECODINGUPDATE = 15,
+      DEVICECONFIGURATION = 16,
+      REQUESTBOOTINFO = 17,
+      BOOTMESSAGE = 18,
+      RESETRADIO = 19,
+      ACK = 20
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -814,6 +823,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGRESULT:
           set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
         case id::DEVICECONFIGURATION:
@@ -891,6 +904,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGRESULT:
           set_decodingResult(rhs.get_decodingResult());
+          break;
+
+        case id::DECODINGUPDATE:
+          set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
         case id::DEVICECONFIGURATION:
@@ -1300,6 +1317,45 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const DecodingResult& get_decodingResult() const { return Body_.decodingResult_; }
     inline const DecodingResult& decodingResult() const { return Body_.decodingResult_; }
 
+    inline bool has_decodingUpdate() const
+    {
+      return id::DECODINGUPDATE == which_Body_;
+    }
+    inline void clear_decodingUpdate()
+    {
+      if(id::DECODINGUPDATE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.decodingUpdate_.~DecodingUpdate();
+      }
+    }
+    inline void set_decodingUpdate(const DecodingUpdate& value)
+    {
+      if(id::DECODINGUPDATE != which_Body_)
+      {
+        init_Body(id::DECODINGUPDATE);
+      }
+      Body_.decodingUpdate_ = value;
+    }
+    inline void set_decodingUpdate(const DecodingUpdate&& value)
+    {
+      if(id::DECODINGUPDATE != which_Body_)
+      {
+        init_Body(id::DECODINGUPDATE);
+      }
+      Body_.decodingUpdate_ = value;
+    }
+    inline DecodingUpdate& mutable_decodingUpdate()
+    {
+      if(id::DECODINGUPDATE != which_Body_)
+      {
+        init_Body(id::DECODINGUPDATE);
+      }
+      return Body_.decodingUpdate_;
+    }
+    inline const DecodingUpdate& get_decodingUpdate() const { return Body_.decodingUpdate_; }
+    inline const DecodingUpdate& decodingUpdate() const { return Body_.decodingUpdate_; }
+
     inline bool has_deviceConfiguration() const
     {
       return id::DEVICECONFIGURATION == which_Body_;
@@ -1585,6 +1641,13 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::DECODINGUPDATE:
+          if(has_decodingUpdate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.decodingUpdate_.serialize_with_id(static_cast<uint32_t>(id::DECODINGUPDATE), buffer, true);
+          }
+          break;
+
         case id::DEVICECONFIGURATION:
           if(has_deviceConfiguration() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -1701,6 +1764,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::DECODINGUPDATE:
+            return_value = deserialize_Body(id::DECODINGUPDATE, Body_.decodingUpdate_, buffer, wire_type);
+
+            break;
+
           case id::DEVICECONFIGURATION:
             return_value = deserialize_Body(id::DEVICECONFIGURATION, Body_.deviceConfiguration_, buffer, wire_type);
 
@@ -1785,6 +1853,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         RlncStateUpdate rlncStateUpdate_;
         RlncTerminationCommand rlncTerminationCommand_;
         DecodingResult decodingResult_;
+        DecodingUpdate decodingUpdate_;
         DeviceConfiguration deviceConfiguration_;
         RequestBootInfo requestBootInfo_;
         BootMessage bootMessage_;
@@ -1849,6 +1918,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::DECODINGRESULT;
             break;
 
+          case id::DECODINGUPDATE:
+            new(&Body_.decodingUpdate_) DecodingUpdate;
+            which_Body_ = id::DECODINGUPDATE;
+            break;
+
           case id::DEVICECONFIGURATION:
             new(&Body_.deviceConfiguration_) DeviceConfiguration;
             which_Body_ = id::DEVICECONFIGURATION;
@@ -1911,6 +1985,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::DECODINGRESULT:
             Body_.decodingResult_.~DecodingResult(); // NOSONAR Unions require this.
+            break;
+          case id::DECODINGUPDATE:
+            Body_.decodingUpdate_.~DecodingUpdate(); // NOSONAR Unions require this.
             break;
           case id::DEVICECONFIGURATION:
             Body_.deviceConfiguration_.~DeviceConfiguration(); // NOSONAR Unions require this.

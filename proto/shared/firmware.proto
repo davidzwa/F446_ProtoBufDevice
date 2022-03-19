@@ -66,5 +66,6 @@ message DecodingUpdate {
     uint32 ReceivedFragments = 6;
     uint32 CurrentGenerationIndex = 7;
     bool IsRunning = 8;
-    uint32 LfsrState = 9;
+    uint32 UsedLfsrState = 9;
+    uint32 CurrentLfsrState = 10;
 }
