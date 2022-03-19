@@ -35,6 +35,7 @@ message RlncInitConfigCommand {
 
 message RlncEncodedFragment {
     // This is a marker field
+    uint32 LfsrState = 1;
 }
 
 message RlncStateUpdate {
@@ -65,5 +66,5 @@ message DecodingUpdate {
     uint32 ReceivedFragments = 6;
     uint32 CurrentGenerationIndex = 7;
     bool IsRunning = 8;
-    uint32 SeedState = 9;
+    uint32 LfsrState = 9;
 }

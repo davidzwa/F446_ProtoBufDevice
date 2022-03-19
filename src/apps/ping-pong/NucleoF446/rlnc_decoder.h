@@ -2,6 +2,7 @@
 #define RLNC_DECODER_H__
 
 #include <stdint.h>
+
 #include <vector>
 
 #include "GaloisFieldElement.h"
@@ -28,12 +29,15 @@ class RlncDecoder {
     void SwitchRows(uint8_t row1, uint8_t row2, uint8_t colCount);
     void ReduceRow(uint8_t row, uint8_t col, uint8_t colCount);
     void EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, uint8_t colCount);
-    uint8_t DetermineMatrixRank();
+    uint8_t DetermineDecodingProgress();
 
    private:
-    void PrepareFragmentStorage();
+    void AutoTerminateRlnc();
+    void ReserveGenerationStorage();
     void ClearDecodingMatrix();
-    uint32_t GetEncodingVectorLength();
+    void ClearGenerationStorage();
+
+    uint32_t GetGenerationFragmentCount();
     void DecodeFragments(DecodingResult& result);
     void StoreDecodingResult(DecodingResult& decodingResult);
     LFSR* lfsr;
@@ -45,7 +49,6 @@ class RlncDecoder {
     vector<RlncFrame> generationFrames;
 
     // Expensive matrix
-    uint8_t storedPackets = 0;
     vector<vector<galois::GFSymbol>> decodingMatrix;
 };
 
