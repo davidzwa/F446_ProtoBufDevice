@@ -330,7 +330,7 @@ optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t 
             return i;
     }
 
-    return NULL;
+    return {};
 }
 
 void RlncDecoder::SwitchRows(uint8_t row1, uint8_t row2, uint8_t colCount) {
