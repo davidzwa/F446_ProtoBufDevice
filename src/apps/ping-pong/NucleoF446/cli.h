@@ -40,8 +40,10 @@ void ProcessCliCommand();
 
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
-void UartSendDecodingUpdate(DecodingUpdate& update);
-void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber);
+void UartSendDecodingUpdateWithoutPayload(DecodingUpdate& update);
+void UartSendDecodingUpdate(DecodingUpdate& update, uint8_t* payload, size_t length);
+void UartSendDecodingMatrix(DecodingMatrix& matrix, uint8_t* payload, size_t length);
+void UartSendDecodingResult(DecodingResult& result);
 void UartThrow(const char* payload, size_t length);
 void UartDebug(const char* payload, uint32_t code, size_t length);
 void UartSendLoRaRxError();

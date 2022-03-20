@@ -23,8 +23,8 @@
 
 #define PKT_START 0xFF
 #define PKT_END 0x00
-#define PROTO_LIMITS MAX_LORA_BYTES, MAX_LORA_BYTES
 #define PACKET_SIZE_LIMIT 256
+#define PROTO_LIMITS PACKET_SIZE_LIMIT, MAX_LORA_BYTES
 
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
@@ -117,15 +117,20 @@ void UartISR(UartNotifyId_t id) {
             readBuffer.push(decodedBuffer[i]);
         }
 
-        auto deserialize_status = uartCommand.deserialize(readBuffer);
-        if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
-            auto checksumResult = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
-            checksumSuccess = crc8 == checksumResult;
-
-            // Let main loop pick it up
-            newCommandReceived = true;
+        auto checksumResult = ComputeChecksum(readBuffer.get_data_array(), readBuffer.get_size());
+        checksumSuccess = crc8 == checksumResult;
+        if (!checksumSuccess) {
+            // Process CRC failure
+            UartDebug((const char*)readBuffer.get_data_array(), (uint32_t)checksumResult, readBuffer.get_size());
+            UartDebug("CRC-FAIL", 400, 8);
         } else {
-            UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
+            auto deserialize_status = uartCommand.deserialize(readBuffer);
+            if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
+                // Let main loop pick it up
+                newCommandReceived = true;
+            } else {
+                UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
+            }
         }
 
         readBuffer.clear();
@@ -205,7 +210,7 @@ void UartResponseSend(UartResponse<PROTO_LIMITS>& response) {
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
     } else {
-        // UartDebug("PROTO")
+        UartDebug("PROTO-FAIL", 404, 10);
     }
     writeBuffer.clear();
 }
@@ -218,20 +223,31 @@ void UartSendAck(uint8_t code) {
     UartResponseSend(uartResponse);
 }
 
-void UartSendDecodingUpdate(DecodingUpdate& update) {
+void UartSendDecodingUpdateWithoutPayload(DecodingUpdate& update) {
     UartResponse<PROTO_LIMITS> uartResponse;
     uartResponse.set_decodingUpdate(update);
     UartResponseSend(uartResponse);
 }
 
-void UartSendDecodingResult(bool success, uint8_t matrixRank, uint8_t firstDecodedNumber, uint8_t lastDecodedNumber) {
+void UartSendDecodingUpdate(DecodingUpdate& update, uint8_t* debugPayload, size_t length) {
     UartResponse<PROTO_LIMITS> uartResponse;
-    auto& decodingResult = uartResponse.mutable_decodingResult();
-    decodingResult.set_Success(success);
-    decodingResult.set_MatrixRank(matrixRank);
-    decodingResult.set_FirstDecodedNumber(firstDecodedNumber);
-    decodingResult.set_LastDecodedNumber(lastDecodedNumber);
+    uartResponse.set_decodingUpdate(update);
+    auto& payload = uartResponse.mutable_Payload();
+    payload.set(debugPayload, length);
+    UartResponseSend(uartResponse);
+}
 
+void UartSendDecodingMatrix(DecodingMatrix& sizes, uint8_t* matrix, size_t length) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    uartResponse.set_decodingMatrix(sizes);
+    auto& payload = uartResponse.mutable_Payload();
+    payload.set(matrix, length);
+    UartResponseSend(uartResponse);
+}
+
+void UartSendDecodingResult(DecodingResult& result) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    uartResponse.set_decodingResult(result);
     UartResponseSend(uartResponse);
 }
 

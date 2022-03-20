@@ -26,15 +26,18 @@ message RlncInitConfigCommand {
     uint32 GenerationSize = 1;
     uint32 GenerationCount = 2;
     uint32 FrameSize = 3;
-    uint32 FrameCount = 4;
+    uint32 TotalFrameCount = 4;
     uint32 FieldDegree = 5;
     uint32 FieldPoly = 6;
     uint32 LfsrSeed = 7;
     uint32 LfsrPoly = 8;
+    bool DebugMatrixUart = 9;
+    bool DebugFragmentUart = 10;
 }
 
 message RlncEncodedFragment {
     // This is a marker field
+    uint32 LfsrState = 1;
 }
 
 message RlncStateUpdate {
@@ -45,4 +48,31 @@ message RlncStateUpdate {
 message RlncTerminationCommand {
     // This is a marker field - for now
     // Might add debugging flags
+}
+
+message DecodingResult {
+    bool Success = 1;
+    uint32 MatrixRank = 2;
+
+    // We check the internal payload
+    uint32 FirstDecodedNumber = 3;
+    uint32 LastDecodedNumber = 4;
+}
+
+message DecodingMatrix {
+    uint32 Cols = 1;
+    uint32 Rows = 2;
+}
+
+message DecodingUpdate {
+    uint32 MatrixCrc8 = 1;
+    uint32 FirstRowCrc8 = 2;
+    uint32 LastRowCrc8 = 3;
+    uint32 LastRowIndex = 4;
+    uint32 RankProgress = 5;
+    uint32 ReceivedFragments = 6;
+    uint32 CurrentGenerationIndex = 7;
+    bool IsRunning = 8;
+    uint32 UsedLfsrState = 9;
+    uint32 CurrentLfsrState = 10;
 }

@@ -30,6 +30,7 @@ void NMI_Handler( void )
 {
 }
 
+#define HARD_FAULT_HANDLER_ENABLED
 /*!
  * \brief  This function handles Hard Fault exception.
  * \param  None
@@ -91,10 +92,10 @@ void HardFault_Handler(void)
 #elif defined(__GNUC__)
 void HardFault_Handler(void)
 {
-    __asm volatile( "TST LR, #4" );
-    __asm volatile( "ITE EQ" );
-    __asm volatile( "MRSEQ R0, MSP" );
-    __asm volatile( "MRSNE R0, PSP" );
+    // __asm volatile( "TST LR, #4" );
+    // __asm volatile( "ITE EQ" );
+    // __asm volatile( "MRSEQ R0, MSP" );
+    // __asm volatile( "MRSNE R0, PSP" );
     __asm volatile( "B HardFault_Handler_C" );
 }
 #else

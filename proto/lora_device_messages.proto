@@ -51,12 +51,13 @@ message LoRaMessage {
         RlncEncodedFragment rlncEncodedFragment = 11;
         RlncStateUpdate rlncStateUpdate = 12;
         RlncTerminationCommand rlncTerminationCommand = 13;
-        DecodingResult decodingResult = 14; // ACK
+        DecodingResult decodingResult = 14; // UC ACK
+        DecodingUpdate decodingUpdate = 15; // UC ACK
 
-        DeviceConfiguration deviceConfiguration = 15;
-        RequestBootInfo requestBootInfo = 16;
-        BootMessage bootMessage = 17;
-        LoRaReset resetRadio = 18;
-        LoRaAck ack = 19;
+        DeviceConfiguration deviceConfiguration = 16;
+        RequestBootInfo requestBootInfo = 17;
+        BootMessage bootMessage = 18;
+        LoRaReset resetRadio = 19;
+        LoRaAck ack = 20;
     }
 }

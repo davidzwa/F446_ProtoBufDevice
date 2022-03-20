@@ -572,11 +572,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
-      set_FrameCount(rhs.get_FrameCount());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
     }
 
     RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
@@ -584,11 +586,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
-      set_FrameCount(rhs.get_FrameCount());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
     }
 
     ~RlncInitConfigCommand() override = default;
@@ -599,11 +603,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       GENERATIONSIZE = 1,
       GENERATIONCOUNT = 2,
       FRAMESIZE = 3,
-      FRAMECOUNT = 4,
+      TOTALFRAMECOUNT = 4,
       FIELDDEGREE = 5,
       FIELDPOLY = 6,
       LFSRSEED = 7,
-      LFSRPOLY = 8
+      LFSRPOLY = 8,
+      DEBUGMATRIXUART = 9,
+      DEBUGFRAGMENTUART = 10
     };
 
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
@@ -611,11 +617,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
-      set_FrameCount(rhs.get_FrameCount());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       return *this;
     }
 
@@ -624,11 +632,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_GenerationSize(rhs.get_GenerationSize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
-      set_FrameCount(rhs.get_FrameCount());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       return *this;
     }
 
@@ -653,12 +663,12 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_FrameSize() const { return FrameSize_; }
     inline EmbeddedProto::uint32::FIELD_TYPE FrameSize() const { return FrameSize_.get(); }
 
-    inline void clear_FrameCount() { FrameCount_.clear(); }
-    inline void set_FrameCount(const EmbeddedProto::uint32& value) { FrameCount_ = value; }
-    inline void set_FrameCount(const EmbeddedProto::uint32&& value) { FrameCount_ = value; }
-    inline EmbeddedProto::uint32& mutable_FrameCount() { return FrameCount_; }
-    inline const EmbeddedProto::uint32& get_FrameCount() const { return FrameCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE FrameCount() const { return FrameCount_.get(); }
+    inline void clear_TotalFrameCount() { TotalFrameCount_.clear(); }
+    inline void set_TotalFrameCount(const EmbeddedProto::uint32& value) { TotalFrameCount_ = value; }
+    inline void set_TotalFrameCount(const EmbeddedProto::uint32&& value) { TotalFrameCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_TotalFrameCount() { return TotalFrameCount_; }
+    inline const EmbeddedProto::uint32& get_TotalFrameCount() const { return TotalFrameCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TotalFrameCount() const { return TotalFrameCount_.get(); }
 
     inline void clear_FieldDegree() { FieldDegree_.clear(); }
     inline void set_FieldDegree(const EmbeddedProto::uint32& value) { FieldDegree_ = value; }
@@ -688,6 +698,20 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_LfsrPoly() const { return LfsrPoly_; }
     inline EmbeddedProto::uint32::FIELD_TYPE LfsrPoly() const { return LfsrPoly_.get(); }
 
+    inline void clear_DebugMatrixUart() { DebugMatrixUart_.clear(); }
+    inline void set_DebugMatrixUart(const EmbeddedProto::boolean& value) { DebugMatrixUart_ = value; }
+    inline void set_DebugMatrixUart(const EmbeddedProto::boolean&& value) { DebugMatrixUart_ = value; }
+    inline EmbeddedProto::boolean& mutable_DebugMatrixUart() { return DebugMatrixUart_; }
+    inline const EmbeddedProto::boolean& get_DebugMatrixUart() const { return DebugMatrixUart_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DebugMatrixUart() const { return DebugMatrixUart_.get(); }
+
+    inline void clear_DebugFragmentUart() { DebugFragmentUart_.clear(); }
+    inline void set_DebugFragmentUart(const EmbeddedProto::boolean& value) { DebugFragmentUart_ = value; }
+    inline void set_DebugFragmentUart(const EmbeddedProto::boolean&& value) { DebugFragmentUart_ = value; }
+    inline EmbeddedProto::boolean& mutable_DebugFragmentUart() { return DebugFragmentUart_; }
+    inline const EmbeddedProto::boolean& get_DebugFragmentUart() const { return DebugFragmentUart_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DebugFragmentUart() const { return DebugFragmentUart_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -708,9 +732,9 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
         return_value = FrameSize_.serialize_with_id(static_cast<uint32_t>(id::FRAMESIZE), buffer, false);
       }
 
-      if((0U != FrameCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != TotalFrameCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = FrameCount_.serialize_with_id(static_cast<uint32_t>(id::FRAMECOUNT), buffer, false);
+        return_value = TotalFrameCount_.serialize_with_id(static_cast<uint32_t>(id::TOTALFRAMECOUNT), buffer, false);
       }
 
       if((0U != FieldDegree_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
@@ -731,6 +755,16 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       if((0U != LfsrPoly_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = LfsrPoly_.serialize_with_id(static_cast<uint32_t>(id::LFSRPOLY), buffer, false);
+      }
+
+      if((false != DebugMatrixUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DebugMatrixUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGMATRIXUART), buffer, false);
+      }
+
+      if((false != DebugFragmentUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DebugFragmentUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGFRAGMENTUART), buffer, false);
       }
 
       return return_value;
@@ -761,8 +795,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
             return_value = FrameSize_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::FRAMECOUNT:
-            return_value = FrameCount_.deserialize_check_type(buffer, wire_type);
+          case id::TOTALFRAMECOUNT:
+            return_value = TotalFrameCount_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::FIELDDEGREE:
@@ -779,6 +813,14 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
 
           case id::LFSRPOLY:
             return_value = LfsrPoly_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEBUGMATRIXUART:
+            return_value = DebugMatrixUart_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEBUGFRAGMENTUART:
+            return_value = DebugFragmentUart_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -813,11 +855,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       clear_GenerationSize();
       clear_GenerationCount();
       clear_FrameSize();
-      clear_FrameCount();
+      clear_TotalFrameCount();
       clear_FieldDegree();
       clear_FieldPoly();
       clear_LfsrSeed();
       clear_LfsrPoly();
+      clear_DebugMatrixUart();
+      clear_DebugFragmentUart();
 
     }
 
@@ -827,11 +871,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 GenerationSize_ = 0U;
       EmbeddedProto::uint32 GenerationCount_ = 0U;
       EmbeddedProto::uint32 FrameSize_ = 0U;
-      EmbeddedProto::uint32 FrameCount_ = 0U;
+      EmbeddedProto::uint32 TotalFrameCount_ = 0U;
       EmbeddedProto::uint32 FieldDegree_ = 0U;
       EmbeddedProto::uint32 FieldPoly_ = 0U;
       EmbeddedProto::uint32 LfsrSeed_ = 0U;
       EmbeddedProto::uint32 LfsrPoly_ = 0U;
+      EmbeddedProto::boolean DebugMatrixUart_ = false;
+      EmbeddedProto::boolean DebugFragmentUart_ = false;
 
 };
 
@@ -841,10 +887,12 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
     RlncEncodedFragment() = default;
     RlncEncodedFragment(const RlncEncodedFragment& rhs )
     {
+      set_LfsrState(rhs.get_LfsrState());
     }
 
     RlncEncodedFragment(const RlncEncodedFragment&& rhs ) noexcept
     {
+      set_LfsrState(rhs.get_LfsrState());
     }
 
     ~RlncEncodedFragment() override = default;
@@ -852,22 +900,37 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
+      LFSRSTATE = 1
     };
 
     RlncEncodedFragment& operator=(const RlncEncodedFragment& rhs)
     {
+      set_LfsrState(rhs.get_LfsrState());
       return *this;
     }
 
     RlncEncodedFragment& operator=(const RlncEncodedFragment&& rhs) noexcept
     {
+      set_LfsrState(rhs.get_LfsrState());
       return *this;
     }
+
+    inline void clear_LfsrState() { LfsrState_.clear(); }
+    inline void set_LfsrState(const EmbeddedProto::uint32& value) { LfsrState_ = value; }
+    inline void set_LfsrState(const EmbeddedProto::uint32&& value) { LfsrState_ = value; }
+    inline EmbeddedProto::uint32& mutable_LfsrState() { return LfsrState_; }
+    inline const EmbeddedProto::uint32& get_LfsrState() const { return LfsrState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LfsrState() const { return LfsrState_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != LfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LfsrState_.serialize_with_id(static_cast<uint32_t>(id::LFSRSTATE), buffer, false);
+      }
 
       return return_value;
     };
@@ -885,6 +948,10 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
+          case id::LFSRSTATE:
+            return_value = LfsrState_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -914,12 +981,14 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
+      clear_LfsrState();
 
     }
 
     private:
 
 
+      EmbeddedProto::uint32 LfsrState_ = 0U;
 
 };
 
@@ -1142,6 +1211,638 @@ class RlncTerminationCommand final: public ::EmbeddedProto::MessageInterface
     private:
 
 
+
+};
+
+class DecodingResult final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DecodingResult() = default;
+    DecodingResult(const DecodingResult& rhs )
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+    }
+
+    DecodingResult(const DecodingResult&& rhs ) noexcept
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+    }
+
+    ~DecodingResult() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      SUCCESS = 1,
+      MATRIXRANK = 2,
+      FIRSTDECODEDNUMBER = 3,
+      LASTDECODEDNUMBER = 4
+    };
+
+    DecodingResult& operator=(const DecodingResult& rhs)
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      return *this;
+    }
+
+    DecodingResult& operator=(const DecodingResult&& rhs) noexcept
+    {
+      set_Success(rhs.get_Success());
+      set_MatrixRank(rhs.get_MatrixRank());
+      set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
+      set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      return *this;
+    }
+
+    inline void clear_Success() { Success_.clear(); }
+    inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
+    inline void set_Success(const EmbeddedProto::boolean&& value) { Success_ = value; }
+    inline EmbeddedProto::boolean& mutable_Success() { return Success_; }
+    inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
+
+    inline void clear_MatrixRank() { MatrixRank_.clear(); }
+    inline void set_MatrixRank(const EmbeddedProto::uint32& value) { MatrixRank_ = value; }
+    inline void set_MatrixRank(const EmbeddedProto::uint32&& value) { MatrixRank_ = value; }
+    inline EmbeddedProto::uint32& mutable_MatrixRank() { return MatrixRank_; }
+    inline const EmbeddedProto::uint32& get_MatrixRank() const { return MatrixRank_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MatrixRank() const { return MatrixRank_.get(); }
+
+    inline void clear_FirstDecodedNumber() { FirstDecodedNumber_.clear(); }
+    inline void set_FirstDecodedNumber(const EmbeddedProto::uint32& value) { FirstDecodedNumber_ = value; }
+    inline void set_FirstDecodedNumber(const EmbeddedProto::uint32&& value) { FirstDecodedNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_FirstDecodedNumber() { return FirstDecodedNumber_; }
+    inline const EmbeddedProto::uint32& get_FirstDecodedNumber() const { return FirstDecodedNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FirstDecodedNumber() const { return FirstDecodedNumber_.get(); }
+
+    inline void clear_LastDecodedNumber() { LastDecodedNumber_.clear(); }
+    inline void set_LastDecodedNumber(const EmbeddedProto::uint32& value) { LastDecodedNumber_ = value; }
+    inline void set_LastDecodedNumber(const EmbeddedProto::uint32&& value) { LastDecodedNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_LastDecodedNumber() { return LastDecodedNumber_; }
+    inline const EmbeddedProto::uint32& get_LastDecodedNumber() const { return LastDecodedNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LastDecodedNumber() const { return LastDecodedNumber_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
+      }
+
+      if((0U != MatrixRank_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MatrixRank_.serialize_with_id(static_cast<uint32_t>(id::MATRIXRANK), buffer, false);
+      }
+
+      if((0U != FirstDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = FirstDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::FIRSTDECODEDNUMBER), buffer, false);
+      }
+
+      if((0U != LastDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LastDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::LASTDECODEDNUMBER), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::SUCCESS:
+            return_value = Success_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MATRIXRANK:
+            return_value = MatrixRank_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::FIRSTDECODEDNUMBER:
+            return_value = FirstDecodedNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LASTDECODEDNUMBER:
+            return_value = LastDecodedNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Success();
+      clear_MatrixRank();
+      clear_FirstDecodedNumber();
+      clear_LastDecodedNumber();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean Success_ = false;
+      EmbeddedProto::uint32 MatrixRank_ = 0U;
+      EmbeddedProto::uint32 FirstDecodedNumber_ = 0U;
+      EmbeddedProto::uint32 LastDecodedNumber_ = 0U;
+
+};
+
+class DecodingMatrix final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DecodingMatrix() = default;
+    DecodingMatrix(const DecodingMatrix& rhs )
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+    }
+
+    DecodingMatrix(const DecodingMatrix&& rhs ) noexcept
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+    }
+
+    ~DecodingMatrix() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      COLS = 1,
+      ROWS = 2
+    };
+
+    DecodingMatrix& operator=(const DecodingMatrix& rhs)
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+      return *this;
+    }
+
+    DecodingMatrix& operator=(const DecodingMatrix&& rhs) noexcept
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+      return *this;
+    }
+
+    inline void clear_Cols() { Cols_.clear(); }
+    inline void set_Cols(const EmbeddedProto::uint32& value) { Cols_ = value; }
+    inline void set_Cols(const EmbeddedProto::uint32&& value) { Cols_ = value; }
+    inline EmbeddedProto::uint32& mutable_Cols() { return Cols_; }
+    inline const EmbeddedProto::uint32& get_Cols() const { return Cols_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Cols() const { return Cols_.get(); }
+
+    inline void clear_Rows() { Rows_.clear(); }
+    inline void set_Rows(const EmbeddedProto::uint32& value) { Rows_ = value; }
+    inline void set_Rows(const EmbeddedProto::uint32&& value) { Rows_ = value; }
+    inline EmbeddedProto::uint32& mutable_Rows() { return Rows_; }
+    inline const EmbeddedProto::uint32& get_Rows() const { return Rows_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Rows() const { return Rows_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != Cols_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Cols_.serialize_with_id(static_cast<uint32_t>(id::COLS), buffer, false);
+      }
+
+      if((0U != Rows_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Rows_.serialize_with_id(static_cast<uint32_t>(id::ROWS), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::COLS:
+            return_value = Cols_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ROWS:
+            return_value = Rows_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Cols();
+      clear_Rows();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 Cols_ = 0U;
+      EmbeddedProto::uint32 Rows_ = 0U;
+
+};
+
+class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DecodingUpdate() = default;
+    DecodingUpdate(const DecodingUpdate& rhs )
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_LastRowCrc8(rhs.get_LastRowCrc8());
+      set_LastRowIndex(rhs.get_LastRowIndex());
+      set_RankProgress(rhs.get_RankProgress());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+    }
+
+    DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_LastRowCrc8(rhs.get_LastRowCrc8());
+      set_LastRowIndex(rhs.get_LastRowIndex());
+      set_RankProgress(rhs.get_RankProgress());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+    }
+
+    ~DecodingUpdate() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      MATRIXCRC8 = 1,
+      FIRSTROWCRC8 = 2,
+      LASTROWCRC8 = 3,
+      LASTROWINDEX = 4,
+      RANKPROGRESS = 5,
+      RECEIVEDFRAGMENTS = 6,
+      CURRENTGENERATIONINDEX = 7,
+      ISRUNNING = 8,
+      USEDLFSRSTATE = 9,
+      CURRENTLFSRSTATE = 10
+    };
+
+    DecodingUpdate& operator=(const DecodingUpdate& rhs)
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_LastRowCrc8(rhs.get_LastRowCrc8());
+      set_LastRowIndex(rhs.get_LastRowIndex());
+      set_RankProgress(rhs.get_RankProgress());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      return *this;
+    }
+
+    DecodingUpdate& operator=(const DecodingUpdate&& rhs) noexcept
+    {
+      set_MatrixCrc8(rhs.get_MatrixCrc8());
+      set_FirstRowCrc8(rhs.get_FirstRowCrc8());
+      set_LastRowCrc8(rhs.get_LastRowCrc8());
+      set_LastRowIndex(rhs.get_LastRowIndex());
+      set_RankProgress(rhs.get_RankProgress());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
+      set_IsRunning(rhs.get_IsRunning());
+      set_UsedLfsrState(rhs.get_UsedLfsrState());
+      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      return *this;
+    }
+
+    inline void clear_MatrixCrc8() { MatrixCrc8_.clear(); }
+    inline void set_MatrixCrc8(const EmbeddedProto::uint32& value) { MatrixCrc8_ = value; }
+    inline void set_MatrixCrc8(const EmbeddedProto::uint32&& value) { MatrixCrc8_ = value; }
+    inline EmbeddedProto::uint32& mutable_MatrixCrc8() { return MatrixCrc8_; }
+    inline const EmbeddedProto::uint32& get_MatrixCrc8() const { return MatrixCrc8_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MatrixCrc8() const { return MatrixCrc8_.get(); }
+
+    inline void clear_FirstRowCrc8() { FirstRowCrc8_.clear(); }
+    inline void set_FirstRowCrc8(const EmbeddedProto::uint32& value) { FirstRowCrc8_ = value; }
+    inline void set_FirstRowCrc8(const EmbeddedProto::uint32&& value) { FirstRowCrc8_ = value; }
+    inline EmbeddedProto::uint32& mutable_FirstRowCrc8() { return FirstRowCrc8_; }
+    inline const EmbeddedProto::uint32& get_FirstRowCrc8() const { return FirstRowCrc8_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FirstRowCrc8() const { return FirstRowCrc8_.get(); }
+
+    inline void clear_LastRowCrc8() { LastRowCrc8_.clear(); }
+    inline void set_LastRowCrc8(const EmbeddedProto::uint32& value) { LastRowCrc8_ = value; }
+    inline void set_LastRowCrc8(const EmbeddedProto::uint32&& value) { LastRowCrc8_ = value; }
+    inline EmbeddedProto::uint32& mutable_LastRowCrc8() { return LastRowCrc8_; }
+    inline const EmbeddedProto::uint32& get_LastRowCrc8() const { return LastRowCrc8_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LastRowCrc8() const { return LastRowCrc8_.get(); }
+
+    inline void clear_LastRowIndex() { LastRowIndex_.clear(); }
+    inline void set_LastRowIndex(const EmbeddedProto::uint32& value) { LastRowIndex_ = value; }
+    inline void set_LastRowIndex(const EmbeddedProto::uint32&& value) { LastRowIndex_ = value; }
+    inline EmbeddedProto::uint32& mutable_LastRowIndex() { return LastRowIndex_; }
+    inline const EmbeddedProto::uint32& get_LastRowIndex() const { return LastRowIndex_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LastRowIndex() const { return LastRowIndex_.get(); }
+
+    inline void clear_RankProgress() { RankProgress_.clear(); }
+    inline void set_RankProgress(const EmbeddedProto::uint32& value) { RankProgress_ = value; }
+    inline void set_RankProgress(const EmbeddedProto::uint32&& value) { RankProgress_ = value; }
+    inline EmbeddedProto::uint32& mutable_RankProgress() { return RankProgress_; }
+    inline const EmbeddedProto::uint32& get_RankProgress() const { return RankProgress_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RankProgress() const { return RankProgress_.get(); }
+
+    inline void clear_ReceivedFragments() { ReceivedFragments_.clear(); }
+    inline void set_ReceivedFragments(const EmbeddedProto::uint32& value) { ReceivedFragments_ = value; }
+    inline void set_ReceivedFragments(const EmbeddedProto::uint32&& value) { ReceivedFragments_ = value; }
+    inline EmbeddedProto::uint32& mutable_ReceivedFragments() { return ReceivedFragments_; }
+    inline const EmbeddedProto::uint32& get_ReceivedFragments() const { return ReceivedFragments_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE ReceivedFragments() const { return ReceivedFragments_.get(); }
+
+    inline void clear_CurrentGenerationIndex() { CurrentGenerationIndex_.clear(); }
+    inline void set_CurrentGenerationIndex(const EmbeddedProto::uint32& value) { CurrentGenerationIndex_ = value; }
+    inline void set_CurrentGenerationIndex(const EmbeddedProto::uint32&& value) { CurrentGenerationIndex_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentGenerationIndex() { return CurrentGenerationIndex_; }
+    inline const EmbeddedProto::uint32& get_CurrentGenerationIndex() const { return CurrentGenerationIndex_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentGenerationIndex() const { return CurrentGenerationIndex_.get(); }
+
+    inline void clear_IsRunning() { IsRunning_.clear(); }
+    inline void set_IsRunning(const EmbeddedProto::boolean& value) { IsRunning_ = value; }
+    inline void set_IsRunning(const EmbeddedProto::boolean&& value) { IsRunning_ = value; }
+    inline EmbeddedProto::boolean& mutable_IsRunning() { return IsRunning_; }
+    inline const EmbeddedProto::boolean& get_IsRunning() const { return IsRunning_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE IsRunning() const { return IsRunning_.get(); }
+
+    inline void clear_UsedLfsrState() { UsedLfsrState_.clear(); }
+    inline void set_UsedLfsrState(const EmbeddedProto::uint32& value) { UsedLfsrState_ = value; }
+    inline void set_UsedLfsrState(const EmbeddedProto::uint32&& value) { UsedLfsrState_ = value; }
+    inline EmbeddedProto::uint32& mutable_UsedLfsrState() { return UsedLfsrState_; }
+    inline const EmbeddedProto::uint32& get_UsedLfsrState() const { return UsedLfsrState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE UsedLfsrState() const { return UsedLfsrState_.get(); }
+
+    inline void clear_CurrentLfsrState() { CurrentLfsrState_.clear(); }
+    inline void set_CurrentLfsrState(const EmbeddedProto::uint32& value) { CurrentLfsrState_ = value; }
+    inline void set_CurrentLfsrState(const EmbeddedProto::uint32&& value) { CurrentLfsrState_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentLfsrState() { return CurrentLfsrState_; }
+    inline const EmbeddedProto::uint32& get_CurrentLfsrState() const { return CurrentLfsrState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentLfsrState() const { return CurrentLfsrState_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != MatrixCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MatrixCrc8_.serialize_with_id(static_cast<uint32_t>(id::MATRIXCRC8), buffer, false);
+      }
+
+      if((0U != FirstRowCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = FirstRowCrc8_.serialize_with_id(static_cast<uint32_t>(id::FIRSTROWCRC8), buffer, false);
+      }
+
+      if((0U != LastRowCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LastRowCrc8_.serialize_with_id(static_cast<uint32_t>(id::LASTROWCRC8), buffer, false);
+      }
+
+      if((0U != LastRowIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LastRowIndex_.serialize_with_id(static_cast<uint32_t>(id::LASTROWINDEX), buffer, false);
+      }
+
+      if((0U != RankProgress_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RankProgress_.serialize_with_id(static_cast<uint32_t>(id::RANKPROGRESS), buffer, false);
+      }
+
+      if((0U != ReceivedFragments_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ReceivedFragments_.serialize_with_id(static_cast<uint32_t>(id::RECEIVEDFRAGMENTS), buffer, false);
+      }
+
+      if((0U != CurrentGenerationIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentGenerationIndex_.serialize_with_id(static_cast<uint32_t>(id::CURRENTGENERATIONINDEX), buffer, false);
+      }
+
+      if((false != IsRunning_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = IsRunning_.serialize_with_id(static_cast<uint32_t>(id::ISRUNNING), buffer, false);
+      }
+
+      if((0U != UsedLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = UsedLfsrState_.serialize_with_id(static_cast<uint32_t>(id::USEDLFSRSTATE), buffer, false);
+      }
+
+      if((0U != CurrentLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentLfsrState_.serialize_with_id(static_cast<uint32_t>(id::CURRENTLFSRSTATE), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::MATRIXCRC8:
+            return_value = MatrixCrc8_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::FIRSTROWCRC8:
+            return_value = FirstRowCrc8_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LASTROWCRC8:
+            return_value = LastRowCrc8_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LASTROWINDEX:
+            return_value = LastRowIndex_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RANKPROGRESS:
+            return_value = RankProgress_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RECEIVEDFRAGMENTS:
+            return_value = ReceivedFragments_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTGENERATIONINDEX:
+            return_value = CurrentGenerationIndex_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ISRUNNING:
+            return_value = IsRunning_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::USEDLFSRSTATE:
+            return_value = UsedLfsrState_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTLFSRSTATE:
+            return_value = CurrentLfsrState_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_MatrixCrc8();
+      clear_FirstRowCrc8();
+      clear_LastRowCrc8();
+      clear_LastRowIndex();
+      clear_RankProgress();
+      clear_ReceivedFragments();
+      clear_CurrentGenerationIndex();
+      clear_IsRunning();
+      clear_UsedLfsrState();
+      clear_CurrentLfsrState();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 MatrixCrc8_ = 0U;
+      EmbeddedProto::uint32 FirstRowCrc8_ = 0U;
+      EmbeddedProto::uint32 LastRowCrc8_ = 0U;
+      EmbeddedProto::uint32 LastRowIndex_ = 0U;
+      EmbeddedProto::uint32 RankProgress_ = 0U;
+      EmbeddedProto::uint32 ReceivedFragments_ = 0U;
+      EmbeddedProto::uint32 CurrentGenerationIndex_ = 0U;
+      EmbeddedProto::boolean IsRunning_ = false;
+      EmbeddedProto::uint32 UsedLfsrState_ = 0U;
+      EmbeddedProto::uint32 CurrentLfsrState_ = 0U;
 
 };
 

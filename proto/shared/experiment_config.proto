@@ -26,22 +26,3 @@ message MeasurementStreamRequest {
 message MeasurementStreamFragment {
     // Payload in generic bytes field
 }
-
-message DecodingResult {
-    bool Success = 1;
-    uint32 MatrixRank = 2;
-
-    // We check the internal payload
-    uint32 FirstDecodedNumber = 3;
-    uint32 LastDecodedNumber = 4;
-}
-
-message DecodingUpdate {
-    uint32 MatrixCrc8 = 1;
-    uint32 FirstRowCrc8 = 2;
-    uint32 SecondRowCrc8 = 3;
-    uint32 Rank = 4;
-    uint32 ReceivedFragments = 5;
-    uint32 CurrentGenerationIndex = 6;
-    bool IsRunning = 7;
-}

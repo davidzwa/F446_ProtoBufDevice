@@ -123,6 +123,7 @@ extern "C"
 
 #define UART_TX                                     PA_2
 #define UART_RX                                     PA_3
+#define UART_SPEED                                  230400
 
 #ifdef __cplusplus
 }

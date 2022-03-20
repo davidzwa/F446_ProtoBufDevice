@@ -4,7 +4,6 @@
 syntax = "proto3";
 
 import "shared/firmware.proto";
-import "shared/experiment_config.proto";
 import "lora_device_messages.proto";
 
 option csharp_namespace = "LoRa";
@@ -44,5 +43,6 @@ message UartResponse {
         ExceptionMessage exceptionMessage = 6;
         DecodingResult decodingResult = 7;
         DecodingUpdate decodingUpdate = 8; // Debugging ACK
+        DecodingMatrix decodingMatrix = 9; // Heavy operation!
     }
 }
