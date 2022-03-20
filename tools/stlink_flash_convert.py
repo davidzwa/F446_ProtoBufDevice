@@ -1,3 +1,4 @@
+from msilib import sequence
 import os
 import subprocess
 from typing import ByteString
@@ -39,40 +40,66 @@ def parse_binary(path: str) -> dict():
 
     word = file.read(4)
 
-    data = {
-        "sequence_number_set": [],
-        "data_set_rrsi": [],
-        "data_set_snr": [],
-        "samples": 0
-    }
+    sequence_numbers = []
+    rssi = []
+    snr = []
+
     counter = 0
     while word:
         if equals_nullword(word):
             print("Empty word found. Done.")
             break
+
         sequence_number = word[3] << 8 | word[2]
-        rssi = word[1]-150
-        snr = signed8(word[0])
+        sequence_numbers.append(sequence_number)
+        rssi.append(word[1]-150)
+        snr.append(signed8(word[0]))
 
-        data["sequence_number_set"].append(sequence_number)
-        data["data_set_rrsi"].append(rssi)
-        data["data_set_snr"].append(snr)
-
-        # Iterate
         word = file.read(4)
-        last_seq_number = sequence_number
         counter += 1
 
-    data["sample_count"] = len(data["sequence_number_set"])
+    return {
+        "sequence_numbers": sequence_numbers,
+        "rssi": rssi,
+        "snr": snr
+    }
+
+
+def filter_wrong_sequence_numbers(data: dict) -> dict():
+    count = len(data["sequence_numbers"])
+    data["packets_missed"] = 0
+    data["packets_faulty_count"] = 0
+    data["packets_faulty"] = []
+
+    for i in range(0, count):
+        if i >= (count-data["packets_faulty_count"]-1):
+            print("BREAK", i, count-data["packets_faulty_count"]-1, data["packets_faulty_count"], len(data["sequence_numbers"]))
+            break
+        if i > 0:
+            prev = data["sequence_numbers"][i-1]
+            current = data["sequence_numbers"][i]
+            if i+1 >= count-1:
+                break
+
+            next = data["sequence_numbers"][i+1]
+            if not (prev < current < next):
+                if next <= current:
+                    print("Fault Next", prev, current, next)
+                    data["sequence_numbers"].pop(i+1)
+                elif current <= prev:
+                    print("Fault Current", prev, current, next)
+                    data["sequence_numbers"].pop(i)
+                else:
+                    print("Fault other", prev, current, next)
+                data["packets_faulty"].append(i)
+                data["packets_faulty_count"] += 1
+                continue
+
+            diff = current-prev-1
+            if diff is not 0:
+                print(i, current, diff)
+                data["packets_missed"] += diff
     return data
-
-
-def filter_wrong_sequence_numbers(dataset: dict) -> dict():
-    # dataset["sequence_number_set"]
-    # for i in range(0, dataset["sample_count"]):
-    #     if i >
-
-    return dataset
 
 
 def plot_file(path, title, rate):
@@ -153,10 +180,11 @@ if __name__ == '__main__':
     # base1 = "../data/nucleo"
     base = "G:/My Drive/Study/Thesis/Mar 2022/Datasets/"
 
-    path0 = base + "3_a2"
+    path0 = base + "3_a4"
     title0 = "RSSI and SNR Roaming"
     rate0 = 0.5
-    PER_set1 = plot_file(path0, title0, rate0)
+    data = plot_file(path0, title0, rate0)
+    print(data.keys())
     # PER_datasets.append(PER_set1)
 
     # path1 = base +"3_a2"
