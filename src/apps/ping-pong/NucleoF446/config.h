@@ -58,5 +58,5 @@
 #define RADIO_BUFFER_SIZE 100  // Define the payload size here
 
 #define NETWORK_RESPONSE_ID 0x12345678
-#define FIRMWARE_VERSION 0x03010000
+#define FIRMWARE_VERSION 0x03020000
 #endif

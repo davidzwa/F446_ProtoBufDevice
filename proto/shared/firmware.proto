@@ -31,6 +31,8 @@ message RlncInitConfigCommand {
     uint32 FieldPoly = 6;
     uint32 LfsrSeed = 7;
     uint32 LfsrPoly = 8;
+    bool DebugMatrixUart = 9;
+    bool DebugFragmentUart = 10;
 }
 
 message RlncEncodedFragment {

@@ -223,6 +223,12 @@ void UartSendAck(uint8_t code) {
     UartResponseSend(uartResponse);
 }
 
+void UartSendDecodingUpdateWithoutPayload(DecodingUpdate& update) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    uartResponse.set_decodingUpdate(update);
+    UartResponseSend(uartResponse);
+}
+
 void UartSendDecodingUpdate(DecodingUpdate& update, uint8_t* debugPayload, size_t length) {
     UartResponse<PROTO_LIMITS> uartResponse;
     uartResponse.set_decodingUpdate(update);

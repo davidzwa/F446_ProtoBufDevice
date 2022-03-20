@@ -33,6 +33,7 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
     rlncDecodingConfig = rlncInitConfig;
     terminated = false;
     generationIndex = 0;
+    generationSucceeded = false;
 
     // Apply to LFSR
     lfsr->Seed = rlncInitConfig.get_LfsrSeed();
@@ -129,8 +130,13 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_FirstRowCrc8(crc1);
     decodingUpdate.set_LastRowCrc8(crc2);
     decodingUpdate.set_LastRowIndex(rowIndex);
-    // Contains the untouched frame, so send before decoding
-    UartSendDecodingUpdate(decodingUpdate, augVector.data(), augVector.size());
+    
+    if (rlncDecodingConfig.get_DebugFragmentUart()) {
+        // Contains the untouched frame, so send before decoding
+        UartSendDecodingUpdate(decodingUpdate, augVector.data(), augVector.size());
+    } else {
+        UartSendDecodingUpdateWithoutPayload(decodingUpdate);
+    }
 
     // Decoding should not fail when incomplete
     DecodingResult result;
@@ -143,13 +149,18 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
 
         // Verify decoding success and do packet integrity check
         auto encVectorLength = GetEncodingVectorLength();
-        auto progress = DetermineNextInnovativeRowIndex();
+        uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
         auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
         auto firstNumber = decodingMatrix[0][numberColumn];
         auto lastRowIndex = encVectorLength - 1;
-        auto lastNumber = (uint8_t)(progress >= encVectorLength ? decodingMatrix[lastRowIndex][numberColumn] : 0x00);
+        auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
 
-        result.set_Success(firstNumber == 0x00 && lastNumber == (encVectorLength - 1));
+        bool success = firstNumber == 0x00 && lastNumber == (encVectorLength - 1);
+        if (success) {
+            generationSucceeded = true;
+        }
+
+        result.set_Success(success);
         result.set_MatrixRank(progress);
         result.set_FirstDecodedNumber(firstNumber);
         result.set_LastDecodedNumber(lastNumber);
@@ -158,7 +169,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         // Delegate to Flash, UART or LoRa
         // StoreDecodingResult(result);
 
-        if (result.Success()) {
+        if (success) {
             AutoTerminateRlnc();
         }
     }
@@ -183,6 +194,7 @@ void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate
     // Update state
     lfsr->State = rlncStateUpdate.get_LfsrState();
     generationIndex = rlncStateUpdate.get_GenerationIndex();
+    generationSucceeded = false;
 
     // TODO no decoding config update?
 
@@ -271,7 +283,9 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
         throw "Bad matrix augmentation size";
     }
 
-    DebugSendMatrix();
+    if (rlncDecodingConfig.get_DebugMatrixUart()) {
+        DebugSendMatrix();
+    }
     uint8_t numPivots = 0;
 
     // loop through columns, exclude augmented columns
@@ -299,7 +313,9 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
         }
     }
 
-    DebugSendMatrix();
+    if (rlncDecodingConfig.get_DebugMatrixUart()) {
+        DebugSendMatrix();
+    }
 }
 
 void RlncDecoder::DebugSendMatrix() {

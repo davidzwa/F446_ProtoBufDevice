@@ -577,6 +577,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
     }
 
     RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
@@ -589,6 +591,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
     }
 
     ~RlncInitConfigCommand() override = default;
@@ -603,7 +607,9 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       FIELDDEGREE = 5,
       FIELDPOLY = 6,
       LFSRSEED = 7,
-      LFSRPOLY = 8
+      LFSRPOLY = 8,
+      DEBUGMATRIXUART = 9,
+      DEBUGFRAGMENTUART = 10
     };
 
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
@@ -616,6 +622,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       return *this;
     }
 
@@ -629,6 +637,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_FieldPoly(rhs.get_FieldPoly());
       set_LfsrSeed(rhs.get_LfsrSeed());
       set_LfsrPoly(rhs.get_LfsrPoly());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       return *this;
     }
 
@@ -688,6 +698,20 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_LfsrPoly() const { return LfsrPoly_; }
     inline EmbeddedProto::uint32::FIELD_TYPE LfsrPoly() const { return LfsrPoly_.get(); }
 
+    inline void clear_DebugMatrixUart() { DebugMatrixUart_.clear(); }
+    inline void set_DebugMatrixUart(const EmbeddedProto::boolean& value) { DebugMatrixUart_ = value; }
+    inline void set_DebugMatrixUart(const EmbeddedProto::boolean&& value) { DebugMatrixUart_ = value; }
+    inline EmbeddedProto::boolean& mutable_DebugMatrixUart() { return DebugMatrixUart_; }
+    inline const EmbeddedProto::boolean& get_DebugMatrixUart() const { return DebugMatrixUart_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DebugMatrixUart() const { return DebugMatrixUart_.get(); }
+
+    inline void clear_DebugFragmentUart() { DebugFragmentUart_.clear(); }
+    inline void set_DebugFragmentUart(const EmbeddedProto::boolean& value) { DebugFragmentUart_ = value; }
+    inline void set_DebugFragmentUart(const EmbeddedProto::boolean&& value) { DebugFragmentUart_ = value; }
+    inline EmbeddedProto::boolean& mutable_DebugFragmentUart() { return DebugFragmentUart_; }
+    inline const EmbeddedProto::boolean& get_DebugFragmentUart() const { return DebugFragmentUart_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DebugFragmentUart() const { return DebugFragmentUart_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -731,6 +755,16 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       if((0U != LfsrPoly_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = LfsrPoly_.serialize_with_id(static_cast<uint32_t>(id::LFSRPOLY), buffer, false);
+      }
+
+      if((false != DebugMatrixUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DebugMatrixUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGMATRIXUART), buffer, false);
+      }
+
+      if((false != DebugFragmentUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DebugFragmentUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGFRAGMENTUART), buffer, false);
       }
 
       return return_value;
@@ -781,6 +815,14 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
             return_value = LfsrPoly_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::DEBUGMATRIXUART:
+            return_value = DebugMatrixUart_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEBUGFRAGMENTUART:
+            return_value = DebugFragmentUart_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -818,6 +860,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       clear_FieldPoly();
       clear_LfsrSeed();
       clear_LfsrPoly();
+      clear_DebugMatrixUart();
+      clear_DebugFragmentUart();
 
     }
 
@@ -832,6 +876,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 FieldPoly_ = 0U;
       EmbeddedProto::uint32 LfsrSeed_ = 0U;
       EmbeddedProto::uint32 LfsrPoly_ = 0U;
+      EmbeddedProto::boolean DebugMatrixUart_ = false;
+      EmbeddedProto::boolean DebugFragmentUart_ = false;
 
 };
 

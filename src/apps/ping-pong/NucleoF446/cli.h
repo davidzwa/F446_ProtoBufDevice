@@ -40,6 +40,7 @@ void ProcessCliCommand();
 
 void UartSendBoot();
 void UartSendAck(uint8_t sequenceNumber);
+void UartSendDecodingUpdateWithoutPayload(DecodingUpdate& update);
 void UartSendDecodingUpdate(DecodingUpdate& update, uint8_t* payload, size_t length);
 void UartSendDecodingMatrix(DecodingMatrix& matrix, uint8_t* payload, size_t length);
 void UartSendDecodingResult(DecodingResult& result);
