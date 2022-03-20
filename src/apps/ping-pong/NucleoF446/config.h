@@ -14,7 +14,7 @@
 #error "Please define a frequency band in the compiler options."
 #endif
 
-#define TX_OUTPUT_POWER -17 // dBm [-17 to 14]
+#define TX_OUTPUT_POWER 14 // dBm [-17 to 14]
 
 #if defined(USE_MODEM_LORA)
 
