@@ -1348,6 +1348,140 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class DecodingMatrix final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DecodingMatrix() = default;
+    DecodingMatrix(const DecodingMatrix& rhs )
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+    }
+
+    DecodingMatrix(const DecodingMatrix&& rhs ) noexcept
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+    }
+
+    ~DecodingMatrix() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      COLS = 1,
+      ROWS = 2
+    };
+
+    DecodingMatrix& operator=(const DecodingMatrix& rhs)
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+      return *this;
+    }
+
+    DecodingMatrix& operator=(const DecodingMatrix&& rhs) noexcept
+    {
+      set_Cols(rhs.get_Cols());
+      set_Rows(rhs.get_Rows());
+      return *this;
+    }
+
+    inline void clear_Cols() { Cols_.clear(); }
+    inline void set_Cols(const EmbeddedProto::uint32& value) { Cols_ = value; }
+    inline void set_Cols(const EmbeddedProto::uint32&& value) { Cols_ = value; }
+    inline EmbeddedProto::uint32& mutable_Cols() { return Cols_; }
+    inline const EmbeddedProto::uint32& get_Cols() const { return Cols_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Cols() const { return Cols_.get(); }
+
+    inline void clear_Rows() { Rows_.clear(); }
+    inline void set_Rows(const EmbeddedProto::uint32& value) { Rows_ = value; }
+    inline void set_Rows(const EmbeddedProto::uint32&& value) { Rows_ = value; }
+    inline EmbeddedProto::uint32& mutable_Rows() { return Rows_; }
+    inline const EmbeddedProto::uint32& get_Rows() const { return Rows_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Rows() const { return Rows_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != Cols_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Cols_.serialize_with_id(static_cast<uint32_t>(id::COLS), buffer, false);
+      }
+
+      if((0U != Rows_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Rows_.serialize_with_id(static_cast<uint32_t>(id::ROWS), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::COLS:
+            return_value = Cols_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ROWS:
+            return_value = Rows_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Cols();
+      clear_Rows();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 Cols_ = 0U;
+      EmbeddedProto::uint32 Rows_ = 0U;
+
+};
+
 class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
 {
   public:

@@ -28,6 +28,7 @@ class RlncDecoder {
    protected:
     uint8_t AddFrameAsMatrixRow(vector<SYMB>& row);
     void ReduceMatrix(uint8_t augmentedCols);
+    void DebugSendMatrix();
     optional<uint8_t> FindPivot(uint8_t startRow, uint8_t col, uint8_t rowCount);
     void SwitchRows(uint8_t row1, uint8_t row2, uint8_t colCount);
     void ReduceRow(uint8_t row, uint8_t col, uint8_t colCount);

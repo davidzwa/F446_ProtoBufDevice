@@ -46,8 +46,8 @@ void RlncDecoder::ReserveGenerationStorage() {
     ClearDecodingMatrix();
     receivedFragments = 0;
 
-    // We only need independent/innovative packets which is at most the generation size
-    auto fragmentsNeeded = rlncDecodingConfig.get_GenerationSize();
+    // We only need independent/innovative packets which is at most min(generation_size, left_frames)
+    auto fragmentsNeeded = GetEncodingVectorLength();
     auto colsNeeded = GetMatrixColumnCount();
 
     decodingMatrix.resize(fragmentsNeeded);
@@ -71,6 +71,11 @@ uint32_t RlncDecoder::GetMatrixColumnCount() {
     return fragmentLength + encodingVectorLength;
 }
 
+/**
+ * @brief Gets the encoding vector length, which is equal to the amount of innovative fragments in the mixture
+ *
+ * @return uint32_t
+ */
 uint32_t RlncDecoder::GetEncodingVectorLength() {
     auto generationSize = rlncDecodingConfig.get_GenerationSize();
     auto processedFrames = (this->generationIndex * generationSize);
@@ -266,6 +271,7 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
         throw "Bad matrix augmentation size";
     }
 
+    DebugSendMatrix();
     uint8_t numPivots = 0;
 
     // loop through columns, exclude augmented columns
@@ -283,13 +289,35 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
         numPivots++;
 
         // Require Reduced form unconditionally
-        for (uint8_t tmpRow = 0; tmpRow < pivotRow.value(); tmpRow++)
+        for (uint8_t tmpRow = 0; tmpRow < pivotRow.value(); tmpRow++) {
             EliminateRow(tmpRow, pivotRow.value(), col, totalColCount);
+        }
 
         // Eliminate Next Rows
-        for (uint8_t tmpRow = pivotRow.value(); tmpRow < totalRowCount; tmpRow++)
+        for (uint8_t tmpRow = pivotRow.value(); tmpRow < totalRowCount; tmpRow++) {
             EliminateRow(tmpRow, pivotRow.value(), col, totalColCount);
+        }
     }
+
+    DebugSendMatrix();
+}
+
+void RlncDecoder::DebugSendMatrix() {
+    // Debug by sending the matrix over UART
+    auto colCount = decodingMatrix[0].size();
+    auto rowCount = decodingMatrix.size();
+    auto totalCount = rowCount * colCount;
+    uint8_t serialMatrix[rowCount * colCount];
+    for (uint8_t i = 0; i < rowCount; i++) {
+        for (uint8_t j = 0; j < colCount; j++) {
+            serialMatrix[i * colCount + j] = decodingMatrix[i][j];
+        }
+    }
+
+    DecodingMatrix matrixSizes;
+    matrixSizes.set_Rows(rowCount);
+    matrixSizes.set_Cols(colCount);
+    UartSendDecodingMatrix(matrixSizes, serialMatrix, totalCount);
 }
 
 optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t rowCount) {

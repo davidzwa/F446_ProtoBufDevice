@@ -23,8 +23,8 @@
 
 #define PKT_START 0xFF
 #define PKT_END 0x00
-#define PROTO_LIMITS MAX_LORA_BYTES, MAX_LORA_BYTES
 #define PACKET_SIZE_LIMIT 256
+#define PROTO_LIMITS PACKET_SIZE_LIMIT, MAX_LORA_BYTES
 
 uint8_t encodedBuffer[PACKET_SIZE_LIMIT];
 uint8_t packetBufferingLength = 0;
@@ -210,7 +210,7 @@ void UartResponseSend(UartResponse<PROTO_LIMITS>& response) {
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
     } else {
-        // UartDebug("PROTO")
+        UartDebug("PROTO-FAIL", 404, 10);
     }
     writeBuffer.clear();
 }
@@ -231,10 +231,17 @@ void UartSendDecodingUpdate(DecodingUpdate& update, uint8_t* debugPayload, size_
     UartResponseSend(uartResponse);
 }
 
+void UartSendDecodingMatrix(DecodingMatrix& sizes, uint8_t* matrix, size_t length) {
+    UartResponse<PROTO_LIMITS> uartResponse;
+    uartResponse.set_decodingMatrix(sizes);
+    auto& payload = uartResponse.mutable_Payload();
+    payload.set(matrix, length);
+    UartResponseSend(uartResponse);
+}
+
 void UartSendDecodingResult(DecodingResult& result) {
     UartResponse<PROTO_LIMITS> uartResponse;
     uartResponse.set_decodingResult(result);
-
     UartResponseSend(uartResponse);
 }
 

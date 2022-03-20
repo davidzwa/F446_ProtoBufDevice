@@ -57,6 +57,11 @@ message DecodingResult {
     uint32 LastDecodedNumber = 4;
 }
 
+message DecodingMatrix {
+    uint32 Cols = 1;
+    uint32 Rows = 2;
+}
+
 message DecodingUpdate {
     uint32 MatrixCrc8 = 1;
     uint32 FirstRowCrc8 = 2;

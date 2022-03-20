@@ -731,6 +731,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
+        case id::DECODINGMATRIX:
+          set_decodingMatrix(rhs.get_decodingMatrix());
+          break;
+
         default:
           break;
       }
@@ -776,6 +780,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           set_decodingUpdate(rhs.get_decodingUpdate());
           break;
 
+        case id::DECODINGMATRIX:
+          set_decodingMatrix(rhs.get_decodingMatrix());
+          break;
+
         default:
           break;
       }
@@ -794,7 +802,8 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
       DEBUGMESSAGE = 5,
       EXCEPTIONMESSAGE = 6,
       DECODINGRESULT = 7,
-      DECODINGUPDATE = 8
+      DECODINGUPDATE = 8,
+      DECODINGMATRIX = 9
     };
 
     UartResponse& operator=(const UartResponse& rhs)
@@ -834,6 +843,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGUPDATE:
           set_decodingUpdate(rhs.get_decodingUpdate());
+          break;
+
+        case id::DECODINGMATRIX:
+          set_decodingMatrix(rhs.get_decodingMatrix());
           break;
 
         default:
@@ -880,6 +893,10 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
         case id::DECODINGUPDATE:
           set_decodingUpdate(rhs.get_decodingUpdate());
+          break;
+
+        case id::DECODINGMATRIX:
+          set_decodingMatrix(rhs.get_decodingMatrix());
           break;
 
         default:
@@ -1170,6 +1187,45 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
     inline const DecodingUpdate& get_decodingUpdate() const { return Body_.decodingUpdate_; }
     inline const DecodingUpdate& decodingUpdate() const { return Body_.decodingUpdate_; }
 
+    inline bool has_decodingMatrix() const
+    {
+      return id::DECODINGMATRIX == which_Body_;
+    }
+    inline void clear_decodingMatrix()
+    {
+      if(id::DECODINGMATRIX == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.decodingMatrix_.~DecodingMatrix();
+      }
+    }
+    inline void set_decodingMatrix(const DecodingMatrix& value)
+    {
+      if(id::DECODINGMATRIX != which_Body_)
+      {
+        init_Body(id::DECODINGMATRIX);
+      }
+      Body_.decodingMatrix_ = value;
+    }
+    inline void set_decodingMatrix(const DecodingMatrix&& value)
+    {
+      if(id::DECODINGMATRIX != which_Body_)
+      {
+        init_Body(id::DECODINGMATRIX);
+      }
+      Body_.decodingMatrix_ = value;
+    }
+    inline DecodingMatrix& mutable_decodingMatrix()
+    {
+      if(id::DECODINGMATRIX != which_Body_)
+      {
+        init_Body(id::DECODINGMATRIX);
+      }
+      return Body_.decodingMatrix_;
+    }
+    inline const DecodingMatrix& get_decodingMatrix() const { return Body_.decodingMatrix_; }
+    inline const DecodingMatrix& decodingMatrix() const { return Body_.decodingMatrix_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1228,6 +1284,13 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
           if(has_decodingUpdate() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
             return_value = Body_.decodingUpdate_.serialize_with_id(static_cast<uint32_t>(id::DECODINGUPDATE), buffer, true);
+          }
+          break;
+
+        case id::DECODINGMATRIX:
+          if(has_decodingMatrix() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.decodingMatrix_.serialize_with_id(static_cast<uint32_t>(id::DECODINGMATRIX), buffer, true);
           }
           break;
 
@@ -1290,6 +1353,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::DECODINGMATRIX:
+            return_value = deserialize_Body(id::DECODINGMATRIX, Body_.decodingMatrix_, buffer, wire_type);
+
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -1341,6 +1409,7 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
         ExceptionMessage exceptionMessage_;
         DecodingResult decodingResult_;
         DecodingUpdate decodingUpdate_;
+        DecodingMatrix decodingMatrix_;
       };
       Body Body_;
 
@@ -1390,6 +1459,11 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::DECODINGUPDATE;
             break;
 
+          case id::DECODINGMATRIX:
+            new(&Body_.decodingMatrix_) DecodingMatrix;
+            which_Body_ = id::DECODINGMATRIX;
+            break;
+
           default:
             break;
          }
@@ -1421,6 +1495,9 @@ class UartResponse final: public ::EmbeddedProto::MessageInterface
             break;
           case id::DECODINGUPDATE:
             Body_.decodingUpdate_.~DecodingUpdate(); // NOSONAR Unions require this.
+            break;
+          case id::DECODINGMATRIX:
+            Body_.decodingMatrix_.~DecodingMatrix(); // NOSONAR Unions require this.
             break;
           default:
             break;
