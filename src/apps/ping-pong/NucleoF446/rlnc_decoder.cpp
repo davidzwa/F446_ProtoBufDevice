@@ -49,9 +49,9 @@ void RlncDecoder::ReserveGenerationStorage() {
     // We only need independent/innovative packets which is at most the generation size
     auto fragmentsNeeded = rlncDecodingConfig.get_GenerationSize();
     auto colsNeeded = GetMatrixColumnCount();
-    
+
     decodingMatrix.resize(fragmentsNeeded);
-    for (uint32_t i=0; i < fragmentsNeeded; i++) {
+    for (uint32_t i = 0; i < fragmentsNeeded; i++) {
         decodingMatrix[i].resize(colsNeeded);
         decodingMatrix[i].assign(colsNeeded, 0);
     }
@@ -195,7 +195,7 @@ void RlncDecoder::AutoTerminateRlnc() {
     lfsr->Reset();
     ClearDecodingMatrix();
     terminated = true;
-    
+
     SendUartTermination();
 }
 
@@ -222,8 +222,8 @@ uint8_t RlncDecoder::AddFrameAsMatrixRow(vector<SYMB>& row) {
     if (row.size() > this->decodingMatrix[innovativeRow].size()) {
         throw "BUG";
     }
+    // UartDebug("INSERT_ROW", innovativeRow, 11);
     this->decodingMatrix[innovativeRow].assign(row.begin(), row.end());
-
     return innovativeRow;
 }
 
@@ -231,9 +231,13 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
     // Only the encoding vector columns need checking
     auto encodingVectorLength = GetEncodingVectorLength();
 
-    bool currentRowAllZeroes = true;
-    for (uint8_t i; i < decodingMatrix.size(); i++) {
-        for (uint8_t j; j < encodingVectorLength; j++) {
+    if (decodingMatrix.size() == 0) {
+        throw "PRE-ALLOCATION PROBLEM";
+    }
+
+    for (uint8_t i = 0; i < decodingMatrix.size(); i++) {
+        bool currentRowAllZeroes = true;
+        for (uint8_t j = 0; j < encodingVectorLength; j++) {
             // As we assume non-RREF any value not zero means rank++
             if (decodingMatrix[i][j] != 0) {
                 currentRowAllZeroes = false;
@@ -242,6 +246,11 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
         }
 
         if (currentRowAllZeroes) return i;
+    }
+
+    if (receivedFragments < encodingVectorLength) {
+        UartDebug("INSERT_ROW", encodingVectorLength - 1, 11);
+        throw "WRONG ROW";
     }
 
     // If no row is all-0 we have full rank - we return the effective generation size
@@ -299,7 +308,7 @@ optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t 
 void RlncDecoder::SwitchRows(uint8_t row1, uint8_t row2, uint8_t colCount) {
     if (row1 == row2) return;
 
-    for (auto col = 0; col < colCount; col++) {
+    for (int col = 0; col < colCount; col++) {
         swap(decodingMatrix[row1][col], decodingMatrix[row2][col]);
     }
 }
