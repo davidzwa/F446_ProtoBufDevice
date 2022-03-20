@@ -4,7 +4,7 @@ import subprocess
 from typing import ByteString
 import matplotlib.pyplot as plt
 import numpy as np
-print(os.getcwd())
+# print(os.getcwd())
 
 # 128 64 32 16
 read_size = 1024 * 16
@@ -47,7 +47,7 @@ def parse_binary(path: str) -> dict():
     counter = 0
     while word:
         if equals_nullword(word):
-            print("Empty word found. Done.")
+            # print("Empty word found. Done.")
             break
 
         sequence_number = word[3] << 8 | word[2]
@@ -67,13 +67,14 @@ def parse_binary(path: str) -> dict():
 
 def filter_wrong_sequence_numbers(data: dict) -> dict():
     count = len(data["sequence_numbers"])
-    data["packets_missed"] = 0
+    data["packets_missed_count"] = 0
+    data["packets_missed_indices"] = []
+    data["packets_missed"] = []
     data["packets_faulty_count"] = 0
     data["packets_faulty"] = []
 
     for i in range(0, count):
         if i >= (count-data["packets_faulty_count"]-1):
-            print("BREAK", i, count-data["packets_faulty_count"]-1, data["packets_faulty_count"], len(data["sequence_numbers"]))
             break
         if i > 0:
             prev = data["sequence_numbers"][i-1]
@@ -84,10 +85,10 @@ def filter_wrong_sequence_numbers(data: dict) -> dict():
             next = data["sequence_numbers"][i+1]
             if not (prev < current < next):
                 if next <= current:
-                    print("Fault Next", prev, current, next)
+                    # print("Fault Next", prev, next, current)
                     data["sequence_numbers"].pop(i+1)
                 elif current <= prev:
-                    print("Fault Current", prev, current, next)
+                    # print("Fault Current", prev, next, current)
                     data["sequence_numbers"].pop(i)
                 else:
                     print("Fault other", prev, current, next)
@@ -97,15 +98,24 @@ def filter_wrong_sequence_numbers(data: dict) -> dict():
 
             diff = current-prev-1
             if diff is not 0:
-                print(i, current, diff)
-                data["packets_missed"] += diff
+                data["packets_missed_count"] += diff
+                data["packets_missed"].append(diff)
+                data["packets_missed_indices"].append(i)
     return data
 
 
 def plot_file(path, title, rate):
-    data = parse_binary(path)
+    raw_data = parse_binary(path)
+    data = filter_wrong_sequence_numbers(raw_data)
 
-    return filter_wrong_sequence_numbers(data)
+    print("Correct packets (num)", len(data["sequence_numbers"]))
+    print("Missed packets (num):", data["packets_missed_count"])
+    print("Missed packets max:", max(data["packets_missed"])
+        if data["packets_missed"] else None)
+    print("Faulty packets (num):", data["packets_faulty_count"])
+    print("Faulty packets:", data["packets_faulty"])
+
+    return data
 
     # counter = 0
     # last_seq_number = None
@@ -180,7 +190,7 @@ if __name__ == '__main__':
     # base1 = "../data/nucleo"
     base = "G:/My Drive/Study/Thesis/Mar 2022/Datasets/"
 
-    path0 = base + "3_a4"
+    path0 = base + "3_a3"
     title0 = "RSSI and SNR Roaming"
     rate0 = 0.5
     data = plot_file(path0, title0, rate0)
