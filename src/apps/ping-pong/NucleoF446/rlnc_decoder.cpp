@@ -31,7 +31,6 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
 
     // Save state config
     rlncDecodingConfig = rlncInitConfig;
-
     terminated = false;
     generationIndex = 0;
 
@@ -40,34 +39,39 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
     lfsr->Reset();
 
     // Prepare storage for the configured generation
-    ClearDecodingMatrix();
     ReserveGenerationStorage();
 }
 
 void RlncDecoder::ReserveGenerationStorage() {
-    ClearGenerationStorage();
-    // Quite conservative (2 overhead) - does not assume any dependent vectors arrive
-    generationFrames.reserve(rlncDecodingConfig.get_GenerationSize() + 2);
-}
+    ClearDecodingMatrix();
+    receivedFragments = 0;
 
-void RlncDecoder::ClearGenerationStorage() {
-    for (uint8_t i = 0; i < generationFrames.size(); i++) {
-        // fill(generationFrames[i].augVector.begin(), generationFrames[i].augVector.end(), 0);
-        generationFrames[i].augVector.clear();
+    // We only need independent/innovative packets which is at most the generation size
+    auto fragmentsNeeded = rlncDecodingConfig.get_GenerationSize();
+    auto colsNeeded = GetMatrixColumnCount();
+    
+    decodingMatrix.resize(fragmentsNeeded);
+    for (uint32_t i=0; i < fragmentsNeeded; i++) {
+        decodingMatrix[i].resize(colsNeeded);
+        decodingMatrix[i].assign(colsNeeded, 0);
     }
-    generationFrames.clear();
 }
 
 void RlncDecoder::ClearDecodingMatrix() {
     for (uint8_t i = 0; i < decodingMatrix.size(); i++) {
-        // fill(decodingMatrix[i].begin(), decodingMatrix[i].end(), 0);
         decodingMatrix[i].clear();
     }
-
     decodingMatrix.clear();
 }
 
-uint32_t RlncDecoder::GetGenerationFragmentCount() {
+uint32_t RlncDecoder::GetMatrixColumnCount() {
+    auto encodingVectorLength = GetEncodingVectorLength();
+    auto fragmentLength = rlncDecodingConfig.get_FrameSize();
+
+    return fragmentLength + encodingVectorLength;
+}
+
+uint32_t RlncDecoder::GetEncodingVectorLength() {
     auto generationSize = rlncDecodingConfig.get_GenerationSize();
     auto processedFrames = (this->generationIndex * generationSize);
     auto totalFrameCountLeft = rlncDecodingConfig.get_TotalFrameCount() - processedFrames;
@@ -82,55 +86,59 @@ uint32_t RlncDecoder::GetGenerationFragmentCount() {
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     // Fetch the encoding vector length
-    auto minimalFragmentCount = GetGenerationFragmentCount();
-
-    // Generate the encoding vector
-    vector<SYMB> encodingVector;
+    auto encodingColCount = GetEncodingVectorLength();
     auto lfsrResetState = message.get_rlncEncodedFragment().get_LfsrState();
+    auto frame = message.get_Payload();
+    auto frameSize = frame.get_length();
 
+    if (frameSize != rlncDecodingConfig.get_FrameSize()) {
+        // Bad or illegal configuration
+        throw "Yuck";
+    }
+
+    // Insert the encoding vector and encoded frame
+    vector<SYMB> augVector;
+
+    // Reproduce the encoding vector
     lfsr->State = lfsrResetState;
-    lfsr->GenerateMany(encodingVector, minimalFragmentCount);
+    lfsr->GenerateMany(augVector, encodingColCount);
 
-    // Process the fragment as augmented vector from frame and enc vector
-    // generationFrames.size() * (size(frame) + size(enc))
-    RlncFrame frame(encodingVector, message.Payload(), message.get_Payload().get_length());
+    // Store the augmented part
+    for (uint8_t i = 0; i < frameSize; i++) {
+        augVector.push_back(frame[i]);
+    }
 
-    // Store the frame in safe memory
-    // auto matrixCapacity = decodingMatrix.capacity();
-    generationFrames.push_back(frame);
-    // Store the frame as malleable matrix row
-    auto lastRowIndex = generationFrames.size() - 1;
-    AddFrameAsMatrixRow(lastRowIndex);
-
-    DecodingResult result;
+    // Store the augmented matrix row
+    auto rowIndex = AddFrameAsMatrixRow(augVector);
 
     // Debug previous decoding action and any new packet
     uint8_t crc1 = ComputeChecksum(decodingMatrix[0].data(), decodingMatrix[0].size());
-    uint8_t crc2 = ComputeChecksum(decodingMatrix[lastRowIndex].data(), decodingMatrix[0].size());
+    uint8_t crc2 = ComputeChecksum(decodingMatrix[rowIndex].data(), decodingMatrix[0].size());
     DecodingUpdate decodingUpdate;
-    decodingUpdate.set_RankProgress(DetermineDecodingProgress());
-    decodingUpdate.set_ReceivedFragments(generationFrames.size());
+    decodingUpdate.set_RankProgress(DetermineNextInnovativeRowIndex());
+    decodingUpdate.set_ReceivedFragments(receivedFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
     decodingUpdate.set_UsedLfsrState(lfsrResetState);
     decodingUpdate.set_CurrentLfsrState(lfsr->State);
     decodingUpdate.set_FirstRowCrc8(crc1);
     decodingUpdate.set_LastRowCrc8(crc2);
-    decodingUpdate.set_LastRowIndex(lastRowIndex);
+    decodingUpdate.set_LastRowIndex(rowIndex);
     // Contains the untouched frame, so send before decoding
-    UartSendDecodingUpdate(decodingUpdate, frame.augVector.data(), frame.augVector.size());
+    UartSendDecodingUpdate(decodingUpdate, augVector.data(), augVector.size());
 
     // Decoding should not fail when incomplete
+    DecodingResult result;
     DecodeFragments(result);
 
     // Process the results - if any
-    if (generationFrames.size() >= minimalFragmentCount) {
+    if (receivedFragments >= encodingColCount) {
         // Enough packets have arrived to attempt decoding with high probability
         // DecodeFragments(result);
 
         // Verify decoding success and do packet integrity check
-        auto encVectorLength = GetGenerationFragmentCount();
-        auto progress = DetermineDecodingProgress();
+        auto encVectorLength = GetEncodingVectorLength();
+        auto progress = DetermineNextInnovativeRowIndex();
         auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
         auto firstNumber = decodingMatrix[0][numberColumn];
         auto lastRowIndex = encVectorLength - 1;
@@ -171,8 +179,9 @@ void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate
     lfsr->State = rlncStateUpdate.get_LfsrState();
     generationIndex = rlncStateUpdate.get_GenerationIndex();
 
-    // Prepare for next generation
-    ClearDecodingMatrix();
+    // TODO no decoding config update?
+
+    // Prepare for next generation, reset state
     ReserveGenerationStorage();
 }
 
@@ -185,10 +194,8 @@ void RlncDecoder::AutoTerminateRlnc() {
     generationIndex = 0x0;
     lfsr->Reset();
     ClearDecodingMatrix();
-    ClearGenerationStorage();
-
-    // Debugging flag for tracking the state
     terminated = true;
+    
     SendUartTermination();
 }
 
@@ -205,27 +212,29 @@ void RlncDecoder::StoreDecodingResult(DecodingResult& decodingResult) {
     }
 }
 
-void RlncDecoder::AddFrameAsMatrixRow(uint8_t rowIndex) {
-    auto source = generationFrames[rowIndex].augVector;
+uint8_t RlncDecoder::AddFrameAsMatrixRow(vector<SYMB>& row) {
+    receivedFragments++;
 
-    // TODO test whether this copies correctly
-    vector<galois::GFSymbol> newData;
-    newData.assign(source.begin(), source.end());
-    this->decodingMatrix.push_back(newData);
+    auto innovativeRow = DetermineNextInnovativeRowIndex();
+    if (innovativeRow > this->decodingMatrix.size()) {
+        throw "OUCH";
+    }
+    if (row.size() > this->decodingMatrix[innovativeRow].size()) {
+        throw "BUG";
+    }
+    this->decodingMatrix[innovativeRow].assign(row.begin(), row.end());
+
+    return innovativeRow;
 }
 
-uint8_t RlncDecoder::DetermineDecodingProgress() {
-    // generationSize is the dimension for our square submatrix (encoding matrix)
-    auto encodingVectorColumnCount = GetGenerationFragmentCount();
+uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
+    // Only the encoding vector columns need checking
+    auto encodingVectorLength = GetEncodingVectorLength();
 
     bool currentRowAllZeroes = true;
     for (uint8_t i; i < decodingMatrix.size(); i++) {
-        for (uint8_t j; j < encodingVectorColumnCount; j++) {
-            // We assume RREF, so any non-unity diagonal entry means rank is the row index
-            if (i == j && decodingMatrix[i][j] != 1) {
-                return i;
-            }
-            // If we spot one value not equal to 0, we have to check
+        for (uint8_t j; j < encodingVectorLength; j++) {
+            // As we assume non-RREF any value not zero means rank++
             if (decodingMatrix[i][j] != 0) {
                 currentRowAllZeroes = false;
                 break;
@@ -235,8 +244,8 @@ uint8_t RlncDecoder::DetermineDecodingProgress() {
         if (currentRowAllZeroes) return i;
     }
 
-    // If no row is all-0 we have full rank
-    return encodingVectorColumnCount;
+    // If no row is all-0 we have full rank - we return the effective generation size
+    return encodingVectorLength - 1;
 }
 
 void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
