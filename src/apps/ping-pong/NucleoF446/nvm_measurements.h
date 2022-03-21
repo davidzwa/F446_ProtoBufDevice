@@ -28,7 +28,7 @@
 uint16_t ClearStorage();
 uint32_t GetMeasurementCount();
 uint16_t AppendMeasurement(uint32_t value);
-uint16_t FlashReadMeasurement(uint32_t index, uint32_t* value);
+uint16_t ReadMeasurement(uint32_t index, uint32_t* value);
 
 // 32000 32-bit values in sector
 // 1 for header, 2 reserved for future use and 2 for counting (both containing same value for safety checks)

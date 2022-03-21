@@ -57,9 +57,6 @@
 #define PAGE2_BASE_ADDRESS      ((uint32_t)(SECTOR7_START))
 #define PAGE2_END_ADDRESS       ((uint32_t)(SECTOR7_START + (PAGE2_SIZE - 1)))
 
-/* No valid page define */
-#define NO_VALID_PAGE         ((uint16_t)0x00AB)
-
 /* Page status definitions */
 #define ERASED_PAGE           ((uint16_t)0xFFFF)     /* Page is erased */
 #define VALID_PAGE            ((uint16_t)0x0000)     /* Page containing valid data */
@@ -73,10 +70,5 @@
 #define PAGE_ILLEGAL_ID       ((uint8_t)0x79) // Page ID is not valid or was not enabled
 #define PAGE_FULL             ((uint8_t)0x80)
 #define PAGE_OVERRUN          ((uint8_t)0x81) // Address given does not fit in page
-
-/* Exported functions ------------------------------------------------------- */
-HAL_StatusTypeDef EepromMcuReadVariable32(uint16_t virtAddress, uint32_t* data);
-HAL_StatusTypeDef EepromMcuWriteVariable32(uint16_t virtAddress, uint32_t data);
-bool ClearAllPages();
 
 #endif /* __EEPROM_H */
