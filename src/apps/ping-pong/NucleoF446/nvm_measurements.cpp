@@ -1,4 +1,4 @@
-#include "measurements_nvmm.h"
+#include "nvm_measurements.h"
 
 #include "nvmm.h"
 
