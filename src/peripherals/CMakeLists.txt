@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 3.6)
 #---------------------------------------------------------------------------------------
 
 if(${SECURE_ELEMENT} MATCHES SOFT_SE)
-    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" "soft-se/*.c")
+    file(GLOB ${PROJECT_NAME}_SOURCES "*.cpp" ) # "soft-se/*.c"
     message(STATUS "Added Soft Secure-Element (C)")
 else() 
     file (GLOB ${PROJECT_NAME}_SOURCES "*.cpp")
@@ -52,10 +52,10 @@ list(APPEND ${PROJECT_NAME}_SOURCES "placeholder.cpp")
 
 add_library(${PROJECT_NAME} OBJECT EXCLUDE_FROM_ALL ${${PROJECT_NAME}_SOURCES})
 
-if(${SECURE_ELEMENT} MATCHES SOFT_SE)
-    target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/soft-se)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE -DSOFT_SE)
-endif()
+# if(${SECURE_ELEMENT} MATCHES SOFT_SE)
+#     target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/soft-se)
+#     target_compile_definitions(${PROJECT_NAME} PRIVATE -DSOFT_SE)
+# endif()
 
 if(TSL_2561)
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tsl2561)
@@ -71,7 +71,7 @@ target_include_directories( ${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     $<TARGET_PROPERTY:board,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:system,INTERFACE_INCLUDE_DIRECTORIES>
-    $<TARGET_PROPERTY:mac,INTERFACE_INCLUDE_DIRECTORIES>
+    # $<TARGET_PROPERTY:mac,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:radio,INTERFACE_INCLUDE_DIRECTORIES>
 )
 

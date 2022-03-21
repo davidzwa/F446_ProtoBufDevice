@@ -4,7 +4,7 @@
 
 // #define DEBUG_THROW
 // Flash bank 5
-#define NVM_PAGE (5)
+#define NVM_PAGE (6)
 NvmHandle NvmMeasurements(NVM_PAGE);
 
 // Unloaded state

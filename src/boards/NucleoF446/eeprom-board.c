@@ -20,11 +20,11 @@ uint32_t GetPageOffsetAddress(uint8_t pageId, uint16_t offset);
 HAL_StatusTypeDef EepromMcuInit(void) {
     HAL_FLASH_Unlock();
 
-    uint16_t pageStatus0 = GetPageHeader(PAGE0_ID);
-    if (pageStatus0 != VALID_PAGE) {
-        EnsurePageErased(PAGE0_ID);
-        SetPageHeader(PAGE0_ID, VALID_PAGE);
-    }
+    // uint16_t pageStatus0 = GetPageHeader(PAGE0_ID);
+    // if (pageStatus0 != VALID_PAGE) {
+    //     EnsurePageErased(PAGE0_ID);
+    //     SetPageHeader(PAGE0_ID, VALID_PAGE);
+    // }
 
     uint16_t pageStatus1 = GetPageHeader(PAGE1_ID);
     if (pageStatus1 != VALID_PAGE) {
@@ -150,9 +150,10 @@ HAL_StatusTypeDef ValidatePageId(uint8_t pageId) {
 }
 
 uint32_t GetPageBaseAddress(uint8_t pageId) {
-    if (pageId == PAGE0_ID) {
-        return PAGE0_BASE_ADDRESS;
-    } else if (pageId == PAGE1_ID) {
+    // if (pageId == PAGE0_ID) {
+    //     return PAGE0_BASE_ADDRESS;
+    // } else 
+    if (pageId == PAGE1_ID) {
         return PAGE1_BASE_ADDRESS;
     } else if (pageId == PAGE2_ID) {
         return PAGE2_BASE_ADDRESS;
@@ -162,9 +163,10 @@ uint32_t GetPageBaseAddress(uint8_t pageId) {
 }
 
 uint32_t GetPageEndAddress(uint8_t pageId) {
-    if (pageId == PAGE0_ID) {
-        return PAGE0_END_ADDRESS;
-    } else if (pageId == PAGE1_ID) {
+    // if (pageId == PAGE0_ID) {
+    //     return PAGE0_END_ADDRESS;
+    // } else 
+    if (pageId == PAGE1_ID) {
         return PAGE1_END_ADDRESS;
     } else if (pageId == PAGE2_ID) {
         return PAGE2_END_ADDRESS;

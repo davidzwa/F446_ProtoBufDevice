@@ -4,7 +4,7 @@
 
 // #define DEBUG_THROW
 // Flash bank 5
-#define NVM_PAGE (6)
+#define NVM_PAGE (7)
 NvmHandle NvmRlnc(NVM_PAGE);
 
 // 0x00 is sector header and should only be written to if sector is full

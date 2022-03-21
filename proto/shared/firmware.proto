@@ -40,6 +40,12 @@ message RlncEncodedFragment {
     uint32 LfsrState = 1;
 }
 
+message RlncFlashEncodedFragment {
+    // This is a compressed field
+    bytes Meta = 1; // LSFR, sequence number, generation ID, fragment ID
+    bytes Payload = 2;
+}
+
 message RlncStateUpdate {
     uint32 GenerationIndex = 1;
     uint32 LfsrState = 2;

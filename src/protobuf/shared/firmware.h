@@ -992,6 +992,140 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
 };
 
+template<uint32_t Meta_LENGTH, 
+uint32_t Payload_LENGTH>
+class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RlncFlashEncodedFragment() = default;
+    RlncFlashEncodedFragment(const RlncFlashEncodedFragment& rhs )
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+    }
+
+    RlncFlashEncodedFragment(const RlncFlashEncodedFragment&& rhs ) noexcept
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+    }
+
+    ~RlncFlashEncodedFragment() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      META = 1,
+      PAYLOAD = 2
+    };
+
+    RlncFlashEncodedFragment& operator=(const RlncFlashEncodedFragment& rhs)
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    RlncFlashEncodedFragment& operator=(const RlncFlashEncodedFragment&& rhs) noexcept
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    inline void clear_Meta() { Meta_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Meta_LENGTH>& mutable_Meta() { return Meta_; }
+    inline void set_Meta(const ::EmbeddedProto::FieldBytes<Meta_LENGTH>& rhs) { Meta_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Meta_LENGTH>& get_Meta() const { return Meta_; }
+    inline const uint8_t* Meta() const { return Meta_.get_const(); }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Meta_.serialize_with_id(static_cast<uint32_t>(id::META), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::META:
+            return_value = Meta_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PAYLOAD:
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Meta();
+      clear_Payload();
+
+    }
+
+    private:
+
+
+      ::EmbeddedProto::FieldBytes<Meta_LENGTH> Meta_;
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
+
+};
+
 class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
 {
   public:
