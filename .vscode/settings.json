@@ -165,7 +165,8 @@
         "stdexcept": "cpp",
         "typeinfo": "cpp",
         "iomanip": "cpp",
-        "crc8.h": "c"
+        "crc8.h": "c",
+        "eeprom-conf.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",

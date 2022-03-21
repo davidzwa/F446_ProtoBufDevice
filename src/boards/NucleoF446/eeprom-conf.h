@@ -42,15 +42,20 @@
 // #define EEPROM_START_ADDRESS ((uint32_t)0x08000000)
 
 /* Pages 0 and 1 base and end addresses */
-#define PAGE0_ID              FLASH_SECTOR_5
-#define PAGE0_SIZE            PAGE_SIZE_128K
-#define PAGE0_BASE_ADDRESS    ((uint32_t)(SECTOR5_START))
-#define PAGE0_END_ADDRESS     ((uint32_t)(SECTOR5_START + (PAGE0_SIZE - 1)))
+#define PAGE0_ID                FLASH_SECTOR_5
+#define PAGE0_SIZE              PAGE_SIZE_128K
+#define PAGE0_BASE_ADDRESS      ((uint32_t)(SECTOR5_START))
+#define PAGE0_END_ADDRESS       ((uint32_t)(SECTOR5_START + (PAGE0_SIZE - 1)))
 
-#define PAGE1_ID              FLASH_SECTOR_6
-#define PAGE1_SIZE            PAGE_SIZE_128K
-#define PAGE1_BASE_ADDRESS    ((uint32_t)(SECTOR6_START))
-#define PAGE1_END_ADDRESS     ((uint32_t)(SECTOR6_START + (PAGE1_SIZE - 1)))
+#define PAGE1_ID                FLASH_SECTOR_6
+#define PAGE1_SIZE              PAGE_SIZE_128K
+#define PAGE1_BASE_ADDRESS      ((uint32_t)(SECTOR6_START))
+#define PAGE1_END_ADDRESS       ((uint32_t)(SECTOR6_START + (PAGE1_SIZE - 1)))
+
+#define PAGE2_ID                FLASH_SECTOR_7
+#define PAGE2_SIZE              PAGE_SIZE_128K
+#define PAGE2_BASE_ADDRESS      ((uint32_t)(SECTOR7_START))
+#define PAGE2_END_ADDRESS       ((uint32_t)(SECTOR7_START + (PAGE2_SIZE - 1)))
 
 /* No valid page define */
 #define NO_VALID_PAGE         ((uint16_t)0x00AB)
