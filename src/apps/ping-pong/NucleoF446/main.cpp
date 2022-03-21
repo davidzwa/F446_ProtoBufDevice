@@ -66,6 +66,10 @@ int main(void) {
     GpioInit(&button, PC_13, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
     GpioSetInterrupt(&button, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, &ButtonCallback);
 
+    uint32_t output;
+    ReadMeasurement(0, &output);
+    UartDebug("FLASH", output, 12);
+
     // CRC check
     // uint8_t values[] = {0xFF, 0x12, 0x34, 0x00};
     // auto outcome = ComputeChecksum(values, sizeof(values));
