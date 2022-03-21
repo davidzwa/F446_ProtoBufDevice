@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.6)
 
 file(GLOB ${PROJECT_NAME}_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/crypto/*.c"
 )
 

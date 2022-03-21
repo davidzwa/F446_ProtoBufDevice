@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdint.h>
 
-#include "measurements_nvmm.h"
+#include "nvm_measurements.h"
 #include "radio_phy.h"
 
 #ifndef MEASUREMENTS_H__

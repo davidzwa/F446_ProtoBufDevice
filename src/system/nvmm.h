@@ -37,62 +37,20 @@
 extern "C" {
 #endif
 
-#include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 
-/*!
- * \brief Writes data to given data block.
- *
- * \param[IN] src    Pointer to the source of data to be copied.
- * \param[IN] size   Number of bytes to copy.
- * \param[IN] offset Relative NVM offset.
- *
- * \retval           Status of the operation
- */
-// uint16_t NvmmWrite(uint8_t* src, uint16_t size, uint16_t offset);
-uint16_t NvmmWriteVar32(uint16_t address, uint32_t variable);
+#include "eeprom-board.h"
 
-/*!
- * \brief Reads from data block to destination pointer.
- *
- * \param[IN] dst    Pointer to the destination array where the content is to be copied.
- * \param[IN] size   Number of bytes to copy.
- * \param[IN] offset Relative NVM offset.
- *
- * \retval           Status of the operation
- */
-// uint16_t NvmmRead(uint8_t* dest, uint16_t size, uint16_t offset);
-uint16_t NvmmReadVar32(uint16_t address, uint32_t* variable);
+class NvmHandle {
+   public:
+    NvmHandle(uint8_t pageId);
+    uint16_t Write(uint16_t address, uint32_t variable);
+    uint16_t Read(uint16_t address, uint32_t* variable);
+    bool Clear();
 
-/*!
- * \brief Verfies the CRC 32 of a data block. The function assumes that the
- *        crc32 is at the end of the block with 4 bytes.
- *
- * \param[IN] size   Length of the block.
- * \param[IN] offset Address offset of the NVM.
- *
- * \retval           Status of the operation
- */
-// bool NvmmCrc32Check(uint16_t size, uint16_t offset);
-
-/*!
- * \brief Invalidates the CRC 32 of a data block. The function assumes that the
- *        crc32 is at the end of the block with 4 bytes.
- *
- * \param[IN] size   Length of the block.
- * \param[IN] offset Address offset of the NVM.
- *
- * \retval           Status of the operation
- */
-// bool NvmmReset(uint16_t size, uint16_t offset);
-
-/**
- * @brief Clear all assigned pages in flash for re-use
- * 
- * @return uint16_t 
- */
-bool NvmmClear();
+   private:
+    uint8_t pageId;
+};
 
 #ifdef __cplusplus
 }

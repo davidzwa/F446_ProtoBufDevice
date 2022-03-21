@@ -25,21 +25,22 @@
 
 #include "nvmm.h"
 
-#include <stdint.h>
-
-#include "eeprom-board.h"
 #include "utilities.h"
 
-uint16_t NvmmWriteVar32(uint16_t address, uint32_t variable) {
-    return EepromMcuWriteVariable32(address * 0x04, variable);
+NvmHandle::NvmHandle(uint8_t pageId) {
+    this->pageId = pageId;
 }
 
-uint16_t NvmmReadVar32(uint16_t address, uint32_t* variable) {
-    return EepromMcuReadVariable32(address * 0x04, variable);
+uint16_t NvmHandle::Write(uint16_t address32, uint32_t variable) {
+    return EepromMcuWriteVariable32(pageId, address32 * 0x04, variable);
 }
 
-bool NvmmClear() {
-    return ClearAllPages();
+uint16_t NvmHandle::Read(uint16_t address32, uint32_t* variable) {
+    return EepromMcuReadVariable32(pageId, address32 * 0x04, variable);
+}
+
+bool NvmHandle::Clear() {
+    return EepromMcuClearPage(pageId);
 }
 
 // bool NvmmCrc32Check(uint16_t size, uint16_t address) {

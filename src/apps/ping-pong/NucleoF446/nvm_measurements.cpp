@@ -1,6 +1,11 @@
-#include "measurements_nvmm.h"
+#include "nvm_measurements.h"
 
 #include "nvmm.h"
+
+// #define DEBUG_THROW
+// Flash bank 5
+#define NVM_PAGE (5)
+NvmHandle NvmMeasurements(NVM_PAGE);
 
 // Unloaded state
 uint16_t measurementCountState = 0xFFFF;
@@ -9,8 +14,11 @@ uint16_t FlashGetValidatedAddress(uint32_t index);
 uint16_t FlashWriteMeasurement(uint32_t index, uint32_t value);
 
 uint16_t ClearStorage() {
-    uint16_t result = NvmmClear();
+    uint16_t result = NvmMeasurements.Clear();
     if (result != 0x00) {
+#ifdef DEBUG_THROW
+        throw "ERR";
+#endif
         return CLEAR_ERROR;
     }
 
@@ -23,6 +31,9 @@ uint16_t AppendMeasurement(uint32_t value) {
     uint32_t index = GetMeasurementCount();
     uint16_t resultWrite = FlashWriteMeasurement(index, value);
     if (resultWrite != 0x00) {
+#ifdef DEBUG_THROW
+        throw "ERR";
+#endif
         return resultWrite;
     }
     
@@ -34,18 +45,24 @@ uint16_t AppendMeasurement(uint32_t value) {
 uint16_t FlashWriteMeasurement(uint32_t index, uint32_t value) {
     // Validate value is erased
     uint32_t flashValue;
-    uint16_t result = FlashReadMeasurement(index, &flashValue);
+    uint16_t result = ReadMeasurement(index, &flashValue);
     if (result != 0x00) {
+#ifdef DEBUG_THROW
+        throw "ERR";
+#endif
         return READ_ERROR;
     }
     if (flashValue != 0xFFFFFFFF) {
+#ifdef DEBUG_THROW
+        throw "ERR";
+#endif
         return ADDRESS_ALREADY_WRITTEN;
     }
 
     uint32_t addressOrError = FlashGetValidatedAddress(index);
     if (addressOrError >= DATA_SECTOR_END) return addressOrError;
 
-    return NvmmWriteVar32(addressOrError, value);
+    return NvmMeasurements.Write(addressOrError, value);
 }
 
 /**
@@ -55,10 +72,10 @@ uint16_t FlashWriteMeasurement(uint32_t index, uint32_t value) {
  * @param value 
  * @return uint16_t success (0) or not (>0)
  */
-uint16_t FlashReadMeasurement(uint32_t index, uint32_t* value) {
+uint16_t ReadMeasurement(uint32_t index, uint32_t* target) {
     uint32_t address = FlashGetValidatedAddress(index);
 
-    return NvmmReadVar32(address, value);
+    return NvmMeasurements.Read(address, target);
 }
 
 uint16_t FlashGetValidatedAddress(uint32_t index) {
@@ -68,6 +85,9 @@ uint16_t FlashGetValidatedAddress(uint32_t index) {
         return address;
     }
 
+#ifdef DEBUG_THROW
+    throw "ERR";
+#endif
     return ADDRESS_OUT_OF_BOUNDS;
 }
 
@@ -86,7 +106,7 @@ uint32_t GetMeasurementCount() {
     uint32_t target;
     measurementCountState = 0;
     while (valueAtIndex < DATA_SECTOR_END) {
-        uint16_t result = NvmmReadVar32(valueAtIndex, &target);
+        uint16_t result = NvmMeasurements.Read(valueAtIndex, &target);
         if (result) return 0xFFFF;
 
         if (target == 0xFFFFFFFF) break;

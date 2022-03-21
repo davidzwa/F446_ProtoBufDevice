@@ -120,6 +120,7 @@ SECTIONS
     _sdata = .;        /* create a global symbol at data start */
     *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
+    *(.code_in_ram)     /* Custom code test */
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
@@ -165,5 +166,3 @@ SECTIONS
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
-
-

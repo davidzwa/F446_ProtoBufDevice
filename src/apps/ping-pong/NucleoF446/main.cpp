@@ -35,10 +35,17 @@
  */
 Gpio_t button;
 
+__attribute__((long_call, section(".code_in_ram"))) void foo(void) {
+    // Do something here
+    UartDebug("RAMFUNC", 0, 8);
+}
+
 void ButtonCallback(void* context) {
     UartDebug("PUSH-BUTTON", 0, 12);
 
     decoder.AutoTerminateRlnc();
+
+    foo();
 }
 
 int main(void) {
