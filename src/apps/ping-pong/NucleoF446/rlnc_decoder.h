@@ -9,7 +9,6 @@
 #include "LinearFeedbackShiftRegister.h"
 #include "config.h"
 #include "lora_device_messages.h"
-// #include "rlnc_frame.h"
 
 using namespace std;
 

@@ -34,8 +34,9 @@ HAL_StatusTypeDef EepromMcuInit(void) {
 
     uint16_t pageStatus2 = GetPageHeader(PAGE2_ID);
     if (pageStatus2 != VALID_PAGE) {
-        EnsurePageErased(PAGE2_ID);
-        SetPageHeader(PAGE2_ID, VALID_PAGE);
+        // EnsurePageErased(PAGE2_ID);
+        // SetPageHeader(PAGE2_ID, VALID_PAGE);
+        return PAGE_PROTECTED;
     }
 
     HAL_FLASH_Lock();
@@ -50,6 +51,12 @@ HAL_StatusTypeDef EepromMcuClearPage(uint8_t pageId) {
     return result;
 }
 
+HAL_StatusTypeDef EepromMcuValidateBufferLimits8(uint8_t pageId, uint32_t pageAddress8, size_t length) {
+    HAL_StatusTypeDef minBoundStatus = ValidatePageLimits(pageId, pageAddress8);
+    HAL_StatusTypeDef maxBoundStatus = ValidatePageLimits(pageId, pageAddress8 + length);
+    return minBoundStatus || maxBoundStatus;
+}
+
 /**
  * @brief Read 32-bit variable
  *
@@ -57,17 +64,59 @@ HAL_StatusTypeDef EepromMcuClearPage(uint8_t pageId) {
  * @param data
  * @return HAL_StatusTypeDef
  */
-HAL_StatusTypeDef EepromMcuReadVariable32(uint8_t pageId, uint16_t pageAddress, uint32_t* data) {
+HAL_StatusTypeDef EepromMcuReadVariable32(uint8_t pageId, uint32_t pageAddress32, uint32_t* data) {
     uint32_t dataAddress;
     HAL_StatusTypeDef result = HAL_OK;
 
     HAL_FLASH_Unlock();
 
     if (ValidatePageId(pageId) != PAGE_ILLEGAL_ID) {
-        result = ValidatePageLimits(pageId, pageAddress);
+        result = ValidatePageLimits(pageId, pageAddress32);
         if (result == HAL_OK) {
-            dataAddress = GetPageOffsetAddress(pageId, pageAddress);
+            dataAddress = GetPageOffsetAddress(pageId, pageAddress32);
             *data = (*(__IO uint32_t*)(dataAddress));
+        }
+    } else {
+        result = PAGE_ILLEGAL_ID;
+    }
+
+    HAL_FLASH_Lock();
+
+    return result;  // (0: variable exist, 1: variable doesn't exist)
+}
+
+HAL_StatusTypeDef EepromMcuReadVariable16(uint8_t pageId, uint32_t pageAddress16, uint16_t* data) {
+    uint32_t dataAddress;
+    HAL_StatusTypeDef result = HAL_OK;
+
+    HAL_FLASH_Unlock();
+
+    if (ValidatePageId(pageId) != PAGE_ILLEGAL_ID) {
+        result = ValidatePageLimits(pageId, pageAddress16);
+        if (result == HAL_OK) {
+            dataAddress = GetPageOffsetAddress(pageId, pageAddress16);
+            *data = (*(__IO uint16_t*)(dataAddress));
+        }
+    } else {
+        result = PAGE_ILLEGAL_ID;
+    }
+
+    HAL_FLASH_Lock();
+
+    return result;  // (0: variable exist, 1: variable doesn't exist)
+}
+
+HAL_StatusTypeDef EepromMcuReadVariable8(uint8_t pageId, uint32_t pageAddress8, uint32_t* data) {
+    uint32_t dataAddress;
+    HAL_StatusTypeDef result = HAL_OK;
+
+    HAL_FLASH_Unlock();
+
+    if (ValidatePageId(pageId) != PAGE_ILLEGAL_ID) {
+        result = ValidatePageLimits(pageId, pageAddress8);
+        if (result == HAL_OK) {
+            dataAddress = GetPageOffsetAddress(pageId, pageAddress8);
+            *data = (*(__IO uint8_t*)(dataAddress));
         }
     } else {
         result = PAGE_ILLEGAL_ID;
@@ -85,7 +134,7 @@ HAL_StatusTypeDef EepromMcuReadVariable32(uint8_t pageId, uint16_t pageAddress, 
  * @param data
  * @return HAL_StatusTypeDef
  */
-HAL_StatusTypeDef EepromMcuWriteVariable32(uint8_t pageId, uint16_t pageAddress32, uint32_t data) {
+HAL_StatusTypeDef EepromMcuWriteVariable32(uint8_t pageId, uint32_t pageAddress32, uint32_t data) {
     uint16_t writeStatus = 0;
 
     HAL_FLASH_Unlock();
@@ -152,7 +201,7 @@ HAL_StatusTypeDef ValidatePageId(uint8_t pageId) {
 uint32_t GetPageBaseAddress(uint8_t pageId) {
     // if (pageId == PAGE0_ID) {
     //     return PAGE0_BASE_ADDRESS;
-    // } else 
+    // } else
     if (pageId == PAGE1_ID) {
         return PAGE1_BASE_ADDRESS;
     } else if (pageId == PAGE2_ID) {
@@ -165,7 +214,7 @@ uint32_t GetPageBaseAddress(uint8_t pageId) {
 uint32_t GetPageEndAddress(uint8_t pageId) {
     // if (pageId == PAGE0_ID) {
     //     return PAGE0_END_ADDRESS;
-    // } else 
+    // } else
     if (pageId == PAGE1_ID) {
         return PAGE1_END_ADDRESS;
     } else if (pageId == PAGE2_ID) {

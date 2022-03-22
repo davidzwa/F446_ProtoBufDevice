@@ -29,12 +29,16 @@ extern "C"
 #endif
 
 #include <stdint.h>
+#include <stddef.h>
 #include "utilities.h"
 
 uint16_t EepromMcuInit(void);
-LmnStatus_t EepromMcuClearPage(uint8_t pageId);
-LmnStatus_t EepromMcuWriteVariable32(uint8_t pageId, uint16_t addr, uint32_t value);
-LmnStatus_t EepromMcuReadVariable32(uint8_t pageId, uint16_t addr, uint32_t* value);
+uint16_t EepromMcuClearPage(uint8_t pageId);
+uint16_t EepromMcuValidateBufferLimits8(uint8_t pageId, uint32_t pageAddress8, size_t length);
+uint16_t EepromMcuReadVariable8(uint8_t pageId, uint32_t pageAddress8, uint8_t* data);
+uint16_t EepromMcuReadVariable16(uint8_t pageId, uint32_t pageAddress8, uint16_t* data);
+uint16_t EepromMcuReadVariable32(uint8_t pageId, uint32_t pageAddress8, uint32_t* value);
+uint16_t EepromMcuWriteVariable32(uint8_t pageId, uint32_t pageAddress8, uint32_t value);
 
 #ifdef __cplusplus
 }

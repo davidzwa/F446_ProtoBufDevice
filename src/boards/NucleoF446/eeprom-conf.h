@@ -70,5 +70,6 @@
 #define PAGE_ILLEGAL_ID       ((uint8_t)0x79) // Page ID is not valid or was not enabled
 #define PAGE_FULL             ((uint8_t)0x80)
 #define PAGE_OVERRUN          ((uint8_t)0x81) // Address given does not fit in page
+#define PAGE_PROTECTED        ((uint8_t)0x82) // We soft-lock this page
 
 #endif /* __EEPROM_H */
