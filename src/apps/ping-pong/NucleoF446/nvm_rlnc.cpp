@@ -10,12 +10,15 @@
 #define NVM_PAGE (7)
 NvmHandle NvmRlnc(NVM_PAGE);
 
+#define GEN_PREFIX_HEADER 0xFFFF0000
+
 // 0x00 is sector header and should only be written to if sector is full
 #define SECTOR_HEADER ((uint16_t)0x0000)
 
 ProtoReadBuffer flashReadBuffer;
-LoRaMessage<MAX_LORA_BYTES> initCommand;
-LoRaMessage<MAX_LORA_BYTES> terminateCommand;
+LoRaMessage<MAX_LORA_BYTES> initCommand;        // Fixed command
+LoRaMessage<MAX_LORA_BYTES> terminateCommand;   // Fixed command
+LoRaMessage<MAX_LORA_BYTES> currentFragment;    // Iterated buffer command
 
 // LAYOUT
 // -- Start of header --
@@ -41,9 +44,9 @@ LoRaMessage<MAX_LORA_BYTES> terminateCommand;
 #define INIT_START DATA_SECTOR_BASE*4 // in 8-bits
 #define DATA_SECTOR_END ((uint16_t)0x7FFF)   // in 32-bits (32k767 measurements)
 
-RlncFlashState state = UNSCANNED;
+uint16_t state = UNSCANNED;
 
-RlncFlashState InitRlncFlashState() {
+uint16_t InitRlncFlashState() {
     uint32_t pageHeader, initSize, termSize;
     auto readStatus = NvmRlnc.Read32(SECTOR_HEADER, &pageHeader);
     if (readStatus != 0x00) {
@@ -71,6 +74,7 @@ RlncFlashState InitRlncFlashState() {
         return state = CORRUPT_INIT_SIZE;
     }
 
+    // Read and deserialize Initiation command
     uint8_t buffer[initSize];
     readStatus = NvmRlnc.ReadBuffer8(INIT_START, buffer, initSize);
     if (readStatus != 0x00) {
@@ -85,6 +89,7 @@ RlncFlashState InitRlncFlashState() {
         return DESERIALIZE_FAIL_INIT;
     }
 
+    // Read and deserialize Termination command
     uint8_t bufferTerm[termSize];
     readStatus = NvmRlnc.ReadBuffer8(INIT_START, bufferTerm, termSize);
     if (readStatus != 0x00) {
@@ -99,13 +104,30 @@ RlncFlashState InitRlncFlashState() {
         return state = DESERIALIZE_FAIL_TERM;
     }
 
+    // Get generation count from init command
+    auto innerInitCommand = initCommand.get_rlncInitConfigCommand();
+    auto generationCount = innerInitCommand.get_GenerationCount();
+    auto fragmentSize = innerInitCommand.get_FrameSize();
+
+    // TODO initSize and termSize are not 32-bits aligned
+    auto currentAddress = DATA_SECTOR_BASE + initSize + termSize;
+    uint32_t currentGenerationPrefix;
+    for (size_t i = 0; i < generationCount; i++)
+    {
+        auto result = NvmRlnc.Read32(currentAddress, &currentGenerationPrefix);
+        if (result != 0x00) {
+            return state = READ_FAIL_GEN_PREFIX + i;
+        }
+        
+        if ((uint16_t)(currentGenerationPrefix >> 16) != 0xFFFF) {
+            return state = GENERATION_FAIL_PREFIX_BASE + i;
+        }
+
+    }    
+
     return state;
 }
 
-RlncFlashState GetRlncFlashState() {
+uint16_t GetRlncFlashState() {
     return state;
 }
-
-// Future use
-// #define NVM_PAGE2 (7)
-// NvmHandle NvmRlnc2(NVM_PAGE2);
