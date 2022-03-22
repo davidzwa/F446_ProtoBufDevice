@@ -12,6 +12,7 @@
 #include "config.h"
 #include "delay.h"
 #include "measurements.h"
+#include "nvm_rlnc.h"
 #include "radio_config.h"
 #include "radio_phy.h"
 #include "tasks.h"
@@ -297,6 +298,7 @@ void UartSendBoot() {
     bootMessage.mutable_DeviceIdentifier() = GetDeviceId();
     bootMessage.set_MeasurementCount(GetMeasurementCount());
     bootMessage.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
+    bootMessage.set_RlncFlashState(GetRlncFlashState());
     auto& version = bootMessage.mutable_FirmwareVersion();
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     version.set_Major(appVersion.Fields.Major);

@@ -393,6 +393,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
     }
 
     BootMessage(const BootMessage&& rhs ) noexcept
@@ -401,6 +402,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
     }
 
     ~BootMessage() override = default;
@@ -411,7 +413,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       DEVICEIDENTIFIER = 1,
       FIRMWAREVERSION = 2,
       MEASUREMENTCOUNT = 3,
-      MEASUREMENTSDISABLED = 4
+      MEASUREMENTSDISABLED = 4,
+      RLNCFLASHSTATE = 5
     };
 
     BootMessage& operator=(const BootMessage& rhs)
@@ -420,6 +423,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
       return *this;
     }
 
@@ -429,6 +433,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
       return *this;
     }
 
@@ -460,6 +465,13 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_MeasurementsDisabled() const { return MeasurementsDisabled_; }
     inline EmbeddedProto::boolean::FIELD_TYPE MeasurementsDisabled() const { return MeasurementsDisabled_.get(); }
 
+    inline void clear_RlncFlashState() { RlncFlashState_.clear(); }
+    inline void set_RlncFlashState(const EmbeddedProto::uint32& value) { RlncFlashState_ = value; }
+    inline void set_RlncFlashState(const EmbeddedProto::uint32&& value) { RlncFlashState_ = value; }
+    inline EmbeddedProto::uint32& mutable_RlncFlashState() { return RlncFlashState_; }
+    inline const EmbeddedProto::uint32& get_RlncFlashState() const { return RlncFlashState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RlncFlashState() const { return RlncFlashState_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -483,6 +495,11 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       if((false != MeasurementsDisabled_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = MeasurementsDisabled_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSDISABLED), buffer, false);
+      }
+
+      if((0U != RlncFlashState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RlncFlashState_.serialize_with_id(static_cast<uint32_t>(id::RLNCFLASHSTATE), buffer, false);
       }
 
       return return_value;
@@ -515,6 +532,10 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
 
           case id::MEASUREMENTSDISABLED:
             return_value = MeasurementsDisabled_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RLNCFLASHSTATE:
+            return_value = RlncFlashState_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -550,6 +571,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       clear_FirmwareVersion();
       clear_MeasurementCount();
       clear_MeasurementsDisabled();
+      clear_RlncFlashState();
 
     }
 
@@ -560,6 +582,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       Version FirmwareVersion_;
       EmbeddedProto::uint32 MeasurementCount_ = 0U;
       EmbeddedProto::boolean MeasurementsDisabled_ = false;
+      EmbeddedProto::uint32 RlncFlashState_ = 0U;
 
 };
 

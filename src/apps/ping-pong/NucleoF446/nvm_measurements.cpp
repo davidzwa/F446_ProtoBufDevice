@@ -75,7 +75,7 @@ uint16_t FlashWriteMeasurement(uint32_t index, uint32_t value) {
 uint16_t ReadMeasurement(uint32_t index, uint32_t* target) {
     uint32_t address = FlashGetValidatedAddress(index);
 
-    return NvmMeasurements.Read(address, target);
+    return NvmMeasurements.Read32(address, target);
 }
 
 uint16_t FlashGetValidatedAddress(uint32_t index) {
@@ -106,7 +106,7 @@ uint32_t GetMeasurementCount() {
     uint32_t target;
     measurementCountState = 0;
     while (valueAtIndex < DATA_SECTOR_END) {
-        uint16_t result = NvmMeasurements.Read(valueAtIndex, &target);
+        uint16_t result = NvmMeasurements.Read32(valueAtIndex, &target);
         if (result) return 0xFFFF;
 
         if (target == 0xFFFFFFFF) break;

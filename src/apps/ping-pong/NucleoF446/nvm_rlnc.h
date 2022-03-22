@@ -1,15 +1,27 @@
 #ifndef NVM_RLNC_H
 #define NVM_RLNC_H
 
-// 0x00 is sector header and should only be written to if sector is full
-#define SECTOR_HEADER ((uint16_t)0x0000)
+enum RlncFlashState {
+    UNSCANNED = 0,
+    READ_FAIL_SECTOR = 1,
+    READ_FAIL_INIT = 11,
+    READ_FAIL_TERM = 12,
+    READ_FAIL_INIT_BUFFER = 13,
+    CORRUPT_SECTOR = 2,
+    CORRUPT_INIT_SIZE = 21,
+    CORRUPT_TERM_SIZE = 22,
+    DESERIALIZE_FAIL_INIT = 31,
+    DESERIALIZE_FAIL_TERM = 32,
+    NODATA = 3,
+    DATAPRESENT = 4,
+    VALIDATED = 5
 
-// Fields useful for later
-#define RESERVED1 ((uint16_t)0x0001)
-#define RESERVED2 ((uint16_t)0x0002)
-#define RESERVED3 ((uint16_t)0x0003)
+};
 
-#define DATA_SECTOR_BASE ((uint16_t)0x0004)  // in 32-bits
-#define DATA_SECTOR_END ((uint16_t)0x7FFF)   // in 32-bits (32k767 measurements)
+#define INIT_SIZE_LIMIT 20
+#define TERM_SIZE_LIMIT 30
+
+RlncFlashState GetRlncFlashState();
+RlncFlashState InitRlncFlashState();
 
 #endif  // NVM_RLNC_H

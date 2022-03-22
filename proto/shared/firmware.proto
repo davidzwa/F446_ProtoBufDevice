@@ -20,6 +20,7 @@ message BootMessage {
     Version FirmwareVersion = 2;
     uint32 MeasurementCount = 3;
     bool MeasurementsDisabled = 4;
+    uint32 RlncFlashState = 5;
 }
 
 message RlncInitConfigCommand {

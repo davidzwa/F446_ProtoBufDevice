@@ -21,13 +21,14 @@
 #include "cli.h"
 #include "config.h"
 #include "delay.h"
+#include "gpio.h"
 #include "measurements.h"
+#include "nvm_rlnc.h"
 #include "nvmm.h"
 #include "radio_config.h"
 #include "radio_phy.h"
 #include "tasks.h"
 #include "utils.h"
-#include "gpio.h"
 
 /**
  * @brief Push button on PC13 (pin 2)
@@ -53,6 +54,7 @@ int main(void) {
     BoardInitPeriph();
     InitCli(true);
     InitializeMeasurements();
+    InitRlncFlashState();
     InitRadioTxConfigLoRa();
     InitRadioRxConfigLoRa();
     InitRadioPhy();
@@ -62,7 +64,7 @@ int main(void) {
 
     // ApplyRadioConfig();
     UartDebug(__TIMESTAMP__, 0, sizeof(__TIMESTAMP__));
-    
+
     GpioInit(&button, PC_13, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
     GpioSetInterrupt(&button, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, &ButtonCallback);
 
@@ -106,8 +108,7 @@ int main(void) {
         if (IsCliCommandReady()) {
             if (IsCrcValid()) {
                 ProcessCliCommand();
-            }
-            else {
+            } else {
                 UartDebug("CRC-FAIL", 400, 8);
                 ResetCrcFailure();
             }
