@@ -4,6 +4,7 @@ bin/
 build/
 tmp/
 *.bin
+!data_rlnc/*
 .kdev4
 *.log
 *.dep

@@ -593,6 +593,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     RlncInitConfigCommand(const RlncInitConfigCommand& rhs )
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -607,6 +608,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -624,20 +626,22 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       GENERATIONSIZE = 1,
-      GENERATIONCOUNT = 2,
-      FRAMESIZE = 3,
-      TOTALFRAMECOUNT = 4,
-      FIELDDEGREE = 5,
-      FIELDPOLY = 6,
-      LFSRSEED = 7,
-      LFSRPOLY = 8,
-      DEBUGMATRIXUART = 9,
-      DEBUGFRAGMENTUART = 10
+      GENERATIONREDUNDANCYSIZE = 2,
+      GENERATIONCOUNT = 3,
+      FRAMESIZE = 4,
+      TOTALFRAMECOUNT = 5,
+      FIELDDEGREE = 6,
+      FIELDPOLY = 7,
+      LFSRSEED = 8,
+      LFSRPOLY = 9,
+      DEBUGMATRIXUART = 10,
+      DEBUGFRAGMENTUART = 11
     };
 
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -653,6 +657,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand&& rhs) noexcept
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -671,6 +676,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_GenerationSize() { return GenerationSize_; }
     inline const EmbeddedProto::uint32& get_GenerationSize() const { return GenerationSize_; }
     inline EmbeddedProto::uint32::FIELD_TYPE GenerationSize() const { return GenerationSize_.get(); }
+
+    inline void clear_GenerationRedundancySize() { GenerationRedundancySize_.clear(); }
+    inline void set_GenerationRedundancySize(const EmbeddedProto::uint32& value) { GenerationRedundancySize_ = value; }
+    inline void set_GenerationRedundancySize(const EmbeddedProto::uint32&& value) { GenerationRedundancySize_ = value; }
+    inline EmbeddedProto::uint32& mutable_GenerationRedundancySize() { return GenerationRedundancySize_; }
+    inline const EmbeddedProto::uint32& get_GenerationRedundancySize() const { return GenerationRedundancySize_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE GenerationRedundancySize() const { return GenerationRedundancySize_.get(); }
 
     inline void clear_GenerationCount() { GenerationCount_.clear(); }
     inline void set_GenerationCount(const EmbeddedProto::uint32& value) { GenerationCount_ = value; }
@@ -745,6 +757,11 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
         return_value = GenerationSize_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONSIZE), buffer, false);
       }
 
+      if((0U != GenerationRedundancySize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = GenerationRedundancySize_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONREDUNDANCYSIZE), buffer, false);
+      }
+
       if((0U != GenerationCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = GenerationCount_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONCOUNT), buffer, false);
@@ -808,6 +825,10 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
         {
           case id::GENERATIONSIZE:
             return_value = GenerationSize_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::GENERATIONREDUNDANCYSIZE:
+            return_value = GenerationRedundancySize_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::GENERATIONCOUNT:
@@ -876,6 +897,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_GenerationSize();
+      clear_GenerationRedundancySize();
       clear_GenerationCount();
       clear_FrameSize();
       clear_TotalFrameCount();
@@ -892,6 +914,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::uint32 GenerationSize_ = 0U;
+      EmbeddedProto::uint32 GenerationRedundancySize_ = 0U;
       EmbeddedProto::uint32 GenerationCount_ = 0U;
       EmbeddedProto::uint32 FrameSize_ = 0U;
       EmbeddedProto::uint32 TotalFrameCount_ = 0U;

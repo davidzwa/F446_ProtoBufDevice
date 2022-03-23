@@ -25,15 +25,16 @@ message BootMessage {
 
 message RlncInitConfigCommand {
     uint32 GenerationSize = 1;
-    uint32 GenerationCount = 2;
-    uint32 FrameSize = 3;
-    uint32 TotalFrameCount = 4;
-    uint32 FieldDegree = 5;
-    uint32 FieldPoly = 6;
-    uint32 LfsrSeed = 7;
-    uint32 LfsrPoly = 8;
-    bool DebugMatrixUart = 9;
-    bool DebugFragmentUart = 10;
+    uint32 GenerationRedundancySize = 2;
+    uint32 GenerationCount = 3;
+    uint32 FrameSize = 4;
+    uint32 TotalFrameCount = 5;
+    uint32 FieldDegree = 6;
+    uint32 FieldPoly = 7;
+    uint32 LfsrSeed = 8;
+    uint32 LfsrPoly = 9;
+    bool DebugMatrixUart = 10;
+    bool DebugFragmentUart = 11;
 }
 
 message RlncEncodedFragment {
