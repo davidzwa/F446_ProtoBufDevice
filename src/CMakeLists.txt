@@ -218,7 +218,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/system)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/protobuf)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mac)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/mac)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/peripherals)
 

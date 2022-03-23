@@ -393,6 +393,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
     }
 
     BootMessage(const BootMessage&& rhs ) noexcept
@@ -401,6 +402,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
     }
 
     ~BootMessage() override = default;
@@ -411,7 +413,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       DEVICEIDENTIFIER = 1,
       FIRMWAREVERSION = 2,
       MEASUREMENTCOUNT = 3,
-      MEASUREMENTSDISABLED = 4
+      MEASUREMENTSDISABLED = 4,
+      RLNCFLASHSTATE = 5
     };
 
     BootMessage& operator=(const BootMessage& rhs)
@@ -420,6 +423,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
       return *this;
     }
 
@@ -429,6 +433,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_FirmwareVersion(rhs.get_FirmwareVersion());
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
+      set_RlncFlashState(rhs.get_RlncFlashState());
       return *this;
     }
 
@@ -460,6 +465,13 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_MeasurementsDisabled() const { return MeasurementsDisabled_; }
     inline EmbeddedProto::boolean::FIELD_TYPE MeasurementsDisabled() const { return MeasurementsDisabled_.get(); }
 
+    inline void clear_RlncFlashState() { RlncFlashState_.clear(); }
+    inline void set_RlncFlashState(const EmbeddedProto::uint32& value) { RlncFlashState_ = value; }
+    inline void set_RlncFlashState(const EmbeddedProto::uint32&& value) { RlncFlashState_ = value; }
+    inline EmbeddedProto::uint32& mutable_RlncFlashState() { return RlncFlashState_; }
+    inline const EmbeddedProto::uint32& get_RlncFlashState() const { return RlncFlashState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RlncFlashState() const { return RlncFlashState_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -483,6 +495,11 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       if((false != MeasurementsDisabled_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = MeasurementsDisabled_.serialize_with_id(static_cast<uint32_t>(id::MEASUREMENTSDISABLED), buffer, false);
+      }
+
+      if((0U != RlncFlashState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RlncFlashState_.serialize_with_id(static_cast<uint32_t>(id::RLNCFLASHSTATE), buffer, false);
       }
 
       return return_value;
@@ -515,6 +532,10 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
 
           case id::MEASUREMENTSDISABLED:
             return_value = MeasurementsDisabled_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RLNCFLASHSTATE:
+            return_value = RlncFlashState_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -550,6 +571,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       clear_FirmwareVersion();
       clear_MeasurementCount();
       clear_MeasurementsDisabled();
+      clear_RlncFlashState();
 
     }
 
@@ -560,6 +582,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       Version FirmwareVersion_;
       EmbeddedProto::uint32 MeasurementCount_ = 0U;
       EmbeddedProto::boolean MeasurementsDisabled_ = false;
+      EmbeddedProto::uint32 RlncFlashState_ = 0U;
 
 };
 
@@ -570,6 +593,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     RlncInitConfigCommand(const RlncInitConfigCommand& rhs )
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -584,6 +608,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -601,20 +626,22 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     {
       NOT_SET = 0,
       GENERATIONSIZE = 1,
-      GENERATIONCOUNT = 2,
-      FRAMESIZE = 3,
-      TOTALFRAMECOUNT = 4,
-      FIELDDEGREE = 5,
-      FIELDPOLY = 6,
-      LFSRSEED = 7,
-      LFSRPOLY = 8,
-      DEBUGMATRIXUART = 9,
-      DEBUGFRAGMENTUART = 10
+      GENERATIONREDUNDANCYSIZE = 2,
+      GENERATIONCOUNT = 3,
+      FRAMESIZE = 4,
+      TOTALFRAMECOUNT = 5,
+      FIELDDEGREE = 6,
+      FIELDPOLY = 7,
+      LFSRSEED = 8,
+      LFSRPOLY = 9,
+      DEBUGMATRIXUART = 10,
+      DEBUGFRAGMENTUART = 11
     };
 
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -630,6 +657,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand&& rhs) noexcept
     {
       set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
       set_GenerationCount(rhs.get_GenerationCount());
       set_FrameSize(rhs.get_FrameSize());
       set_TotalFrameCount(rhs.get_TotalFrameCount());
@@ -648,6 +676,13 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_GenerationSize() { return GenerationSize_; }
     inline const EmbeddedProto::uint32& get_GenerationSize() const { return GenerationSize_; }
     inline EmbeddedProto::uint32::FIELD_TYPE GenerationSize() const { return GenerationSize_.get(); }
+
+    inline void clear_GenerationRedundancySize() { GenerationRedundancySize_.clear(); }
+    inline void set_GenerationRedundancySize(const EmbeddedProto::uint32& value) { GenerationRedundancySize_ = value; }
+    inline void set_GenerationRedundancySize(const EmbeddedProto::uint32&& value) { GenerationRedundancySize_ = value; }
+    inline EmbeddedProto::uint32& mutable_GenerationRedundancySize() { return GenerationRedundancySize_; }
+    inline const EmbeddedProto::uint32& get_GenerationRedundancySize() const { return GenerationRedundancySize_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE GenerationRedundancySize() const { return GenerationRedundancySize_.get(); }
 
     inline void clear_GenerationCount() { GenerationCount_.clear(); }
     inline void set_GenerationCount(const EmbeddedProto::uint32& value) { GenerationCount_ = value; }
@@ -722,6 +757,11 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
         return_value = GenerationSize_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONSIZE), buffer, false);
       }
 
+      if((0U != GenerationRedundancySize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = GenerationRedundancySize_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONREDUNDANCYSIZE), buffer, false);
+      }
+
       if((0U != GenerationCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = GenerationCount_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONCOUNT), buffer, false);
@@ -785,6 +825,10 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
         {
           case id::GENERATIONSIZE:
             return_value = GenerationSize_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::GENERATIONREDUNDANCYSIZE:
+            return_value = GenerationRedundancySize_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::GENERATIONCOUNT:
@@ -853,6 +897,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_GenerationSize();
+      clear_GenerationRedundancySize();
       clear_GenerationCount();
       clear_FrameSize();
       clear_TotalFrameCount();
@@ -869,6 +914,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::uint32 GenerationSize_ = 0U;
+      EmbeddedProto::uint32 GenerationRedundancySize_ = 0U;
       EmbeddedProto::uint32 GenerationCount_ = 0U;
       EmbeddedProto::uint32 FrameSize_ = 0U;
       EmbeddedProto::uint32 TotalFrameCount_ = 0U;
@@ -989,6 +1035,140 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::uint32 LfsrState_ = 0U;
+
+};
+
+template<uint32_t Meta_LENGTH, 
+uint32_t Payload_LENGTH>
+class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RlncFlashEncodedFragment() = default;
+    RlncFlashEncodedFragment(const RlncFlashEncodedFragment& rhs )
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+    }
+
+    RlncFlashEncodedFragment(const RlncFlashEncodedFragment&& rhs ) noexcept
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+    }
+
+    ~RlncFlashEncodedFragment() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      META = 1,
+      PAYLOAD = 2
+    };
+
+    RlncFlashEncodedFragment& operator=(const RlncFlashEncodedFragment& rhs)
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    RlncFlashEncodedFragment& operator=(const RlncFlashEncodedFragment&& rhs) noexcept
+    {
+      set_Meta(rhs.get_Meta());
+      set_Payload(rhs.get_Payload());
+      return *this;
+    }
+
+    inline void clear_Meta() { Meta_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Meta_LENGTH>& mutable_Meta() { return Meta_; }
+    inline void set_Meta(const ::EmbeddedProto::FieldBytes<Meta_LENGTH>& rhs) { Meta_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Meta_LENGTH>& get_Meta() const { return Meta_; }
+    inline const uint8_t* Meta() const { return Meta_.get_const(); }
+
+    inline void clear_Payload() { Payload_.clear(); }
+    inline ::EmbeddedProto::FieldBytes<Payload_LENGTH>& mutable_Payload() { return Payload_; }
+    inline void set_Payload(const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& rhs) { Payload_.set(rhs); }
+    inline const ::EmbeddedProto::FieldBytes<Payload_LENGTH>& get_Payload() const { return Payload_; }
+    inline const uint8_t* Payload() const { return Payload_.get_const(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Meta_.serialize_with_id(static_cast<uint32_t>(id::META), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = Payload_.serialize_with_id(static_cast<uint32_t>(id::PAYLOAD), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::META:
+            return_value = Meta_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PAYLOAD:
+            return_value = Payload_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_Meta();
+      clear_Payload();
+
+    }
+
+    private:
+
+
+      ::EmbeddedProto::FieldBytes<Meta_LENGTH> Meta_;
+      ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
 };
 
