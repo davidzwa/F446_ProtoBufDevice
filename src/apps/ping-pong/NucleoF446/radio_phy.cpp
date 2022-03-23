@@ -9,6 +9,7 @@
 #include "delay.h"
 #include "lora_device_messages.h"
 #include "measurements.h"
+#include "nvm_rlnc.h"
 #include "radio_config.h"
 #include "tasks.h"
 #include "utils.h"
@@ -170,14 +171,26 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 hasResponseTx = true;
                 TransmitLoRaFlashInfo(true);
             }
-
+        } else if (message.has_rlncRemoteFlashStartCommand()) {
+            if (IsRlncSessionStarted()) {
+                StopRlncSessionFromFlash();
+            } else {
+                StartRlncSessionFromFlash(message.get_rlncRemoteFlashStartCommand());
+            }
+            SendLoRaRlncSessionResponse();
+        } else if (message.has_rlncQueryRemoteFlashCommand()) {
+            SendLoRaRlncSessionResponse();        
         }
         // Not built yet
         // else if (message.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();
         // }
-    } 
+    }
+
+    if (message.has_rlncRemoteFlashStopCommand()) {
+        StopRlncSessionFromFlash();
+    }
     
     // MC or UC work the same
     if (message.has_rlncInitConfigCommand()) {

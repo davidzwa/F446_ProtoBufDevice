@@ -192,7 +192,6 @@ void RlncDecoder::DecodeFragments(DecodingResult& result) {
  */
 void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
     // Update state
-    lfsr->State = rlncStateUpdate.get_LfsrState();
     generationIndex = rlncStateUpdate.get_GenerationIndex();
     generationSucceeded = false;
 

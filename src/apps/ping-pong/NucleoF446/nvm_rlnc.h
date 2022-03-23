@@ -21,8 +21,8 @@ enum RlncFlashState {
     CORRUPT_LFSR_ZERO = 24,
     CORRUPT_FRAG_SEQ = 25000,
     CORRUPT_FRAG_GEN = 26000,
-    CORRUPT_UPDATE_CMD_SIZE = 28000,
-    CORRUPT_UPDATE_CMD = 29000,
+    CORRUPT_UPDATE_PREFIX = 27000,
+    CORRUPT_UPDATE_INDEX = 28000,
     DESERIALIZE_FAIL_INIT = 31,
     DESERIALIZE_FAIL_TERM = 32,
     // The generation index get added assuming it falls in range 0-999
@@ -38,7 +38,6 @@ enum RlncFlashState {
 enum RlncSessionState {
     IDLE = 0,
     PRE_INIT = 1,
-    POST_INIT = 2,
     IN_GENERATION = 30000,
     UPDATING_GENERATION = 40000,
     PRE_TERMINATION = 5,
@@ -60,15 +59,17 @@ enum RlncSessionState {
 #define INIT_SIZE_LIMIT 20U
 #define TERM_SIZE_LIMIT 30U
 #define FRAG_SIZE_LIMIT 25U
-#define UPDATE_CMD_SIZE_LIMIT 30U
 #define FULL_FRAG_SIZE_LIMIT 10000U  // We load all gen fragments in memory
 
 // Startup functionality
 uint16_t GetRlncFlashState();
 uint16_t ValidateRlncFlashState();
+uint32_t GetCurrentTimerPeriod();
 
 // Runtime functionality
-uint16_t StartRlncSessionFromFlash(RlncRemoteFlashStartCommand& command);
+uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command);
+uint16_t StopRlncSessionFromFlash();
+void SendLoRaRlncSessionResponse();
 bool IsRlncSessionStarted();
 bool IsNextTimedActionReady();
 uint16_t ProgressRlncSession();

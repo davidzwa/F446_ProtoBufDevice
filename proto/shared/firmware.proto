@@ -27,7 +27,7 @@ message BootMessage {
 
 message RlncRemoteFlashStartCommand {
     // We can stretch this only so far given a certain redundancy
-    uint32 ReducedGenerationRedundancySize = 1;
+    // uint32 ReducedGenerationRedundancySize = 1;
 
     // TX power, BW and SF
     TransmitConfiguration transmitConfiguration = 2;

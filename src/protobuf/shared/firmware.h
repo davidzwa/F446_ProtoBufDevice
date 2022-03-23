@@ -593,7 +593,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     RlncRemoteFlashStartCommand() = default;
     RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand& rhs )
     {
-      set_ReducedGenerationRedundancySize(rhs.get_ReducedGenerationRedundancySize());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
@@ -602,7 +601,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
 
     RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand&& rhs ) noexcept
     {
-      set_ReducedGenerationRedundancySize(rhs.get_ReducedGenerationRedundancySize());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
@@ -614,7 +612,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      REDUCEDGENERATIONREDUNDANCYSIZE = 1,
       TRANSMITCONFIGURATION = 2,
       TIMERDELAY = 3,
       SETISMULTICAST = 4,
@@ -623,7 +620,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
 
     RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand& rhs)
     {
-      set_ReducedGenerationRedundancySize(rhs.get_ReducedGenerationRedundancySize());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
@@ -633,20 +629,12 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
 
     RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand&& rhs) noexcept
     {
-      set_ReducedGenerationRedundancySize(rhs.get_ReducedGenerationRedundancySize());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
       return *this;
     }
-
-    inline void clear_ReducedGenerationRedundancySize() { ReducedGenerationRedundancySize_.clear(); }
-    inline void set_ReducedGenerationRedundancySize(const EmbeddedProto::uint32& value) { ReducedGenerationRedundancySize_ = value; }
-    inline void set_ReducedGenerationRedundancySize(const EmbeddedProto::uint32&& value) { ReducedGenerationRedundancySize_ = value; }
-    inline EmbeddedProto::uint32& mutable_ReducedGenerationRedundancySize() { return ReducedGenerationRedundancySize_; }
-    inline const EmbeddedProto::uint32& get_ReducedGenerationRedundancySize() const { return ReducedGenerationRedundancySize_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE ReducedGenerationRedundancySize() const { return ReducedGenerationRedundancySize_.get(); }
 
     inline void clear_transmitConfiguration() { transmitConfiguration_.clear(); }
     inline void set_transmitConfiguration(const TransmitConfiguration& value) { transmitConfiguration_ = value; }
@@ -680,11 +668,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != ReducedGenerationRedundancySize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = ReducedGenerationRedundancySize_.serialize_with_id(static_cast<uint32_t>(id::REDUCEDGENERATIONREDUNDANCYSIZE), buffer, false);
-      }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
@@ -722,10 +705,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::REDUCEDGENERATIONREDUNDANCYSIZE:
-            return_value = ReducedGenerationRedundancySize_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case id::TRANSMITCONFIGURATION:
             return_value = transmitConfiguration_.deserialize_check_type(buffer, wire_type);
             break;
@@ -771,7 +750,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
 
     void clear() override
     {
-      clear_ReducedGenerationRedundancySize();
       clear_transmitConfiguration();
       clear_TimerDelay();
       clear_SetIsMulticast();
@@ -782,7 +760,6 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     private:
 
 
-      EmbeddedProto::uint32 ReducedGenerationRedundancySize_ = 0U;
       TransmitConfiguration transmitConfiguration_;
       EmbeddedProto::uint32 TimerDelay_ = 0U;
       EmbeddedProto::boolean SetIsMulticast_ = false;
