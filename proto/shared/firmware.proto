@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "shared/experiment_config.proto";
+
 option csharp_namespace = "LoRa";
 
 message Version {
@@ -21,6 +23,42 @@ message BootMessage {
     uint32 MeasurementCount = 3;
     bool MeasurementsDisabled = 4;
     uint32 RlncFlashState = 5;
+}
+
+message RlncRemoteFlashStartCommand {
+    // We can stretch this only so far given a certain redundancy
+    uint32 ReducedGenerationRedundancySize = 1;
+
+    // TX power, BW and SF
+    TransmitConfiguration transmitConfiguration = 2;
+
+    // Timer delay between each packet
+    uint32 TimerDelay = 3;
+    bool SetIsMulticast = 4;
+    uint32 DeviceId0 = 5;
+}
+
+message RlncRemoteFlashStopCommand {
+
+}
+
+message RlncQueryRemoteFlashState {
+
+}
+
+message RlncRemoteFlashResponse {
+    uint32 RlncFlashState = 1;
+    uint32 RlncSessionState = 2;
+
+    // TX power, BW and SF
+    int32 CurrentTxPower = 3;
+    uint32 CurrentTxBandwidth = 4;
+    uint32 CurrentTxDataRate = 5;
+
+    // Timer delay between each packet
+    uint32 CurrentTimerDelay = 6;
+    bool CurrentSetIsMulticast = 7;
+    uint32 CurrentDeviceId0 = 8;
 }
 
 message RlncInitConfigCommand {
@@ -50,7 +88,6 @@ message RlncFlashEncodedFragment {
 
 message RlncStateUpdate {
     uint32 GenerationIndex = 1;
-    uint32 LfsrState = 2;
 }
 
 message RlncTerminationCommand {

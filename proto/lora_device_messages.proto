@@ -16,14 +16,10 @@ message RequestBootInfo {
 message DeviceConfiguration {
     bool EnableAlwaysSend = 1;
     uint32 AlwaysSendPeriod = 2;
-    
     // Ignored if EnableAlwaysSend is true
     uint32 LimitedSendCount = 3;
 
-    // TX power, BW and SF
-    int32 TxPower = 4;
-    uint32 TxBandwidth = 5;
-    uint32 TxDataRate = 6;
+    TransmitConfiguration transmitConfiguration = 4;
 }
 
 message LoRaReset {
@@ -42,22 +38,30 @@ message LoRaMessage {
     bytes Payload = 4;
     
     oneof Body {
-        ForwardExperimentCommand forwardExperimentCommand = 6; // Set role TX/RX, play/pause or switch to predefined experiment
-        ExperimentResponse experimentResponse = 7;
-        MeasurementStreamRequest measurementStreamRequest = 8;
-        MeasurementStreamFragment measurementStreamFragment = 9;
+        ForwardExperimentCommand forwardExperimentCommand = 5; // Set role TX/RX, play/pause or switch to predefined experiment
+        ExperimentResponse experimentResponse = 6;
+        MeasurementStreamRequest measurementStreamRequest = 7;
+        MeasurementStreamFragment measurementStreamFragment = 8;
         
-        RlncInitConfigCommand rlncInitConfigCommand = 10;
-        RlncEncodedFragment rlncEncodedFragment = 11;
-        RlncStateUpdate rlncStateUpdate = 12;
-        RlncTerminationCommand rlncTerminationCommand = 13;
-        DecodingResult decodingResult = 14; // UC ACK
-        DecodingUpdate decodingUpdate = 15; // UC ACK
+        // RLNC Remote command - control plane
+        RlncRemoteFlashStartCommand rlncRemoteFlashStartCommand = 9;
+        RlncRemoteFlashStopCommand rlncRemoteFlashStopCommand = 10;
+        RlncQueryRemoteFlashState rlncQueryRemoteFlashCommand = 11;
+        // RLNC Remote command response
+        RlncRemoteFlashResponse rlncRemoteFlashResponse = 12;
 
-        DeviceConfiguration deviceConfiguration = 16;
-        RequestBootInfo requestBootInfo = 17;
-        BootMessage bootMessage = 18;
-        LoRaReset resetRadio = 19;
-        LoRaAck ack = 20;
+        // Actual RLNC commands
+        RlncInitConfigCommand rlncInitConfigCommand = 13;
+        RlncEncodedFragment rlncEncodedFragment = 14;
+        RlncStateUpdate rlncStateUpdate = 15;
+        RlncTerminationCommand rlncTerminationCommand = 16;
+        DecodingResult decodingResult = 17; // UC ACK
+        DecodingUpdate decodingUpdate = 18; // UC ACK
+
+        DeviceConfiguration deviceConfiguration = 19;
+        RequestBootInfo requestBootInfo = 20;
+        BootMessage bootMessage = 21;
+        LoRaReset resetRadio = 22;
+        LoRaAck ack = 23;
     }
 }

@@ -2,6 +2,7 @@
 #define NVM_RLNC_H
 
 #include <stdint.h>
+#include "firmware.h"
 
 enum RlncFlashState {
     UNSCANNED = 0,
@@ -34,6 +35,16 @@ enum RlncFlashState {
     VALID = 6
 };
 
+enum RlncSessionState {
+    IDLE = 0,
+    PRE_INIT = 1,
+    POST_INIT = 2,
+    IN_GENERATION = 30000,
+    UPDATING_GENERATION = 40000,
+    PRE_TERMINATION = 5,
+    POST_TERMINATION = 6
+};
+
 // 0x00 is sector header and should only be written to if sector is full
 #define SECTOR_HEADER ((uint16_t)0x0000)
 #define GEN_PREFIX_HEADER 0xFFFF0000
@@ -50,9 +61,16 @@ enum RlncFlashState {
 #define TERM_SIZE_LIMIT 30U
 #define FRAG_SIZE_LIMIT 25U
 #define UPDATE_CMD_SIZE_LIMIT 30U
-#define FULL_FRAG_SIZE_LIMIT 10000U // We load all gen fragments in memory
+#define FULL_FRAG_SIZE_LIMIT 10000U  // We load all gen fragments in memory
 
+// Startup functionality
 uint16_t GetRlncFlashState();
-uint16_t InitRlncFlashState();
+uint16_t ValidateRlncFlashState();
+
+// Runtime functionality
+uint16_t StartRlncSessionFromFlash(RlncRemoteFlashStartCommand& command);
+bool IsRlncSessionStarted();
+bool IsNextTimedActionReady();
+uint16_t ProgressRlncSession();
 
 #endif  // NVM_RLNC_H

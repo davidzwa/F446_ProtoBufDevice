@@ -4,6 +4,9 @@
 #include "config.h"
 #include "lora_device_messages.h"
 #include "nvmm.h"
+#include "radio_phy.h"
+#include "radio_config.h"
+#include "timer.h"
 
 // #define DEBUG_THROW
 // Flash bank 5
@@ -11,12 +14,17 @@
 NvmHandle NvmRlnc(NVM_PAGE);
 
 static uint32_t GetGenerationFrameCount(RlncInitConfigCommand& config, uint32_t generationIndex);
+void TimerDelayAsync();
+RlncInitConfigCommand GetConfig();
+uint32_t GetGenerationCount();
 
 ProtoReadBuffer flashReadBuffer;
 LoRaMessage<MAX_LORA_BYTES> initCommand;       // Fixed command
-LoRaMessage<MAX_LORA_BYTES> terminateCommand;  // Fixed command
+LoRaMessage<MAX_LORA_BYTES> terminationCommand;  // Fixed command
 LoRaMessage<MAX_LORA_BYTES> currentFragment;   // Iterated buffer command
 LoRaMessage<MAX_LORA_BYTES> updateCommand;     // Iterated buffer command
+
+static TimerEvent_t rlncDelayTimer;
 
 // LAYOUT
 // -- Start of header --
@@ -33,6 +41,11 @@ LoRaMessage<MAX_LORA_BYTES> updateCommand;     // Iterated buffer command
 //      -- SYNC HEADER 0xFFFF + Update Length (16+16 bits) --
 //      --> Packet Rlnc Update (unless g index is 0)
 
+#define TIMER_DELAY 500
+bool nextActionReady = false;
+uint32_t currentGenerationIndex = 0;
+uint32_t currentFragmentIndex = 0;
+
 // The serialized Rlnc Init Configuration (Proto, bytes)
 #define ADDR_INIT_SIZE ((uint16_t)0x0001)
 // Size of packet stored for termination (Proto, bytes)
@@ -42,9 +55,89 @@ LoRaMessage<MAX_LORA_BYTES> updateCommand;     // Iterated buffer command
 #define INIT_START8 DATA_SECTOR_BASE * 4     // in 8-bits
 #define DATA_SECTOR_END ((uint16_t)0x7FFF)   // in 32-bits (32k767 measurements)
 
-uint16_t state = UNSCANNED;
+uint16_t state = RlncFlashState::UNSCANNED;
+uint16_t sessionState = RlncSessionState::IDLE;
 
-uint16_t InitRlncFlashState() {
+bool IsNextTimedActionReady() {
+    return nextActionReady;
+}
+
+bool IsRlncSessionStarted() {
+    return sessionState != RlncSessionState::IDLE;
+}
+
+uint16_t StartRlncSessionFromFlash(RlncRemoteFlashStartCommand& command) {
+    if (state != RlncFlashState::VALID) return state;
+
+    SetTxConfig(command.get_transmitConfiguration());
+
+    state = RlncSessionState::PRE_INIT;
+    currentFragmentIndex = 0;
+    currentGenerationIndex = 0;
+    TimerDelayAsync();
+    return 0x00;
+}
+
+uint16_t ProgressRlncSession() {
+    if (state == RlncSessionState::PRE_INIT) {
+        TransmitLoRaMessage(initCommand);
+        state = RlncSessionState::POST_INIT;
+    } else if (state == RlncSessionState::POST_INIT) {
+        state = RlncSessionState::IN_GENERATION;
+        // TODO
+    } else if (state == RlncSessionState::IN_GENERATION) {
+        // TODO load fragment
+
+        // Transmit fragment
+        TransmitLoRaMessage(currentFragment);
+        currentFragmentIndex++;
+        
+        // TODO if at end of generation but not last generation
+        return state = RlncSessionState::UPDATING_GENERATION;
+
+        // state == RlncSessionState::IN_GENERATION;
+        // TODO if done
+        auto generationCount = GetGenerationCount();
+
+        state = RlncSessionState::PRE_TERMINATION;
+    } else if (state == RlncSessionState::UPDATING_GENERATION) {
+        currentGenerationIndex++;
+
+        updateCommand.mutable_rlncStateUpdate().set_GenerationIndex(currentGenerationIndex);
+        TransmitLoRaMessage(updateCommand);
+        
+        state = RlncSessionState::IN_GENERATION;
+    }
+    else if (state == RlncSessionState::PRE_TERMINATION) {
+        TransmitLoRaMessage(terminationCommand);
+        state = RlncSessionState::POST_TERMINATION;
+    } else if (state == RlncSessionState::POST_TERMINATION) {
+        state = RlncSessionState::IDLE;
+    }
+
+    return 0x00;
+}
+
+uint16_t GetRlncFlashState() {
+    return state;
+}
+
+/**
+ *  Internal functionality below
+ *
+ * */
+static void OnRlncDelayTimerEvent(void* context) {
+    nextActionReady = true;
+}
+
+void TimerDelayAsync() {
+    nextActionReady = false;
+    TimerInit(&rlncDelayTimer, OnRlncDelayTimerEvent);
+    TimerSetValue(&rlncDelayTimer, TIMER_DELAY);
+    TimerStart(&rlncDelayTimer);
+}
+
+uint16_t ValidateRlncFlashState() {
     uint32_t pageHeader, initSize8, termSize8;
     auto readStatus = NvmRlnc.Read32(SECTOR_HEADER, &pageHeader);
     if (readStatus != 0x00) {
@@ -97,14 +190,14 @@ uint16_t InitRlncFlashState() {
     for (size_t i = 0; i < termSize8; i++) {
         flashReadBuffer.push(bufferTerm[i]);
     }
-    protoErr = terminateCommand.deserialize(flashReadBuffer);
+    protoErr = terminationCommand.deserialize(flashReadBuffer);
     if (protoErr != EmbeddedProto::Error::NO_ERRORS) {
         return state = DESERIALIZE_FAIL_TERM;
     }
 
     // Get generation count from init command
-    auto innerInitCommand = initCommand.get_rlncInitConfigCommand();
-    auto generationCount = innerInitCommand.get_GenerationCount();
+    auto innerInitCommand = GetConfig();
+    auto generationCount = GetGenerationCount();
     auto generationSize = innerInitCommand.get_GenerationSize();
     auto generationRedundancySize = innerInitCommand.get_GenerationRedundancySize();
     uint16_t totalGenerationSize = (uint16_t)generationSize + (uint16_t)generationRedundancySize;
@@ -207,8 +300,12 @@ uint16_t InitRlncFlashState() {
     return state = VALID;
 }
 
-uint16_t GetRlncFlashState() {
-    return state;
+RlncInitConfigCommand GetConfig() {
+    return initCommand.get_rlncInitConfigCommand();
+}
+
+uint32_t GetGenerationCount() {
+    return GetConfig().get_GenerationCount();
 }
 
 /**

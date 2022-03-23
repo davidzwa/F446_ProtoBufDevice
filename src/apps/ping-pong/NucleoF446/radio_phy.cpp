@@ -147,7 +147,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 StopPeriodicTransmit();
                 UartDebug("DevConfStop", 0, 12);
             } else {
-                SetTxConfig(config);
+                SetTxConfig(config.get_transmitConfiguration());
                 ApplyAlwaysSendPeriodically(config);
                 UartDebug("DevConf", 0, 7);
             }

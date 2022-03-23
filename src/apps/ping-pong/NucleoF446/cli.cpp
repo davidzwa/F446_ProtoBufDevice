@@ -193,7 +193,7 @@ void ProcessCliCommand() {
         }
     } else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
-        SetTxConfig(config);
+        SetTxConfig(config.get_transmitConfiguration());
         ApplyAlwaysSendPeriodically(config);
         UartSendAck(1);
     } else {

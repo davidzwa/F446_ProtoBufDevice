@@ -54,7 +54,7 @@ int main(void) {
     BoardInitPeriph();
     InitCli(true);
     InitializeMeasurements();
-    InitRlncFlashState();
+    ValidateRlncFlashState();
     InitRadioTxConfigLoRa();
     InitRadioRxConfigLoRa();
     InitRadioPhy();
@@ -112,6 +112,10 @@ int main(void) {
                 UartDebug("CRC-FAIL", 400, 8);
                 ResetCrcFailure();
             }
+        }
+
+        if (IsRlncSessionStarted() && IsNextTimedActionReady()) {
+            ProgressRlncSession();
         }
     }
 }
