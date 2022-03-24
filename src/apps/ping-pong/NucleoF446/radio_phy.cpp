@@ -179,7 +179,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             }
             SendLoRaRlncSessionResponse();
         } else if (message.has_rlncQueryRemoteFlashCommand()) {
-            SendLoRaRlncSessionResponse();        
+            SendLoRaRlncSessionResponse();
         }
         // Not built yet
         // else if (message.has_measurementStreamRequest()) {
@@ -188,10 +188,10 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         // }
     }
 
-    if (message.has_rlncRemoteFlashStopCommand()) {
+    if (isMulticast && message.has_rlncRemoteFlashStopCommand()) {
         StopRlncSessionFromFlash();
     }
-    
+
     // MC or UC work the same
     if (message.has_rlncInitConfigCommand()) {
         auto initConfigCommand = message.mutable_rlncInitConfigCommand();

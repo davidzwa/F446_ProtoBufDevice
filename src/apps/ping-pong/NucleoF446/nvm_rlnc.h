@@ -62,11 +62,12 @@ enum RlncSessionState {
 #define FULL_FRAG_SIZE_LIMIT 10000U  // We load all gen fragments in memory
 
 // Startup functionality
-uint16_t GetRlncFlashState();
 uint16_t ValidateRlncFlashState();
 uint32_t GetCurrentTimerPeriod();
 
 // Runtime functionality
+uint16_t GetRlncFlashState();
+uint16_t GetRlncSessionState();
 uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command);
 uint16_t StopRlncSessionFromFlash();
 void SendLoRaRlncSessionResponse();

@@ -160,11 +160,16 @@ uint16_t GetRlncFlashState() {
     return state;
 }
 
+uint16_t GetRlncSessionState() {
+    return sessionState;
+}
+
 uint32_t GetCurrentTimerPeriod() {
     return max(TIMER_DELAY_MIN, currentTimerPeriod);
 }
 
 void SendLoRaRlncSessionResponse() {
+    stateResponse.clear();
     RlncRemoteFlashResponse response;
 
     response.set_RlncFlashState(state);
@@ -179,6 +184,8 @@ void SendLoRaRlncSessionResponse() {
     response.set_CurrentTxDataRate(GetTxDataRate());
 
     stateResponse.set_rlncRemoteFlashResponse(response);
+    stateResponse.set_IsMulticast(false);
+    stateResponse.set_DeviceId(NETWORK_RESPONSE_ID);
     TransmitLoRaMessage(stateResponse);
 }
 
