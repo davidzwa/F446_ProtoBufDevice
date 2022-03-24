@@ -178,8 +178,10 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 StartRlncSessionFromFlash(message.get_rlncRemoteFlashStartCommand());
             }
             SendLoRaRlncSessionResponse();
+            hasResponseTx = true;
         } else if (message.has_rlncQueryRemoteFlashCommand()) {
             SendLoRaRlncSessionResponse();
+            hasResponseTx = true;
         }
         // Not built yet
         // else if (message.has_measurementStreamRequest()) {
