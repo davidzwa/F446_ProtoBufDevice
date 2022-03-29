@@ -10,7 +10,7 @@
 
 static RlncDecoder decoder;
 
-void InitRadioPhy();
+uint32_t InitRadioPhy();
 void TransmitSpreadingFactorConfig(uint8_t spreadingFactor);
 void TransmitLoRaMessage(LORA_MSG_TEMPLATE& message);
 void TransmitLoRaFlashInfo(bool wasCleared);

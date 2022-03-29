@@ -36,17 +36,19 @@
  */
 Gpio_t button;
 
-__attribute__((long_call, section(".code_in_ram"))) void foo(void) {
-    // Do something here
-    UartDebug("RAMFUNC", 0, 8);
+__attribute__((long_call, section(".code_in_ram"))) void MemoryFunction(void) {
+    int32_t result = randr(1, 10);
+    UartDebug("RAMFUNC", result, 8);
+    decoder.AutoTerminateRlnc();
 }
 
 void ButtonCallback(void* context) {
-    UartDebug("PUSH-BUTTON", 0, 12);
+    
+    MemoryFunction();
+}
 
-    decoder.AutoTerminateRlnc();
-
-    foo();
+void SetRandomSeed(uint32_t seed) {
+    srand1(seed);
 }
 
 int main(void) {
@@ -57,7 +59,8 @@ int main(void) {
     ValidateRlncFlashState();
     InitRadioTxConfigLoRa();
     InitRadioRxConfigLoRa();
-    InitRadioPhy();
+    auto seed = InitRadioPhy();
+    SetRandomSeed(seed);
     InitTimedTasks();
 
     UartSendBoot();

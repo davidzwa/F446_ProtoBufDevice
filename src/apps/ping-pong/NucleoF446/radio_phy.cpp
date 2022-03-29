@@ -35,7 +35,7 @@ void OnRxError(void);
  */
 static RadioEvents_t RadioEvents;
 
-void InitRadioPhy() {
+uint32_t InitRadioPhy() {
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
     RadioEvents.RxDone = OnRxDone;
@@ -45,6 +45,8 @@ void InitRadioPhy() {
 
     Radio.Init(&RadioEvents);
     Radio.SetChannel(RF_FREQUENCY);
+
+    auto rngSeed = Radio.Random();
 
 #if defined(USE_MODEM_LORA)
 
@@ -77,6 +79,8 @@ void InitRadioPhy() {
 #else
 #error "Please define a frequency band in the compiler options."
 #endif
+
+    return rngSeed;
 }
 
 void OnTxDone(void) {
