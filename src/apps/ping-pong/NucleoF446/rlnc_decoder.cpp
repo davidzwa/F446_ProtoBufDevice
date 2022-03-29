@@ -2,12 +2,11 @@
 
 #include "Crc8.h"
 #include "cli.h"
+#include "delay.h"
 #include "utilities.h"
 
 unsigned int prim_poly = 0x11D;
 galois::GaloisField gf(8, prim_poly);
-
-#define AUGM_EXCEPTION "Bad matrix augmentation size"
 
 #define MAX_GEN_SIZE 5
 #define MAX_OVERHEAD 2
@@ -99,7 +98,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
 
     if (frameSize != rlncDecodingConfig.get_FrameSize()) {
         // Bad or illegal configuration
-        throw "Yuck";
+        ThrowDecodingError(DecodingError::FRAME_SIZE_MISMATCH);
+        throw "Illegal frame size";
     }
 
     // Insert the encoding vector and encoded frame
@@ -130,7 +130,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_FirstRowCrc8(crc1);
     decodingUpdate.set_LastRowCrc8(crc2);
     decodingUpdate.set_LastRowIndex(rowIndex);
-    
+
     if (rlncDecodingConfig.get_DebugFragmentUart()) {
         // Contains the untouched frame, so send before decoding
         UartSendDecodingUpdate(decodingUpdate, augVector.data(), augVector.size());
@@ -233,10 +233,12 @@ uint8_t RlncDecoder::AddFrameAsMatrixRow(vector<SYMB>& row) {
 
     auto innovativeRow = DetermineNextInnovativeRowIndex();
     if (innovativeRow > this->decodingMatrix.size()) {
-        throw "OUCH";
+        ThrowDecodingError(DecodingError::INNO_ROW_EXCEEDS_MATRIX_ROWS);
+        throw "Innovative row exceeds matrix allocated rows";
     }
     if (row.size() > this->decodingMatrix[innovativeRow].size()) {
-        throw "BUG";
+        ThrowDecodingError(DecodingError::INNO_ROW_EXCEEDS_MATRIX_COLS);
+        throw "Innovative row exceeds matrix allocated columns";
     }
     // UartDebug("INSERT_ROW", innovativeRow, 11);
     this->decodingMatrix[innovativeRow].assign(row.begin(), row.end());
@@ -248,7 +250,8 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
     auto encodingVectorLength = GetEncodingVectorLength();
 
     if (decodingMatrix.size() == 0) {
-        throw "PRE-ALLOCATION PROBLEM";
+        ThrowDecodingError(DecodingError::MATRIX_SIZE_0_ADD_ROW);
+        throw "Matrix not pre-allocated (size 0)";
     }
 
     for (uint8_t i = 0; i < decodingMatrix.size(); i++) {
@@ -265,8 +268,8 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
     }
 
     if (receivedFragments < encodingVectorLength) {
-        UartDebug("INSERT_ROW", encodingVectorLength - 1, 11);
-        throw "WRONG ROW";
+        ThrowDecodingError(DecodingError::ILLEGAL_RANK_STATE);
+        throw "Reached full-rank when insufficient packets were received";
     }
 
     // If no row is all-0 we have full rank - we return the effective generation size
@@ -278,7 +281,7 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
     auto totalColCount = decodingMatrix[0].size();
 
     if (augmentedCols >= totalColCount) {
-        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION) - 1);
+        ThrowDecodingError(DecodingError::AUGMENTED_COLS_EXCEEDS_TOTAL);
         throw "Bad matrix augmentation size";
     }
 
@@ -337,6 +340,7 @@ void RlncDecoder::DebugSendMatrix() {
 
 optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t rowCount) {
     if (rowCount == 0) {
+        ThrowDecodingError(DecodingError::FIND_PIVOT_ROWCOUNT_0);
         throw "Illegal rowcount given";
     }
 
@@ -379,4 +383,13 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
     for (int col = pivotCol; col < colCount; col++) {
         decodingMatrix[row][col] = gf.sub(decodingMatrix[row][col], gf.mul(decodingMatrix[pivotRow][col], coefficient));
     }
+}
+
+void RlncDecoder::ThrowDecodingError(DecodingError error) {
+    while (1) {
+        UartDebug("RLNC_ERR", error, 8);
+        DelayMs(2000);
+    }
+
+    throw "Decoding Error catch";
 }

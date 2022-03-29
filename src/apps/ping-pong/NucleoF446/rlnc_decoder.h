@@ -14,6 +14,16 @@ using namespace std;
 
 #define SYMB uint8_t
 
+enum DecodingError {
+    AUGMENTED_COLS_EXCEEDS_TOTAL = 0x01,
+    FRAME_SIZE_MISMATCH = 0x02,
+    MATRIX_SIZE_0_ADD_ROW = 0x03,
+    FIND_PIVOT_ROWCOUNT_0 = 0x04,
+    INNO_ROW_EXCEEDS_MATRIX_ROWS = 0x05,
+    INNO_ROW_EXCEEDS_MATRIX_COLS = 0x06,
+    ILLEGAL_RANK_STATE = 0x07 // Usually a corrupt matrix (bit-flips?)
+};
+
 class RlncDecoder {
    public:
     RlncDecoder();
@@ -25,6 +35,7 @@ class RlncDecoder {
     void TerminateRlnc(const RlncTerminationCommand& RlncTerminationCommand);
 
    protected:
+    void ThrowDecodingError(DecodingError error);
     uint8_t AddFrameAsMatrixRow(vector<SYMB>& row);
     void ReduceMatrix(uint8_t augmentedCols);
     void DebugSendMatrix();
