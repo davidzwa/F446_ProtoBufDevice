@@ -299,6 +299,7 @@ void UartSendBoot() {
     bootMessage.set_MeasurementCount(GetMeasurementCount());
     bootMessage.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
     bootMessage.set_RlncFlashState(GetRlncFlashState());
+    bootMessage.set_RlncSessionState(GetRlncSessionState());
     auto& version = bootMessage.mutable_FirmwareVersion();
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     version.set_Major(appVersion.Fields.Major);

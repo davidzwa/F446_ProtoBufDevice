@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ProtoReadBuffer.h"
+#include "cli.h"
 #include "config.h"
 #include "lora_device_messages.h"
 #include "nvmm.h"
@@ -93,7 +94,7 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 
     SetTxConfig(command.get_transmitConfiguration());
 
-    state = RlncSessionState::PRE_INIT;
+    sessionState = RlncSessionState::PRE_INIT;
     currentFragmentIndex = 0;
     currentGenerationIndex = 0;
 
@@ -102,6 +103,7 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
     // TODO apply below
     currentSetIsMulticast = command.get_SetIsMulticast();
     currentTimerPeriod = command.get_TimerDelay();
+    UartDebug("RLNC", 0, 4);
     TimerDelayAsync();
     return 0x00;
 }
@@ -109,15 +111,18 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 uint16_t StopRlncSessionFromFlash() {
     TimerStop(&rlncDelayTimer);
 
-    return state = RlncSessionState::PRE_INIT;
+    UartDebug("RLNC", 0xFF, 4);
+
+    return sessionState = RlncSessionState::PRE_INIT;
 }
 
 uint16_t ProgressRlncSession() {
     auto generationCount = GetGenerationCount();
-    if (state == RlncSessionState::PRE_INIT) {
+    if (sessionState == RlncSessionState::PRE_INIT) {
         TransmitLoRaMessage(initCommand);
-        state = RlncSessionState::IN_GENERATION;
-    } else if (state == RlncSessionState::IN_GENERATION) {
+        UartDebug("RLNC", 2, 4);
+        sessionState = RlncSessionState::IN_GENERATION;
+    } else if (sessionState == RlncSessionState::IN_GENERATION) {
         // TODO validate fragment makes sense
         LoadCurrentFragment(currentFragmentIndex, currentGenerationIndex);
 
@@ -128,28 +133,31 @@ uint16_t ProgressRlncSession() {
         auto generationTotalFragments = CalculateGenerationTotalFrameCount(currentGenerationIndex);
         if (currentFragmentIndex + 1 >= generationTotalFragments) {
             if (currentGenerationIndex + 1 < generationCount) {
-                return state = RlncSessionState::UPDATING_GENERATION;
+                return sessionState = RlncSessionState::UPDATING_GENERATION;
             } else {
-                return state = RlncSessionState::PRE_TERMINATION;
+                return sessionState = RlncSessionState::PRE_TERMINATION;
             }
         }
 
         currentFragmentIndex++;
-        return state == RlncSessionState::IN_GENERATION;
-    } else if (state == RlncSessionState::UPDATING_GENERATION) {
+        UartDebug("RLNC", 3, 4);
+        return sessionState == RlncSessionState::IN_GENERATION;
+    } else if (sessionState == RlncSessionState::UPDATING_GENERATION) {
         currentGenerationIndex++;
         currentFragmentIndex = 0;
         PrepareNewUpdateCommand(currentGenerationIndex);
         TransmitLoRaMessage(updateCommand);
-        state = RlncSessionState::IN_GENERATION;
-    } else if (state == RlncSessionState::PRE_TERMINATION) {
+        sessionState = RlncSessionState::IN_GENERATION;
+        UartDebug("RLNC", 4, 4);
+    } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
         TransmitLoRaMessage(terminationCommand);
-        state = RlncSessionState::POST_TERMINATION;
-    } else if (state == RlncSessionState::POST_TERMINATION) {
-        return state = RlncSessionState::IDLE;
+        sessionState = RlncSessionState::POST_TERMINATION;
+        UartDebug("RLNC", 0xFE, 4);
+    } else if (sessionState == RlncSessionState::POST_TERMINATION) {
+        return sessionState = RlncSessionState::IDLE;
     }
 
-    if (state != RlncSessionState::IDLE) {
+    if (sessionState != RlncSessionState::IDLE) {
         TimerStart(&rlncDelayTimer);
     }
 
@@ -195,6 +203,7 @@ void SendLoRaRlncSessionResponse() {
  * */
 static void OnRlncDelayTimerEvent(void* context) {
     nextActionReady = true;
+    UartDebug("RLNC", 0x1, 4);
 }
 
 void TimerDelayAsync() {

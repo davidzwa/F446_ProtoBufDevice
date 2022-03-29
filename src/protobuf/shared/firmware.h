@@ -395,6 +395,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
     }
 
     BootMessage(const BootMessage&& rhs ) noexcept
@@ -404,6 +405,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
     }
 
     ~BootMessage() override = default;
@@ -415,7 +417,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       FIRMWAREVERSION = 2,
       MEASUREMENTCOUNT = 3,
       MEASUREMENTSDISABLED = 4,
-      RLNCFLASHSTATE = 5
+      RLNCFLASHSTATE = 5,
+      RLNCSESSIONSTATE = 6
     };
 
     BootMessage& operator=(const BootMessage& rhs)
@@ -425,6 +428,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
       return *this;
     }
 
@@ -435,6 +439,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
       return *this;
     }
 
@@ -473,6 +478,13 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_RlncFlashState() const { return RlncFlashState_; }
     inline EmbeddedProto::uint32::FIELD_TYPE RlncFlashState() const { return RlncFlashState_.get(); }
 
+    inline void clear_RlncSessionState() { RlncSessionState_.clear(); }
+    inline void set_RlncSessionState(const EmbeddedProto::uint32& value) { RlncSessionState_ = value; }
+    inline void set_RlncSessionState(const EmbeddedProto::uint32&& value) { RlncSessionState_ = value; }
+    inline EmbeddedProto::uint32& mutable_RlncSessionState() { return RlncSessionState_; }
+    inline const EmbeddedProto::uint32& get_RlncSessionState() const { return RlncSessionState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RlncSessionState() const { return RlncSessionState_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -501,6 +513,11 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       if((0U != RlncFlashState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = RlncFlashState_.serialize_with_id(static_cast<uint32_t>(id::RLNCFLASHSTATE), buffer, false);
+      }
+
+      if((0U != RlncSessionState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RlncSessionState_.serialize_with_id(static_cast<uint32_t>(id::RLNCSESSIONSTATE), buffer, false);
       }
 
       return return_value;
@@ -539,6 +556,10 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
             return_value = RlncFlashState_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::RLNCSESSIONSTATE:
+            return_value = RlncSessionState_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -573,6 +594,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       clear_MeasurementCount();
       clear_MeasurementsDisabled();
       clear_RlncFlashState();
+      clear_RlncSessionState();
 
     }
 
@@ -584,6 +606,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 MeasurementCount_ = 0U;
       EmbeddedProto::boolean MeasurementsDisabled_ = false;
       EmbeddedProto::uint32 RlncFlashState_ = 0U;
+      EmbeddedProto::uint32 RlncSessionState_ = 0U;
 
 };
 

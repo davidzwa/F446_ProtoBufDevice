@@ -23,6 +23,7 @@ message BootMessage {
     uint32 MeasurementCount = 3;
     bool MeasurementsDisabled = 4;
     uint32 RlncFlashState = 5;
+    uint32 RlncSessionState = 6;
 }
 
 message RlncRemoteFlashStartCommand {
