@@ -2,6 +2,7 @@
 #define NVM_RLNC_H
 
 #include <stdint.h>
+#include "firmware.h"
 
 enum RlncFlashState {
     UNSCANNED = 0,
@@ -20,8 +21,8 @@ enum RlncFlashState {
     CORRUPT_LFSR_ZERO = 24,
     CORRUPT_FRAG_SEQ = 25000,
     CORRUPT_FRAG_GEN = 26000,
-    CORRUPT_UPDATE_CMD_SIZE = 28000,
-    CORRUPT_UPDATE_CMD = 29000,
+    CORRUPT_UPDATE_PREFIX = 27000,
+    CORRUPT_UPDATE_INDEX = 28000,
     DESERIALIZE_FAIL_INIT = 31,
     DESERIALIZE_FAIL_TERM = 32,
     // The generation index get added assuming it falls in range 0-999
@@ -32,6 +33,15 @@ enum RlncFlashState {
     GENERATION_FULL_FRAG_SIZE_INCORRECT = 44000,
     VALIDATING = 5,
     VALID = 6
+};
+
+enum RlncSessionState {
+    IDLE = 0x00,
+    PRE_INIT = 0x1,
+    IN_GENERATION = 0x3000,
+    UPDATING_GENERATION = 0x4000,
+    PRE_TERMINATION = 0x5,
+    POST_TERMINATION = 0x6
 };
 
 // 0x00 is sector header and should only be written to if sector is full
@@ -49,10 +59,20 @@ enum RlncFlashState {
 #define INIT_SIZE_LIMIT 20U
 #define TERM_SIZE_LIMIT 30U
 #define FRAG_SIZE_LIMIT 25U
-#define UPDATE_CMD_SIZE_LIMIT 30U
-#define FULL_FRAG_SIZE_LIMIT 10000U // We load all gen fragments in memory
+#define FULL_FRAG_SIZE_LIMIT 10000U  // We load all gen fragments in memory
 
+// Startup functionality
+uint16_t ValidateRlncFlashState();
+uint32_t GetCurrentTimerPeriod();
+
+// Runtime functionality
 uint16_t GetRlncFlashState();
-uint16_t InitRlncFlashState();
+uint16_t GetRlncSessionState();
+uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command);
+uint16_t StopRlncSessionFromFlash();
+void SendLoRaRlncSessionResponse();
+bool IsRlncSessionStarted();
+bool IsNextTimedActionReady();
+uint16_t ProgressRlncSession();
 
 #endif  // NVM_RLNC_H

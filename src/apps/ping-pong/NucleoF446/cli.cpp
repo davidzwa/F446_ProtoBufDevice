@@ -193,7 +193,7 @@ void ProcessCliCommand() {
         }
     } else if (uartCommand.has_deviceConfiguration()) {
         auto config = uartCommand.get_deviceConfiguration();
-        SetTxConfig(config);
+        SetTxConfig(config.get_transmitConfiguration());
         ApplyAlwaysSendPeriodically(config);
         UartSendAck(1);
     } else {
@@ -299,6 +299,7 @@ void UartSendBoot() {
     bootMessage.set_MeasurementCount(GetMeasurementCount());
     bootMessage.set_MeasurementsDisabled(IsStorageDirtyAndLocked());
     bootMessage.set_RlncFlashState(GetRlncFlashState());
+    bootMessage.set_RlncSessionState(GetRlncSessionState());
     auto& version = bootMessage.mutable_FirmwareVersion();
     const Version_t appVersion = {.Value = FIRMWARE_VERSION};
     version.set_Major(appVersion.Fields.Major);

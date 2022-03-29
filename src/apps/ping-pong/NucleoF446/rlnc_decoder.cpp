@@ -2,12 +2,11 @@
 
 #include "Crc8.h"
 #include "cli.h"
+#include "delay.h"
 #include "utilities.h"
 
 unsigned int prim_poly = 0x11D;
 galois::GaloisField gf(8, prim_poly);
-
-#define AUGM_EXCEPTION "Bad matrix augmentation size"
 
 #define MAX_GEN_SIZE 5
 #define MAX_OVERHEAD 2
@@ -30,7 +29,15 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
     // TODO what if generationSize is too big? Device will crash most probably...
 
     // Save state config
-    rlncDecodingConfig = rlncInitConfig;
+    rlncConfig = rlncInitConfig;
+
+    // Set the random seed if applicable
+    auto receptionConfig = rlncConfig.get_receptionRateConfig();
+    if (receptionConfig.get_OverrideSeed()) {
+        srand1(receptionConfig.get_Seed());
+        UartDebug("RLNC_PER_SEED", GetSeed(), 13);
+    }
+
     terminated = false;
     generationIndex = 0;
     generationSucceeded = false;
@@ -67,7 +74,7 @@ void RlncDecoder::ClearDecodingMatrix() {
 
 uint32_t RlncDecoder::GetMatrixColumnCount() {
     auto encodingVectorLength = GetEncodingVectorLength();
-    auto fragmentLength = rlncDecodingConfig.get_FrameSize();
+    auto fragmentLength = rlncConfig.get_FrameSize();
 
     return fragmentLength + encodingVectorLength;
 }
@@ -78,9 +85,9 @@ uint32_t RlncDecoder::GetMatrixColumnCount() {
  * @return uint32_t
  */
 uint32_t RlncDecoder::GetEncodingVectorLength() {
-    auto generationSize = rlncDecodingConfig.get_GenerationSize();
+    auto generationSize = rlncConfig.get_GenerationSize();
     auto processedFrames = (this->generationIndex * generationSize);
-    auto totalFrameCountLeft = rlncDecodingConfig.get_TotalFrameCount() - processedFrames;
+    auto totalFrameCountLeft = rlncConfig.get_TotalFrameCount() - processedFrames;
 
     // If the total frame count left-over is less than the generation size, we take that
     if (generationSize <= totalFrameCountLeft) {
@@ -90,16 +97,41 @@ uint32_t RlncDecoder::GetEncodingVectorLength() {
     }
 }
 
+bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
+    auto receptionConfig = rlncConfig.get_receptionRateConfig();
+
+    if (!receptionConfig.get_DropUpdateCommands() && isUpdatePacket) {
+        return false;
+    }
+
+    auto approxPer = receptionConfig.get_PacketErrorRate();
+    auto fixedPer = approxPer * 10000;
+    if (approxPer > 0.0000001f && approxPer < 0.999999f) {
+        auto randomValue = randr(0, 10000);
+        auto willDropPacket = randomValue < fixedPer;
+        if (willDropPacket) {
+            UartDebug("RLNC_RNG", randomValue, 8);
+        }
+        return willDropPacket;
+    }
+
+    return false;
+}
+
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
+    if (generationSucceeded) return;
+    if (DecidePacketErrorDroppage(true)) return;
+
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
     auto lfsrResetState = message.get_rlncEncodedFragment().get_LfsrState();
     auto frame = message.get_Payload();
     auto frameSize = frame.get_length();
 
-    if (frameSize != rlncDecodingConfig.get_FrameSize()) {
+    if (frameSize != rlncConfig.get_FrameSize()) {
         // Bad or illegal configuration
-        throw "Yuck";
+        ThrowDecodingError(DecodingError::FRAME_SIZE_MISMATCH);
+        throw "Illegal frame size";
     }
 
     // Insert the encoding vector and encoded frame
@@ -130,8 +162,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_FirstRowCrc8(crc1);
     decodingUpdate.set_LastRowCrc8(crc2);
     decodingUpdate.set_LastRowIndex(rowIndex);
-    
-    if (rlncDecodingConfig.get_DebugFragmentUart()) {
+
+    if (rlncConfig.get_DebugFragmentUart()) {
         // Contains the untouched frame, so send before decoding
         UartSendDecodingUpdate(decodingUpdate, augVector.data(), augVector.size());
     } else {
@@ -155,7 +187,11 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         auto lastRowIndex = encVectorLength - 1;
         auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
 
-        bool success = firstNumber == 0x00 && lastNumber == (encVectorLength - 1);
+        auto generationSize = rlncConfig.get_GenerationSize();
+        auto correctFirstNumber = generationSize * generationIndex;
+        auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
+
+        bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
         if (success) {
             generationSucceeded = true;
         }
@@ -168,10 +204,6 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
 
         // Delegate to Flash, UART or LoRa
         // StoreDecodingResult(result);
-
-        if (success) {
-            AutoTerminateRlnc();
-        }
     }
 }
 
@@ -179,7 +211,7 @@ void RlncDecoder::DecodeFragments(DecodingResult& result) {
     CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
-    auto augLength = rlncDecodingConfig.get_FrameSize();
+    auto augLength = rlncConfig.get_FrameSize();
     ReduceMatrix(augLength);
 
     CRITICAL_SECTION_END();
@@ -191,8 +223,9 @@ void RlncDecoder::DecodeFragments(DecodingResult& result) {
  * @param rlncStateUpdate
  */
 void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
+    if (DecidePacketErrorDroppage(true)) return;
+
     // Update state
-    lfsr->State = rlncStateUpdate.get_LfsrState();
     generationIndex = rlncStateUpdate.get_GenerationIndex();
     generationSucceeded = false;
 
@@ -234,10 +267,12 @@ uint8_t RlncDecoder::AddFrameAsMatrixRow(vector<SYMB>& row) {
 
     auto innovativeRow = DetermineNextInnovativeRowIndex();
     if (innovativeRow > this->decodingMatrix.size()) {
-        throw "OUCH";
+        ThrowDecodingError(DecodingError::INNO_ROW_EXCEEDS_MATRIX_ROWS);
+        throw "Innovative row exceeds matrix allocated rows";
     }
     if (row.size() > this->decodingMatrix[innovativeRow].size()) {
-        throw "BUG";
+        ThrowDecodingError(DecodingError::INNO_ROW_EXCEEDS_MATRIX_COLS);
+        throw "Innovative row exceeds matrix allocated columns";
     }
     // UartDebug("INSERT_ROW", innovativeRow, 11);
     this->decodingMatrix[innovativeRow].assign(row.begin(), row.end());
@@ -249,7 +284,8 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
     auto encodingVectorLength = GetEncodingVectorLength();
 
     if (decodingMatrix.size() == 0) {
-        throw "PRE-ALLOCATION PROBLEM";
+        ThrowDecodingError(DecodingError::MATRIX_SIZE_0_ADD_ROW);
+        throw "Matrix not pre-allocated (size 0)";
     }
 
     for (uint8_t i = 0; i < decodingMatrix.size(); i++) {
@@ -266,8 +302,8 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
     }
 
     if (receivedFragments < encodingVectorLength) {
-        UartDebug("INSERT_ROW", encodingVectorLength - 1, 11);
-        throw "WRONG ROW";
+        ThrowDecodingError(DecodingError::ILLEGAL_RANK_STATE);
+        throw "Reached full-rank when insufficient packets were received";
     }
 
     // If no row is all-0 we have full rank - we return the effective generation size
@@ -279,11 +315,11 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
     auto totalColCount = decodingMatrix[0].size();
 
     if (augmentedCols >= totalColCount) {
-        UartThrow(AUGM_EXCEPTION, sizeof(AUGM_EXCEPTION) - 1);
+        ThrowDecodingError(DecodingError::AUGMENTED_COLS_EXCEEDS_TOTAL);
         throw "Bad matrix augmentation size";
     }
 
-    if (rlncDecodingConfig.get_DebugMatrixUart()) {
+    if (rlncConfig.get_DebugMatrixUart()) {
         DebugSendMatrix();
     }
     uint8_t numPivots = 0;
@@ -313,7 +349,7 @@ void RlncDecoder::ReduceMatrix(uint8_t augmentedCols) {
         }
     }
 
-    if (rlncDecodingConfig.get_DebugMatrixUart()) {
+    if (rlncConfig.get_DebugMatrixUart()) {
         DebugSendMatrix();
     }
 }
@@ -338,6 +374,7 @@ void RlncDecoder::DebugSendMatrix() {
 
 optional<uint8_t> RlncDecoder::FindPivot(uint8_t startRow, uint8_t col, uint8_t rowCount) {
     if (rowCount == 0) {
+        ThrowDecodingError(DecodingError::FIND_PIVOT_ROWCOUNT_0);
         throw "Illegal rowcount given";
     }
 
@@ -380,4 +417,13 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
     for (int col = pivotCol; col < colCount; col++) {
         decodingMatrix[row][col] = gf.sub(decodingMatrix[row][col], gf.mul(decodingMatrix[pivotRow][col], coefficient));
     }
+}
+
+void RlncDecoder::ThrowDecodingError(DecodingError error) {
+    while (1) {
+        UartDebug("RLNC_ERR", error, 8);
+        DelayMs(2000);
+    }
+
+    throw "Decoding Error catch";
 }

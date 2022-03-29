@@ -84,6 +84,8 @@ typedef union Version_u
     uint32_t Value;
 }Version_t;
 
+uint32_t GetSeed();
+
 /*!
  * \brief Initializes the pseudo random generator initial value
  *

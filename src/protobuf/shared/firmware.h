@@ -44,6 +44,7 @@
 #include <limits>
 
 // Include external proto definitions
+#include <shared/experiment_config.h>
 
 
 class Version final: public ::EmbeddedProto::MessageInterface
@@ -394,6 +395,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
     }
 
     BootMessage(const BootMessage&& rhs ) noexcept
@@ -403,6 +405,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
     }
 
     ~BootMessage() override = default;
@@ -414,7 +417,8 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       FIRMWAREVERSION = 2,
       MEASUREMENTCOUNT = 3,
       MEASUREMENTSDISABLED = 4,
-      RLNCFLASHSTATE = 5
+      RLNCFLASHSTATE = 5,
+      RLNCSESSIONSTATE = 6
     };
 
     BootMessage& operator=(const BootMessage& rhs)
@@ -424,6 +428,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
       return *this;
     }
 
@@ -434,6 +439,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       set_MeasurementCount(rhs.get_MeasurementCount());
       set_MeasurementsDisabled(rhs.get_MeasurementsDisabled());
       set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
       return *this;
     }
 
@@ -472,6 +478,13 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_RlncFlashState() const { return RlncFlashState_; }
     inline EmbeddedProto::uint32::FIELD_TYPE RlncFlashState() const { return RlncFlashState_.get(); }
 
+    inline void clear_RlncSessionState() { RlncSessionState_.clear(); }
+    inline void set_RlncSessionState(const EmbeddedProto::uint32& value) { RlncSessionState_ = value; }
+    inline void set_RlncSessionState(const EmbeddedProto::uint32&& value) { RlncSessionState_ = value; }
+    inline EmbeddedProto::uint32& mutable_RlncSessionState() { return RlncSessionState_; }
+    inline const EmbeddedProto::uint32& get_RlncSessionState() const { return RlncSessionState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RlncSessionState() const { return RlncSessionState_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -500,6 +513,11 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       if((0U != RlncFlashState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = RlncFlashState_.serialize_with_id(static_cast<uint32_t>(id::RLNCFLASHSTATE), buffer, false);
+      }
+
+      if((0U != RlncSessionState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RlncSessionState_.serialize_with_id(static_cast<uint32_t>(id::RLNCSESSIONSTATE), buffer, false);
       }
 
       return return_value;
@@ -538,6 +556,10 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
             return_value = RlncFlashState_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::RLNCSESSIONSTATE:
+            return_value = RlncSessionState_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -572,6 +594,7 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       clear_MeasurementCount();
       clear_MeasurementsDisabled();
       clear_RlncFlashState();
+      clear_RlncSessionState();
 
     }
 
@@ -583,6 +606,658 @@ class BootMessage final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 MeasurementCount_ = 0U;
       EmbeddedProto::boolean MeasurementsDisabled_ = false;
       EmbeddedProto::uint32 RlncFlashState_ = 0U;
+      EmbeddedProto::uint32 RlncSessionState_ = 0U;
+
+};
+
+class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RlncRemoteFlashStartCommand() = default;
+    RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand& rhs )
+    {
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
+      set_TimerDelay(rhs.get_TimerDelay());
+      set_SetIsMulticast(rhs.get_SetIsMulticast());
+      set_DeviceId0(rhs.get_DeviceId0());
+    }
+
+    RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand&& rhs ) noexcept
+    {
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
+      set_TimerDelay(rhs.get_TimerDelay());
+      set_SetIsMulticast(rhs.get_SetIsMulticast());
+      set_DeviceId0(rhs.get_DeviceId0());
+    }
+
+    ~RlncRemoteFlashStartCommand() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      TRANSMITCONFIGURATION = 2,
+      RECEPTIONRATECONFIG = 3,
+      TIMERDELAY = 4,
+      SETISMULTICAST = 5,
+      DEVICEID0 = 6
+    };
+
+    RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand& rhs)
+    {
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
+      set_TimerDelay(rhs.get_TimerDelay());
+      set_SetIsMulticast(rhs.get_SetIsMulticast());
+      set_DeviceId0(rhs.get_DeviceId0());
+      return *this;
+    }
+
+    RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand&& rhs) noexcept
+    {
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
+      set_TimerDelay(rhs.get_TimerDelay());
+      set_SetIsMulticast(rhs.get_SetIsMulticast());
+      set_DeviceId0(rhs.get_DeviceId0());
+      return *this;
+    }
+
+    inline void clear_transmitConfiguration() { transmitConfiguration_.clear(); }
+    inline void set_transmitConfiguration(const TransmitConfiguration& value) { transmitConfiguration_ = value; }
+    inline void set_transmitConfiguration(const TransmitConfiguration&& value) { transmitConfiguration_ = value; }
+    inline TransmitConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
+    inline const TransmitConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
+    inline const TransmitConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+
+    inline void clear_receptionRateConfig() { receptionRateConfig_.clear(); }
+    inline void set_receptionRateConfig(const ReceptionRateConfig& value) { receptionRateConfig_ = value; }
+    inline void set_receptionRateConfig(const ReceptionRateConfig&& value) { receptionRateConfig_ = value; }
+    inline ReceptionRateConfig& mutable_receptionRateConfig() { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& get_receptionRateConfig() const { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& receptionRateConfig() const { return receptionRateConfig_; }
+
+    inline void clear_TimerDelay() { TimerDelay_.clear(); }
+    inline void set_TimerDelay(const EmbeddedProto::uint32& value) { TimerDelay_ = value; }
+    inline void set_TimerDelay(const EmbeddedProto::uint32&& value) { TimerDelay_ = value; }
+    inline EmbeddedProto::uint32& mutable_TimerDelay() { return TimerDelay_; }
+    inline const EmbeddedProto::uint32& get_TimerDelay() const { return TimerDelay_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TimerDelay() const { return TimerDelay_.get(); }
+
+    inline void clear_SetIsMulticast() { SetIsMulticast_.clear(); }
+    inline void set_SetIsMulticast(const EmbeddedProto::boolean& value) { SetIsMulticast_ = value; }
+    inline void set_SetIsMulticast(const EmbeddedProto::boolean&& value) { SetIsMulticast_ = value; }
+    inline EmbeddedProto::boolean& mutable_SetIsMulticast() { return SetIsMulticast_; }
+    inline const EmbeddedProto::boolean& get_SetIsMulticast() const { return SetIsMulticast_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE SetIsMulticast() const { return SetIsMulticast_.get(); }
+
+    inline void clear_DeviceId0() { DeviceId0_.clear(); }
+    inline void set_DeviceId0(const EmbeddedProto::uint32& value) { DeviceId0_ = value; }
+    inline void set_DeviceId0(const EmbeddedProto::uint32&& value) { DeviceId0_ = value; }
+    inline EmbeddedProto::uint32& mutable_DeviceId0() { return DeviceId0_; }
+    inline const EmbeddedProto::uint32& get_DeviceId0() const { return DeviceId0_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE DeviceId0() const { return DeviceId0_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = transmitConfiguration_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCONFIGURATION), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = receptionRateConfig_.serialize_with_id(static_cast<uint32_t>(id::RECEPTIONRATECONFIG), buffer, false);
+      }
+
+      if((0U != TimerDelay_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TimerDelay_.serialize_with_id(static_cast<uint32_t>(id::TIMERDELAY), buffer, false);
+      }
+
+      if((false != SetIsMulticast_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SetIsMulticast_.serialize_with_id(static_cast<uint32_t>(id::SETISMULTICAST), buffer, false);
+      }
+
+      if((0U != DeviceId0_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DeviceId0_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID0), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::TRANSMITCONFIGURATION:
+            return_value = transmitConfiguration_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RECEPTIONRATECONFIG:
+            return_value = receptionRateConfig_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TIMERDELAY:
+            return_value = TimerDelay_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SETISMULTICAST:
+            return_value = SetIsMulticast_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEVICEID0:
+            return_value = DeviceId0_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_transmitConfiguration();
+      clear_receptionRateConfig();
+      clear_TimerDelay();
+      clear_SetIsMulticast();
+      clear_DeviceId0();
+
+    }
+
+    private:
+
+
+      TransmitConfiguration transmitConfiguration_;
+      ReceptionRateConfig receptionRateConfig_;
+      EmbeddedProto::uint32 TimerDelay_ = 0U;
+      EmbeddedProto::boolean SetIsMulticast_ = false;
+      EmbeddedProto::uint32 DeviceId0_ = 0U;
+
+};
+
+class RlncRemoteFlashStopCommand final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RlncRemoteFlashStopCommand() = default;
+    RlncRemoteFlashStopCommand(const RlncRemoteFlashStopCommand& rhs )
+    {
+    }
+
+    RlncRemoteFlashStopCommand(const RlncRemoteFlashStopCommand&& rhs ) noexcept
+    {
+    }
+
+    ~RlncRemoteFlashStopCommand() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+    };
+
+    RlncRemoteFlashStopCommand& operator=(const RlncRemoteFlashStopCommand& rhs)
+    {
+      return *this;
+    }
+
+    RlncRemoteFlashStopCommand& operator=(const RlncRemoteFlashStopCommand&& rhs) noexcept
+    {
+      return *this;
+    }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+
+    }
+
+    private:
+
+
+
+};
+
+class RlncQueryRemoteFlashState final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RlncQueryRemoteFlashState() = default;
+    RlncQueryRemoteFlashState(const RlncQueryRemoteFlashState& rhs )
+    {
+    }
+
+    RlncQueryRemoteFlashState(const RlncQueryRemoteFlashState&& rhs ) noexcept
+    {
+    }
+
+    ~RlncQueryRemoteFlashState() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+    };
+
+    RlncQueryRemoteFlashState& operator=(const RlncQueryRemoteFlashState& rhs)
+    {
+      return *this;
+    }
+
+    RlncQueryRemoteFlashState& operator=(const RlncQueryRemoteFlashState&& rhs) noexcept
+    {
+      return *this;
+    }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+
+    }
+
+    private:
+
+
+
+};
+
+class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    RlncRemoteFlashResponse() = default;
+    RlncRemoteFlashResponse(const RlncRemoteFlashResponse& rhs )
+    {
+      set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
+      set_CurrentTxPower(rhs.get_CurrentTxPower());
+      set_CurrentTxBandwidth(rhs.get_CurrentTxBandwidth());
+      set_CurrentTxDataRate(rhs.get_CurrentTxDataRate());
+      set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
+      set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
+      set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+    }
+
+    RlncRemoteFlashResponse(const RlncRemoteFlashResponse&& rhs ) noexcept
+    {
+      set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
+      set_CurrentTxPower(rhs.get_CurrentTxPower());
+      set_CurrentTxBandwidth(rhs.get_CurrentTxBandwidth());
+      set_CurrentTxDataRate(rhs.get_CurrentTxDataRate());
+      set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
+      set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
+      set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+    }
+
+    ~RlncRemoteFlashResponse() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      RLNCFLASHSTATE = 1,
+      RLNCSESSIONSTATE = 2,
+      CURRENTTXPOWER = 3,
+      CURRENTTXBANDWIDTH = 4,
+      CURRENTTXDATARATE = 5,
+      CURRENTTIMERDELAY = 6,
+      CURRENTSETISMULTICAST = 7,
+      CURRENTDEVICEID0 = 8
+    };
+
+    RlncRemoteFlashResponse& operator=(const RlncRemoteFlashResponse& rhs)
+    {
+      set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
+      set_CurrentTxPower(rhs.get_CurrentTxPower());
+      set_CurrentTxBandwidth(rhs.get_CurrentTxBandwidth());
+      set_CurrentTxDataRate(rhs.get_CurrentTxDataRate());
+      set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
+      set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
+      set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+      return *this;
+    }
+
+    RlncRemoteFlashResponse& operator=(const RlncRemoteFlashResponse&& rhs) noexcept
+    {
+      set_RlncFlashState(rhs.get_RlncFlashState());
+      set_RlncSessionState(rhs.get_RlncSessionState());
+      set_CurrentTxPower(rhs.get_CurrentTxPower());
+      set_CurrentTxBandwidth(rhs.get_CurrentTxBandwidth());
+      set_CurrentTxDataRate(rhs.get_CurrentTxDataRate());
+      set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
+      set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
+      set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+      return *this;
+    }
+
+    inline void clear_RlncFlashState() { RlncFlashState_.clear(); }
+    inline void set_RlncFlashState(const EmbeddedProto::uint32& value) { RlncFlashState_ = value; }
+    inline void set_RlncFlashState(const EmbeddedProto::uint32&& value) { RlncFlashState_ = value; }
+    inline EmbeddedProto::uint32& mutable_RlncFlashState() { return RlncFlashState_; }
+    inline const EmbeddedProto::uint32& get_RlncFlashState() const { return RlncFlashState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RlncFlashState() const { return RlncFlashState_.get(); }
+
+    inline void clear_RlncSessionState() { RlncSessionState_.clear(); }
+    inline void set_RlncSessionState(const EmbeddedProto::uint32& value) { RlncSessionState_ = value; }
+    inline void set_RlncSessionState(const EmbeddedProto::uint32&& value) { RlncSessionState_ = value; }
+    inline EmbeddedProto::uint32& mutable_RlncSessionState() { return RlncSessionState_; }
+    inline const EmbeddedProto::uint32& get_RlncSessionState() const { return RlncSessionState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE RlncSessionState() const { return RlncSessionState_.get(); }
+
+    inline void clear_CurrentTxPower() { CurrentTxPower_.clear(); }
+    inline void set_CurrentTxPower(const EmbeddedProto::int32& value) { CurrentTxPower_ = value; }
+    inline void set_CurrentTxPower(const EmbeddedProto::int32&& value) { CurrentTxPower_ = value; }
+    inline EmbeddedProto::int32& mutable_CurrentTxPower() { return CurrentTxPower_; }
+    inline const EmbeddedProto::int32& get_CurrentTxPower() const { return CurrentTxPower_; }
+    inline EmbeddedProto::int32::FIELD_TYPE CurrentTxPower() const { return CurrentTxPower_.get(); }
+
+    inline void clear_CurrentTxBandwidth() { CurrentTxBandwidth_.clear(); }
+    inline void set_CurrentTxBandwidth(const EmbeddedProto::uint32& value) { CurrentTxBandwidth_ = value; }
+    inline void set_CurrentTxBandwidth(const EmbeddedProto::uint32&& value) { CurrentTxBandwidth_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentTxBandwidth() { return CurrentTxBandwidth_; }
+    inline const EmbeddedProto::uint32& get_CurrentTxBandwidth() const { return CurrentTxBandwidth_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentTxBandwidth() const { return CurrentTxBandwidth_.get(); }
+
+    inline void clear_CurrentTxDataRate() { CurrentTxDataRate_.clear(); }
+    inline void set_CurrentTxDataRate(const EmbeddedProto::uint32& value) { CurrentTxDataRate_ = value; }
+    inline void set_CurrentTxDataRate(const EmbeddedProto::uint32&& value) { CurrentTxDataRate_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentTxDataRate() { return CurrentTxDataRate_; }
+    inline const EmbeddedProto::uint32& get_CurrentTxDataRate() const { return CurrentTxDataRate_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentTxDataRate() const { return CurrentTxDataRate_.get(); }
+
+    inline void clear_CurrentTimerDelay() { CurrentTimerDelay_.clear(); }
+    inline void set_CurrentTimerDelay(const EmbeddedProto::uint32& value) { CurrentTimerDelay_ = value; }
+    inline void set_CurrentTimerDelay(const EmbeddedProto::uint32&& value) { CurrentTimerDelay_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentTimerDelay() { return CurrentTimerDelay_; }
+    inline const EmbeddedProto::uint32& get_CurrentTimerDelay() const { return CurrentTimerDelay_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentTimerDelay() const { return CurrentTimerDelay_.get(); }
+
+    inline void clear_CurrentSetIsMulticast() { CurrentSetIsMulticast_.clear(); }
+    inline void set_CurrentSetIsMulticast(const EmbeddedProto::boolean& value) { CurrentSetIsMulticast_ = value; }
+    inline void set_CurrentSetIsMulticast(const EmbeddedProto::boolean&& value) { CurrentSetIsMulticast_ = value; }
+    inline EmbeddedProto::boolean& mutable_CurrentSetIsMulticast() { return CurrentSetIsMulticast_; }
+    inline const EmbeddedProto::boolean& get_CurrentSetIsMulticast() const { return CurrentSetIsMulticast_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE CurrentSetIsMulticast() const { return CurrentSetIsMulticast_.get(); }
+
+    inline void clear_CurrentDeviceId0() { CurrentDeviceId0_.clear(); }
+    inline void set_CurrentDeviceId0(const EmbeddedProto::uint32& value) { CurrentDeviceId0_ = value; }
+    inline void set_CurrentDeviceId0(const EmbeddedProto::uint32&& value) { CurrentDeviceId0_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentDeviceId0() { return CurrentDeviceId0_; }
+    inline const EmbeddedProto::uint32& get_CurrentDeviceId0() const { return CurrentDeviceId0_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentDeviceId0() const { return CurrentDeviceId0_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != RlncFlashState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RlncFlashState_.serialize_with_id(static_cast<uint32_t>(id::RLNCFLASHSTATE), buffer, false);
+      }
+
+      if((0U != RlncSessionState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = RlncSessionState_.serialize_with_id(static_cast<uint32_t>(id::RLNCSESSIONSTATE), buffer, false);
+      }
+
+      if((0 != CurrentTxPower_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentTxPower_.serialize_with_id(static_cast<uint32_t>(id::CURRENTTXPOWER), buffer, false);
+      }
+
+      if((0U != CurrentTxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentTxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::CURRENTTXBANDWIDTH), buffer, false);
+      }
+
+      if((0U != CurrentTxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentTxDataRate_.serialize_with_id(static_cast<uint32_t>(id::CURRENTTXDATARATE), buffer, false);
+      }
+
+      if((0U != CurrentTimerDelay_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentTimerDelay_.serialize_with_id(static_cast<uint32_t>(id::CURRENTTIMERDELAY), buffer, false);
+      }
+
+      if((false != CurrentSetIsMulticast_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentSetIsMulticast_.serialize_with_id(static_cast<uint32_t>(id::CURRENTSETISMULTICAST), buffer, false);
+      }
+
+      if((0U != CurrentDeviceId0_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentDeviceId0_.serialize_with_id(static_cast<uint32_t>(id::CURRENTDEVICEID0), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::RLNCFLASHSTATE:
+            return_value = RlncFlashState_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RLNCSESSIONSTATE:
+            return_value = RlncSessionState_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTTXPOWER:
+            return_value = CurrentTxPower_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTTXBANDWIDTH:
+            return_value = CurrentTxBandwidth_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTTXDATARATE:
+            return_value = CurrentTxDataRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTTIMERDELAY:
+            return_value = CurrentTimerDelay_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTSETISMULTICAST:
+            return_value = CurrentSetIsMulticast_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTDEVICEID0:
+            return_value = CurrentDeviceId0_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_RlncFlashState();
+      clear_RlncSessionState();
+      clear_CurrentTxPower();
+      clear_CurrentTxBandwidth();
+      clear_CurrentTxDataRate();
+      clear_CurrentTimerDelay();
+      clear_CurrentSetIsMulticast();
+      clear_CurrentDeviceId0();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::uint32 RlncFlashState_ = 0U;
+      EmbeddedProto::uint32 RlncSessionState_ = 0U;
+      EmbeddedProto::int32 CurrentTxPower_ = 0;
+      EmbeddedProto::uint32 CurrentTxBandwidth_ = 0U;
+      EmbeddedProto::uint32 CurrentTxDataRate_ = 0U;
+      EmbeddedProto::uint32 CurrentTimerDelay_ = 0U;
+      EmbeddedProto::boolean CurrentSetIsMulticast_ = false;
+      EmbeddedProto::uint32 CurrentDeviceId0_ = 0U;
 
 };
 
@@ -603,6 +1278,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
     }
 
     RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
@@ -618,6 +1294,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
     }
 
     ~RlncInitConfigCommand() override = default;
@@ -635,7 +1312,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       LFSRSEED = 8,
       LFSRPOLY = 9,
       DEBUGMATRIXUART = 10,
-      DEBUGFRAGMENTUART = 11
+      DEBUGFRAGMENTUART = 11,
+      RECEPTIONRATECONFIG = 12
     };
 
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
@@ -651,6 +1329,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       return *this;
     }
 
@@ -667,6 +1346,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       return *this;
     }
 
@@ -747,6 +1427,33 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_DebugFragmentUart() const { return DebugFragmentUart_; }
     inline EmbeddedProto::boolean::FIELD_TYPE DebugFragmentUart() const { return DebugFragmentUart_.get(); }
 
+    inline bool has_receptionRateConfig() const
+    {
+      return 0 != (presence::mask(presence::fields::RECEPTIONRATECONFIG) & presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)]);
+    }
+    inline void clear_receptionRateConfig()
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] &= ~(presence::mask(presence::fields::RECEPTIONRATECONFIG));
+      receptionRateConfig_.clear();
+    }
+    inline void set_receptionRateConfig(const ReceptionRateConfig& value)
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+      receptionRateConfig_ = value;
+    }
+    inline void set_receptionRateConfig(const ReceptionRateConfig&& value)
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+      receptionRateConfig_ = value;
+    }
+    inline ReceptionRateConfig& mutable_receptionRateConfig()
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+      return receptionRateConfig_;
+    }
+    inline const ReceptionRateConfig& get_receptionRateConfig() const { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& receptionRateConfig() const { return receptionRateConfig_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -805,6 +1512,11 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       if((false != DebugFragmentUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = DebugFragmentUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGFRAGMENTUART), buffer, false);
+      }
+
+      if(has_receptionRateConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = receptionRateConfig_.serialize_with_id(static_cast<uint32_t>(id::RECEPTIONRATECONFIG), buffer, true);
       }
 
       return return_value;
@@ -867,6 +1579,11 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
             return_value = DebugFragmentUart_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::RECEPTIONRATECONFIG:
+            presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+            return_value = receptionRateConfig_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -907,11 +1624,46 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       clear_LfsrPoly();
       clear_DebugMatrixUart();
       clear_DebugFragmentUart();
+      clear_receptionRateConfig();
 
     }
 
     private:
 
+      // Define constants for tracking the presence of fields.
+      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
+      struct presence
+      {
+        // An enumeration with all the fields for which presence has to be tracked.
+        enum class fields : uint32_t
+        {
+          RECEPTIONRATECONFIG
+        };
+
+        // The number of fields for which presence has to be tracked.
+        static constexpr uint32_t N_FIELDS = 1;
+
+        // Which type are we using to track presence.
+        using TYPE = uint32_t;
+
+        // How many bits are there in the presence type.
+        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
+
+        // How many variables of TYPE do we need to bit mask all presence fields.
+        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
+
+        // Obtain the index of a given field in the presence array.
+        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
+
+        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
+        static constexpr TYPE mask(const fields& field)
+        {
+          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
+        }
+      };
+
+      // Create an array in which the presence flags are stored.
+      typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::uint32 GenerationSize_ = 0U;
       EmbeddedProto::uint32 GenerationRedundancySize_ = 0U;
@@ -924,6 +1676,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 LfsrPoly_ = 0U;
       EmbeddedProto::boolean DebugMatrixUart_ = false;
       EmbeddedProto::boolean DebugFragmentUart_ = false;
+      ReceptionRateConfig receptionRateConfig_;
 
 };
 
@@ -1179,13 +1932,11 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
     RlncStateUpdate(const RlncStateUpdate& rhs )
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
-      set_LfsrState(rhs.get_LfsrState());
     }
 
     RlncStateUpdate(const RlncStateUpdate&& rhs ) noexcept
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
-      set_LfsrState(rhs.get_LfsrState());
     }
 
     ~RlncStateUpdate() override = default;
@@ -1193,21 +1944,18 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      GENERATIONINDEX = 1,
-      LFSRSTATE = 2
+      GENERATIONINDEX = 1
     };
 
     RlncStateUpdate& operator=(const RlncStateUpdate& rhs)
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
-      set_LfsrState(rhs.get_LfsrState());
       return *this;
     }
 
     RlncStateUpdate& operator=(const RlncStateUpdate&& rhs) noexcept
     {
       set_GenerationIndex(rhs.get_GenerationIndex());
-      set_LfsrState(rhs.get_LfsrState());
       return *this;
     }
 
@@ -1218,13 +1966,6 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_GenerationIndex() const { return GenerationIndex_; }
     inline EmbeddedProto::uint32::FIELD_TYPE GenerationIndex() const { return GenerationIndex_.get(); }
 
-    inline void clear_LfsrState() { LfsrState_.clear(); }
-    inline void set_LfsrState(const EmbeddedProto::uint32& value) { LfsrState_ = value; }
-    inline void set_LfsrState(const EmbeddedProto::uint32&& value) { LfsrState_ = value; }
-    inline EmbeddedProto::uint32& mutable_LfsrState() { return LfsrState_; }
-    inline const EmbeddedProto::uint32& get_LfsrState() const { return LfsrState_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LfsrState() const { return LfsrState_.get(); }
-
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1233,11 +1974,6 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
       if((0U != GenerationIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = GenerationIndex_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONINDEX), buffer, false);
-      }
-
-      if((0U != LfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = LfsrState_.serialize_with_id(static_cast<uint32_t>(id::LFSRSTATE), buffer, false);
       }
 
       return return_value;
@@ -1258,10 +1994,6 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
         {
           case id::GENERATIONINDEX:
             return_value = GenerationIndex_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::LFSRSTATE:
-            return_value = LfsrState_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -1294,7 +2026,6 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_GenerationIndex();
-      clear_LfsrState();
 
     }
 
@@ -1302,7 +2033,6 @@ class RlncStateUpdate final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::uint32 GenerationIndex_ = 0U;
-      EmbeddedProto::uint32 LfsrState_ = 0U;
 
 };
 

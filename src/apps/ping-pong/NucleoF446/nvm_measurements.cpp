@@ -3,7 +3,7 @@
 #include "nvmm.h"
 
 // #define DEBUG_THROW
-// Flash bank 5
+// Flash bank 6
 #define NVM_PAGE (6)
 NvmHandle NvmMeasurements(NVM_PAGE);
 

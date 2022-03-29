@@ -26,3 +26,17 @@ message MeasurementStreamRequest {
 message MeasurementStreamFragment {
     // Payload in generic bytes field
 }
+
+message TransmitConfiguration {
+    // TX power, BW and SF
+    int32 TxPower = 1;
+    uint32 TxBandwidth = 2;
+    uint32 TxDataRate = 3;
+}
+
+message ReceptionRateConfig {
+    float PacketErrorRate = 1;
+    bool OverrideSeed = 2;
+    uint32 Seed = 3;
+    bool DropUpdateCommands = 4;
+}

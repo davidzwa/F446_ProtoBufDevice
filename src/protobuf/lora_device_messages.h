@@ -168,9 +168,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
       set_LimitedSendCount(rhs.get_LimitedSendCount());
-      set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
     }
 
     DeviceConfiguration(const DeviceConfiguration&& rhs ) noexcept
@@ -178,9 +176,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
       set_LimitedSendCount(rhs.get_LimitedSendCount());
-      set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
     }
 
     ~DeviceConfiguration() override = default;
@@ -191,9 +187,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       ENABLEALWAYSSEND = 1,
       ALWAYSSENDPERIOD = 2,
       LIMITEDSENDCOUNT = 3,
-      TXPOWER = 4,
-      TXBANDWIDTH = 5,
-      TXDATARATE = 6
+      TRANSMITCONFIGURATION = 4
     };
 
     DeviceConfiguration& operator=(const DeviceConfiguration& rhs)
@@ -201,9 +195,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
       set_LimitedSendCount(rhs.get_LimitedSendCount());
-      set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
       return *this;
     }
 
@@ -212,9 +204,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
       set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
       set_LimitedSendCount(rhs.get_LimitedSendCount());
-      set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_transmitConfiguration(rhs.get_transmitConfiguration());
       return *this;
     }
 
@@ -239,26 +229,12 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_LimitedSendCount() const { return LimitedSendCount_; }
     inline EmbeddedProto::uint32::FIELD_TYPE LimitedSendCount() const { return LimitedSendCount_.get(); }
 
-    inline void clear_TxPower() { TxPower_.clear(); }
-    inline void set_TxPower(const EmbeddedProto::int32& value) { TxPower_ = value; }
-    inline void set_TxPower(const EmbeddedProto::int32&& value) { TxPower_ = value; }
-    inline EmbeddedProto::int32& mutable_TxPower() { return TxPower_; }
-    inline const EmbeddedProto::int32& get_TxPower() const { return TxPower_; }
-    inline EmbeddedProto::int32::FIELD_TYPE TxPower() const { return TxPower_.get(); }
-
-    inline void clear_TxBandwidth() { TxBandwidth_.clear(); }
-    inline void set_TxBandwidth(const EmbeddedProto::uint32& value) { TxBandwidth_ = value; }
-    inline void set_TxBandwidth(const EmbeddedProto::uint32&& value) { TxBandwidth_ = value; }
-    inline EmbeddedProto::uint32& mutable_TxBandwidth() { return TxBandwidth_; }
-    inline const EmbeddedProto::uint32& get_TxBandwidth() const { return TxBandwidth_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE TxBandwidth() const { return TxBandwidth_.get(); }
-
-    inline void clear_TxDataRate() { TxDataRate_.clear(); }
-    inline void set_TxDataRate(const EmbeddedProto::uint32& value) { TxDataRate_ = value; }
-    inline void set_TxDataRate(const EmbeddedProto::uint32&& value) { TxDataRate_ = value; }
-    inline EmbeddedProto::uint32& mutable_TxDataRate() { return TxDataRate_; }
-    inline const EmbeddedProto::uint32& get_TxDataRate() const { return TxDataRate_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE TxDataRate() const { return TxDataRate_.get(); }
+    inline void clear_transmitConfiguration() { transmitConfiguration_.clear(); }
+    inline void set_transmitConfiguration(const TransmitConfiguration& value) { transmitConfiguration_ = value; }
+    inline void set_transmitConfiguration(const TransmitConfiguration&& value) { transmitConfiguration_ = value; }
+    inline TransmitConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
+    inline const TransmitConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
+    inline const TransmitConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -280,19 +256,9 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
         return_value = LimitedSendCount_.serialize_with_id(static_cast<uint32_t>(id::LIMITEDSENDCOUNT), buffer, false);
       }
 
-      if((0 != TxPower_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
-        return_value = TxPower_.serialize_with_id(static_cast<uint32_t>(id::TXPOWER), buffer, false);
-      }
-
-      if((0U != TxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = TxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXBANDWIDTH), buffer, false);
-      }
-
-      if((0U != TxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = TxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXDATARATE), buffer, false);
+        return_value = transmitConfiguration_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCONFIGURATION), buffer, false);
       }
 
       return return_value;
@@ -323,16 +289,8 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
             return_value = LimitedSendCount_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::TXPOWER:
-            return_value = TxPower_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::TXBANDWIDTH:
-            return_value = TxBandwidth_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::TXDATARATE:
-            return_value = TxDataRate_.deserialize_check_type(buffer, wire_type);
+          case id::TRANSMITCONFIGURATION:
+            return_value = transmitConfiguration_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -367,9 +325,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       clear_EnableAlwaysSend();
       clear_AlwaysSendPeriod();
       clear_LimitedSendCount();
-      clear_TxPower();
-      clear_TxBandwidth();
-      clear_TxDataRate();
+      clear_transmitConfiguration();
 
     }
 
@@ -379,9 +335,7 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::boolean EnableAlwaysSend_ = false;
       EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
       EmbeddedProto::uint32 LimitedSendCount_ = 0U;
-      EmbeddedProto::int32 TxPower_ = 0;
-      EmbeddedProto::uint32 TxBandwidth_ = 0U;
-      EmbeddedProto::uint32 TxDataRate_ = 0U;
+      TransmitConfiguration transmitConfiguration_;
 
 };
 
@@ -619,6 +573,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
+        case id::RLNCREMOTEFLASHSTARTCOMMAND:
+          set_rlncRemoteFlashStartCommand(rhs.get_rlncRemoteFlashStartCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHSTOPCOMMAND:
+          set_rlncRemoteFlashStopCommand(rhs.get_rlncRemoteFlashStopCommand());
+          break;
+
+        case id::RLNCQUERYREMOTEFLASHCOMMAND:
+          set_rlncQueryRemoteFlashCommand(rhs.get_rlncQueryRemoteFlashCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHRESPONSE:
+          set_rlncRemoteFlashResponse(rhs.get_rlncRemoteFlashResponse());
+          break;
+
         case id::RLNCINITCONFIGCOMMAND:
           set_rlncInitConfigCommand(rhs.get_rlncInitConfigCommand());
           break;
@@ -699,6 +669,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
           break;
 
+        case id::RLNCREMOTEFLASHSTARTCOMMAND:
+          set_rlncRemoteFlashStartCommand(rhs.get_rlncRemoteFlashStartCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHSTOPCOMMAND:
+          set_rlncRemoteFlashStopCommand(rhs.get_rlncRemoteFlashStopCommand());
+          break;
+
+        case id::RLNCQUERYREMOTEFLASHCOMMAND:
+          set_rlncQueryRemoteFlashCommand(rhs.get_rlncQueryRemoteFlashCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHRESPONSE:
+          set_rlncRemoteFlashResponse(rhs.get_rlncRemoteFlashResponse());
+          break;
+
         case id::RLNCINITCONFIGCOMMAND:
           set_rlncInitConfigCommand(rhs.get_rlncInitConfigCommand());
           break;
@@ -758,21 +744,25 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       DEVICEID = 2,
       CORRELATIONCODE = 3,
       PAYLOAD = 4,
-      FORWARDEXPERIMENTCOMMAND = 6,
-      EXPERIMENTRESPONSE = 7,
-      MEASUREMENTSTREAMREQUEST = 8,
-      MEASUREMENTSTREAMFRAGMENT = 9,
-      RLNCINITCONFIGCOMMAND = 10,
-      RLNCENCODEDFRAGMENT = 11,
-      RLNCSTATEUPDATE = 12,
-      RLNCTERMINATIONCOMMAND = 13,
-      DECODINGRESULT = 14,
-      DECODINGUPDATE = 15,
-      DEVICECONFIGURATION = 16,
-      REQUESTBOOTINFO = 17,
-      BOOTMESSAGE = 18,
-      RESETRADIO = 19,
-      ACK = 20
+      FORWARDEXPERIMENTCOMMAND = 5,
+      EXPERIMENTRESPONSE = 6,
+      MEASUREMENTSTREAMREQUEST = 7,
+      MEASUREMENTSTREAMFRAGMENT = 8,
+      RLNCREMOTEFLASHSTARTCOMMAND = 9,
+      RLNCREMOTEFLASHSTOPCOMMAND = 10,
+      RLNCQUERYREMOTEFLASHCOMMAND = 11,
+      RLNCREMOTEFLASHRESPONSE = 12,
+      RLNCINITCONFIGCOMMAND = 13,
+      RLNCENCODEDFRAGMENT = 14,
+      RLNCSTATEUPDATE = 15,
+      RLNCTERMINATIONCOMMAND = 16,
+      DECODINGRESULT = 17,
+      DECODINGUPDATE = 18,
+      DEVICECONFIGURATION = 19,
+      REQUESTBOOTINFO = 20,
+      BOOTMESSAGE = 21,
+      RESETRADIO = 22,
+      ACK = 23
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -803,6 +793,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::MEASUREMENTSTREAMFRAGMENT:
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
+          break;
+
+        case id::RLNCREMOTEFLASHSTARTCOMMAND:
+          set_rlncRemoteFlashStartCommand(rhs.get_rlncRemoteFlashStartCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHSTOPCOMMAND:
+          set_rlncRemoteFlashStopCommand(rhs.get_rlncRemoteFlashStopCommand());
+          break;
+
+        case id::RLNCQUERYREMOTEFLASHCOMMAND:
+          set_rlncQueryRemoteFlashCommand(rhs.get_rlncQueryRemoteFlashCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHRESPONSE:
+          set_rlncRemoteFlashResponse(rhs.get_rlncRemoteFlashResponse());
           break;
 
         case id::RLNCINITCONFIGCOMMAND:
@@ -884,6 +890,22 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::MEASUREMENTSTREAMFRAGMENT:
           set_measurementStreamFragment(rhs.get_measurementStreamFragment());
+          break;
+
+        case id::RLNCREMOTEFLASHSTARTCOMMAND:
+          set_rlncRemoteFlashStartCommand(rhs.get_rlncRemoteFlashStartCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHSTOPCOMMAND:
+          set_rlncRemoteFlashStopCommand(rhs.get_rlncRemoteFlashStopCommand());
+          break;
+
+        case id::RLNCQUERYREMOTEFLASHCOMMAND:
+          set_rlncQueryRemoteFlashCommand(rhs.get_rlncQueryRemoteFlashCommand());
+          break;
+
+        case id::RLNCREMOTEFLASHRESPONSE:
+          set_rlncRemoteFlashResponse(rhs.get_rlncRemoteFlashResponse());
           break;
 
         case id::RLNCINITCONFIGCOMMAND:
@@ -1121,6 +1143,162 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     }
     inline const MeasurementStreamFragment& get_measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
     inline const MeasurementStreamFragment& measurementStreamFragment() const { return Body_.measurementStreamFragment_; }
+
+    inline bool has_rlncRemoteFlashStartCommand() const
+    {
+      return id::RLNCREMOTEFLASHSTARTCOMMAND == which_Body_;
+    }
+    inline void clear_rlncRemoteFlashStartCommand()
+    {
+      if(id::RLNCREMOTEFLASHSTARTCOMMAND == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncRemoteFlashStartCommand_.~RlncRemoteFlashStartCommand();
+      }
+    }
+    inline void set_rlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand& value)
+    {
+      if(id::RLNCREMOTEFLASHSTARTCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHSTARTCOMMAND);
+      }
+      Body_.rlncRemoteFlashStartCommand_ = value;
+    }
+    inline void set_rlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand&& value)
+    {
+      if(id::RLNCREMOTEFLASHSTARTCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHSTARTCOMMAND);
+      }
+      Body_.rlncRemoteFlashStartCommand_ = value;
+    }
+    inline RlncRemoteFlashStartCommand& mutable_rlncRemoteFlashStartCommand()
+    {
+      if(id::RLNCREMOTEFLASHSTARTCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHSTARTCOMMAND);
+      }
+      return Body_.rlncRemoteFlashStartCommand_;
+    }
+    inline const RlncRemoteFlashStartCommand& get_rlncRemoteFlashStartCommand() const { return Body_.rlncRemoteFlashStartCommand_; }
+    inline const RlncRemoteFlashStartCommand& rlncRemoteFlashStartCommand() const { return Body_.rlncRemoteFlashStartCommand_; }
+
+    inline bool has_rlncRemoteFlashStopCommand() const
+    {
+      return id::RLNCREMOTEFLASHSTOPCOMMAND == which_Body_;
+    }
+    inline void clear_rlncRemoteFlashStopCommand()
+    {
+      if(id::RLNCREMOTEFLASHSTOPCOMMAND == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncRemoteFlashStopCommand_.~RlncRemoteFlashStopCommand();
+      }
+    }
+    inline void set_rlncRemoteFlashStopCommand(const RlncRemoteFlashStopCommand& value)
+    {
+      if(id::RLNCREMOTEFLASHSTOPCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHSTOPCOMMAND);
+      }
+      Body_.rlncRemoteFlashStopCommand_ = value;
+    }
+    inline void set_rlncRemoteFlashStopCommand(const RlncRemoteFlashStopCommand&& value)
+    {
+      if(id::RLNCREMOTEFLASHSTOPCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHSTOPCOMMAND);
+      }
+      Body_.rlncRemoteFlashStopCommand_ = value;
+    }
+    inline RlncRemoteFlashStopCommand& mutable_rlncRemoteFlashStopCommand()
+    {
+      if(id::RLNCREMOTEFLASHSTOPCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHSTOPCOMMAND);
+      }
+      return Body_.rlncRemoteFlashStopCommand_;
+    }
+    inline const RlncRemoteFlashStopCommand& get_rlncRemoteFlashStopCommand() const { return Body_.rlncRemoteFlashStopCommand_; }
+    inline const RlncRemoteFlashStopCommand& rlncRemoteFlashStopCommand() const { return Body_.rlncRemoteFlashStopCommand_; }
+
+    inline bool has_rlncQueryRemoteFlashCommand() const
+    {
+      return id::RLNCQUERYREMOTEFLASHCOMMAND == which_Body_;
+    }
+    inline void clear_rlncQueryRemoteFlashCommand()
+    {
+      if(id::RLNCQUERYREMOTEFLASHCOMMAND == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncQueryRemoteFlashCommand_.~RlncQueryRemoteFlashState();
+      }
+    }
+    inline void set_rlncQueryRemoteFlashCommand(const RlncQueryRemoteFlashState& value)
+    {
+      if(id::RLNCQUERYREMOTEFLASHCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCQUERYREMOTEFLASHCOMMAND);
+      }
+      Body_.rlncQueryRemoteFlashCommand_ = value;
+    }
+    inline void set_rlncQueryRemoteFlashCommand(const RlncQueryRemoteFlashState&& value)
+    {
+      if(id::RLNCQUERYREMOTEFLASHCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCQUERYREMOTEFLASHCOMMAND);
+      }
+      Body_.rlncQueryRemoteFlashCommand_ = value;
+    }
+    inline RlncQueryRemoteFlashState& mutable_rlncQueryRemoteFlashCommand()
+    {
+      if(id::RLNCQUERYREMOTEFLASHCOMMAND != which_Body_)
+      {
+        init_Body(id::RLNCQUERYREMOTEFLASHCOMMAND);
+      }
+      return Body_.rlncQueryRemoteFlashCommand_;
+    }
+    inline const RlncQueryRemoteFlashState& get_rlncQueryRemoteFlashCommand() const { return Body_.rlncQueryRemoteFlashCommand_; }
+    inline const RlncQueryRemoteFlashState& rlncQueryRemoteFlashCommand() const { return Body_.rlncQueryRemoteFlashCommand_; }
+
+    inline bool has_rlncRemoteFlashResponse() const
+    {
+      return id::RLNCREMOTEFLASHRESPONSE == which_Body_;
+    }
+    inline void clear_rlncRemoteFlashResponse()
+    {
+      if(id::RLNCREMOTEFLASHRESPONSE == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.rlncRemoteFlashResponse_.~RlncRemoteFlashResponse();
+      }
+    }
+    inline void set_rlncRemoteFlashResponse(const RlncRemoteFlashResponse& value)
+    {
+      if(id::RLNCREMOTEFLASHRESPONSE != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHRESPONSE);
+      }
+      Body_.rlncRemoteFlashResponse_ = value;
+    }
+    inline void set_rlncRemoteFlashResponse(const RlncRemoteFlashResponse&& value)
+    {
+      if(id::RLNCREMOTEFLASHRESPONSE != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHRESPONSE);
+      }
+      Body_.rlncRemoteFlashResponse_ = value;
+    }
+    inline RlncRemoteFlashResponse& mutable_rlncRemoteFlashResponse()
+    {
+      if(id::RLNCREMOTEFLASHRESPONSE != which_Body_)
+      {
+        init_Body(id::RLNCREMOTEFLASHRESPONSE);
+      }
+      return Body_.rlncRemoteFlashResponse_;
+    }
+    inline const RlncRemoteFlashResponse& get_rlncRemoteFlashResponse() const { return Body_.rlncRemoteFlashResponse_; }
+    inline const RlncRemoteFlashResponse& rlncRemoteFlashResponse() const { return Body_.rlncRemoteFlashResponse_; }
 
     inline bool has_rlncInitConfigCommand() const
     {
@@ -1606,6 +1784,34 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::RLNCREMOTEFLASHSTARTCOMMAND:
+          if(has_rlncRemoteFlashStartCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncRemoteFlashStartCommand_.serialize_with_id(static_cast<uint32_t>(id::RLNCREMOTEFLASHSTARTCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::RLNCREMOTEFLASHSTOPCOMMAND:
+          if(has_rlncRemoteFlashStopCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncRemoteFlashStopCommand_.serialize_with_id(static_cast<uint32_t>(id::RLNCREMOTEFLASHSTOPCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::RLNCQUERYREMOTEFLASHCOMMAND:
+          if(has_rlncQueryRemoteFlashCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncQueryRemoteFlashCommand_.serialize_with_id(static_cast<uint32_t>(id::RLNCQUERYREMOTEFLASHCOMMAND), buffer, true);
+          }
+          break;
+
+        case id::RLNCREMOTEFLASHRESPONSE:
+          if(has_rlncRemoteFlashResponse() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.rlncRemoteFlashResponse_.serialize_with_id(static_cast<uint32_t>(id::RLNCREMOTEFLASHRESPONSE), buffer, true);
+          }
+          break;
+
         case id::RLNCINITCONFIGCOMMAND:
           if(has_rlncInitConfigCommand() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
           {
@@ -1739,6 +1945,26 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::RLNCREMOTEFLASHSTARTCOMMAND:
+            return_value = deserialize_Body(id::RLNCREMOTEFLASHSTARTCOMMAND, Body_.rlncRemoteFlashStartCommand_, buffer, wire_type);
+
+            break;
+
+          case id::RLNCREMOTEFLASHSTOPCOMMAND:
+            return_value = deserialize_Body(id::RLNCREMOTEFLASHSTOPCOMMAND, Body_.rlncRemoteFlashStopCommand_, buffer, wire_type);
+
+            break;
+
+          case id::RLNCQUERYREMOTEFLASHCOMMAND:
+            return_value = deserialize_Body(id::RLNCQUERYREMOTEFLASHCOMMAND, Body_.rlncQueryRemoteFlashCommand_, buffer, wire_type);
+
+            break;
+
+          case id::RLNCREMOTEFLASHRESPONSE:
+            return_value = deserialize_Body(id::RLNCREMOTEFLASHRESPONSE, Body_.rlncRemoteFlashResponse_, buffer, wire_type);
+
+            break;
+
           case id::RLNCINITCONFIGCOMMAND:
             return_value = deserialize_Body(id::RLNCINITCONFIGCOMMAND, Body_.rlncInitConfigCommand_, buffer, wire_type);
 
@@ -1848,6 +2074,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         ExperimentResponse experimentResponse_;
         MeasurementStreamRequest measurementStreamRequest_;
         MeasurementStreamFragment measurementStreamFragment_;
+        RlncRemoteFlashStartCommand rlncRemoteFlashStartCommand_;
+        RlncRemoteFlashStopCommand rlncRemoteFlashStopCommand_;
+        RlncQueryRemoteFlashState rlncQueryRemoteFlashCommand_;
+        RlncRemoteFlashResponse rlncRemoteFlashResponse_;
         RlncInitConfigCommand rlncInitConfigCommand_;
         RlncEncodedFragment rlncEncodedFragment_;
         RlncStateUpdate rlncStateUpdate_;
@@ -1891,6 +2121,26 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           case id::MEASUREMENTSTREAMFRAGMENT:
             new(&Body_.measurementStreamFragment_) MeasurementStreamFragment;
             which_Body_ = id::MEASUREMENTSTREAMFRAGMENT;
+            break;
+
+          case id::RLNCREMOTEFLASHSTARTCOMMAND:
+            new(&Body_.rlncRemoteFlashStartCommand_) RlncRemoteFlashStartCommand;
+            which_Body_ = id::RLNCREMOTEFLASHSTARTCOMMAND;
+            break;
+
+          case id::RLNCREMOTEFLASHSTOPCOMMAND:
+            new(&Body_.rlncRemoteFlashStopCommand_) RlncRemoteFlashStopCommand;
+            which_Body_ = id::RLNCREMOTEFLASHSTOPCOMMAND;
+            break;
+
+          case id::RLNCQUERYREMOTEFLASHCOMMAND:
+            new(&Body_.rlncQueryRemoteFlashCommand_) RlncQueryRemoteFlashState;
+            which_Body_ = id::RLNCQUERYREMOTEFLASHCOMMAND;
+            break;
+
+          case id::RLNCREMOTEFLASHRESPONSE:
+            new(&Body_.rlncRemoteFlashResponse_) RlncRemoteFlashResponse;
+            which_Body_ = id::RLNCREMOTEFLASHRESPONSE;
             break;
 
           case id::RLNCINITCONFIGCOMMAND:
@@ -1970,6 +2220,18 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::MEASUREMENTSTREAMFRAGMENT:
             Body_.measurementStreamFragment_.~MeasurementStreamFragment(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCREMOTEFLASHSTARTCOMMAND:
+            Body_.rlncRemoteFlashStartCommand_.~RlncRemoteFlashStartCommand(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCREMOTEFLASHSTOPCOMMAND:
+            Body_.rlncRemoteFlashStopCommand_.~RlncRemoteFlashStopCommand(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCQUERYREMOTEFLASHCOMMAND:
+            Body_.rlncQueryRemoteFlashCommand_.~RlncQueryRemoteFlashState(); // NOSONAR Unions require this.
+            break;
+          case id::RLNCREMOTEFLASHRESPONSE:
+            Body_.rlncRemoteFlashResponse_.~RlncRemoteFlashResponse(); // NOSONAR Unions require this.
             break;
           case id::RLNCINITCONFIGCOMMAND:
             Body_.rlncInitConfigCommand_.~RlncInitConfigCommand(); // NOSONAR Unions require this.

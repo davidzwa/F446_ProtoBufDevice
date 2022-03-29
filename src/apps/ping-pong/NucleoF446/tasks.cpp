@@ -5,7 +5,6 @@
 #include "delay.h"
 #include "measurements.h"
 #include "radio_phy.h"
-#include "stdio.h"
 #include "timer.h"
 
 #define MAX_SEQUENCE_NUMBERS 5000
@@ -114,7 +113,7 @@ void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
         sequenceNumberLimit = limitedSendCount;
         periodicCurrentCounter = 0;
 
-        if (limitedSendCount == 0) {
+        if ((uint32_t)limitedSendCount == 0U) {
             StopPeriodicTransmit();
         }
         else {

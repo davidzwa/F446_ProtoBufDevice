@@ -9,6 +9,7 @@
 #include "delay.h"
 #include "lora_device_messages.h"
 #include "measurements.h"
+#include "nvm_rlnc.h"
 #include "radio_config.h"
 #include "tasks.h"
 #include "utils.h"
@@ -34,7 +35,7 @@ void OnRxError(void);
  */
 static RadioEvents_t RadioEvents;
 
-void InitRadioPhy() {
+uint32_t InitRadioPhy() {
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
     RadioEvents.RxDone = OnRxDone;
@@ -44,6 +45,8 @@ void InitRadioPhy() {
 
     Radio.Init(&RadioEvents);
     Radio.SetChannel(RF_FREQUENCY);
+
+    auto rngSeed = Radio.Random();
 
 #if defined(USE_MODEM_LORA)
 
@@ -76,10 +79,12 @@ void InitRadioPhy() {
 #else
 #error "Please define a frequency band in the compiler options."
 #endif
+
+    return rngSeed;
 }
 
 void OnTxDone(void) {
-    UartDebug("LORATX-DONE", 400, 11);
+    UartDebug("LORATX-DONE", 200, 11);
     Radio.Rx(0);
 }
 
@@ -147,7 +152,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 StopPeriodicTransmit();
                 UartDebug("DevConfStop", 0, 12);
             } else {
-                SetTxConfig(config);
+                SetTxConfig(config.get_transmitConfiguration());
                 ApplyAlwaysSendPeriodically(config);
                 UartDebug("DevConf", 0, 7);
             }
@@ -157,11 +162,9 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
                 ClearMeasurements();
             }
-            // No unique extra feature
-            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
-            // }
+            
             // Not built yet
-            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
+            // if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
             //     // TODO
             // }
 
@@ -170,15 +173,29 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
                 hasResponseTx = true;
                 TransmitLoRaFlashInfo(true);
             }
-
+        } else if (message.has_rlncRemoteFlashStartCommand()) {
+            if (IsRlncSessionStarted()) {
+                StopRlncSessionFromFlash();
+            } else {
+                StartRlncSessionFromFlash(message.get_rlncRemoteFlashStartCommand());
+            }
+            SendLoRaRlncSessionResponse();
+            hasResponseTx = true;
+        } else if (message.has_rlncQueryRemoteFlashCommand()) {
+            SendLoRaRlncSessionResponse();
+            hasResponseTx = true;
         }
         // Not built yet
         // else if (message.has_measurementStreamRequest()) {
         // TODO filter based on device id
         // StreamMeasurements();
         // }
-    } 
-    
+    }
+
+    if (isMulticast && message.has_rlncRemoteFlashStopCommand()) {
+        StopRlncSessionFromFlash();
+    }
+
     // MC or UC work the same
     if (message.has_rlncInitConfigCommand()) {
         auto initConfigCommand = message.mutable_rlncInitConfigCommand();

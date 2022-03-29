@@ -133,7 +133,6 @@ void BoardCriticalSectionEnd(uint32_t *mask) {
 
 void BoardInitPeriph(void) {
     // Initialize the I2C sensors here
-
 #ifdef USE_BME_68X
     bme688 = new BME688();
     bme688->init(&I2c);
@@ -478,7 +477,7 @@ static void InitFlashMemoryOperations(void) {
     PVD_Config();
 
     // Initialize the EEPROM emulation driver
-    EepromMcuInit( );
+    EepromMcuInit();
 
     // Lock the Flash Program Erase controller
     HAL_FLASH_Lock();

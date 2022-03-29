@@ -37,22 +37,30 @@ void InitRadioRxConfigLoRa() {
     rxConf.set_RxContinuous(LORA_CONT_LISTEN);
 }
 
+int32_t GetTxPower() {
+    return txConf.get_Power();
+}
+
+uint32_t GetTxDataRate() {
+    return txConf.get_DataRate();
+}
+
+uint32_t GetTxBandwidth() {
+    return txConf.get_Bandwidth();
+}
+
 void SetTxPower(int8_t power) {
     Radio.Standby();
-
     txConf.set_Power(power);
-
     Radio.Rx(0);
 }
 
-void SetTxConfig(DeviceConfiguration& config) {
+void SetTxConfig(const TransmitConfiguration& config) {
     Radio.Standby();
-
     txConf.set_Power(config.get_TxPower());
     txConf.set_Bandwidth(config.get_TxBandwidth());
     txConf.set_DataRate(config.get_TxDataRate());
     ApplyRadioTxConfig();
-
     Radio.Rx(0);
 }
 

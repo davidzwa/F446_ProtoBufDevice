@@ -584,4 +584,341 @@ class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    TransmitConfiguration() = default;
+    TransmitConfiguration(const TransmitConfiguration& rhs )
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+    }
+
+    TransmitConfiguration(const TransmitConfiguration&& rhs ) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+    }
+
+    ~TransmitConfiguration() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      TXPOWER = 1,
+      TXBANDWIDTH = 2,
+      TXDATARATE = 3
+    };
+
+    TransmitConfiguration& operator=(const TransmitConfiguration& rhs)
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+      return *this;
+    }
+
+    TransmitConfiguration& operator=(const TransmitConfiguration&& rhs) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxBandwidth(rhs.get_TxBandwidth());
+      set_TxDataRate(rhs.get_TxDataRate());
+      return *this;
+    }
+
+    inline void clear_TxPower() { TxPower_.clear(); }
+    inline void set_TxPower(const EmbeddedProto::int32& value) { TxPower_ = value; }
+    inline void set_TxPower(const EmbeddedProto::int32&& value) { TxPower_ = value; }
+    inline EmbeddedProto::int32& mutable_TxPower() { return TxPower_; }
+    inline const EmbeddedProto::int32& get_TxPower() const { return TxPower_; }
+    inline EmbeddedProto::int32::FIELD_TYPE TxPower() const { return TxPower_.get(); }
+
+    inline void clear_TxBandwidth() { TxBandwidth_.clear(); }
+    inline void set_TxBandwidth(const EmbeddedProto::uint32& value) { TxBandwidth_ = value; }
+    inline void set_TxBandwidth(const EmbeddedProto::uint32&& value) { TxBandwidth_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxBandwidth() { return TxBandwidth_; }
+    inline const EmbeddedProto::uint32& get_TxBandwidth() const { return TxBandwidth_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxBandwidth() const { return TxBandwidth_.get(); }
+
+    inline void clear_TxDataRate() { TxDataRate_.clear(); }
+    inline void set_TxDataRate(const EmbeddedProto::uint32& value) { TxDataRate_ = value; }
+    inline void set_TxDataRate(const EmbeddedProto::uint32&& value) { TxDataRate_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxDataRate() { return TxDataRate_; }
+    inline const EmbeddedProto::uint32& get_TxDataRate() const { return TxDataRate_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxDataRate() const { return TxDataRate_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0 != TxPower_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxPower_.serialize_with_id(static_cast<uint32_t>(id::TXPOWER), buffer, false);
+      }
+
+      if((0U != TxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXBANDWIDTH), buffer, false);
+      }
+
+      if((0U != TxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXDATARATE), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::TXPOWER:
+            return_value = TxPower_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXBANDWIDTH:
+            return_value = TxBandwidth_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXDATARATE:
+            return_value = TxDataRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_TxPower();
+      clear_TxBandwidth();
+      clear_TxDataRate();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::int32 TxPower_ = 0;
+      EmbeddedProto::uint32 TxBandwidth_ = 0U;
+      EmbeddedProto::uint32 TxDataRate_ = 0U;
+
+};
+
+class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    ReceptionRateConfig() = default;
+    ReceptionRateConfig(const ReceptionRateConfig& rhs )
+    {
+      set_PacketErrorRate(rhs.get_PacketErrorRate());
+      set_OverrideSeed(rhs.get_OverrideSeed());
+      set_Seed(rhs.get_Seed());
+      set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+    }
+
+    ReceptionRateConfig(const ReceptionRateConfig&& rhs ) noexcept
+    {
+      set_PacketErrorRate(rhs.get_PacketErrorRate());
+      set_OverrideSeed(rhs.get_OverrideSeed());
+      set_Seed(rhs.get_Seed());
+      set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+    }
+
+    ~ReceptionRateConfig() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      PACKETERRORRATE = 1,
+      OVERRIDESEED = 2,
+      SEED = 3,
+      DROPUPDATECOMMANDS = 4
+    };
+
+    ReceptionRateConfig& operator=(const ReceptionRateConfig& rhs)
+    {
+      set_PacketErrorRate(rhs.get_PacketErrorRate());
+      set_OverrideSeed(rhs.get_OverrideSeed());
+      set_Seed(rhs.get_Seed());
+      set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+      return *this;
+    }
+
+    ReceptionRateConfig& operator=(const ReceptionRateConfig&& rhs) noexcept
+    {
+      set_PacketErrorRate(rhs.get_PacketErrorRate());
+      set_OverrideSeed(rhs.get_OverrideSeed());
+      set_Seed(rhs.get_Seed());
+      set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+      return *this;
+    }
+
+    inline void clear_PacketErrorRate() { PacketErrorRate_.clear(); }
+    inline void set_PacketErrorRate(const EmbeddedProto::floatfixed& value) { PacketErrorRate_ = value; }
+    inline void set_PacketErrorRate(const EmbeddedProto::floatfixed&& value) { PacketErrorRate_ = value; }
+    inline EmbeddedProto::floatfixed& mutable_PacketErrorRate() { return PacketErrorRate_; }
+    inline const EmbeddedProto::floatfixed& get_PacketErrorRate() const { return PacketErrorRate_; }
+    inline EmbeddedProto::floatfixed::FIELD_TYPE PacketErrorRate() const { return PacketErrorRate_.get(); }
+
+    inline void clear_OverrideSeed() { OverrideSeed_.clear(); }
+    inline void set_OverrideSeed(const EmbeddedProto::boolean& value) { OverrideSeed_ = value; }
+    inline void set_OverrideSeed(const EmbeddedProto::boolean&& value) { OverrideSeed_ = value; }
+    inline EmbeddedProto::boolean& mutable_OverrideSeed() { return OverrideSeed_; }
+    inline const EmbeddedProto::boolean& get_OverrideSeed() const { return OverrideSeed_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE OverrideSeed() const { return OverrideSeed_.get(); }
+
+    inline void clear_Seed() { Seed_.clear(); }
+    inline void set_Seed(const EmbeddedProto::uint32& value) { Seed_ = value; }
+    inline void set_Seed(const EmbeddedProto::uint32&& value) { Seed_ = value; }
+    inline EmbeddedProto::uint32& mutable_Seed() { return Seed_; }
+    inline const EmbeddedProto::uint32& get_Seed() const { return Seed_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Seed() const { return Seed_.get(); }
+
+    inline void clear_DropUpdateCommands() { DropUpdateCommands_.clear(); }
+    inline void set_DropUpdateCommands(const EmbeddedProto::boolean& value) { DropUpdateCommands_ = value; }
+    inline void set_DropUpdateCommands(const EmbeddedProto::boolean&& value) { DropUpdateCommands_ = value; }
+    inline EmbeddedProto::boolean& mutable_DropUpdateCommands() { return DropUpdateCommands_; }
+    inline const EmbeddedProto::boolean& get_DropUpdateCommands() const { return DropUpdateCommands_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DropUpdateCommands() const { return DropUpdateCommands_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0.0 != PacketErrorRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = PacketErrorRate_.serialize_with_id(static_cast<uint32_t>(id::PACKETERRORRATE), buffer, false);
+      }
+
+      if((false != OverrideSeed_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = OverrideSeed_.serialize_with_id(static_cast<uint32_t>(id::OVERRIDESEED), buffer, false);
+      }
+
+      if((0U != Seed_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Seed_.serialize_with_id(static_cast<uint32_t>(id::SEED), buffer, false);
+      }
+
+      if((false != DropUpdateCommands_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DropUpdateCommands_.serialize_with_id(static_cast<uint32_t>(id::DROPUPDATECOMMANDS), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::PACKETERRORRATE:
+            return_value = PacketErrorRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::OVERRIDESEED:
+            return_value = OverrideSeed_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SEED:
+            return_value = Seed_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DROPUPDATECOMMANDS:
+            return_value = DropUpdateCommands_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_PacketErrorRate();
+      clear_OverrideSeed();
+      clear_Seed();
+      clear_DropUpdateCommands();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::floatfixed PacketErrorRate_ = 0.0;
+      EmbeddedProto::boolean OverrideSeed_ = false;
+      EmbeddedProto::uint32 Seed_ = 0U;
+      EmbeddedProto::boolean DropUpdateCommands_ = false;
+
+};
+
 #endif // SHARED_EXPERIMENT_CONFIG_H

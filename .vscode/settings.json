@@ -167,7 +167,9 @@
         "iomanip": "cpp",
         "crc8.h": "c",
         "eeprom-conf.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "stm32f4xx_hal_rng.h": "c",
+        "delay-board.h": "c"
     },
     "favorites.resources": [
         "src\\boards\\NucleoF446\\CMakeLists.txt",
