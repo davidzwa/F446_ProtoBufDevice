@@ -617,6 +617,7 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand& rhs )
     {
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
@@ -625,6 +626,7 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand&& rhs ) noexcept
     {
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
@@ -636,14 +638,16 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     {
       NOT_SET = 0,
       TRANSMITCONFIGURATION = 2,
-      TIMERDELAY = 3,
-      SETISMULTICAST = 4,
-      DEVICEID0 = 5
+      RECEPTIONRATECONFIG = 3,
+      TIMERDELAY = 4,
+      SETISMULTICAST = 5,
+      DEVICEID0 = 6
     };
 
     RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand& rhs)
     {
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
@@ -653,6 +657,7 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand&& rhs) noexcept
     {
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
@@ -665,6 +670,13 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     inline TransmitConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
     inline const TransmitConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
     inline const TransmitConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+
+    inline void clear_receptionRateConfig() { receptionRateConfig_.clear(); }
+    inline void set_receptionRateConfig(const ReceptionRateConfig& value) { receptionRateConfig_ = value; }
+    inline void set_receptionRateConfig(const ReceptionRateConfig&& value) { receptionRateConfig_ = value; }
+    inline ReceptionRateConfig& mutable_receptionRateConfig() { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& get_receptionRateConfig() const { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& receptionRateConfig() const { return receptionRateConfig_; }
 
     inline void clear_TimerDelay() { TimerDelay_.clear(); }
     inline void set_TimerDelay(const EmbeddedProto::uint32& value) { TimerDelay_ = value; }
@@ -695,6 +707,11 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
         return_value = transmitConfiguration_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCONFIGURATION), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = receptionRateConfig_.serialize_with_id(static_cast<uint32_t>(id::RECEPTIONRATECONFIG), buffer, false);
       }
 
       if((0U != TimerDelay_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
@@ -730,6 +747,10 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
         {
           case id::TRANSMITCONFIGURATION:
             return_value = transmitConfiguration_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RECEPTIONRATECONFIG:
+            return_value = receptionRateConfig_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::TIMERDELAY:
@@ -774,6 +795,7 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     void clear() override
     {
       clear_transmitConfiguration();
+      clear_receptionRateConfig();
       clear_TimerDelay();
       clear_SetIsMulticast();
       clear_DeviceId0();
@@ -784,6 +806,7 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
 
 
       TransmitConfiguration transmitConfiguration_;
+      ReceptionRateConfig receptionRateConfig_;
       EmbeddedProto::uint32 TimerDelay_ = 0U;
       EmbeddedProto::boolean SetIsMulticast_ = false;
       EmbeddedProto::uint32 DeviceId0_ = 0U;
@@ -1255,6 +1278,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
     }
 
     RlncInitConfigCommand(const RlncInitConfigCommand&& rhs ) noexcept
@@ -1270,6 +1294,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
     }
 
     ~RlncInitConfigCommand() override = default;
@@ -1287,7 +1312,8 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       LFSRSEED = 8,
       LFSRPOLY = 9,
       DEBUGMATRIXUART = 10,
-      DEBUGFRAGMENTUART = 11
+      DEBUGFRAGMENTUART = 11,
+      RECEPTIONRATECONFIG = 12
     };
 
     RlncInitConfigCommand& operator=(const RlncInitConfigCommand& rhs)
@@ -1303,6 +1329,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       return *this;
     }
 
@@ -1319,6 +1346,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       return *this;
     }
 
@@ -1399,6 +1427,33 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_DebugFragmentUart() const { return DebugFragmentUart_; }
     inline EmbeddedProto::boolean::FIELD_TYPE DebugFragmentUart() const { return DebugFragmentUart_.get(); }
 
+    inline bool has_receptionRateConfig() const
+    {
+      return 0 != (presence::mask(presence::fields::RECEPTIONRATECONFIG) & presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)]);
+    }
+    inline void clear_receptionRateConfig()
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] &= ~(presence::mask(presence::fields::RECEPTIONRATECONFIG));
+      receptionRateConfig_.clear();
+    }
+    inline void set_receptionRateConfig(const ReceptionRateConfig& value)
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+      receptionRateConfig_ = value;
+    }
+    inline void set_receptionRateConfig(const ReceptionRateConfig&& value)
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+      receptionRateConfig_ = value;
+    }
+    inline ReceptionRateConfig& mutable_receptionRateConfig()
+    {
+      presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+      return receptionRateConfig_;
+    }
+    inline const ReceptionRateConfig& get_receptionRateConfig() const { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& receptionRateConfig() const { return receptionRateConfig_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1457,6 +1512,11 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       if((false != DebugFragmentUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = DebugFragmentUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGFRAGMENTUART), buffer, false);
+      }
+
+      if(has_receptionRateConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = receptionRateConfig_.serialize_with_id(static_cast<uint32_t>(id::RECEPTIONRATECONFIG), buffer, true);
       }
 
       return return_value;
@@ -1519,6 +1579,11 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
             return_value = DebugFragmentUart_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::RECEPTIONRATECONFIG:
+            presence_[presence::index(presence::fields::RECEPTIONRATECONFIG)] |= presence::mask(presence::fields::RECEPTIONRATECONFIG);
+            return_value = receptionRateConfig_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -1559,11 +1624,46 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       clear_LfsrPoly();
       clear_DebugMatrixUart();
       clear_DebugFragmentUart();
+      clear_receptionRateConfig();
 
     }
 
     private:
 
+      // Define constants for tracking the presence of fields.
+      // Use a struct to scope the variables from user fields as namespaces are not allowed within classes.
+      struct presence
+      {
+        // An enumeration with all the fields for which presence has to be tracked.
+        enum class fields : uint32_t
+        {
+          RECEPTIONRATECONFIG
+        };
+
+        // The number of fields for which presence has to be tracked.
+        static constexpr uint32_t N_FIELDS = 1;
+
+        // Which type are we using to track presence.
+        using TYPE = uint32_t;
+
+        // How many bits are there in the presence type.
+        static constexpr uint32_t N_BITS = std::numeric_limits<TYPE>::digits;
+
+        // How many variables of TYPE do we need to bit mask all presence fields.
+        static constexpr uint32_t SIZE = (N_FIELDS / N_BITS) + ((N_FIELDS % N_BITS) > 0 ? 1 : 0);
+
+        // Obtain the index of a given field in the presence array.
+        static constexpr uint32_t index(const fields& field) { return static_cast<uint32_t>(field) / N_BITS; }
+
+        // Obtain the bit mask for the given field assuming we are at the correct index in the presence array.
+        static constexpr TYPE mask(const fields& field)
+        {
+          return static_cast<uint32_t>(0x01) << (static_cast<uint32_t>(field) % N_BITS);
+        }
+      };
+
+      // Create an array in which the presence flags are stored.
+      typename presence::TYPE presence_[presence::SIZE] = {0};
 
       EmbeddedProto::uint32 GenerationSize_ = 0U;
       EmbeddedProto::uint32 GenerationRedundancySize_ = 0U;
@@ -1576,6 +1676,7 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 LfsrPoly_ = 0U;
       EmbeddedProto::boolean DebugMatrixUart_ = false;
       EmbeddedProto::boolean DebugFragmentUart_ = false;
+      ReceptionRateConfig receptionRateConfig_;
 
 };
 

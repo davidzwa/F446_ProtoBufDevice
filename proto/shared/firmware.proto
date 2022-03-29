@@ -32,11 +32,16 @@ message RlncRemoteFlashStartCommand {
 
     // TX power, BW and SF
     TransmitConfiguration transmitConfiguration = 2;
+    ReceptionRateConfig receptionRateConfig = 3;
 
     // Timer delay between each packet
-    uint32 TimerDelay = 3;
-    bool SetIsMulticast = 4;
-    uint32 DeviceId0 = 5;
+    uint32 TimerDelay = 4;
+    bool SetIsMulticast = 5;
+    uint32 DeviceId0 = 6;
+
+    // Not implemented
+    // bool DebugMatrixUart = 7;
+    // bool DebugFragmentUart = 8;
 }
 
 message RlncRemoteFlashStopCommand {
@@ -74,6 +79,8 @@ message RlncInitConfigCommand {
     uint32 LfsrPoly = 9;
     bool DebugMatrixUart = 10;
     bool DebugFragmentUart = 11;
+
+    optional ReceptionRateConfig receptionRateConfig = 12;
 }
 
 message RlncEncodedFragment {

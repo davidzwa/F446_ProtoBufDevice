@@ -30,6 +30,14 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
 
     // Save state config
     rlncConfig = rlncInitConfig;
+
+    // Set the random seed if applicable
+    auto receptionConfig = rlncConfig.get_receptionRateConfig();
+    if (receptionConfig.get_OverrideSeed()) {
+        srand1(receptionConfig.get_Seed());
+        UartDebug("RLNC_PER_SEED", GetSeed(), 13);
+    }
+
     terminated = false;
     generationIndex = 0;
     generationSucceeded = false;
@@ -89,8 +97,30 @@ uint32_t RlncDecoder::GetEncodingVectorLength() {
     }
 }
 
+bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
+    auto receptionConfig = rlncConfig.get_receptionRateConfig();
+
+    if (!receptionConfig.get_DropUpdateCommands() && isUpdatePacket) {
+        return false;
+    }
+
+    auto approxPer = receptionConfig.get_PacketErrorRate();
+    auto fixedPer = approxPer * 10000;
+    if (approxPer > 0.0000001f && approxPer < 0.999999f) {
+        auto randomValue = randr(0, 10000);
+        auto willDropPacket = randomValue < fixedPer;
+        if (willDropPacket) {
+            UartDebug("RLNC_RNG", randomValue, 8);
+        }
+        return willDropPacket;
+    }
+
+    return false;
+}
+
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if (generationSucceeded) return;
+    if (DecidePacketErrorDroppage(true)) return;
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
@@ -156,7 +186,6 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         auto firstNumber = decodingMatrix[0][numberColumn];
         auto lastRowIndex = encVectorLength - 1;
         auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
-        
 
         auto generationSize = rlncConfig.get_GenerationSize();
         auto correctFirstNumber = generationSize * generationIndex;
@@ -194,6 +223,8 @@ void RlncDecoder::DecodeFragments(DecodingResult& result) {
  * @param rlncStateUpdate
  */
 void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
+    if (DecidePacketErrorDroppage(true)) return;
+
     // Update state
     generationIndex = rlncStateUpdate.get_GenerationIndex();
     generationSucceeded = false;

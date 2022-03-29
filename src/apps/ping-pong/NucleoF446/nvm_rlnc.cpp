@@ -94,6 +94,10 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 
     SetTxConfig(command.get_transmitConfiguration());
 
+    initCommand
+        .mutable_rlncInitConfigCommand()
+        .set_receptionRateConfig(command.get_receptionRateConfig());
+
     sessionState = RlncSessionState::PRE_INIT;
     currentFragmentIndex = 0;
     currentGenerationIndex = 0;
@@ -139,8 +143,7 @@ uint16_t ProgressRlncSession() {
             } else {
                 sessionState = RlncSessionState::PRE_TERMINATION;
             }
-        }
-        else {
+        } else {
             currentFragmentIndex++;
             sessionState = RlncSessionState::IN_GENERATION;
         }
@@ -467,5 +470,4 @@ static const RlncInitConfigCommand& GetConfig() {
 }
 
 static void DebugRlncCode(uint32_t code) {
-
 }

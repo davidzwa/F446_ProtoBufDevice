@@ -46,6 +46,7 @@ class RlncDecoder {
     uint8_t DetermineNextInnovativeRowIndex();
 
    private:
+    bool DecidePacketErrorDroppage(bool isUpdatePacket);
     void ReserveGenerationStorage();
     void ClearDecodingMatrix();
 

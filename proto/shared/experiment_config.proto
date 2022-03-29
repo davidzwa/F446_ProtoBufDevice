@@ -33,3 +33,10 @@ message TransmitConfiguration {
     uint32 TxBandwidth = 2;
     uint32 TxDataRate = 3;
 }
+
+message ReceptionRateConfig {
+    float PacketErrorRate = 1;
+    bool OverrideSeed = 2;
+    uint32 Seed = 3;
+    bool DropUpdateCommands = 4;
+}

@@ -42,6 +42,11 @@ int32_t rand1(void) {
 void srand1(uint32_t seed) {
     next = seed;
 }
+
+uint32_t GetSeed() {
+    return next;
+}
+
 // Standard random functions redefinition end
 
 int32_t randr(int32_t min, int32_t max) {
