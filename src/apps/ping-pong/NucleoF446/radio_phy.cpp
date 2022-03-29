@@ -80,7 +80,7 @@ void InitRadioPhy() {
 }
 
 void OnTxDone(void) {
-    UartDebug("LORATX-DONE", 400, 11);
+    UartDebug("LORATX-DONE", 200, 11);
     Radio.Rx(0);
 }
 
@@ -158,11 +158,9 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
                 ClearMeasurements();
             }
-            // No unique extra feature
-            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::QueryFlash) {
-            // }
+            
             // Not built yet
-            // else if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
+            // if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
             //     // TODO
             // }
 

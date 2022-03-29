@@ -199,9 +199,9 @@ HAL_StatusTypeDef ValidatePageId(uint8_t pageId) {
 }
 
 uint32_t GetPageBaseAddress(uint8_t pageId) {
-    // if (pageId == PAGE0_ID) {
-    //     return PAGE0_BASE_ADDRESS;
-    // } else
+    if (pageId == PAGE0_ID) {
+        return PAGE0_BASE_ADDRESS;
+    } else
     if (pageId == PAGE1_ID) {
         return PAGE1_BASE_ADDRESS;
     } else if (pageId == PAGE2_ID) {
@@ -212,9 +212,9 @@ uint32_t GetPageBaseAddress(uint8_t pageId) {
 }
 
 uint32_t GetPageEndAddress(uint8_t pageId) {
-    // if (pageId == PAGE0_ID) {
-    //     return PAGE0_END_ADDRESS;
-    // } else
+    if (pageId == PAGE0_ID) {
+        return PAGE0_END_ADDRESS;
+    } else
     if (pageId == PAGE1_ID) {
         return PAGE1_END_ADDRESS;
     } else if (pageId == PAGE2_ID) {

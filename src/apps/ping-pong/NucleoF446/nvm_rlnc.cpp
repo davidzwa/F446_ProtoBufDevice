@@ -110,7 +110,6 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 
 uint16_t StopRlncSessionFromFlash() {
     TimerStop(&rlncDelayTimer);
-
     UartDebug("RLNC", 0xFF, 4);
 
     return sessionState = RlncSessionState::PRE_TERMINATION;
@@ -465,4 +464,8 @@ static uint32_t GetGenerationCount() {
 
 static const RlncInitConfigCommand& GetConfig() {
     return initCommand.get_rlncInitConfigCommand();
+}
+
+static void DebugRlncCode(uint32_t code) {
+
 }

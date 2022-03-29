@@ -54,7 +54,7 @@ class RlncDecoder {
     void DecodeFragments(DecodingResult& result);
     void StoreDecodingResult(DecodingResult& decodingResult);
 
-    RlncInitConfigCommand rlncDecodingConfig;
+    RlncInitConfigCommand rlncConfig;
     LFSR* lfsr;
     uint8_t generationIndex;
     bool generationSucceeded;
