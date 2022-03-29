@@ -36,12 +36,12 @@ enum RlncFlashState {
 };
 
 enum RlncSessionState {
-    IDLE = 0,
-    PRE_INIT = 1,
-    IN_GENERATION = 30000,
-    UPDATING_GENERATION = 40000,
-    PRE_TERMINATION = 5,
-    POST_TERMINATION = 6
+    IDLE = 0x00,
+    PRE_INIT = 0x1,
+    IN_GENERATION = 0x3000,
+    UPDATING_GENERATION = 0x4000,
+    PRE_TERMINATION = 0x5,
+    POST_TERMINATION = 0x6
 };
 
 // 0x00 is sector header and should only be written to if sector is full

@@ -113,10 +113,12 @@ uint16_t StopRlncSessionFromFlash() {
 
     UartDebug("RLNC", 0xFF, 4);
 
-    return sessionState = RlncSessionState::PRE_INIT;
+    return sessionState = RlncSessionState::PRE_TERMINATION;
 }
 
 uint16_t ProgressRlncSession() {
+    nextActionReady = false;
+
     auto generationCount = GetGenerationCount();
     if (sessionState == RlncSessionState::PRE_INIT) {
         TransmitLoRaMessage(initCommand);
@@ -128,20 +130,21 @@ uint16_t ProgressRlncSession() {
 
         // Transmit fragment
         TransmitLoRaMessage(currentFragment);
+        UartDebug("RLNC", 3, 4);
 
         // Check if done with generation and not in last generation
         auto generationTotalFragments = CalculateGenerationTotalFrameCount(currentGenerationIndex);
         if (currentFragmentIndex + 1 >= generationTotalFragments) {
             if (currentGenerationIndex + 1 < generationCount) {
-                return sessionState = RlncSessionState::UPDATING_GENERATION;
+                sessionState = RlncSessionState::UPDATING_GENERATION;
             } else {
-                return sessionState = RlncSessionState::PRE_TERMINATION;
+                sessionState = RlncSessionState::PRE_TERMINATION;
             }
         }
-
-        currentFragmentIndex++;
-        UartDebug("RLNC", 3, 4);
-        return sessionState == RlncSessionState::IN_GENERATION;
+        else {
+            currentFragmentIndex++;
+            sessionState = RlncSessionState::IN_GENERATION;
+        }
     } else if (sessionState == RlncSessionState::UPDATING_GENERATION) {
         currentGenerationIndex++;
         currentFragmentIndex = 0;
@@ -154,7 +157,7 @@ uint16_t ProgressRlncSession() {
         sessionState = RlncSessionState::POST_TERMINATION;
         UartDebug("RLNC", 0xFE, 4);
     } else if (sessionState == RlncSessionState::POST_TERMINATION) {
-        return sessionState = RlncSessionState::IDLE;
+        sessionState = RlncSessionState::IDLE;
     }
 
     if (sessionState != RlncSessionState::IDLE) {
@@ -203,7 +206,6 @@ void SendLoRaRlncSessionResponse() {
  * */
 static void OnRlncDelayTimerEvent(void* context) {
     nextActionReady = true;
-    UartDebug("RLNC", 0x1, 4);
 }
 
 void TimerDelayAsync() {
