@@ -120,7 +120,9 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if (generationSucceeded) return;
-    if (DecidePacketErrorDroppage(true)) return;
+   
+    bool willDropPacketByRng = DecidePacketErrorDroppage(true);
+    if (willDropPacketByRng) return;
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
