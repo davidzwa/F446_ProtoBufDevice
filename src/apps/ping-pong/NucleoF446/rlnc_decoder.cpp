@@ -4,10 +4,11 @@
 #include "cli.h"
 #include "delay.h"
 #include "utilities.h"
+#include "utils.h"
 
 unsigned int prim_poly = 0x11D;
 galois::GaloisField gf(8, prim_poly);
-
+static DecodingResult lastDecodingResult;
 #define MAX_GEN_SIZE 5
 #define MAX_OVERHEAD 2
 #define MAX_SYMBOLS 12
@@ -52,7 +53,8 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
 
 void RlncDecoder::ReserveGenerationStorage() {
     ClearDecodingMatrix();
-    receivedFragments = 0;
+    receivedGenFragments = 0;
+    missedGenFragments = 0;
 
     // We only need independent/innovative packets which is at most min(generation_size, left_frames)
     auto fragmentsNeeded = GetEncodingVectorLength();
@@ -120,9 +122,27 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if (generationSucceeded) return;
-   
+
     bool willDropPacketByRng = DecidePacketErrorDroppage(false);
     if (willDropPacketByRng) return;
+
+    uint32_t correlationCode = message.get_CorrelationCode();
+    uint32_t tempGenerationIndex = 0;
+    uint32_t tempFragmentIndex = 0;
+    DecodeRlncFragmentIndex(correlationCode, &tempFragmentIndex, &tempGenerationIndex);
+
+    if ((uint8_t)tempGenerationIndex != generationIndex) {
+        SendUartDecodingUpdate(lastDecodingResult);
+        UartDebug("RLNC_LAG_GEN", generationIndex, 12);
+        generationSucceeded = false;
+        generationIndex = tempGenerationIndex;
+        ReserveGenerationStorage();
+    }
+    uint32_t totalFragmentIndex = receivedGenFragments + missedGenFragments;
+    if (tempFragmentIndex > totalFragmentIndex) {
+        missedGenFragments += tempFragmentIndex - totalFragmentIndex;
+        UartDebug("RLNC_LAG_FRAG", missedGenFragments, 13);
+    }
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
@@ -156,7 +176,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     uint8_t crc2 = ComputeChecksum(decodingMatrix[rowIndex].data(), decodingMatrix[0].size());
     DecodingUpdate decodingUpdate;
     decodingUpdate.set_RankProgress(DetermineNextInnovativeRowIndex());
-    decodingUpdate.set_ReceivedFragments(receivedFragments);
+    decodingUpdate.set_ReceivedFragments(receivedGenFragments);
+    decodingUpdate.set_MissedGenFragments(missedGenFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
     decodingUpdate.set_UsedLfsrState(lfsrResetState);
@@ -173,38 +194,13 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     }
 
     // Decoding should not fail when incomplete
-    DecodingResult result;
-    DecodeFragments(result);
+
+    DecodeFragments(lastDecodingResult);
 
     // Process the results - if any
-    if (receivedFragments >= encodingColCount) {
-        // Enough packets have arrived to attempt decoding with high probability
-        // DecodeFragments(result);
-
-        // Verify decoding success and do packet integrity check
-        auto encVectorLength = GetEncodingVectorLength();
-        uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
-        auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
-        auto firstNumber = decodingMatrix[0][numberColumn];
-        auto lastRowIndex = encVectorLength - 1;
-        auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
-
-        auto generationSize = rlncConfig.get_GenerationSize();
-        auto correctFirstNumber = generationSize * generationIndex;
-        auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
-
-        bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
-        if (success) {
-            generationSucceeded = true;
-        }
-
-        result.set_Success(success);
-        result.set_MatrixRank(progress);
-        result.set_FirstDecodedNumber(firstNumber);
-        result.set_LastDecodedNumber(lastNumber);
-        UartSendDecodingResult(result);
-
+    if (receivedGenFragments >= encodingColCount) {
         // Delegate to Flash, UART or LoRa
+        SendUartDecodingUpdate(lastDecodingResult);
         // StoreDecodingResult(result);
     }
 }
@@ -265,7 +261,7 @@ void RlncDecoder::StoreDecodingResult(DecodingResult& decodingResult) {
 }
 
 uint8_t RlncDecoder::AddFrameAsMatrixRow(vector<SYMB>& row) {
-    receivedFragments++;
+    receivedGenFragments++;
 
     auto innovativeRow = DetermineNextInnovativeRowIndex();
     if (innovativeRow > this->decodingMatrix.size()) {
@@ -303,7 +299,7 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
         if (currentRowAllZeroes) return i;
     }
 
-    if (receivedFragments < encodingVectorLength) {
+    if (receivedGenFragments < encodingVectorLength) {
         ThrowDecodingError(DecodingError::ILLEGAL_RANK_STATE);
         throw "Reached full-rank when insufficient packets were received";
     }
@@ -419,6 +415,30 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
     for (int col = pivotCol; col < colCount; col++) {
         decodingMatrix[row][col] = gf.sub(decodingMatrix[row][col], gf.mul(decodingMatrix[pivotRow][col], coefficient));
     }
+}
+
+void RlncDecoder::SendUartDecodingUpdate(DecodingResult& result) {
+    auto encVectorLength = GetEncodingVectorLength();
+    uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
+    auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
+    auto firstNumber = decodingMatrix[0][numberColumn];
+    auto lastRowIndex = encVectorLength - 1;
+    auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
+
+    auto generationSize = rlncConfig.get_GenerationSize();
+    auto correctFirstNumber = generationSize * generationIndex;
+    auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
+
+    bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
+    if (success) {
+        generationSucceeded = true;
+    }
+
+    result.set_Success(success);
+    result.set_MatrixRank(progress);
+    result.set_FirstDecodedNumber(firstNumber);
+    result.set_LastDecodedNumber(lastNumber);
+    UartSendDecodingResult(result);
 }
 
 void RlncDecoder::ThrowDecodingError(DecodingError error) {

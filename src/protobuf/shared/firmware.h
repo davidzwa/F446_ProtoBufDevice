@@ -2500,6 +2500,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_IsRunning(rhs.get_IsRunning());
       set_UsedLfsrState(rhs.get_UsedLfsrState());
       set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
     }
 
     DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
@@ -2514,6 +2515,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_IsRunning(rhs.get_IsRunning());
       set_UsedLfsrState(rhs.get_UsedLfsrState());
       set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
     }
 
     ~DecodingUpdate() override = default;
@@ -2530,7 +2532,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       CURRENTGENERATIONINDEX = 7,
       ISRUNNING = 8,
       USEDLFSRSTATE = 9,
-      CURRENTLFSRSTATE = 10
+      CURRENTLFSRSTATE = 10,
+      MISSEDGENFRAGMENTS = 11
     };
 
     DecodingUpdate& operator=(const DecodingUpdate& rhs)
@@ -2545,6 +2548,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_IsRunning(rhs.get_IsRunning());
       set_UsedLfsrState(rhs.get_UsedLfsrState());
       set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
       return *this;
     }
 
@@ -2560,6 +2564,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_IsRunning(rhs.get_IsRunning());
       set_UsedLfsrState(rhs.get_UsedLfsrState());
       set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
       return *this;
     }
 
@@ -2633,6 +2638,13 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_CurrentLfsrState() const { return CurrentLfsrState_; }
     inline EmbeddedProto::uint32::FIELD_TYPE CurrentLfsrState() const { return CurrentLfsrState_.get(); }
 
+    inline void clear_MissedGenFragments() { MissedGenFragments_.clear(); }
+    inline void set_MissedGenFragments(const EmbeddedProto::uint32& value) { MissedGenFragments_ = value; }
+    inline void set_MissedGenFragments(const EmbeddedProto::uint32&& value) { MissedGenFragments_ = value; }
+    inline EmbeddedProto::uint32& mutable_MissedGenFragments() { return MissedGenFragments_; }
+    inline const EmbeddedProto::uint32& get_MissedGenFragments() const { return MissedGenFragments_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MissedGenFragments() const { return MissedGenFragments_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -2686,6 +2698,11 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       if((0U != CurrentLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = CurrentLfsrState_.serialize_with_id(static_cast<uint32_t>(id::CURRENTLFSRSTATE), buffer, false);
+      }
+
+      if((0U != MissedGenFragments_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MissedGenFragments_.serialize_with_id(static_cast<uint32_t>(id::MISSEDGENFRAGMENTS), buffer, false);
       }
 
       return return_value;
@@ -2744,6 +2761,10 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
             return_value = CurrentLfsrState_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::MISSEDGENFRAGMENTS:
+            return_value = MissedGenFragments_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -2783,6 +2804,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       clear_IsRunning();
       clear_UsedLfsrState();
       clear_CurrentLfsrState();
+      clear_MissedGenFragments();
 
     }
 
@@ -2799,6 +2821,7 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::boolean IsRunning_ = false;
       EmbeddedProto::uint32 UsedLfsrState_ = 0U;
       EmbeddedProto::uint32 CurrentLfsrState_ = 0U;
+      EmbeddedProto::uint32 MissedGenFragments_ = 0U;
 
 };
 

@@ -53,13 +53,15 @@ class RlncDecoder {
     uint32_t GetMatrixColumnCount();
     uint32_t GetEncodingVectorLength();
     void DecodeFragments(DecodingResult& result);
+    void SendUartDecodingUpdate(DecodingResult& result);
     void StoreDecodingResult(DecodingResult& decodingResult);
 
     RlncInitConfigCommand rlncConfig;
     LFSR* lfsr;
     uint8_t generationIndex;
     bool generationSucceeded;
-    uint8_t receivedFragments;
+    uint16_t receivedGenFragments;
+    uint16_t missedGenFragments;
     bool terminated;
     vector<vector<galois::GFSymbol>> decodingMatrix;
 };

@@ -73,7 +73,7 @@ int main(void) {
 
     uint32_t output;
     ReadMeasurement(0, &output);
-    UartDebug("FLASH", output, 12);
+    UartDebug("FLASH", output, 6);
 
     // CRC check
     // uint8_t values[] = {0xFF, 0x12, 0x34, 0x00};

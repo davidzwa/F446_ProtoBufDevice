@@ -12,6 +12,7 @@
 #include "radio_config.h"
 #include "radio_phy.h"
 #include "timer.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -294,7 +295,7 @@ uint16_t ValidateRlncFlashState() {
     generationStartAddresses.reserve(generationCount);
     auto generationSize = initConfig.get_GenerationSize();
     auto generationRedundancySize = initConfig.get_GenerationRedundancySize();
-    
+
     uint16_t maxGenerationSize = (uint16_t)generationSize + (uint16_t)generationRedundancySize;
     auto frameSize = GetFrameSize();
     if ((uint8_t)frameSize > FRAG_SIZE_LIMIT) {
@@ -346,8 +347,7 @@ uint16_t ValidateRlncFlashState() {
 
         for (size_t j = 0; j < currentGenerationSize; j++) {
             // Read frag metadata
-            const uint32_t addressCopy = currentAddress8;
-            result = NvmRlnc.ReadBuffer8(addressCopy, currentFragmentMeta, FRAG_META_BYTES);
+            result = NvmRlnc.ReadBuffer8(currentAddress8, currentFragmentMeta, FRAG_META_BYTES);
             if (result != 0x00) {
                 return state = READ_FAIL_FRAG_META + currentSequenceNumber;
             }
@@ -422,6 +422,7 @@ static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationI
     fragment.set_LfsrState(fragmentMetaBuffer[LFSR_BYTE]);
 
     currentFragment.clear();
+    currentFragment.set_CorrelationCode(EncodeRlncCorrelationCode(currentGenerationIndex, currentFragmentIndex));
     currentFragment.set_rlncEncodedFragment(fragment);
     currentFragment.mutable_Payload().set(fragmentBuffer, frameSize);
 
