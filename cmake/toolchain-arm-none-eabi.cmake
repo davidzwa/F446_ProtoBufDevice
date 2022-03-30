@@ -65,7 +65,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 # -g produce debugging information in the operating system’s native format
  # -O0 does not optimise out debuggable vars -Og does [-O0,-O1,-O2,-O3,-Og]
 set(CMAKE_C_FLAGS_DEBUG "-Os -g -DDEBUG" CACHE INTERNAL "C Compiler options for debug build type")
-set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g -DDEBUG" CACHE INTERNAL "C++ Compiler options for debug build type")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DDEBUG" CACHE INTERNAL "C++ Compiler options for debug build type")
 set(CMAKE_ASM_FLAGS_DEBUG "-g" CACHE INTERNAL "ASM Compiler options for debug build type")
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "" CACHE INTERNAL "Linker options for debug build type")
 

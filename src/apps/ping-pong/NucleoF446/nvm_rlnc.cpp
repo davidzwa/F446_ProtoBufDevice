@@ -340,7 +340,7 @@ uint16_t ValidateRlncFlashState() {
         }
 
         // Advance beyond generation prefix
-        generationStartAddresses[currentGenerationIndex] = currentAddress8;
+        generationStartAddresses[i] = currentAddress8;
         currentAddress8 += GEN_PREFIX_BYTES;
 
         for (size_t j = 0; j < currentGenerationSize; j++) {
