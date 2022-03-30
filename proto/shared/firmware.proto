@@ -40,8 +40,8 @@ message RlncRemoteFlashStartCommand {
     uint32 DeviceId0 = 6;
 
     // Not implemented
-    // bool DebugMatrixUart = 7;
-    // bool DebugFragmentUart = 8;
+    bool DebugMatrixUart = 7;
+    bool DebugFragmentUart = 8;
 }
 
 message RlncRemoteFlashStopCommand {
