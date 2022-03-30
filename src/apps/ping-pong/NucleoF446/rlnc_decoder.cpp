@@ -134,10 +134,12 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if ((uint8_t)tempGenerationIndex != generationIndex) {
         UartDebug("RLNC_LAG_GEN", generationIndex, 12);
         generationSucceeded = false;
+        generationIndex = tempGenerationIndex;
         ReserveGenerationStorage();
     }
-    if (tempFragmentIndex > receivedGenFragments + missedGenFragments) {
-        missedGenFragments += tempFragmentIndex - receivedGenFragments + missedGenFragments;
+    uint32_t totalFragmentIndex = receivedGenFragments + missedGenFragments;
+    if (tempFragmentIndex > totalFragmentIndex) {
+        missedGenFragments += tempFragmentIndex - totalFragmentIndex;
         UartDebug("RLNC_LAG_FRAG", receivedGenFragments, 13);
     }
 
