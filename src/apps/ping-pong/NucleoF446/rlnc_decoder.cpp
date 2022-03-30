@@ -8,7 +8,7 @@
 
 unsigned int prim_poly = 0x11D;
 galois::GaloisField gf(8, prim_poly);
-
+static DecodingResult lastDecodingResult;
 #define MAX_GEN_SIZE 5
 #define MAX_OVERHEAD 2
 #define MAX_SYMBOLS 12
@@ -132,6 +132,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     DecodeRlncFragmentIndex(correlationCode, &tempFragmentIndex, &tempGenerationIndex);
 
     if ((uint8_t)tempGenerationIndex != generationIndex) {
+        SendUartDecodingUpdate(lastDecodingResult);
         UartDebug("RLNC_LAG_GEN", generationIndex, 12);
         generationSucceeded = false;
         generationIndex = tempGenerationIndex;
@@ -140,7 +141,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     uint32_t totalFragmentIndex = receivedGenFragments + missedGenFragments;
     if (tempFragmentIndex > totalFragmentIndex) {
         missedGenFragments += tempFragmentIndex - totalFragmentIndex;
-        UartDebug("RLNC_LAG_FRAG", receivedGenFragments, 13);
+        UartDebug("RLNC_LAG_FRAG", missedGenFragments, 13);
     }
 
     // Fetch the encoding vector length
@@ -193,38 +194,13 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     }
 
     // Decoding should not fail when incomplete
-    DecodingResult result;
-    DecodeFragments(result);
+
+    DecodeFragments(lastDecodingResult);
 
     // Process the results - if any
     if (receivedGenFragments >= encodingColCount) {
-        // Enough packets have arrived to attempt decoding with high probability
-        // DecodeFragments(result);
-
-        // Verify decoding success and do packet integrity check
-        auto encVectorLength = GetEncodingVectorLength();
-        uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
-        auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
-        auto firstNumber = decodingMatrix[0][numberColumn];
-        auto lastRowIndex = encVectorLength - 1;
-        auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
-
-        auto generationSize = rlncConfig.get_GenerationSize();
-        auto correctFirstNumber = generationSize * generationIndex;
-        auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
-
-        bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
-        if (success) {
-            generationSucceeded = true;
-        }
-
-        result.set_Success(success);
-        result.set_MatrixRank(progress);
-        result.set_FirstDecodedNumber(firstNumber);
-        result.set_LastDecodedNumber(lastNumber);
-        UartSendDecodingResult(result);
-
         // Delegate to Flash, UART or LoRa
+        SendUartDecodingUpdate(lastDecodingResult);
         // StoreDecodingResult(result);
     }
 }
@@ -439,6 +415,30 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
     for (int col = pivotCol; col < colCount; col++) {
         decodingMatrix[row][col] = gf.sub(decodingMatrix[row][col], gf.mul(decodingMatrix[pivotRow][col], coefficient));
     }
+}
+
+void RlncDecoder::SendUartDecodingUpdate(DecodingResult& result) {
+    auto encVectorLength = GetEncodingVectorLength();
+    uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
+    auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
+    auto firstNumber = decodingMatrix[0][numberColumn];
+    auto lastRowIndex = encVectorLength - 1;
+    auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
+
+    auto generationSize = rlncConfig.get_GenerationSize();
+    auto correctFirstNumber = generationSize * generationIndex;
+    auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
+
+    bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
+    if (success) {
+        generationSucceeded = true;
+    }
+
+    result.set_Success(success);
+    result.set_MatrixRank(progress);
+    result.set_FirstDecodedNumber(firstNumber);
+    result.set_LastDecodedNumber(lastNumber);
+    UartSendDecodingResult(result);
 }
 
 void RlncDecoder::ThrowDecodingError(DecodingError error) {
