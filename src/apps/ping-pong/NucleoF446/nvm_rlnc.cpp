@@ -356,7 +356,9 @@ uint16_t ValidateRlncFlashState() {
             if (currentFragmentMeta[LFSR_BYTE] == 0x00) {
                 return state = CORRUPT_LFSR_ZERO;
             }
-            if (currentFragmentMeta[SEQ_BYTE] != currentSequenceNumber) {
+            
+            uint16_t metaSequenceNumber = ((uint16_t)currentFragmentMeta[SEQ_BYTE] << 8) + currentFragmentMeta[SEQ_BYTE2];
+            if (metaSequenceNumber != currentSequenceNumber) {
                 return state = CORRUPT_FRAG_SEQ + currentSequenceNumber;
             }
             if (currentFragmentMeta[GEN_INDEX_BYTE] != i) {

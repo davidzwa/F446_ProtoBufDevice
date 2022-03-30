@@ -50,11 +50,12 @@ enum RlncSessionState {
 
 #define GEN_PREFIX_BYTES 4U
 #define UPDATE_PREFIX_BYTES 4U
-#define FRAG_META_BYTES 3U
+#define FRAG_META_BYTES 4U
 
 #define LFSR_BYTE 0U
-#define SEQ_BYTE 1U
-#define GEN_INDEX_BYTE 2U
+#define GEN_INDEX_BYTE 1U
+#define SEQ_BYTE 2U
+#define SEQ_BYTE2 3U
 
 #define INIT_SIZE_LIMIT 35U
 #define TERM_SIZE_LIMIT 30U
