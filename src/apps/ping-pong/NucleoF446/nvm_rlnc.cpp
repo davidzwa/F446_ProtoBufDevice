@@ -226,6 +226,7 @@ static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message) {
 }
 
 uint16_t ValidateRlncFlashState() {
+    uint32_t currentAddress8;
     uint32_t pageHeader;
     auto readStatus = NvmRlnc.Read32(SECTOR_HEADER, &pageHeader);
     if (readStatus != 0x00) {
@@ -252,7 +253,7 @@ uint16_t ValidateRlncFlashState() {
         return state = READ_FAIL_TERM;
     }
     if (termSize8 > TERM_SIZE_LIMIT) {
-        return state = CORRUPT_INIT_SIZE;
+        return state = CORRUPT_TERM_SIZE;
     }
 
     // Read and deserialize Initiation command
@@ -299,13 +300,13 @@ uint16_t ValidateRlncFlashState() {
 
     // Update the 8-bit address where repeated data starts
     generationStartAddress8 = INIT_START8 + initSize8 + termSize8;
-    auto currentAddress8 = generationStartAddress8;
+    currentAddress8 = generationStartAddress8;
 
-    uint8_t currentGenerationPrefix[GEN_PREFIX_BYTES];
-    uint8_t currentUpdateCmdPrefix[UPDATE_PREFIX_BYTES];
+    uint8_t currentGenerationPrefix[GEN_PREFIX_BYTES] = {};
+    uint8_t currentUpdateCmdPrefix[UPDATE_PREFIX_BYTES] = {};
     uint16_t currentGenerationSize = 0;
-    uint8_t currentFragmentMeta[FRAG_META_BYTES];
-    uint8_t currentFragment[(size_t)frameSize];
+    uint8_t currentFragmentMeta[FRAG_META_BYTES] = {};
+    uint8_t currentFragment[(size_t)frameSize] = {};
     uint32_t currentSequenceNumber = 0;
     uint16_t result;
     for (size_t i = 0; i < generationCount; i++) {

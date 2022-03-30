@@ -31,19 +31,20 @@ NvmHandle::NvmHandle(uint8_t pageId) {
     this->pageId = pageId;
 }
 
-uint16_t NvmHandle::Write(uint16_t address32, uint32_t variable) {
+uint16_t NvmHandle::Write(const uint16_t address32, uint32_t variable) {
     return EepromMcuWriteVariable32(pageId, address32 * 0x04, variable);
 }
 
-uint16_t NvmHandle::ReadBuffer8(uint32_t address8, uint8_t* buffer, size_t length8) {
-    auto status = EepromMcuValidateBufferLimits8(pageId, address8, length8);
+uint16_t NvmHandle::ReadBuffer8(const uint32_t address8, uint8_t* buffer, size_t length8) {
+    uint16_t status = EepromMcuValidateBufferLimits8(pageId, address8, length8);
     if (status != 0x00) {
         return status;
     }
 
     uint16_t readSuccess = 0x00;
     for (size_t i = 0; i < length8; i++) {
-        auto result = EepromMcuReadVariable8(pageId, address8 + i, buffer + i);
+        const uint32_t addressOffset = address8 + i;
+        uint16_t result = EepromMcuReadVariable8(pageId, addressOffset, buffer + i);
         if (result != 0x00) {
             readSuccess = result;
             return readSuccess;
@@ -53,15 +54,15 @@ uint16_t NvmHandle::ReadBuffer8(uint32_t address8, uint8_t* buffer, size_t lengt
     return readSuccess;
 }
 
-uint16_t NvmHandle::Read8(uint32_t address8, uint8_t* variable) {
+uint16_t NvmHandle::Read8(const uint32_t address8, uint8_t* variable) {
     return EepromMcuReadVariable8(pageId, address8, variable);
 }
 
-uint16_t NvmHandle::Read16(uint32_t address16, uint16_t* variable) {
+uint16_t NvmHandle::Read16(const uint32_t address16, uint16_t* variable) {
     return EepromMcuReadVariable16(pageId, address16 * 0x02, variable);
 }
 
-uint16_t NvmHandle::Read32(uint32_t address32, uint32_t* variable) {
+uint16_t NvmHandle::Read32(const uint32_t address32, uint32_t* variable) {
     return EepromMcuReadVariable32(pageId, address32 * 0x04, variable);
 }
 
@@ -91,14 +92,4 @@ bool NvmHandle::Clear() {
 //         }
 //     }
 //     return true;
-// }
-
-// bool NvmmReset(uint16_t size, uint16_t offset) {
-//     uint32_t crc32 = 0;
-
-//     if (EepromMcuWriteBuffer(offset + size - sizeof(crc32),
-//                              (uint8_t*)&crc32, sizeof(crc32)) == LMN_STATUS_OK) {
-//         return true;
-//     }
-//     return false;
 // }

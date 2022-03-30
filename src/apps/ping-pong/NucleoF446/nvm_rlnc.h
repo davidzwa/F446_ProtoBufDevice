@@ -48,15 +48,15 @@ enum RlncSessionState {
 #define SECTOR_HEADER ((uint16_t)0x0000)
 #define GEN_PREFIX_HEADER 0xFFFF0000
 
-#define GEN_PREFIX_BYTES 4
-#define UPDATE_PREFIX_BYTES 4
-#define FRAG_META_BYTES 3
+#define GEN_PREFIX_BYTES 4U
+#define UPDATE_PREFIX_BYTES 4U
+#define FRAG_META_BYTES 3U
 
-#define LFSR_BYTE 0
-#define SEQ_BYTE 1
-#define GEN_INDEX_BYTE 2
+#define LFSR_BYTE 0U
+#define SEQ_BYTE 1U
+#define GEN_INDEX_BYTE 2U
 
-#define INIT_SIZE_LIMIT 20U
+#define INIT_SIZE_LIMIT 35U
 #define TERM_SIZE_LIMIT 30U
 #define FRAG_SIZE_LIMIT 25U
 #define FULL_FRAG_SIZE_LIMIT 10000U  // We load all gen fragments in memory
