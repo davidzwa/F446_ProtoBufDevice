@@ -15,12 +15,11 @@
 
 using namespace std;
 
-// #define DEBUG_THROW
-// Flash bank 5
-#define NVM_PAGE (7)
+#define NVM_PAGE (7)  // Flash bank 7
 NvmHandle NvmRlnc(NVM_PAGE);
 
 void TimerDelayAsync();
+static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message);
 static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationIndex);
 static void PrepareNewUpdateCommand(uint32_t nextGenerationIndex);
 static uint32_t CalculateGenerationBaseFrameCount(uint32_t generationIndex);
@@ -76,8 +75,8 @@ bool nextActionReady = false;
 uint32_t currentGenerationIndex = 0;
 uint32_t currentFragmentIndex = 0;
 uint32_t currentTimerPeriod = 0;
-uint32_t currentDeviceId0 = 0;
-bool currentSetIsMulticast = false;
+uint32_t deviceId0Filter = 0;
+bool isMulticastFilter = false;
 uint16_t state = RlncFlashState::UNSCANNED;
 uint16_t sessionState = RlncSessionState::IDLE;
 
@@ -94,21 +93,24 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 
     SetTxConfig(command.get_transmitConfiguration());
 
+    // Set message control plane filter
+    deviceId0Filter = command.get_DeviceId0();
+    isMulticastFilter = command.get_SetIsMulticast();
+
+    // Save the overridden reception config
     initCommand
         .mutable_rlncInitConfigCommand()
         .set_receptionRateConfig(command.get_receptionRateConfig());
+    UartDebug("RLNC", 0, 4);
 
     sessionState = RlncSessionState::PRE_INIT;
     currentFragmentIndex = 0;
     currentGenerationIndex = 0;
 
-    // TODO apply below
-    currentDeviceId0 = command.get_DeviceId0();
-    // TODO apply below
-    currentSetIsMulticast = command.get_SetIsMulticast();
+    // Set timer period and trigger it
     currentTimerPeriod = command.get_TimerDelay();
-    UartDebug("RLNC", 0, 4);
     TimerDelayAsync();
+
     return 0x00;
 }
 
@@ -124,15 +126,14 @@ uint16_t ProgressRlncSession() {
 
     auto generationCount = GetGenerationCount();
     if (sessionState == RlncSessionState::PRE_INIT) {
-        TransmitLoRaMessage(initCommand);
+        TransmitLoRaMessageWithDeviceFilter(initCommand);
         UartDebug("RLNC", 2, 4);
         sessionState = RlncSessionState::IN_GENERATION;
     } else if (sessionState == RlncSessionState::IN_GENERATION) {
-        // TODO validate fragment makes sense
         LoadCurrentFragment(currentFragmentIndex, currentGenerationIndex);
 
         // Transmit fragment
-        TransmitLoRaMessage(currentFragment);
+        TransmitLoRaMessageWithDeviceFilter(currentFragment);
         UartDebug("RLNC", 3, 4);
 
         // Check if done with generation and not in last generation
@@ -151,11 +152,11 @@ uint16_t ProgressRlncSession() {
         currentGenerationIndex++;
         currentFragmentIndex = 0;
         PrepareNewUpdateCommand(currentGenerationIndex);
-        TransmitLoRaMessage(updateCommand);
+        TransmitLoRaMessageWithDeviceFilter(updateCommand);
         sessionState = RlncSessionState::IN_GENERATION;
         UartDebug("RLNC", 4, 4);
     } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
-        TransmitLoRaMessage(terminationCommand);
+        TransmitLoRaMessageWithDeviceFilter(terminationCommand);
         sessionState = RlncSessionState::POST_TERMINATION;
         UartDebug("RLNC", 0xFE, 4);
     } else if (sessionState == RlncSessionState::POST_TERMINATION) {
@@ -188,8 +189,8 @@ void SendLoRaRlncSessionResponse() {
     response.set_RlncFlashState(state);
     response.set_RlncSessionState(sessionState);
 
-    response.set_CurrentDeviceId0(currentDeviceId0);
-    response.set_CurrentSetIsMulticast(currentSetIsMulticast);
+    response.set_CurrentDeviceId0(deviceId0Filter);
+    response.set_CurrentSetIsMulticast(isMulticastFilter);
     response.set_CurrentTimerDelay(GetCurrentTimerPeriod());
 
     response.set_CurrentTxPower(GetTxPower());
@@ -215,6 +216,13 @@ void TimerDelayAsync() {
     TimerInit(&rlncDelayTimer, OnRlncDelayTimerEvent);
     TimerSetValue(&rlncDelayTimer, GetCurrentTimerPeriod());
     TimerStart(&rlncDelayTimer);
+}
+
+static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message) {
+    message.set_DeviceId(deviceId0Filter);
+    message.set_IsMulticast(isMulticastFilter);
+
+    TransmitLoRaMessage(message);
 }
 
 uint16_t ValidateRlncFlashState() {
@@ -467,7 +475,4 @@ static uint32_t GetGenerationCount() {
 
 static const RlncInitConfigCommand& GetConfig() {
     return initCommand.get_rlncInitConfigCommand();
-}
-
-static void DebugRlncCode(uint32_t code) {
 }

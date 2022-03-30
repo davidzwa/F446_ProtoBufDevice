@@ -21,6 +21,9 @@ LORA_MSG_TEMPLATE loraPhyMessage;
 int8_t lastRssiValue = 0;
 int8_t lastSnrValue = 0;
 
+bool HandleLoRaProtoMulticastPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr);
+bool HandleRlncCommand(LORA_MSG_TEMPLATE& message);
+
 /*!
  * \brief Radio interupts
  */
@@ -112,11 +115,55 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Processing
-    auto isResponding = HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
+    bool isResponding = false;
+    auto isMulticast = loraPhyMessage.get_IsMulticast();
+    bool isDeviceId = IsDeviceId(loraPhyMessage.get_DeviceId());
+    if (isMulticast) {
+        UartDebug("MC", isDeviceId + 200, 2);
+        isResponding = HandleLoRaProtoMulticastPayload(loraPhyMessage, rssi, snr);
+    } else if (isDeviceId) {
+        UartDebug("UC", isDeviceId + 100, 2);
+        isResponding = HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
+    }
 
+    // Only specific RLNC messages are registered as measurement
+    if (loraPhyMessage.get_which_Body() == LORA_MSG_TEMPLATE::id::NOT_SET || loraPhyMessage.has_rlncInitConfigCommand() || loraPhyMessage.has_rlncEncodedFragment() || loraPhyMessage.has_rlncStateUpdate() || loraPhyMessage.has_rlncTerminationCommand()) {
+        auto sequenceNumber = loraPhyMessage.get_CorrelationCode();
+        RegisterNewMeasurement(sequenceNumber, rssi, snr);
+    }
+
+    // Send the RX event back over UART (if enabled)
+    UartSendLoRaRx(loraPhyMessage, rssi, snr, false);
+
+    // Ensure that the static message is not re-used
+    readLoraBuffer.clear();
+    loraPhyMessage.clear();
+
+    // Re-enable continuous listening
     if (!isResponding) {
         Radio.Rx(0);
     }
+}
+
+bool HandleLoRaProtoMulticastPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
+    if (message.has_rlncRemoteFlashStopCommand()) {
+        StopRlncSessionFromFlash();
+    } else if (message.has_deviceConfiguration() && IsSending()) {
+        // Broadcast emergency stop command
+        StopPeriodicTransmit();
+    } 
+    // else if (message.has_forwardExperimentCommand()) {
+        // auto msg = message.get_forwardExperimentCommand();
+        // auto slaveCommand = msg.get_slaveCommand();
+        // Debug this before enabling it
+        // if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
+        //     ClearMeasurements();
+        // }
+    // }
+    
+    HandleRlncCommand(message);
+
+    return false;
 }
 
 /**
@@ -124,79 +171,46 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
  *
  */
 bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
-    auto hasResponseTx = false;
-
-    // Debug whether this was multicast or not
-    bool isDeviceId = IsDeviceId(message.get_DeviceId());
-    bool isMulticast = message.get_IsMulticast();
-    if (isMulticast) {
-        UartDebug("MC", isDeviceId + 200, 2);
-
-        // Only multicast is registered as measurement
-        auto sequenceNumber = message.get_CorrelationCode();
-        RegisterNewMeasurement(sequenceNumber, rssi, snr);
-    } else {
-        UartDebug("UC", isDeviceId + 100, 2);
-    }
-
-    // Exception for multicast stop command
-    if ((!isDeviceId || isMulticast) && message.has_deviceConfiguration()) {
-        auto deviceConf = message.get_deviceConfiguration();
+    if (message.has_deviceConfiguration()) {
+        // Periodic/sequence sending
         if (IsSending()) {
             StopPeriodicTransmit();
-        }
-    } else if (isDeviceId) {
-        if (message.has_deviceConfiguration()) {
+            UartDebug("DevConfStop", 0, 12);
+        } else {
             auto config = message.get_deviceConfiguration();
-            if (IsSending()) {
-                StopPeriodicTransmit();
-                UartDebug("DevConfStop", 0, 12);
-            } else {
-                SetTxConfig(config.get_transmitConfiguration());
-                ApplyAlwaysSendPeriodically(config);
-                UartDebug("DevConf", 0, 7);
-            }
-        } else if (message.has_forwardExperimentCommand()) {
-            auto msg = message.get_forwardExperimentCommand();
-            auto slaveCommand = msg.get_slaveCommand();
-            if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
-                ClearMeasurements();
-            }
-            
-            // Not built yet
-            // if (slaveCommand == ForwardExperimentCommand::SlaveCommand::StreamFlashContents) {
-            //     // TODO
-            // }
-
-            if (!isMulticast) {
-                UartDebug("LORA-ACK", 1, 8);
-                hasResponseTx = true;
-                TransmitLoRaFlashInfo(true);
-            }
-        } else if (message.has_rlncRemoteFlashStartCommand()) {
-            if (IsRlncSessionStarted()) {
-                StopRlncSessionFromFlash();
-            } else {
-                StartRlncSessionFromFlash(message.get_rlncRemoteFlashStartCommand());
-            }
-            SendLoRaRlncSessionResponse();
-            hasResponseTx = true;
-        } else if (message.has_rlncQueryRemoteFlashCommand()) {
-            SendLoRaRlncSessionResponse();
-            hasResponseTx = true;
+            SetTxConfig(config.get_transmitConfiguration());
+            ApplyAlwaysSendPeriodically(config);
+            UartDebug("DevConf", 0, 7);
         }
-        // Not built yet
-        // else if (message.has_measurementStreamRequest()) {
-        // TODO filter based on device id
-        // StreamMeasurements();
-        // }
+        return false;
+    } else if (message.has_forwardExperimentCommand()) {
+        auto msg = message.get_forwardExperimentCommand();
+        auto slaveCommand = msg.get_slaveCommand();
+        if (slaveCommand == ForwardExperimentCommand::SlaveCommand::ClearFlash) {
+            ClearMeasurements();
+        }
+
+        UartDebug("LORA-ACK", 1, 8);
+        TransmitLoRaFlashInfo(true);
+        return true;
+    } else if (message.has_rlncRemoteFlashStartCommand()) {
+        if (IsRlncSessionStarted()) {
+            StopRlncSessionFromFlash();
+        }
+
+        StartRlncSessionFromFlash(message.get_rlncRemoteFlashStartCommand());
+        SendLoRaRlncSessionResponse();
+        return true;
+    } else if (message.has_rlncQueryRemoteFlashCommand()) {
+        SendLoRaRlncSessionResponse();
+        return true;
     }
 
-    if (isMulticast && message.has_rlncRemoteFlashStopCommand()) {
-        StopRlncSessionFromFlash();
-    }
+    HandleRlncCommand(message);
+    return false;
+}
 
-    // MC or UC work the same
+bool HandleRlncCommand(LORA_MSG_TEMPLATE& message) {
     if (message.has_rlncInitConfigCommand()) {
         auto initConfigCommand = message.mutable_rlncInitConfigCommand();
         decoder.InitRlncDecodingSession(initConfigCommand);
@@ -207,16 +221,11 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         decoder.ProcessRlncFragment(message);
     } else if (message.has_rlncTerminationCommand()) {
         decoder.TerminateRlnc(message.get_rlncTerminationCommand());
+    } else {
+        return false;
     }
 
-    // Send the RX event back over UART (if enabled)
-    UartSendLoRaRx(message, rssi, snr, false);
-
-    // Ensure that the message is not re-used
-    readLoraBuffer.clear();
-    message.clear();
-
-    return hasResponseTx;
+    return true;
 }
 
 void OnRxTimeout(void) {
