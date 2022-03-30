@@ -94,7 +94,7 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
     deviceId0Filter = command.get_DeviceId0();
     isMulticastFilter = command.get_SetIsMulticast();
 
-    // Save the overridden reception config
+    // Save the overridden reception and debug config
     auto& mutableInitCommand = initCommand.mutable_rlncInitConfigCommand();
     mutableInitCommand.set_receptionRateConfig(command.get_receptionRateConfig());
     mutableInitCommand.set_DebugFragmentUart(command.get_DebugFragmentUart());
