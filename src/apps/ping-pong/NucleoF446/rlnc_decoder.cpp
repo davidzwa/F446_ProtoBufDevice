@@ -4,6 +4,7 @@
 #include "cli.h"
 #include "delay.h"
 #include "utilities.h"
+#include "utils.h"
 
 unsigned int prim_poly = 0x11D;
 galois::GaloisField gf(8, prim_poly);
@@ -52,7 +53,8 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
 
 void RlncDecoder::ReserveGenerationStorage() {
     ClearDecodingMatrix();
-    receivedFragments = 0;
+    receivedGenFragments = 0;
+    missedGenFragments = 0;
 
     // We only need independent/innovative packets which is at most min(generation_size, left_frames)
     auto fragmentsNeeded = GetEncodingVectorLength();
@@ -120,9 +122,24 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if (generationSucceeded) return;
-   
+
     bool willDropPacketByRng = DecidePacketErrorDroppage(false);
     if (willDropPacketByRng) return;
+
+    uint32_t correlationCode = message.get_CorrelationCode();
+    uint32_t tempGenerationIndex = 0;
+    uint32_t tempFragmentIndex = 0;
+    DecodeRlncFragmentIndex(correlationCode, &tempFragmentIndex, &tempGenerationIndex);
+
+    if ((uint8_t)tempGenerationIndex != generationIndex) {
+        UartDebug("RLNC_LAG_GEN", generationIndex, 12);
+        generationSucceeded = false;
+        ReserveGenerationStorage();
+    }
+    if (tempFragmentIndex > receivedGenFragments + missedGenFragments) {
+        missedGenFragments += tempFragmentIndex - receivedGenFragments + missedGenFragments;
+        UartDebug("RLNC_LAG_FRAG", receivedGenFragments, 13);
+    }
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
@@ -156,7 +173,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     uint8_t crc2 = ComputeChecksum(decodingMatrix[rowIndex].data(), decodingMatrix[0].size());
     DecodingUpdate decodingUpdate;
     decodingUpdate.set_RankProgress(DetermineNextInnovativeRowIndex());
-    decodingUpdate.set_ReceivedFragments(receivedFragments);
+    decodingUpdate.set_ReceivedFragments(receivedGenFragments);
+    decodingUpdate.set_MissedGenFragments(missedGenFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
     decodingUpdate.set_UsedLfsrState(lfsrResetState);
@@ -177,7 +195,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     DecodeFragments(result);
 
     // Process the results - if any
-    if (receivedFragments >= encodingColCount) {
+    if (receivedGenFragments >= encodingColCount) {
         // Enough packets have arrived to attempt decoding with high probability
         // DecodeFragments(result);
 
@@ -265,7 +283,7 @@ void RlncDecoder::StoreDecodingResult(DecodingResult& decodingResult) {
 }
 
 uint8_t RlncDecoder::AddFrameAsMatrixRow(vector<SYMB>& row) {
-    receivedFragments++;
+    receivedGenFragments++;
 
     auto innovativeRow = DetermineNextInnovativeRowIndex();
     if (innovativeRow > this->decodingMatrix.size()) {
@@ -303,7 +321,7 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
         if (currentRowAllZeroes) return i;
     }
 
-    if (receivedFragments < encodingVectorLength) {
+    if (receivedGenFragments < encodingVectorLength) {
         ThrowDecodingError(DecodingError::ILLEGAL_RANK_STATE);
         throw "Reached full-rank when insufficient packets were received";
     }

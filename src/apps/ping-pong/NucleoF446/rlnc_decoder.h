@@ -59,7 +59,8 @@ class RlncDecoder {
     LFSR* lfsr;
     uint8_t generationIndex;
     bool generationSucceeded;
-    uint8_t receivedFragments;
+    uint16_t receivedGenFragments;
+    uint16_t missedGenFragments;
     bool terminated;
     vector<vector<galois::GFSymbol>> decodingMatrix;
 };
