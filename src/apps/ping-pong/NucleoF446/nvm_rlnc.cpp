@@ -15,12 +15,11 @@
 
 using namespace std;
 
-// #define DEBUG_THROW
-// Flash bank 5
-#define NVM_PAGE (7)
+#define NVM_PAGE (7)  // Flash bank 7
 NvmHandle NvmRlnc(NVM_PAGE);
 
 void TimerDelayAsync();
+static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message);
 static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationIndex);
 static void PrepareNewUpdateCommand(uint32_t nextGenerationIndex);
 static uint32_t CalculateGenerationBaseFrameCount(uint32_t generationIndex);
@@ -33,9 +32,6 @@ static uint32_t GetGenerationCount();
 static const RlncInitConfigCommand& GetConfig();
 
 vector<uint32_t> generationStartAddresses;
-uint32_t generationStartAddress8 = 0;
-uint32_t initSize8 = 0;
-uint32_t termSize8 = 0;
 
 ProtoReadBuffer flashReadBuffer;
 LoRaMessage<MAX_LORA_BYTES> initCommand;         // Fixed command
@@ -76,8 +72,8 @@ bool nextActionReady = false;
 uint32_t currentGenerationIndex = 0;
 uint32_t currentFragmentIndex = 0;
 uint32_t currentTimerPeriod = 0;
-uint32_t currentDeviceId0 = 0;
-bool currentSetIsMulticast = false;
+uint32_t deviceId0Filter = 0;
+bool isMulticastFilter = false;
 uint16_t state = RlncFlashState::UNSCANNED;
 uint16_t sessionState = RlncSessionState::IDLE;
 
@@ -94,21 +90,25 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 
     SetTxConfig(command.get_transmitConfiguration());
 
-    initCommand
-        .mutable_rlncInitConfigCommand()
-        .set_receptionRateConfig(command.get_receptionRateConfig());
+    // Set message control plane filter
+    deviceId0Filter = command.get_DeviceId0();
+    isMulticastFilter = command.get_SetIsMulticast();
+
+    // Save the overridden reception and debug config
+    auto& mutableInitCommand = initCommand.mutable_rlncInitConfigCommand();
+    mutableInitCommand.set_receptionRateConfig(command.get_receptionRateConfig());
+    mutableInitCommand.set_DebugFragmentUart(command.get_DebugFragmentUart());
+    mutableInitCommand.set_DebugMatrixUart(command.get_DebugMatrixUart());
+    UartDebug("RLNC", 0, 4);
 
     sessionState = RlncSessionState::PRE_INIT;
     currentFragmentIndex = 0;
     currentGenerationIndex = 0;
 
-    // TODO apply below
-    currentDeviceId0 = command.get_DeviceId0();
-    // TODO apply below
-    currentSetIsMulticast = command.get_SetIsMulticast();
+    // Set timer period and trigger it
     currentTimerPeriod = command.get_TimerDelay();
-    UartDebug("RLNC", 0, 4);
     TimerDelayAsync();
+
     return 0x00;
 }
 
@@ -124,15 +124,14 @@ uint16_t ProgressRlncSession() {
 
     auto generationCount = GetGenerationCount();
     if (sessionState == RlncSessionState::PRE_INIT) {
-        TransmitLoRaMessage(initCommand);
+        TransmitLoRaMessageWithDeviceFilter(initCommand);
         UartDebug("RLNC", 2, 4);
         sessionState = RlncSessionState::IN_GENERATION;
     } else if (sessionState == RlncSessionState::IN_GENERATION) {
-        // TODO validate fragment makes sense
         LoadCurrentFragment(currentFragmentIndex, currentGenerationIndex);
 
         // Transmit fragment
-        TransmitLoRaMessage(currentFragment);
+        TransmitLoRaMessageWithDeviceFilter(currentFragment);
         UartDebug("RLNC", 3, 4);
 
         // Check if done with generation and not in last generation
@@ -151,11 +150,11 @@ uint16_t ProgressRlncSession() {
         currentGenerationIndex++;
         currentFragmentIndex = 0;
         PrepareNewUpdateCommand(currentGenerationIndex);
-        TransmitLoRaMessage(updateCommand);
+        TransmitLoRaMessageWithDeviceFilter(updateCommand);
         sessionState = RlncSessionState::IN_GENERATION;
         UartDebug("RLNC", 4, 4);
     } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
-        TransmitLoRaMessage(terminationCommand);
+        TransmitLoRaMessageWithDeviceFilter(terminationCommand);
         sessionState = RlncSessionState::POST_TERMINATION;
         UartDebug("RLNC", 0xFE, 4);
     } else if (sessionState == RlncSessionState::POST_TERMINATION) {
@@ -188,8 +187,8 @@ void SendLoRaRlncSessionResponse() {
     response.set_RlncFlashState(state);
     response.set_RlncSessionState(sessionState);
 
-    response.set_CurrentDeviceId0(currentDeviceId0);
-    response.set_CurrentSetIsMulticast(currentSetIsMulticast);
+    response.set_CurrentDeviceId0(deviceId0Filter);
+    response.set_CurrentSetIsMulticast(isMulticastFilter);
     response.set_CurrentTimerDelay(GetCurrentTimerPeriod());
 
     response.set_CurrentTxPower(GetTxPower());
@@ -217,8 +216,19 @@ void TimerDelayAsync() {
     TimerStart(&rlncDelayTimer);
 }
 
+static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message) {
+    message.set_DeviceId(deviceId0Filter);
+    message.set_IsMulticast(isMulticastFilter);
+
+    TransmitLoRaMessage(message);
+}
+
 uint16_t ValidateRlncFlashState() {
+    uint32_t currentAddress8;
     uint32_t pageHeader;
+    uint32_t generationStartAddress8 = 0;
+    uint32_t initSize8 = 0;
+    uint32_t termSize8 = 0;
     auto readStatus = NvmRlnc.Read32(SECTOR_HEADER, &pageHeader);
     if (readStatus != 0x00) {
         return state = READ_FAIL_SECTOR;
@@ -244,7 +254,7 @@ uint16_t ValidateRlncFlashState() {
         return state = READ_FAIL_TERM;
     }
     if (termSize8 > TERM_SIZE_LIMIT) {
-        return state = CORRUPT_INIT_SIZE;
+        return state = CORRUPT_TERM_SIZE;
     }
 
     // Read and deserialize Initiation command
@@ -281,8 +291,10 @@ uint16_t ValidateRlncFlashState() {
     auto initConfig = GetConfig();
     auto generationCount = GetGenerationCount();
     generationStartAddresses.clear();
+    generationStartAddresses.reserve(generationCount);
     auto generationSize = initConfig.get_GenerationSize();
     auto generationRedundancySize = initConfig.get_GenerationRedundancySize();
+    
     uint16_t maxGenerationSize = (uint16_t)generationSize + (uint16_t)generationRedundancySize;
     auto frameSize = GetFrameSize();
     if ((uint8_t)frameSize > FRAG_SIZE_LIMIT) {
@@ -291,13 +303,13 @@ uint16_t ValidateRlncFlashState() {
 
     // Update the 8-bit address where repeated data starts
     generationStartAddress8 = INIT_START8 + initSize8 + termSize8;
-    auto currentAddress8 = generationStartAddress8;
+    currentAddress8 = generationStartAddress8;
 
-    uint8_t currentGenerationPrefix[GEN_PREFIX_BYTES];
-    uint8_t currentUpdateCmdPrefix[UPDATE_PREFIX_BYTES];
+    uint8_t currentGenerationPrefix[GEN_PREFIX_BYTES] = {};
+    uint8_t currentUpdateCmdPrefix[UPDATE_PREFIX_BYTES] = {};
     uint16_t currentGenerationSize = 0;
-    uint8_t currentFragmentMeta[FRAG_META_BYTES];
-    uint8_t currentFragment[(size_t)frameSize];
+    uint8_t currentFragmentMeta[FRAG_META_BYTES] = {};
+    uint8_t currentFragment[(size_t)frameSize] = {};
     uint32_t currentSequenceNumber = 0;
     uint16_t result;
     for (size_t i = 0; i < generationCount; i++) {
@@ -329,12 +341,13 @@ uint16_t ValidateRlncFlashState() {
         }
 
         // Advance beyond generation prefix
-        generationStartAddresses.push_back(currentAddress8);
+        generationStartAddresses[i] = currentAddress8;
         currentAddress8 += GEN_PREFIX_BYTES;
 
         for (size_t j = 0; j < currentGenerationSize; j++) {
             // Read frag metadata
-            result = NvmRlnc.ReadBuffer8(currentAddress8, currentFragmentMeta, FRAG_META_BYTES);
+            const uint32_t addressCopy = currentAddress8;
+            result = NvmRlnc.ReadBuffer8(addressCopy, currentFragmentMeta, FRAG_META_BYTES);
             if (result != 0x00) {
                 return state = READ_FAIL_FRAG_META + currentSequenceNumber;
             }
@@ -467,7 +480,4 @@ static uint32_t GetGenerationCount() {
 
 static const RlncInitConfigCommand& GetConfig() {
     return initCommand.get_rlncInitConfigCommand();
-}
-
-static void DebugRlncCode(uint32_t code) {
 }

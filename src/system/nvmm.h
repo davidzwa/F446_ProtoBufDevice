@@ -44,12 +44,12 @@ extern "C" {
 class NvmHandle {
    public:
     NvmHandle(uint8_t pageId);
-    uint16_t Write(uint16_t address, uint32_t variable);
+    uint16_t Write(const uint16_t address, uint32_t variable);
 
-    uint16_t ReadBuffer8(uint32_t address, uint8_t* buffer, size_t length);
-    uint16_t Read8(uint32_t address, uint8_t* variable);
-    uint16_t Read16(uint32_t address, uint16_t* variable);
-    uint16_t Read32(uint32_t address, uint32_t* variable);
+    uint16_t ReadBuffer8(const uint32_t address, uint8_t* buffer, size_t length);
+    uint16_t Read8(const uint32_t address, uint8_t* variable);
+    uint16_t Read16(const uint32_t address, uint16_t* variable);
+    uint16_t Read32(const uint32_t address, uint32_t* variable);
     bool Clear();
 
    private:

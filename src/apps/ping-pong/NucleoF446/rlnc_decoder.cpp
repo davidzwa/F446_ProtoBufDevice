@@ -104,11 +104,11 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
         return false;
     }
 
-    auto approxPer = receptionConfig.get_PacketErrorRate();
-    auto fixedPer = approxPer * 10000;
+    float approxPer = receptionConfig.get_PacketErrorRate();
+    int32_t fixedPer = (int32_t)(approxPer * 10000.0f);
     if (approxPer > 0.0000001f && approxPer < 0.999999f) {
-        auto randomValue = randr(0, 10000);
-        auto willDropPacket = randomValue < fixedPer;
+        int32_t randomValue = randr(0, 10000);
+        bool willDropPacket = randomValue < fixedPer;
         if (willDropPacket) {
             UartDebug("RLNC_RNG", randomValue, 8);
         }
@@ -120,7 +120,9 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if (generationSucceeded) return;
-    if (DecidePacketErrorDroppage(true)) return;
+   
+    bool willDropPacketByRng = DecidePacketErrorDroppage(false);
+    if (willDropPacketByRng) return;
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();

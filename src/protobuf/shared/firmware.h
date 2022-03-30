@@ -621,6 +621,8 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
     }
 
     RlncRemoteFlashStartCommand(const RlncRemoteFlashStartCommand&& rhs ) noexcept
@@ -630,6 +632,8 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
     }
 
     ~RlncRemoteFlashStartCommand() override = default;
@@ -641,7 +645,9 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       RECEPTIONRATECONFIG = 3,
       TIMERDELAY = 4,
       SETISMULTICAST = 5,
-      DEVICEID0 = 6
+      DEVICEID0 = 6,
+      DEBUGMATRIXUART = 7,
+      DEBUGFRAGMENTUART = 8
     };
 
     RlncRemoteFlashStartCommand& operator=(const RlncRemoteFlashStartCommand& rhs)
@@ -651,6 +657,8 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       return *this;
     }
 
@@ -661,6 +669,8 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       set_TimerDelay(rhs.get_TimerDelay());
       set_SetIsMulticast(rhs.get_SetIsMulticast());
       set_DeviceId0(rhs.get_DeviceId0());
+      set_DebugMatrixUart(rhs.get_DebugMatrixUart());
+      set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       return *this;
     }
 
@@ -699,6 +709,20 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     inline const EmbeddedProto::uint32& get_DeviceId0() const { return DeviceId0_; }
     inline EmbeddedProto::uint32::FIELD_TYPE DeviceId0() const { return DeviceId0_.get(); }
 
+    inline void clear_DebugMatrixUart() { DebugMatrixUart_.clear(); }
+    inline void set_DebugMatrixUart(const EmbeddedProto::boolean& value) { DebugMatrixUart_ = value; }
+    inline void set_DebugMatrixUart(const EmbeddedProto::boolean&& value) { DebugMatrixUart_ = value; }
+    inline EmbeddedProto::boolean& mutable_DebugMatrixUart() { return DebugMatrixUart_; }
+    inline const EmbeddedProto::boolean& get_DebugMatrixUart() const { return DebugMatrixUart_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DebugMatrixUart() const { return DebugMatrixUart_.get(); }
+
+    inline void clear_DebugFragmentUart() { DebugFragmentUart_.clear(); }
+    inline void set_DebugFragmentUart(const EmbeddedProto::boolean& value) { DebugFragmentUart_ = value; }
+    inline void set_DebugFragmentUart(const EmbeddedProto::boolean&& value) { DebugFragmentUart_ = value; }
+    inline EmbeddedProto::boolean& mutable_DebugFragmentUart() { return DebugFragmentUart_; }
+    inline const EmbeddedProto::boolean& get_DebugFragmentUart() const { return DebugFragmentUart_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE DebugFragmentUart() const { return DebugFragmentUart_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -727,6 +751,16 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       if((0U != DeviceId0_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = DeviceId0_.serialize_with_id(static_cast<uint32_t>(id::DEVICEID0), buffer, false);
+      }
+
+      if((false != DebugMatrixUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DebugMatrixUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGMATRIXUART), buffer, false);
+      }
+
+      if((false != DebugFragmentUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = DebugFragmentUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGFRAGMENTUART), buffer, false);
       }
 
       return return_value;
@@ -765,6 +799,14 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
             return_value = DeviceId0_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::DEBUGMATRIXUART:
+            return_value = DebugMatrixUart_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DEBUGFRAGMENTUART:
+            return_value = DebugFragmentUart_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -799,6 +841,8 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       clear_TimerDelay();
       clear_SetIsMulticast();
       clear_DeviceId0();
+      clear_DebugMatrixUart();
+      clear_DebugFragmentUart();
 
     }
 
@@ -810,6 +854,8 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
       EmbeddedProto::uint32 TimerDelay_ = 0U;
       EmbeddedProto::boolean SetIsMulticast_ = false;
       EmbeddedProto::uint32 DeviceId0_ = 0U;
+      EmbeddedProto::boolean DebugMatrixUart_ = false;
+      EmbeddedProto::boolean DebugFragmentUart_ = false;
 
 };
 

@@ -14,5 +14,10 @@ rlnc_fixed4_50f_10b_fake_4gen_3red.bin
 - Corrected for final generation with probably less fragments
 
 rlnc_fixed5_50f_10b_fake_4gen_3red.bin
-W.I.P. !
 - Simplified update header with next generation index
+
+rlnc_fixed6_50f_10b_fake_4gen_3red.bin
+- Updated Init packet with reception config
+
+rlnc_fixed6b_50f_10b_fake_4gen_3red.bin
+- Removed correlation code and device id from termination packet
