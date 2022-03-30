@@ -32,9 +32,6 @@ static uint32_t GetGenerationCount();
 static const RlncInitConfigCommand& GetConfig();
 
 vector<uint32_t> generationStartAddresses;
-uint32_t generationStartAddress8 = 0;
-uint32_t initSize8 = 0;
-uint32_t termSize8 = 0;
 
 ProtoReadBuffer flashReadBuffer;
 LoRaMessage<MAX_LORA_BYTES> initCommand;         // Fixed command
@@ -228,6 +225,9 @@ static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message) {
 uint16_t ValidateRlncFlashState() {
     uint32_t currentAddress8;
     uint32_t pageHeader;
+    uint32_t generationStartAddress8 = 0;
+    uint32_t initSize8 = 0;
+    uint32_t termSize8 = 0;
     auto readStatus = NvmRlnc.Read32(SECTOR_HEADER, &pageHeader);
     if (readStatus != 0x00) {
         return state = READ_FAIL_SECTOR;
@@ -290,8 +290,10 @@ uint16_t ValidateRlncFlashState() {
     auto initConfig = GetConfig();
     auto generationCount = GetGenerationCount();
     generationStartAddresses.clear();
+    generationStartAddresses.reserve(generationCount);
     auto generationSize = initConfig.get_GenerationSize();
     auto generationRedundancySize = initConfig.get_GenerationRedundancySize();
+    
     uint16_t maxGenerationSize = (uint16_t)generationSize + (uint16_t)generationRedundancySize;
     auto frameSize = GetFrameSize();
     if ((uint8_t)frameSize > FRAG_SIZE_LIMIT) {
@@ -338,12 +340,13 @@ uint16_t ValidateRlncFlashState() {
         }
 
         // Advance beyond generation prefix
-        generationStartAddresses.push_back(currentAddress8);
+        generationStartAddresses[currentGenerationIndex] = currentAddress8;
         currentAddress8 += GEN_PREFIX_BYTES;
 
         for (size_t j = 0; j < currentGenerationSize; j++) {
             // Read frag metadata
-            result = NvmRlnc.ReadBuffer8(currentAddress8, currentFragmentMeta, FRAG_META_BYTES);
+            const uint32_t addressCopy = currentAddress8;
+            result = NvmRlnc.ReadBuffer8(addressCopy, currentFragmentMeta, FRAG_META_BYTES);
             if (result != 0x00) {
                 return state = READ_FAIL_FRAG_META + currentSequenceNumber;
             }
