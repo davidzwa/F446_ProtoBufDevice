@@ -68,6 +68,11 @@ def calc_optimal_frame_size(min_frag: int):
             added = math.floor((current_duration+pingslot_duration)/current_duration)
             # print("increase", added)
             current_frag += added
+        
+        if current_frag > 225:
+            current_frag = 225
+            current_duration = calc_lora_tpacket(current_frag)
+            return current_frag, current_duration
 
         print(f"frag {current_frag:.4f} {current_duration:.4f} {pingslot_duration:.4f}")
         last_duration = current_duration
