@@ -87,12 +87,12 @@ uint32_t InitRadioPhy() {
 }
 
 void OnTxDone(void) {
-    UartDebug("LORATX-DONE", 200, 11);
+    UartDebug("LORATX_DONE", 200, 11);
     Radio.Rx(0);
 }
 
 void OnTxTimeout(void) {
-    UartDebug("LORATX-TIMEOUT", 400, 14);
+    UartDebug("LORATX_TIMEOUT", 400, 14);
     Radio.Rx(0);
 }
 
@@ -101,7 +101,7 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     lastRssiValue = rssi;
     lastSnrValue = snr;
 
-    UartDebug("LORARX-DONE", 0, 11);
+    UartDebug("LORARX_DONE", 0, 11);
 
     for (uint16_t i = 0; i < size; i++) {
         readLoraBuffer.push(payload[i]);
@@ -109,7 +109,7 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     auto result = loraPhyMessage.deserialize(readLoraBuffer);
     if (result != ::EmbeddedProto::Error::NO_ERRORS) {
-        UartDebug("PROTO-LORA-FAIL", 401, 15);
+        UartDebug("PROTO_LORA_FAIL", 401, 15);
         Radio.Rx(0);
         return;
     }

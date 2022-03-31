@@ -123,14 +123,14 @@ void UartISR(UartNotifyId_t id) {
         if (!checksumSuccess) {
             // Process CRC failure
             UartDebug((const char*)readBuffer.get_data_array(), (uint32_t)checksumResult, readBuffer.get_size());
-            UartDebug("CRC-FAIL", 400, 8);
+            UartDebug("CRC_FAIL", 400, 8);
         } else {
             auto deserialize_status = uartCommand.deserialize(readBuffer);
             if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
                 // Let main loop pick it up
                 newCommandReceived = true;
             } else {
-                UartDebug("PROTO-FAIL", (uint32_t)deserialize_status, 10);
+                UartDebug("PROTO_FAIL", (uint32_t)deserialize_status, 10);
             }
         }
 
@@ -211,7 +211,7 @@ void UartResponseSend(UartResponse<PROTO_LIMITS>& response) {
     if (result == ::EmbeddedProto::Error::NO_ERRORS) {
         UartSend(writeBuffer.get_data(), writeBuffer.get_size());
     } else {
-        UartDebug("PROTO-FAIL", 404, 10);
+        UartDebug("PROTO_FAIL_TX", 404, 10);
     }
     writeBuffer.clear();
 }

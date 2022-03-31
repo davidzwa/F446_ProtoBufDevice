@@ -60,6 +60,7 @@ class RlncDecoder {
     LFSR* lfsr;
     uint8_t generationIndex;
     bool generationSucceeded;
+    bool atLeastGenerationResultSent;
     uint16_t receivedGenFragments;
     uint16_t missedGenFragments;
     bool terminated;

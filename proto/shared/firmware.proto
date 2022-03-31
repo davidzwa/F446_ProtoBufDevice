@@ -110,6 +110,11 @@ message DecodingResult {
     // We check the internal payload
     uint32 FirstDecodedNumber = 3;
     uint32 LastDecodedNumber = 4;
+
+    // Copy from DecodingUpdate
+    uint32 ReceivedFragments = 5;
+    uint32 MissedGenFragments = 6;
+    uint32 CurrentGenerationIndex = 7;
 }
 
 message DecodingMatrix {
