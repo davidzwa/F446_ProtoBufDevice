@@ -2180,6 +2180,9 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       set_MatrixRank(rhs.get_MatrixRank());
       set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
       set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
     }
 
     DecodingResult(const DecodingResult&& rhs ) noexcept
@@ -2188,6 +2191,9 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       set_MatrixRank(rhs.get_MatrixRank());
       set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
       set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
     }
 
     ~DecodingResult() override = default;
@@ -2198,7 +2204,10 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       SUCCESS = 1,
       MATRIXRANK = 2,
       FIRSTDECODEDNUMBER = 3,
-      LASTDECODEDNUMBER = 4
+      LASTDECODEDNUMBER = 4,
+      RECEIVEDFRAGMENTS = 5,
+      MISSEDGENFRAGMENTS = 6,
+      CURRENTGENERATIONINDEX = 7
     };
 
     DecodingResult& operator=(const DecodingResult& rhs)
@@ -2207,6 +2216,9 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       set_MatrixRank(rhs.get_MatrixRank());
       set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
       set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       return *this;
     }
 
@@ -2216,6 +2228,9 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       set_MatrixRank(rhs.get_MatrixRank());
       set_FirstDecodedNumber(rhs.get_FirstDecodedNumber());
       set_LastDecodedNumber(rhs.get_LastDecodedNumber());
+      set_ReceivedFragments(rhs.get_ReceivedFragments());
+      set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       return *this;
     }
 
@@ -2247,6 +2262,27 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_LastDecodedNumber() const { return LastDecodedNumber_; }
     inline EmbeddedProto::uint32::FIELD_TYPE LastDecodedNumber() const { return LastDecodedNumber_.get(); }
 
+    inline void clear_ReceivedFragments() { ReceivedFragments_.clear(); }
+    inline void set_ReceivedFragments(const EmbeddedProto::uint32& value) { ReceivedFragments_ = value; }
+    inline void set_ReceivedFragments(const EmbeddedProto::uint32&& value) { ReceivedFragments_ = value; }
+    inline EmbeddedProto::uint32& mutable_ReceivedFragments() { return ReceivedFragments_; }
+    inline const EmbeddedProto::uint32& get_ReceivedFragments() const { return ReceivedFragments_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE ReceivedFragments() const { return ReceivedFragments_.get(); }
+
+    inline void clear_MissedGenFragments() { MissedGenFragments_.clear(); }
+    inline void set_MissedGenFragments(const EmbeddedProto::uint32& value) { MissedGenFragments_ = value; }
+    inline void set_MissedGenFragments(const EmbeddedProto::uint32&& value) { MissedGenFragments_ = value; }
+    inline EmbeddedProto::uint32& mutable_MissedGenFragments() { return MissedGenFragments_; }
+    inline const EmbeddedProto::uint32& get_MissedGenFragments() const { return MissedGenFragments_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE MissedGenFragments() const { return MissedGenFragments_.get(); }
+
+    inline void clear_CurrentGenerationIndex() { CurrentGenerationIndex_.clear(); }
+    inline void set_CurrentGenerationIndex(const EmbeddedProto::uint32& value) { CurrentGenerationIndex_ = value; }
+    inline void set_CurrentGenerationIndex(const EmbeddedProto::uint32&& value) { CurrentGenerationIndex_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentGenerationIndex() { return CurrentGenerationIndex_; }
+    inline const EmbeddedProto::uint32& get_CurrentGenerationIndex() const { return CurrentGenerationIndex_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentGenerationIndex() const { return CurrentGenerationIndex_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -2270,6 +2306,21 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       if((0U != LastDecodedNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = LastDecodedNumber_.serialize_with_id(static_cast<uint32_t>(id::LASTDECODEDNUMBER), buffer, false);
+      }
+
+      if((0U != ReceivedFragments_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ReceivedFragments_.serialize_with_id(static_cast<uint32_t>(id::RECEIVEDFRAGMENTS), buffer, false);
+      }
+
+      if((0U != MissedGenFragments_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = MissedGenFragments_.serialize_with_id(static_cast<uint32_t>(id::MISSEDGENFRAGMENTS), buffer, false);
+      }
+
+      if((0U != CurrentGenerationIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentGenerationIndex_.serialize_with_id(static_cast<uint32_t>(id::CURRENTGENERATIONINDEX), buffer, false);
       }
 
       return return_value;
@@ -2302,6 +2353,18 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
 
           case id::LASTDECODEDNUMBER:
             return_value = LastDecodedNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RECEIVEDFRAGMENTS:
+            return_value = ReceivedFragments_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::MISSEDGENFRAGMENTS:
+            return_value = MissedGenFragments_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTGENERATIONINDEX:
+            return_value = CurrentGenerationIndex_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -2337,6 +2400,9 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       clear_MatrixRank();
       clear_FirstDecodedNumber();
       clear_LastDecodedNumber();
+      clear_ReceivedFragments();
+      clear_MissedGenFragments();
+      clear_CurrentGenerationIndex();
 
     }
 
@@ -2347,6 +2413,9 @@ class DecodingResult final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 MatrixRank_ = 0U;
       EmbeddedProto::uint32 FirstDecodedNumber_ = 0U;
       EmbeddedProto::uint32 LastDecodedNumber_ = 0U;
+      EmbeddedProto::uint32 ReceivedFragments_ = 0U;
+      EmbeddedProto::uint32 MissedGenFragments_ = 0U;
+      EmbeddedProto::uint32 CurrentGenerationIndex_ = 0U;
 
 };
 
