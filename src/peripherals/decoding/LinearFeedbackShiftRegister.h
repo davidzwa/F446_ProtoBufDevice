@@ -2,17 +2,19 @@
 #define LINEARFEEDBACKSHIFTREGISTER_H__
 
 #include <stdint.h>
+
 #include <vector>
 
 using namespace std;
 
 /**
  * @brief fixated LFSR verified with C# unit tests
- * 
+ *
  */
 class LFSR {
    public:
     LFSR(uint8_t seed);
+    void ResetNewSeed(uint8_t seed);
     void Reset();
     uint8_t Generate();
     void GenerateMany(vector<uint8_t>& output, uint16_t count);

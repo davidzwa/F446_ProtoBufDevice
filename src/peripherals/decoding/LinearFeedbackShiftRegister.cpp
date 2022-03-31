@@ -1,10 +1,22 @@
 
 #include "LinearFeedbackShiftRegister.h"
 
+#include "utilities.h"
+
 using namespace std;
 
 LFSR::LFSR(uint8_t seed) {
     Seed = seed;
+    this->Reset();
+}
+
+/**
+ * @brief Reset the LFSR including a new seed as starting point
+ * 
+ * @param seed 
+ */
+void LFSR::ResetNewSeed(uint8_t seed) {
+    this->Seed = seed;
     this->Reset();
 }
 
@@ -20,8 +32,9 @@ void LFSR::GenerateMany(vector<uint8_t>& output, uint16_t count) {
 }
 
 uint8_t LFSR::Generate() {
-    if (GeneratedValuesCount > 255)
-        return 0x00;
+    if (GeneratedValuesCount > 255){
+        ThrowMcuBreakpoint();
+    }
 
     /* Must be 8-bit to allow bit<<7 later in the code */
     /* taps: 8 4 3 1; feedback polynomial: x^8 + x^4 + x^3 + x^1 + 1 */

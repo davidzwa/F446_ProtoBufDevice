@@ -41,7 +41,7 @@ extern "C" {
 
 class ProtoWriteBuffer : public ::EmbeddedProto::WriteBufferInterface {
     //! Store a maximum of MAX_SIZE bytes in the buffer
-    static constexpr uint32_t MAX_SIZE = 100;
+    static constexpr uint32_t MAX_SIZE = 200;
 
    public:
     ProtoWriteBuffer() = default;
