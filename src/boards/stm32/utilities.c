@@ -130,3 +130,7 @@ uint32_t Crc32Update(uint32_t crcInit, uint8_t *buffer, uint16_t length) {
 uint32_t Crc32Finalize(uint32_t crc) {
     return ~crc;
 }
+
+void ThrowMcuBreakpoint() {
+    __asm__ __volatile__("bkpt");
+}

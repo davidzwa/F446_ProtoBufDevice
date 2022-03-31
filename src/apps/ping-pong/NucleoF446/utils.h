@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include "firmware.h"
+#include "utilities.h"
 
 #ifndef UTILS_H__
 #define UTILS_H__

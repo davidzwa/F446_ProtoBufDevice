@@ -209,6 +209,8 @@ void BoardCriticalSectionBegin( uint32_t *mask );
  */
 void BoardCriticalSectionEnd( uint32_t *mask );
 
+void ThrowMcuBreakpoint();
+
 #ifdef __cplusplus
 }
 #endif
