@@ -437,8 +437,6 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
     bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
     if (success) {
         generationSucceeded = true;
-    } else {
-        //
     }
 
     result.set_Success(success);
