@@ -112,7 +112,17 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
         int32_t randomValue = randr(0, 10000);
         bool willDropPacket = randomValue < fixedPer;
         if (willDropPacket) {
-            UartDebug("RLNC_RNG", randomValue, 8);
+            if (isUpdatePacket) {
+                UartDebug("RLNC_RNG_DROP", 0, 14);
+            }
+            else {
+                UartDebug("RLNC_RNG_DROP", randomValue, 14);
+            }
+        }
+        else {
+            if (!isUpdatePacket) {
+                UartDebug("RLNC_RNG_ACPT", randomValue, 14);
+            }
         }
         return willDropPacket;
     }
@@ -121,15 +131,16 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
 }
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
-    if (generationSucceeded) return;
-
     bool willDropPacketByRng = DecidePacketErrorDroppage(false);
     if (willDropPacketByRng) return;
 
+    if (generationSucceeded) return;
+
     uint32_t correlationCode = message.get_CorrelationCode();
+    uint32_t generationSize = rlncConfig.get_GenerationSize() + rlncConfig.get_GenerationRedundancySize();
     uint32_t tempGenerationIndex = 0;
     uint32_t tempFragmentIndex = 0;
-    DecodeRlncFragmentIndex(correlationCode, &tempFragmentIndex, &tempGenerationIndex);
+    DecodeRlncSequenceNumber(correlationCode, generationSize, &tempFragmentIndex, &tempGenerationIndex);
 
     uint8_t missedGenerations = (uint8_t)tempGenerationIndex - generationIndex;
     if (missedGenerations > 0) {

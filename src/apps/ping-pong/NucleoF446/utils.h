@@ -11,9 +11,7 @@
  **/
 bool IsValidSpreadingFactor(uint8_t spreadingFactor);
 
-uint32_t EncodeRlncCorrelationCode(uint32_t generationIndex, uint32_t fragmentIndex);
-
-void DecodeRlncFragmentIndex(uint32_t code, uint32_t* fragmentIndex, uint32_t* generationIndex);
+void DecodeRlncSequenceNumber(uint32_t code, uint32_t generationTotalSize, uint32_t* fragmentIndex, uint32_t* generationIndex);
 
 DeviceId GetDeviceId();
 

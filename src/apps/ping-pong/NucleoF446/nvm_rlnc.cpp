@@ -423,8 +423,9 @@ static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationI
     RlncEncodedFragment fragment;
     fragment.set_LfsrState(fragmentMetaBuffer[LFSR_BYTE]);
 
+    uint16_t sequenceNumber = ((uint16_t)fragmentMetaBuffer[SEQ_BYTE] << 8) + fragmentMetaBuffer[SEQ_BYTE2];
     currentFragment.clear();
-    currentFragment.set_CorrelationCode(EncodeRlncCorrelationCode(currentGenerationIndex, currentFragmentIndex));
+    currentFragment.set_CorrelationCode(sequenceNumber);
     currentFragment.set_rlncEncodedFragment(fragment);
     currentFragment.mutable_Payload().set(fragmentBuffer, frameSize);
 
