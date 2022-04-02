@@ -447,6 +447,9 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
     result.set_FirstDecodedNumber(firstNumber);
     result.set_LastDecodedNumber(lastNumber);
     UartSendDecodingResult(result);
+
+    // Clear the results after sending
+    result.clear();
 }
 
 void RlncDecoder::ThrowDecodingError(DecodingError error) {

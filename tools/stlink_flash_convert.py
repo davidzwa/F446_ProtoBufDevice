@@ -5,11 +5,12 @@ import numpy as np
 print(os.getcwd())
 
 # 128 64 32 16
-read_size = 1024 * 16
+# read_size = 1024 * 16
 # --serial 066BFF323338424E43042719
-subprocess.run(
-    f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08020000 131072", shell=True, check=True)
+# subprocess.run(
+#     f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08040000 131072", shell=True, check=True)
 
+rlnc_sequence_numbers = True
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
 PER_datasets = []
