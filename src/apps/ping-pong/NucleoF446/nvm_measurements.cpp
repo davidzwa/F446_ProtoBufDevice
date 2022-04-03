@@ -36,7 +36,7 @@ uint16_t AppendMeasurement(uint32_t value) {
 #endif
         return resultWrite;
     }
-    
+
     measurementCountState++;
 
     return 0x00;

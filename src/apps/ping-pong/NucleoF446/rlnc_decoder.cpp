@@ -112,7 +112,17 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
         int32_t randomValue = randr(0, 10000);
         bool willDropPacket = randomValue < fixedPer;
         if (willDropPacket) {
-            UartDebug("RLNC_RNG", randomValue, 8);
+            if (isUpdatePacket) {
+                UartDebug("RLNC_RNG_DROP", 0, 14);
+            } else {
+                UartDebug("RLNC_RNG_DROP", randomValue, 14);
+            }
+        } else {
+            if (!isUpdatePacket) {
+                UartDebug("RLNC_RNG_ACPT", randomValue, 14);
+            } else {
+                UartDebug("RLNC_RNG_ACPT", 0, 14);
+            }
         }
         return willDropPacket;
     }
@@ -121,29 +131,34 @@ bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
 }
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
-    if (generationSucceeded) return;
-
     bool willDropPacketByRng = DecidePacketErrorDroppage(false);
     if (willDropPacketByRng) return;
 
     uint32_t correlationCode = message.get_CorrelationCode();
+    uint32_t generationSize = rlncConfig.get_GenerationSize() + rlncConfig.get_GenerationRedundancySize();
+
+    // Parse the new generationIndex
     uint32_t tempGenerationIndex = 0;
     uint32_t tempFragmentIndex = 0;
-    DecodeRlncFragmentIndex(correlationCode, &tempFragmentIndex, &tempGenerationIndex);
+    DecodeRlncSequenceNumber(correlationCode, generationSize, &tempFragmentIndex, &tempGenerationIndex);
 
     uint8_t missedGenerations = (uint8_t)tempGenerationIndex - generationIndex;
     if (missedGenerations > 0) {
-        SendUartDecodingResult(lastDecodingResult);
+        // SendUartDecodingResult(lastDecodingResult);
         UartDebug("RLNC_LAG_GEN", missedGenerations, 12);
         generationSucceeded = false;
         generationIndex = tempGenerationIndex;
         ReserveGenerationStorage();
     }
+
+    if (generationSucceeded) return;
+
     uint32_t totalFragmentIndex = receivedGenFragments + missedGenFragments;
     if (tempFragmentIndex > totalFragmentIndex) {
         missedGenFragments += tempFragmentIndex - totalFragmentIndex;
         UartDebug("RLNC_LAG_FRAG", missedGenFragments, 13);
     }
+    
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
@@ -175,7 +190,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     }
 
     // Store the augmented matrix row
-    auto rowIndex = AddFrameAsMatrixRow(augVector);
+    uint8_t rowIndex = AddFrameAsMatrixRow(augVector);
 
     // Debug previous decoding action and any new packet
     uint8_t crc1 = ComputeChecksum(decodingMatrix[0].data(), decodingMatrix[0].size());
@@ -199,7 +214,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         UartSendDecodingUpdateWithoutPayload(decodingUpdate);
     }
 
-    // Decoding should not fail when incompleteclc
+    // Decoding should not fail when incomplete
     DecodeFragments(lastDecodingResult);
 
     // Process the results - if any
@@ -226,23 +241,22 @@ void RlncDecoder::DecodeFragments(DecodingResult& result) {
  * @param rlncStateUpdate
  */
 void RlncDecoder::UpdateRlncDecodingState(const RlncStateUpdate& rlncStateUpdate) {
-    if (DecidePacketErrorDroppage(true)) return;
+    // if (DecidePacketErrorDroppage(true)) return;
 
     // Skipped or failed generations also need tracking
-    uint32_t newGenerationIndex = rlncStateUpdate.get_GenerationIndex();
-    if (newGenerationIndex - generationIndex > 1 || !generationSucceeded) {
-        SendUartDecodingResult(lastDecodingResult);
-    }
+    // uint32_t newGenerationIndex = rlncStateUpdate.get_GenerationIndex();
+    // if (newGenerationIndex - generationIndex > 1 || !generationSucceeded) {
+    //     SendUartDecodingResult(lastDecodingResult);
+    // }
 
     // Update state
-    generationIndex = newGenerationIndex;
-    generationSucceeded = false;
-    atLeastGenerationResultSent = false;
+    // generationIndex = newGenerationIndex;
+    // generationSucceeded = false;
 
-    lfsr->Reset();
+    // lfsr->Reset();
 
     // Prepare for next generation, reset state
-    ReserveGenerationStorage();
+    // ReserveGenerationStorage();
 }
 
 void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCommand) {
@@ -307,11 +321,12 @@ uint8_t RlncDecoder::DetermineNextInnovativeRowIndex() {
         if (currentRowAllZeroes) return i;
     }
 
+    // This may not happen because empty rows should have returned lower rank than full rank
     if (receivedGenFragments < encodingVectorLength) {
         ThrowDecodingError(DecodingError::ILLEGAL_RANK_STATE);
     }
 
-    // If no row is all-0 we have full rank - we return the effective generation size
+    // If no row is all-0 we have full rank - we return the effective generation size (as index)
     return encodingVectorLength - 1;
 }
 
@@ -437,8 +452,6 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
     bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
     if (success) {
         generationSucceeded = true;
-    } else {
-        //
     }
 
     result.set_Success(success);
@@ -449,13 +462,15 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
     result.set_FirstDecodedNumber(firstNumber);
     result.set_LastDecodedNumber(lastNumber);
     UartSendDecodingResult(result);
+
+    // Clear the results after sending for better state management
+    result.clear();
 }
 
 void RlncDecoder::ThrowDecodingError(DecodingError error) {
+    ThrowMcuBreakpoint();
     while (1) {
         UartDebug("RLNC_ERR", error, 8);
         DelayMs(2000);
     }
-
-    ThrowMcuBreakpoint();
 }

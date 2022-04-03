@@ -128,7 +128,7 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
 
     // Only specific RLNC messages are registered as measurement
     if (loraPhyMessage.get_which_Body() == LORA_MSG_TEMPLATE::id::NOT_SET || loraPhyMessage.has_rlncInitConfigCommand() || loraPhyMessage.has_rlncEncodedFragment() || loraPhyMessage.has_rlncStateUpdate() || loraPhyMessage.has_rlncTerminationCommand()) {
-        auto sequenceNumber = loraPhyMessage.get_CorrelationCode();
+        uint16_t sequenceNumber = loraPhyMessage.get_CorrelationCode();
         RegisterNewMeasurement(sequenceNumber, rssi, snr);
     }
 
