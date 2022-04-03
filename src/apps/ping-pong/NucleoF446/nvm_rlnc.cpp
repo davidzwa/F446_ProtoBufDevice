@@ -100,7 +100,7 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
     mutableInitCommand.set_receptionRateConfig(command.get_receptionRateConfig());
     mutableInitCommand.set_DebugFragmentUart(command.get_DebugFragmentUart());
     mutableInitCommand.set_DebugMatrixUart(command.get_DebugMatrixUart());
-    UartDebug("RLNC", 0, 4);
+    UartDebug("RLNC_NVM", 0, 8);
 
     sessionState = RlncSessionState::PRE_INIT;
     currentFragmentIndex = 0;
@@ -115,7 +115,7 @@ uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
 
 uint16_t StopRlncSessionFromFlash() {
     TimerStop(&rlncDelayTimer);
-    UartDebug("RLNC", 0xFF, 4);
+    UartDebug("RLNC_NVM", 0xFF, 8);
 
     return sessionState = RlncSessionState::PRE_TERMINATION;
 }
@@ -126,14 +126,14 @@ uint16_t ProgressRlncSession() {
     auto generationCount = GetGenerationCount();
     if (sessionState == RlncSessionState::PRE_INIT) {
         TransmitLoRaMessageWithDeviceFilter(initCommand);
-        UartDebug("RLNC", 2, 4);
+        UartDebug("RLNC_NVM", 2000 + currentGenerationIndex, 8);
         sessionState = RlncSessionState::IN_GENERATION;
     } else if (sessionState == RlncSessionState::IN_GENERATION) {
         LoadCurrentFragment(currentFragmentIndex, currentGenerationIndex);
 
         // Transmit fragment
         TransmitLoRaMessageWithDeviceFilter(currentFragment);
-        UartDebug("RLNC", 3, 4);
+        UartDebug("RLNC_NVM", 3000 + currentGenerationIndex, 8);
 
         // Check if done with generation and not in last generation
         auto generationTotalFragments = CalculateGenerationTotalFrameCount(currentGenerationIndex);
@@ -150,14 +150,14 @@ uint16_t ProgressRlncSession() {
     } else if (sessionState == RlncSessionState::UPDATING_GENERATION) {
         currentGenerationIndex++;
         currentFragmentIndex = 0;
-        PrepareNewUpdateCommand(currentGenerationIndex);
-        TransmitLoRaMessageWithDeviceFilter(updateCommand);
+        // PrepareNewUpdateCommand(currentGenerationIndex);
+        // TransmitLoRaMessageWithDeviceFilter(updateCommand);
         sessionState = RlncSessionState::IN_GENERATION;
-        UartDebug("RLNC", 4, 4);
+        UartDebug("RLNC_NVM", 4000 + currentGenerationIndex, 8);
     } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
         TransmitLoRaMessageWithDeviceFilter(terminationCommand);
         sessionState = RlncSessionState::POST_TERMINATION;
-        UartDebug("RLNC", 0xFE, 4);
+        UartDebug("RLNC_NVM", 0xFE, 8);
     } else if (sessionState == RlncSessionState::POST_TERMINATION) {
         sessionState = RlncSessionState::IDLE;
     }
@@ -356,7 +356,7 @@ uint16_t ValidateRlncFlashState() {
             if (currentFragmentMeta[LFSR_BYTE] == 0x00) {
                 return state = CORRUPT_LFSR_ZERO;
             }
-            
+
             uint16_t metaSequenceNumber = ((uint16_t)currentFragmentMeta[SEQ_BYTE] << 8) + currentFragmentMeta[SEQ_BYTE2];
             if (metaSequenceNumber != currentSequenceNumber) {
                 return state = CORRUPT_FRAG_SEQ + currentSequenceNumber;
