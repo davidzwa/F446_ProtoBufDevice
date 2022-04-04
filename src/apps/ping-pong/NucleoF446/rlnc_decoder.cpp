@@ -158,7 +158,6 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         missedGenFragments += tempFragmentIndex - totalFragmentIndex;
         UartDebug("RLNC_LAG_FRAG", missedGenFragments, 13);
     }
-    
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
@@ -218,7 +217,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     DecodeFragments(lastDecodingResult);
 
     // Process the results - if any
-    if (receivedGenFragments >= encodingColCount) {
+    if (tempFragmentIndex == generationSize - 1 || (receivedGenFragments >= encodingColCount && lastDecodingResult.get_Success())) {
         // Delegate to Flash, UART or LoRa
         SendUartDecodingResult(lastDecodingResult);
         // StoreDecodingResult(result);
