@@ -17,6 +17,8 @@
  */
 
 #include "Crc8.h"
+#include "LCG.h"
+#include "XoShiro.h"
 #include "board.h"
 #include "cli.h"
 #include "config.h"
@@ -43,7 +45,6 @@ __attribute__((long_call, section(".code_in_ram"))) void MemoryFunction(void) {
 }
 
 void ButtonCallback(void* context) {
-    
     MemoryFunction();
 }
 
@@ -59,8 +60,8 @@ int main(void) {
     ValidateRlncFlashState();
     InitRadioTxConfigLoRa();
     InitRadioRxConfigLoRa();
-    auto seed = InitRadioPhy();
-    SetRandomSeed(seed);
+    // auto seed = InitRadioPhy();
+    // SetRandomSeed(seed);
     InitTimedTasks();
 
     UartSendBoot();
@@ -74,6 +75,26 @@ int main(void) {
     uint32_t output;
     ReadMeasurement(0, &output);
     UartDebug("FLASH", output, 6);
+
+    auto rng = xoshiro32plus8(0x32);
+    uint8_t val1 = rng();
+    UartDebug("RNG", val1, 3);
+    // UartDebug("RNG", rand1(), 3);
+
+    // auto rng = LCG();
+    // UartDebug("RNG", rand1(), 3);
+    // UartDebug("RNG", rand1(), 3);
+    // UartDebug("RNG", rand1(), 3);
+    // UartDebug("RNG", rand1(), 3);
+    // UartDebug("RNG", rand1(), 3);
+    // UartDebug("RNG", rand1(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
+    // UartDebug("RNG", rng.Next(), 3);
 
     // CRC check
     // uint8_t values[] = {0xFF, 0x12, 0x34, 0x00};
