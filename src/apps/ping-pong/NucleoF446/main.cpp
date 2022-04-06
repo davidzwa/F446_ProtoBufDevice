@@ -72,13 +72,20 @@ int main(void) {
     GpioInit(&button, PC_13, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
     GpioSetInterrupt(&button, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, &ButtonCallback);
 
-    uint32_t output;
-    ReadMeasurement(0, &output);
-    UartDebug("FLASH", output, 6);
+    // uint32_t output;
+    // ReadMeasurement(0, &output);
+    // UartDebug("FLASH", output, 6);
 
-    auto rng = xoshiro32plus8(0x32);
-    uint8_t val1 = rng();
-    UartDebug("RNG", val1, 3);
+    auto rng = xoshiro32starstar8(0x32, 0x33, 0x34, 0x35);
+    for (size_t i = 0; i < 32; i++)
+    {
+        UartDebug("RNG", rng(), 3);
+    }
+    
+    // UartDebug("RNG", rng(), 3);
+    // UartDebug("RNG", rng(), 3);
+    // UartDebug("RNG", rng(), 3);
+    // UartDebug("RNG", rng(), 3);
     // UartDebug("RNG", rand1(), 3);
 
     // auto rng = LCG();
