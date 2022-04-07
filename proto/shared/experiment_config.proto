@@ -40,3 +40,8 @@ message ReceptionRateConfig {
     uint32 Seed = 3;
     bool DropUpdateCommands = 4;
 }
+
+enum PRngImplementation{
+    LFSR_32 = 0;
+    XoShiRo_32 = 1;
+}

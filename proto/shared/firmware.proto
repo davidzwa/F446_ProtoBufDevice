@@ -75,8 +75,8 @@ message RlncInitConfigCommand {
     uint32 TotalFrameCount = 5;
     uint32 FieldDegree = 6;
     uint32 FieldPoly = 7;
-    uint32 LfsrSeed = 8;
-    uint32 LfsrPoly = 9;
+    // PRNG will not switch for now
+    // PRngImplementation pRngImplementation = 9;
     bool DebugMatrixUart = 10;
     bool DebugFragmentUart = 11;
 
@@ -84,17 +84,19 @@ message RlncInitConfigCommand {
 }
 
 message RlncEncodedFragment {
-    // This is a marker field
-    uint32 LfsrState = 1;
+    // This is a marker field mostly using the Payload and CorrelationCode top fields
+    uint32 PRngSeedState = 1;
 }
 
 message RlncFlashEncodedFragment {
-    // This is a compressed field
-    bytes Meta = 1; // LSFR, sequence number, generation ID, fragment ID
-    bytes Payload = 2;
+    // This is a compressed field in flash memory
+    uint32 PRngSeedState = 1;
+    bytes Meta = 2; // sequence number, generation ID, fragment ID
+    bytes Payload = 3;
 }
 
 message RlncStateUpdate {
+    // DEPRECATED This field is being deprecated as it is now redundant over CorrelationCode
     uint32 GenerationIndex = 1;
 }
 
@@ -131,7 +133,7 @@ message DecodingUpdate {
     uint32 ReceivedFragments = 6;
     uint32 CurrentGenerationIndex = 7;
     bool IsRunning = 8;
-    uint32 UsedLfsrState = 9;
-    uint32 CurrentLfsrState = 10;
+    uint32 UsedPrngSeedState = 9;
+    uint32 CurrentPrngState = 10;
     uint32 MissedGenFragments = 11;
 }

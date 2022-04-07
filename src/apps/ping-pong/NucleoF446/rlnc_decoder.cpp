@@ -13,12 +13,16 @@ static DecodingResult lastDecodingResult;
 #define MAX_OVERHEAD 2
 #define MAX_SYMBOLS 12
 
+using namespace std;
+using namespace xoshiro_detail;
+
 void SendUartTermination() {
     UartDebug("RLNC_TERMINATE", 0, 15);
 }
 
 RlncDecoder::RlncDecoder() {
-    lfsr = new LFSR(LFSR_DEFAULT_SEED);
+    
+    rng = xoshiro32starstar8(0x00, 0x00, 0x00, 0x01);
     terminated = true;
 
     // Make this matrix statically allocated - ensure it's larger than needed
@@ -43,9 +47,6 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
     generationIndex = 0;
     generationSucceeded = false;
     atLeastGenerationResultSent = false;
-
-    // Apply to LFSR
-    lfsr->ResetNewSeed(rlncInitConfig.get_LfsrSeed());
 
     // Prepare storage for the configured generation
     ReserveGenerationStorage();
@@ -161,7 +162,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
 
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
-    auto lfsrResetState = message.get_rlncEncodedFragment().get_LfsrState();
+    uint32_t prngSeedState = message.get_rlncEncodedFragment().get_PRngSeedState();
+    
     auto frame = message.get_Payload();
     auto frameSize = frame.get_length();
 
@@ -174,14 +176,27 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     vector<SYMB> augVector;
 
     // Reproduce the encoding vector
-    lfsr->ResetNewSeed(lfsrResetState);
-    lfsr->GenerateMany(augVector, encodingColCount);
+    uint8_t val0 = (uint8_t)(prngSeedState >> 24);
+    uint8_t val1 = (uint8_t)(prngSeedState >> 16);
+    uint8_t val2 = (uint8_t)(prngSeedState >> 8);
+    uint8_t val3 = (uint8_t)(prngSeedState);
+    rng.set_State(val0, val1, val2, val3);
+    RngGenerateMany(augVector, encodingColCount);
 
-    for (uint8_t i = 0; i < encodingColCount; i++) {
-        if (augVector[i] == 0x00) {
-            ThrowMcuBreakpoint();
-        }
-    }
+    uint32_t currentPrngSeedState;
+    uint8_t cVal0 = (uint8_t)(rng.get_State0());
+    uint8_t cVal1 = (uint8_t)(rng.get_State1());
+    uint8_t cVal2 = (uint8_t)(rng.get_State2());
+    uint8_t cVal3 = (uint8_t)(rng.get_State3());
+    currentPrngSeedState = (cVal0 << 24) + (cVal1 << 16) + (cVal2 << 8) + cVal3;
+
+    // 0x00 is now a tolerated value
+    // TODO check not all are 0x00
+    // for (uint8_t i = 0; i < encodingColCount; i++) {
+    //     if (augVector[i] == 0x00) {
+    //         ThrowMcuBreakpoint();
+    //     }
+    // }
 
     // Store the augmented part
     for (uint8_t i = 0; i < frameSize; i++) {
@@ -200,8 +215,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_MissedGenFragments(missedGenFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
-    decodingUpdate.set_UsedLfsrState(lfsrResetState);
-    decodingUpdate.set_CurrentLfsrState(lfsr->State);
+    decodingUpdate.set_UsedPrngSeedState(prngSeedState);
+    decodingUpdate.set_CurrentPrngState(currentPrngSeedState);
     decodingUpdate.set_FirstRowCrc8(crc1);
     decodingUpdate.set_LastRowCrc8(crc2);
     decodingUpdate.set_LastRowIndex(rowIndex);
@@ -265,7 +280,7 @@ void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCom
 void RlncDecoder::AutoTerminateRlnc() {
     // Reset state
     generationIndex = 0x0;
-    lfsr->Reset();
+    rng.set_State(0x00, 0x00, 0x00, 0x00); // Would cause an error
     ClearDecodingMatrix();
     terminated = true;
 
@@ -471,5 +486,11 @@ void RlncDecoder::ThrowDecodingError(DecodingError error) {
     while (1) {
         UartDebug("RLNC_ERR", error, 8);
         DelayMs(2000);
+    }
+}
+
+void RlncDecoder::RngGenerateMany(vector<uint8_t>& output, uint16_t count) {
+    for (int i = 0; i < count; i++) {
+        output.push_back(rng());
     }
 }

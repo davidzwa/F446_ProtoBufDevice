@@ -1320,8 +1320,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
-      set_LfsrSeed(rhs.get_LfsrSeed());
-      set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       set_receptionRateConfig(rhs.get_receptionRateConfig());
@@ -1336,8 +1334,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
-      set_LfsrSeed(rhs.get_LfsrSeed());
-      set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       set_receptionRateConfig(rhs.get_receptionRateConfig());
@@ -1355,8 +1351,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       TOTALFRAMECOUNT = 5,
       FIELDDEGREE = 6,
       FIELDPOLY = 7,
-      LFSRSEED = 8,
-      LFSRPOLY = 9,
       DEBUGMATRIXUART = 10,
       DEBUGFRAGMENTUART = 11,
       RECEPTIONRATECONFIG = 12
@@ -1371,8 +1365,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
-      set_LfsrSeed(rhs.get_LfsrSeed());
-      set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       set_receptionRateConfig(rhs.get_receptionRateConfig());
@@ -1388,8 +1380,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       set_TotalFrameCount(rhs.get_TotalFrameCount());
       set_FieldDegree(rhs.get_FieldDegree());
       set_FieldPoly(rhs.get_FieldPoly());
-      set_LfsrSeed(rhs.get_LfsrSeed());
-      set_LfsrPoly(rhs.get_LfsrPoly());
       set_DebugMatrixUart(rhs.get_DebugMatrixUart());
       set_DebugFragmentUart(rhs.get_DebugFragmentUart());
       set_receptionRateConfig(rhs.get_receptionRateConfig());
@@ -1444,20 +1434,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
     inline EmbeddedProto::uint32& mutable_FieldPoly() { return FieldPoly_; }
     inline const EmbeddedProto::uint32& get_FieldPoly() const { return FieldPoly_; }
     inline EmbeddedProto::uint32::FIELD_TYPE FieldPoly() const { return FieldPoly_.get(); }
-
-    inline void clear_LfsrSeed() { LfsrSeed_.clear(); }
-    inline void set_LfsrSeed(const EmbeddedProto::uint32& value) { LfsrSeed_ = value; }
-    inline void set_LfsrSeed(const EmbeddedProto::uint32&& value) { LfsrSeed_ = value; }
-    inline EmbeddedProto::uint32& mutable_LfsrSeed() { return LfsrSeed_; }
-    inline const EmbeddedProto::uint32& get_LfsrSeed() const { return LfsrSeed_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LfsrSeed() const { return LfsrSeed_.get(); }
-
-    inline void clear_LfsrPoly() { LfsrPoly_.clear(); }
-    inline void set_LfsrPoly(const EmbeddedProto::uint32& value) { LfsrPoly_ = value; }
-    inline void set_LfsrPoly(const EmbeddedProto::uint32&& value) { LfsrPoly_ = value; }
-    inline EmbeddedProto::uint32& mutable_LfsrPoly() { return LfsrPoly_; }
-    inline const EmbeddedProto::uint32& get_LfsrPoly() const { return LfsrPoly_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LfsrPoly() const { return LfsrPoly_.get(); }
 
     inline void clear_DebugMatrixUart() { DebugMatrixUart_.clear(); }
     inline void set_DebugMatrixUart(const EmbeddedProto::boolean& value) { DebugMatrixUart_ = value; }
@@ -1540,16 +1516,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
         return_value = FieldPoly_.serialize_with_id(static_cast<uint32_t>(id::FIELDPOLY), buffer, false);
       }
 
-      if((0U != LfsrSeed_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = LfsrSeed_.serialize_with_id(static_cast<uint32_t>(id::LFSRSEED), buffer, false);
-      }
-
-      if((0U != LfsrPoly_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = LfsrPoly_.serialize_with_id(static_cast<uint32_t>(id::LFSRPOLY), buffer, false);
-      }
-
       if((false != DebugMatrixUart_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = DebugMatrixUart_.serialize_with_id(static_cast<uint32_t>(id::DEBUGMATRIXUART), buffer, false);
@@ -1609,14 +1575,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
             return_value = FieldPoly_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::LFSRSEED:
-            return_value = LfsrSeed_.deserialize_check_type(buffer, wire_type);
-            break;
-
-          case id::LFSRPOLY:
-            return_value = LfsrPoly_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case id::DEBUGMATRIXUART:
             return_value = DebugMatrixUart_.deserialize_check_type(buffer, wire_type);
             break;
@@ -1666,8 +1624,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       clear_TotalFrameCount();
       clear_FieldDegree();
       clear_FieldPoly();
-      clear_LfsrSeed();
-      clear_LfsrPoly();
       clear_DebugMatrixUart();
       clear_DebugFragmentUart();
       clear_receptionRateConfig();
@@ -1718,8 +1674,6 @@ class RlncInitConfigCommand final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 TotalFrameCount_ = 0U;
       EmbeddedProto::uint32 FieldDegree_ = 0U;
       EmbeddedProto::uint32 FieldPoly_ = 0U;
-      EmbeddedProto::uint32 LfsrSeed_ = 0U;
-      EmbeddedProto::uint32 LfsrPoly_ = 0U;
       EmbeddedProto::boolean DebugMatrixUart_ = false;
       EmbeddedProto::boolean DebugFragmentUart_ = false;
       ReceptionRateConfig receptionRateConfig_;
@@ -1732,12 +1686,12 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
     RlncEncodedFragment() = default;
     RlncEncodedFragment(const RlncEncodedFragment& rhs )
     {
-      set_LfsrState(rhs.get_LfsrState());
+      set_PRngSeedState(rhs.get_PRngSeedState());
     }
 
     RlncEncodedFragment(const RlncEncodedFragment&& rhs ) noexcept
     {
-      set_LfsrState(rhs.get_LfsrState());
+      set_PRngSeedState(rhs.get_PRngSeedState());
     }
 
     ~RlncEncodedFragment() override = default;
@@ -1745,36 +1699,36 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      LFSRSTATE = 1
+      PRNGSEEDSTATE = 1
     };
 
     RlncEncodedFragment& operator=(const RlncEncodedFragment& rhs)
     {
-      set_LfsrState(rhs.get_LfsrState());
+      set_PRngSeedState(rhs.get_PRngSeedState());
       return *this;
     }
 
     RlncEncodedFragment& operator=(const RlncEncodedFragment&& rhs) noexcept
     {
-      set_LfsrState(rhs.get_LfsrState());
+      set_PRngSeedState(rhs.get_PRngSeedState());
       return *this;
     }
 
-    inline void clear_LfsrState() { LfsrState_.clear(); }
-    inline void set_LfsrState(const EmbeddedProto::uint32& value) { LfsrState_ = value; }
-    inline void set_LfsrState(const EmbeddedProto::uint32&& value) { LfsrState_ = value; }
-    inline EmbeddedProto::uint32& mutable_LfsrState() { return LfsrState_; }
-    inline const EmbeddedProto::uint32& get_LfsrState() const { return LfsrState_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LfsrState() const { return LfsrState_.get(); }
+    inline void clear_PRngSeedState() { PRngSeedState_.clear(); }
+    inline void set_PRngSeedState(const EmbeddedProto::uint32& value) { PRngSeedState_ = value; }
+    inline void set_PRngSeedState(const EmbeddedProto::uint32&& value) { PRngSeedState_ = value; }
+    inline EmbeddedProto::uint32& mutable_PRngSeedState() { return PRngSeedState_; }
+    inline const EmbeddedProto::uint32& get_PRngSeedState() const { return PRngSeedState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE PRngSeedState() const { return PRngSeedState_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != LfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != PRngSeedState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = LfsrState_.serialize_with_id(static_cast<uint32_t>(id::LFSRSTATE), buffer, false);
+        return_value = PRngSeedState_.serialize_with_id(static_cast<uint32_t>(id::PRNGSEEDSTATE), buffer, false);
       }
 
       return return_value;
@@ -1793,8 +1747,8 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::LFSRSTATE:
-            return_value = LfsrState_.deserialize_check_type(buffer, wire_type);
+          case id::PRNGSEEDSTATE:
+            return_value = PRngSeedState_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -1826,14 +1780,14 @@ class RlncEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_LfsrState();
+      clear_PRngSeedState();
 
     }
 
     private:
 
 
-      EmbeddedProto::uint32 LfsrState_ = 0U;
+      EmbeddedProto::uint32 PRngSeedState_ = 0U;
 
 };
 
@@ -1845,12 +1799,14 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
     RlncFlashEncodedFragment() = default;
     RlncFlashEncodedFragment(const RlncFlashEncodedFragment& rhs )
     {
+      set_PRngSeedState(rhs.get_PRngSeedState());
       set_Meta(rhs.get_Meta());
       set_Payload(rhs.get_Payload());
     }
 
     RlncFlashEncodedFragment(const RlncFlashEncodedFragment&& rhs ) noexcept
     {
+      set_PRngSeedState(rhs.get_PRngSeedState());
       set_Meta(rhs.get_Meta());
       set_Payload(rhs.get_Payload());
     }
@@ -1860,12 +1816,14 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      META = 1,
-      PAYLOAD = 2
+      PRNGSEEDSTATE = 1,
+      META = 2,
+      PAYLOAD = 3
     };
 
     RlncFlashEncodedFragment& operator=(const RlncFlashEncodedFragment& rhs)
     {
+      set_PRngSeedState(rhs.get_PRngSeedState());
       set_Meta(rhs.get_Meta());
       set_Payload(rhs.get_Payload());
       return *this;
@@ -1873,10 +1831,18 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
     RlncFlashEncodedFragment& operator=(const RlncFlashEncodedFragment&& rhs) noexcept
     {
+      set_PRngSeedState(rhs.get_PRngSeedState());
       set_Meta(rhs.get_Meta());
       set_Payload(rhs.get_Payload());
       return *this;
     }
+
+    inline void clear_PRngSeedState() { PRngSeedState_.clear(); }
+    inline void set_PRngSeedState(const EmbeddedProto::uint32& value) { PRngSeedState_ = value; }
+    inline void set_PRngSeedState(const EmbeddedProto::uint32&& value) { PRngSeedState_ = value; }
+    inline EmbeddedProto::uint32& mutable_PRngSeedState() { return PRngSeedState_; }
+    inline const EmbeddedProto::uint32& get_PRngSeedState() const { return PRngSeedState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE PRngSeedState() const { return PRngSeedState_.get(); }
 
     inline void clear_Meta() { Meta_.clear(); }
     inline ::EmbeddedProto::FieldBytes<Meta_LENGTH>& mutable_Meta() { return Meta_; }
@@ -1894,6 +1860,11 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0U != PRngSeedState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = PRngSeedState_.serialize_with_id(static_cast<uint32_t>(id::PRNGSEEDSTATE), buffer, false);
+      }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
@@ -1921,6 +1892,10 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
+          case id::PRNGSEEDSTATE:
+            return_value = PRngSeedState_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::META:
             return_value = Meta_.deserialize_check_type(buffer, wire_type);
             break;
@@ -1958,6 +1933,7 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
+      clear_PRngSeedState();
       clear_Meta();
       clear_Payload();
 
@@ -1966,6 +1942,7 @@ class RlncFlashEncodedFragment final: public ::EmbeddedProto::MessageInterface
     private:
 
 
+      EmbeddedProto::uint32 PRngSeedState_ = 0U;
       ::EmbeddedProto::FieldBytes<Meta_LENGTH> Meta_;
       ::EmbeddedProto::FieldBytes<Payload_LENGTH> Payload_;
 
@@ -2567,8 +2544,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_UsedLfsrState(rhs.get_UsedLfsrState());
-      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
+      set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
     }
 
@@ -2582,8 +2559,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_UsedLfsrState(rhs.get_UsedLfsrState());
-      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
+      set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
     }
 
@@ -2600,8 +2577,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       RECEIVEDFRAGMENTS = 6,
       CURRENTGENERATIONINDEX = 7,
       ISRUNNING = 8,
-      USEDLFSRSTATE = 9,
-      CURRENTLFSRSTATE = 10,
+      USEDPRNGSEEDSTATE = 9,
+      CURRENTPRNGSTATE = 10,
       MISSEDGENFRAGMENTS = 11
     };
 
@@ -2615,8 +2592,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_UsedLfsrState(rhs.get_UsedLfsrState());
-      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
+      set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
       return *this;
     }
@@ -2631,8 +2608,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_ReceivedFragments(rhs.get_ReceivedFragments());
       set_CurrentGenerationIndex(rhs.get_CurrentGenerationIndex());
       set_IsRunning(rhs.get_IsRunning());
-      set_UsedLfsrState(rhs.get_UsedLfsrState());
-      set_CurrentLfsrState(rhs.get_CurrentLfsrState());
+      set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
+      set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
       return *this;
     }
@@ -2693,19 +2670,19 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_IsRunning() const { return IsRunning_; }
     inline EmbeddedProto::boolean::FIELD_TYPE IsRunning() const { return IsRunning_.get(); }
 
-    inline void clear_UsedLfsrState() { UsedLfsrState_.clear(); }
-    inline void set_UsedLfsrState(const EmbeddedProto::uint32& value) { UsedLfsrState_ = value; }
-    inline void set_UsedLfsrState(const EmbeddedProto::uint32&& value) { UsedLfsrState_ = value; }
-    inline EmbeddedProto::uint32& mutable_UsedLfsrState() { return UsedLfsrState_; }
-    inline const EmbeddedProto::uint32& get_UsedLfsrState() const { return UsedLfsrState_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE UsedLfsrState() const { return UsedLfsrState_.get(); }
+    inline void clear_UsedPrngSeedState() { UsedPrngSeedState_.clear(); }
+    inline void set_UsedPrngSeedState(const EmbeddedProto::uint32& value) { UsedPrngSeedState_ = value; }
+    inline void set_UsedPrngSeedState(const EmbeddedProto::uint32&& value) { UsedPrngSeedState_ = value; }
+    inline EmbeddedProto::uint32& mutable_UsedPrngSeedState() { return UsedPrngSeedState_; }
+    inline const EmbeddedProto::uint32& get_UsedPrngSeedState() const { return UsedPrngSeedState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE UsedPrngSeedState() const { return UsedPrngSeedState_.get(); }
 
-    inline void clear_CurrentLfsrState() { CurrentLfsrState_.clear(); }
-    inline void set_CurrentLfsrState(const EmbeddedProto::uint32& value) { CurrentLfsrState_ = value; }
-    inline void set_CurrentLfsrState(const EmbeddedProto::uint32&& value) { CurrentLfsrState_ = value; }
-    inline EmbeddedProto::uint32& mutable_CurrentLfsrState() { return CurrentLfsrState_; }
-    inline const EmbeddedProto::uint32& get_CurrentLfsrState() const { return CurrentLfsrState_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE CurrentLfsrState() const { return CurrentLfsrState_.get(); }
+    inline void clear_CurrentPrngState() { CurrentPrngState_.clear(); }
+    inline void set_CurrentPrngState(const EmbeddedProto::uint32& value) { CurrentPrngState_ = value; }
+    inline void set_CurrentPrngState(const EmbeddedProto::uint32&& value) { CurrentPrngState_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentPrngState() { return CurrentPrngState_; }
+    inline const EmbeddedProto::uint32& get_CurrentPrngState() const { return CurrentPrngState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentPrngState() const { return CurrentPrngState_.get(); }
 
     inline void clear_MissedGenFragments() { MissedGenFragments_.clear(); }
     inline void set_MissedGenFragments(const EmbeddedProto::uint32& value) { MissedGenFragments_ = value; }
@@ -2759,14 +2736,14 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
         return_value = IsRunning_.serialize_with_id(static_cast<uint32_t>(id::ISRUNNING), buffer, false);
       }
 
-      if((0U != UsedLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != UsedPrngSeedState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = UsedLfsrState_.serialize_with_id(static_cast<uint32_t>(id::USEDLFSRSTATE), buffer, false);
+        return_value = UsedPrngSeedState_.serialize_with_id(static_cast<uint32_t>(id::USEDPRNGSEEDSTATE), buffer, false);
       }
 
-      if((0U != CurrentLfsrState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != CurrentPrngState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = CurrentLfsrState_.serialize_with_id(static_cast<uint32_t>(id::CURRENTLFSRSTATE), buffer, false);
+        return_value = CurrentPrngState_.serialize_with_id(static_cast<uint32_t>(id::CURRENTPRNGSTATE), buffer, false);
       }
 
       if((0U != MissedGenFragments_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
@@ -2822,12 +2799,12 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
             return_value = IsRunning_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::USEDLFSRSTATE:
-            return_value = UsedLfsrState_.deserialize_check_type(buffer, wire_type);
+          case id::USEDPRNGSEEDSTATE:
+            return_value = UsedPrngSeedState_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::CURRENTLFSRSTATE:
-            return_value = CurrentLfsrState_.deserialize_check_type(buffer, wire_type);
+          case id::CURRENTPRNGSTATE:
+            return_value = CurrentPrngState_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::MISSEDGENFRAGMENTS:
@@ -2871,8 +2848,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       clear_ReceivedFragments();
       clear_CurrentGenerationIndex();
       clear_IsRunning();
-      clear_UsedLfsrState();
-      clear_CurrentLfsrState();
+      clear_UsedPrngSeedState();
+      clear_CurrentPrngState();
       clear_MissedGenFragments();
 
     }
@@ -2888,8 +2865,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 ReceivedFragments_ = 0U;
       EmbeddedProto::uint32 CurrentGenerationIndex_ = 0U;
       EmbeddedProto::boolean IsRunning_ = false;
-      EmbeddedProto::uint32 UsedLfsrState_ = 0U;
-      EmbeddedProto::uint32 CurrentLfsrState_ = 0U;
+      EmbeddedProto::uint32 UsedPrngSeedState_ = 0U;
+      EmbeddedProto::uint32 CurrentPrngState_ = 0U;
       EmbeddedProto::uint32 MissedGenFragments_ = 0U;
 
 };
