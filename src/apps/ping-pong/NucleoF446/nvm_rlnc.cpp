@@ -22,7 +22,6 @@ NvmHandle NvmRlnc(NVM_PAGE);
 void TimerDelayAsync();
 static void TransmitLoRaMessageWithDeviceFilter(LORA_MSG_TEMPLATE& message);
 static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationIndex);
-static void PrepareNewUpdateCommand(uint32_t nextGenerationIndex);
 static uint32_t CalculateGenerationBaseFrameCount(uint32_t generationIndex);
 static uint32_t CalculateGenerationTotalFrameCount(uint32_t generationIndex);
 static uint32_t CalculateGenerationAddress(uint32_t generationIndex);
@@ -38,7 +37,6 @@ ProtoReadBuffer flashReadBuffer;
 LoRaMessage<MAX_LORA_BYTES> initCommand;         // Fixed command
 LoRaMessage<MAX_LORA_BYTES> terminationCommand;  // Fixed command
 LoRaMessage<MAX_LORA_BYTES> currentFragment;     // Iterated buffer command
-LoRaMessage<MAX_LORA_BYTES> updateCommand;       // Iterated buffer command
 // Response message
 LoRaMessage<MAX_LORA_BYTES> stateResponse;
 
@@ -150,8 +148,6 @@ uint16_t ProgressRlncSession() {
     } else if (sessionState == RlncSessionState::UPDATING_GENERATION) {
         currentGenerationIndex++;
         currentFragmentIndex = 0;
-        // PrepareNewUpdateCommand(currentGenerationIndex);
-        // TransmitLoRaMessageWithDeviceFilter(updateCommand);
         sessionState = RlncSessionState::IN_GENERATION;
         UartDebug("RLNC_NVM", 4000 + currentGenerationIndex, 8);
     } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
@@ -352,9 +348,14 @@ uint16_t ValidateRlncFlashState() {
                 return state = READ_FAIL_FRAG_META + currentSequenceNumber;
             }
 
-            // Validate LFSR state not ever to be zero
-            if (currentFragmentMeta[LFSR_BYTE] == 0x00) {
-                return state = CORRUPT_LFSR_ZERO;
+            // Validate PRNG Seed state not ever to be zero
+            uint8_t byte0 = currentFragmentMeta[SEED_STATE_BYTE];
+            uint8_t byte1 = currentFragmentMeta[SEED_STATE_BYTE1];
+            uint8_t byte2 = currentFragmentMeta[SEED_STATE_BYTE2];
+            uint8_t byte3 = currentFragmentMeta[SEED_STATE_BYTE3];
+            uint32_t metaPrngSeedState = ((uint32_t)byte0 << 24) + ((uint32_t)byte1 << 16) + ((uint32_t)byte2 << 8) + byte3;
+            if (metaPrngSeedState == 0x00) {
+                return state = CORRUPT_PRNG_SEED_ZERO;
             }
 
             uint16_t metaSequenceNumber = ((uint16_t)currentFragmentMeta[SEQ_BYTE] << 8) + currentFragmentMeta[SEQ_BYTE2];
@@ -421,7 +422,13 @@ static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationI
     }
 
     RlncEncodedFragment fragment;
-    fragment.set_LfsrState(fragmentMetaBuffer[LFSR_BYTE]);
+
+    uint8_t byte0 = fragmentMetaBuffer[SEED_STATE_BYTE];
+    uint8_t byte1 = fragmentMetaBuffer[SEED_STATE_BYTE1];
+    uint8_t byte2 = fragmentMetaBuffer[SEED_STATE_BYTE2];
+    uint8_t byte3 = fragmentMetaBuffer[SEED_STATE_BYTE3];
+    uint32_t metaPrngSeedState = ((uint32_t)byte0 << 24) + ((uint32_t)byte1 << 16) + ((uint32_t)byte2 << 8) + byte3;
+    fragment.set_PRngSeedState(metaPrngSeedState);
 
     uint16_t sequenceNumber = ((uint16_t)fragmentMetaBuffer[SEQ_BYTE] << 8) + fragmentMetaBuffer[SEQ_BYTE2];
     currentFragment.clear();
@@ -430,10 +437,6 @@ static uint16_t LoadCurrentFragment(uint32_t fragmentIndex, uint32_t generationI
     currentFragment.mutable_Payload().set(fragmentBuffer, frameSize);
 
     return 0x00;
-}
-
-static void PrepareNewUpdateCommand(uint32_t nextGenerationIndex) {
-    updateCommand.mutable_rlncStateUpdate().set_GenerationIndex(nextGenerationIndex);
 }
 
 static uint32_t CalculateGenerationAddress(uint32_t generationIndex) {

@@ -36,6 +36,8 @@
 
 #if defined(SX1261MBXBAS)
 #include "sx126x-board.h"
+#else if defined(SX1272MB2DAS)
+#include "sx1272-board.h"
 #endif
 
 #include "board.h"

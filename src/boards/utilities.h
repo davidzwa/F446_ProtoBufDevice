@@ -93,6 +93,8 @@ uint32_t GetSeed();
  */
 void srand1( uint32_t seed );
 
+uint32_t rand1(void);
+
 /*!
  * \brief Computes a random number between min and max
  *

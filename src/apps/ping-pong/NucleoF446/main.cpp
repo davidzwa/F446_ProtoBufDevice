@@ -17,6 +17,7 @@
  */
 
 #include "Crc8.h"
+#include "XoShiro.h"
 #include "board.h"
 #include "cli.h"
 #include "config.h"
@@ -43,7 +44,6 @@ __attribute__((long_call, section(".code_in_ram"))) void MemoryFunction(void) {
 }
 
 void ButtonCallback(void* context) {
-    
     MemoryFunction();
 }
 
@@ -59,8 +59,8 @@ int main(void) {
     ValidateRlncFlashState();
     InitRadioTxConfigLoRa();
     InitRadioRxConfigLoRa();
-    auto seed = InitRadioPhy();
-    SetRandomSeed(seed);
+    InitRadioPhy();
+    // SetRandomSeed(seed);
     InitTimedTasks();
 
     UartSendBoot();
@@ -71,9 +71,15 @@ int main(void) {
     GpioInit(&button, PC_13, PIN_INPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0);
     GpioSetInterrupt(&button, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, &ButtonCallback);
 
-    uint32_t output;
-    ReadMeasurement(0, &output);
-    UartDebug("FLASH", output, 6);
+    // uint32_t output;
+    // ReadMeasurement(0, &output);
+    // UartDebug("FLASH", output, 6);
+
+    // auto rng = xoshiro32starstar8(0x32, 0x33, 0x34, 0x35);
+    // for (size_t i = 0; i < 32; i++)
+    // {
+    //     UartDebug("RNG", rng(), 3);
+    // }
 
     // CRC check
     // uint8_t values[] = {0xFF, 0x12, 0x34, 0x00};

@@ -46,6 +46,12 @@
 // Include external proto definitions
 
 
+enum class PRngImplementation : uint32_t
+{
+  LFSR_32 = 0,
+  XoShiRo_32 = 1
+};
+
 class ForwardExperimentCommand final: public ::EmbeddedProto::MessageInterface
 {
   public:

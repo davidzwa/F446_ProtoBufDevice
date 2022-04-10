@@ -7,10 +7,9 @@
 
 #include "GaloisFieldElement.h"
 #include "LinearFeedbackShiftRegister.h"
+#include "XoShiro.h"
 #include "config.h"
 #include "lora_device_messages.h"
-
-using namespace std;
 
 #define SYMB uint8_t
 
@@ -21,7 +20,7 @@ enum DecodingError {
     FIND_PIVOT_ROWCOUNT_0 = 0x04,
     INNO_ROW_EXCEEDS_MATRIX_ROWS = 0x05,
     INNO_ROW_EXCEEDS_MATRIX_COLS = 0x06,
-    ILLEGAL_RANK_STATE = 0x07 // Usually a corrupt matrix (bit-flips?)
+    ILLEGAL_RANK_STATE = 0x07  // Usually a corrupt matrix (bit-flips?)
 };
 
 class RlncDecoder {
@@ -36,7 +35,7 @@ class RlncDecoder {
 
    protected:
     void ThrowDecodingError(DecodingError error);
-    uint8_t AddFrameAsMatrixRow(vector<SYMB>& row);
+    uint8_t AddFrameAsMatrixRow(std::vector<SYMB>& row);
     void ReduceMatrix(uint8_t augmentedCols);
     void DebugSendMatrix();
     optional<uint8_t> FindPivot(uint8_t startRow, uint8_t col, uint8_t rowCount);
@@ -46,6 +45,7 @@ class RlncDecoder {
     uint8_t DetermineNextInnovativeRowIndex();
 
    private:
+    void RngGenerateMany(std::vector<uint8_t>& output, uint16_t count);
     bool DecidePacketErrorDroppage(bool isUpdatePacket);
     void ReserveGenerationStorage();
     void ClearDecodingMatrix();
@@ -57,7 +57,7 @@ class RlncDecoder {
     void StoreDecodingResult(DecodingResult& decodingResult);
 
     RlncInitConfigCommand rlncConfig;
-    LFSR* lfsr;
+    xoshiro32starstar8 rng = xoshiro32starstar8(0,0,0,1);
     uint8_t generationIndex;
     bool generationSucceeded;
     bool atLeastGenerationResultSent;
