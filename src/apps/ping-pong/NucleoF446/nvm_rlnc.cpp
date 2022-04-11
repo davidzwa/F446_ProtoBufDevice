@@ -7,6 +7,7 @@
 #include "ProtoReadBuffer.h"
 #include "cli.h"
 #include "config.h"
+#include "delay.h"
 #include "lora_device_messages.h"
 #include "nvmm.h"
 #include "radio_config.h"
@@ -151,6 +152,7 @@ uint16_t ProgressRlncSession() {
         sessionState = RlncSessionState::IN_GENERATION;
         UartDebug("RLNC_NVM", 4000 + currentGenerationIndex, 8);
     } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
+        DelayMs(200);
         TransmitLoRaMessageWithDeviceFilter(terminationCommand);
         sessionState = RlncSessionState::POST_TERMINATION;
         UartDebug("RLNC_NVM", 0xFE, 8);

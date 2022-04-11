@@ -136,16 +136,15 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     if (willDropPacketByRng) return;
 
     uint32_t correlationCode = message.get_CorrelationCode();
-    uint32_t generationSize = rlncConfig.get_GenerationSize() + rlncConfig.get_GenerationRedundancySize();
+    uint32_t maxGenerationSize = rlncConfig.get_GenerationSize() + rlncConfig.get_GenerationRedundancySize();
 
     // Parse the new generationIndex
     uint32_t tempGenerationIndex = 0;
     uint32_t tempFragmentIndex = 0;
-    DecodeRlncSequenceNumber(correlationCode, generationSize, &tempFragmentIndex, &tempGenerationIndex);
+    DecodeRlncSequenceNumber(correlationCode, maxGenerationSize, &tempFragmentIndex, &tempGenerationIndex);
 
     uint8_t missedGenerations = (uint8_t)tempGenerationIndex - generationIndex;
     if (missedGenerations > 0) {
-        // SendUartDecodingResult(lastDecodingResult);
         UartDebug("RLNC_LAG_GEN", missedGenerations, 12);
         generationSucceeded = false;
         generationIndex = tempGenerationIndex;
@@ -190,20 +189,13 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     uint8_t cVal3 = (uint8_t)(rng.get_State3());
     currentPrngSeedState = (cVal0 << 24) + (cVal1 << 16) + (cVal2 << 8) + cVal3;
 
-    // 0x00 is now a tolerated value
-    // TODO check not all are 0x00
-    // for (uint8_t i = 0; i < encodingColCount; i++) {
-    //     if (augVector[i] == 0x00) {
-    //         ThrowMcuBreakpoint();
-    //     }
-    // }
-
     // Store the augmented part
     for (uint8_t i = 0; i < frameSize; i++) {
         augVector.push_back(frame[i]);
     }
 
     // Store the augmented matrix row
+    bool success = DetermineSuccess(); // Before spoiling the matrix
     uint8_t rowIndex = AddFrameAsMatrixRow(augVector);
 
     // Debug previous decoding action and any new packet
@@ -215,7 +207,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_MissedGenFragments(missedGenFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
-    decodingUpdate.set_Success(generationSucceeded);
+    decodingUpdate.set_Success(success);
     decodingUpdate.set_UsedPrngSeedState(prngSeedState);
     decodingUpdate.set_CurrentPrngState(currentPrngSeedState);
     decodingUpdate.set_FirstRowCrc8(crc1);
@@ -233,7 +225,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     DecodeFragments(lastDecodingResult);
 
     // Process the results - if any
-    if (tempFragmentIndex == generationSize - 1 || (receivedGenFragments >= encodingColCount && lastDecodingResult.get_Success())) {
+    if (tempFragmentIndex == encodingColCount - 1 || (receivedGenFragments >= encodingColCount && lastDecodingResult.get_Success())) {
         // Delegate to Flash, UART or LoRa
         SendUartDecodingResult(lastDecodingResult);
         // StoreDecodingResult(result);
@@ -453,18 +445,14 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
 }
 
 void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
-    auto encVectorLength = GetEncodingVectorLength();
+    uint32_t encVectorLength = GetEncodingVectorLength();
     uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
-    auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
-    auto firstNumber = decodingMatrix[0][numberColumn];
-    auto lastRowIndex = encVectorLength - 1;
-    auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
+    uint32_t numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
+    uint32_t firstNumber = decodingMatrix[0][numberColumn];
+    uint32_t lastRowIndex = encVectorLength - 1;
+    uint32_t lastNumber = decodingMatrix[lastRowIndex][numberColumn];
 
-    auto generationSize = rlncConfig.get_GenerationSize();
-    auto correctFirstNumber = generationSize * generationIndex;
-    auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
-
-    bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
+    bool success = DetermineSuccess();
     if (success) {
         generationSucceeded = true;
     }
@@ -480,6 +468,21 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
 
     // Clear the results after sending for better state management
     result.clear();
+}
+
+bool RlncDecoder::DetermineSuccess() {
+    auto encVectorLength = GetEncodingVectorLength();
+    auto generationSize = rlncConfig.get_GenerationSize();
+    auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
+    auto firstNumber = decodingMatrix[0][numberColumn];
+    auto lastRowIndex = encVectorLength - 1;
+    auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
+    auto correctFirstNumber = generationSize * generationIndex;
+    auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
+
+    bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
+
+    return success;
 }
 
 void RlncDecoder::ThrowDecodingError(DecodingError error) {
