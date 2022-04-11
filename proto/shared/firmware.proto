@@ -65,6 +65,14 @@ message RlncRemoteFlashResponse {
     uint32 CurrentTimerDelay = 6;
     bool CurrentSetIsMulticast = 7;
     uint32 CurrentDeviceId0 = 8;
+
+    // Experiment configuration loaded from RlncInitCommand
+    uint32 GenerationSize = 9;
+    uint32 GenerationRedundancySize = 10;
+    uint32 GenerationCount = 11;
+    uint32 FrameSize = 12;
+    uint32 TotalFrameCount = 13;
+    ReceptionRateConfig receptionRateConfig = 14;
 }
 
 message RlncInitConfigCommand {
@@ -136,4 +144,5 @@ message DecodingUpdate {
     uint32 UsedPrngSeedState = 9;
     uint32 CurrentPrngState = 10;
     uint32 MissedGenFragments = 11;
+    bool Success = 12;
 }

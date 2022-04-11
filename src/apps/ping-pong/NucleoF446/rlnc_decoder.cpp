@@ -215,6 +215,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     decodingUpdate.set_MissedGenFragments(missedGenFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
     decodingUpdate.set_IsRunning(!terminated);
+    decodingUpdate.set_Success(generationSucceeded);
     decodingUpdate.set_UsedPrngSeedState(prngSeedState);
     decodingUpdate.set_CurrentPrngState(currentPrngSeedState);
     decodingUpdate.set_FirstRowCrc8(crc1);
