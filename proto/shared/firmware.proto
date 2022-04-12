@@ -145,4 +145,6 @@ message DecodingUpdate {
     uint32 CurrentPrngState = 10;
     uint32 MissedGenFragments = 11;
     bool Success = 12;
+    uint32 CurrentFragmentIndex = 13;
+    uint32 CurrentSequenceNumber = 14;
 }

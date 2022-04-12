@@ -2686,6 +2686,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
       set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
     }
 
     DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
@@ -2702,6 +2704,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
       set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
     }
 
     ~DecodingUpdate() override = default;
@@ -2720,7 +2724,9 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       USEDPRNGSEEDSTATE = 9,
       CURRENTPRNGSTATE = 10,
       MISSEDGENFRAGMENTS = 11,
-      SUCCESS = 12
+      SUCCESS = 12,
+      CURRENTFRAGMENTINDEX = 13,
+      CURRENTSEQUENCENUMBER = 14
     };
 
     DecodingUpdate& operator=(const DecodingUpdate& rhs)
@@ -2737,6 +2743,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
       set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
       return *this;
     }
 
@@ -2754,6 +2762,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
       set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
       return *this;
     }
 
@@ -2841,6 +2851,20 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
     inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
 
+    inline void clear_CurrentFragmentIndex() { CurrentFragmentIndex_.clear(); }
+    inline void set_CurrentFragmentIndex(const EmbeddedProto::uint32& value) { CurrentFragmentIndex_ = value; }
+    inline void set_CurrentFragmentIndex(const EmbeddedProto::uint32&& value) { CurrentFragmentIndex_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentFragmentIndex() { return CurrentFragmentIndex_; }
+    inline const EmbeddedProto::uint32& get_CurrentFragmentIndex() const { return CurrentFragmentIndex_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentFragmentIndex() const { return CurrentFragmentIndex_.get(); }
+
+    inline void clear_CurrentSequenceNumber() { CurrentSequenceNumber_.clear(); }
+    inline void set_CurrentSequenceNumber(const EmbeddedProto::uint32& value) { CurrentSequenceNumber_ = value; }
+    inline void set_CurrentSequenceNumber(const EmbeddedProto::uint32&& value) { CurrentSequenceNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentSequenceNumber() { return CurrentSequenceNumber_; }
+    inline const EmbeddedProto::uint32& get_CurrentSequenceNumber() const { return CurrentSequenceNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentSequenceNumber() const { return CurrentSequenceNumber_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -2904,6 +2928,16 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
+      }
+
+      if((0U != CurrentFragmentIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentFragmentIndex_.serialize_with_id(static_cast<uint32_t>(id::CURRENTFRAGMENTINDEX), buffer, false);
+      }
+
+      if((0U != CurrentSequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentSequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::CURRENTSEQUENCENUMBER), buffer, false);
       }
 
       return return_value;
@@ -2970,6 +3004,14 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
             return_value = Success_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::CURRENTFRAGMENTINDEX:
+            return_value = CurrentFragmentIndex_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTSEQUENCENUMBER:
+            return_value = CurrentSequenceNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -3011,6 +3053,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       clear_CurrentPrngState();
       clear_MissedGenFragments();
       clear_Success();
+      clear_CurrentFragmentIndex();
+      clear_CurrentSequenceNumber();
 
     }
 
@@ -3029,6 +3073,8 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 CurrentPrngState_ = 0U;
       EmbeddedProto::uint32 MissedGenFragments_ = 0U;
       EmbeddedProto::boolean Success_ = false;
+      EmbeddedProto::uint32 CurrentFragmentIndex_ = 0U;
+      EmbeddedProto::uint32 CurrentSequenceNumber_ = 0U;
 
 };
 

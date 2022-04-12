@@ -165,7 +165,6 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     
     auto frame = message.get_Payload();
     auto frameSize = frame.get_length();
-
     if (frameSize != rlncConfig.get_FrameSize()) {
         // Bad or illegal configuration
         ThrowDecodingError(DecodingError::FRAME_SIZE_MISMATCH);
@@ -206,6 +205,8 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     uint8_t crc2 = ComputeChecksum(decodingMatrix[rowIndex].data(), decodingMatrix[0].size());
     DecodingUpdate decodingUpdate;
     decodingUpdate.set_RankProgress(DetermineNextInnovativeRowIndex());
+    decodingUpdate.set_CurrentFragmentIndex(tempFragmentIndex);
+    decodingUpdate.set_CurrentSequenceNumber(correlationCode);
     decodingUpdate.set_ReceivedFragments(receivedGenFragments);
     decodingUpdate.set_MissedGenFragments(missedGenFragments);
     decodingUpdate.set_CurrentGenerationIndex(generationIndex);
