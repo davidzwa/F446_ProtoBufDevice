@@ -133,18 +133,17 @@ message DecodingMatrix {
 }
 
 message DecodingUpdate {
-    uint32 MatrixCrc8 = 1;
-    uint32 FirstRowCrc8 = 2;
-    uint32 LastRowCrc8 = 3;
-    uint32 LastRowIndex = 4;
-    uint32 RankProgress = 5;
-    uint32 ReceivedFragments = 6;
-    uint32 CurrentGenerationIndex = 7;
-    bool IsRunning = 8;
-    uint32 UsedPrngSeedState = 9;
-    uint32 CurrentPrngState = 10;
-    uint32 MissedGenFragments = 11;
-    bool Success = 12;
-    uint32 CurrentFragmentIndex = 13;
-    uint32 CurrentSequenceNumber = 14;
+    uint32 FirstRowCrc8 = 1;
+    uint32 LastRowCrc8 = 2;
+    uint32 LastRowIndex = 3;
+    uint32 RankProgress = 4;
+    uint32 ReceivedFragments = 5;
+    uint32 CurrentGenerationIndex = 6;
+    bool IsRunning = 7;
+    uint32 UsedPrngSeedState = 8;
+    uint32 CurrentPrngState = 9;
+    uint32 MissedGenFragments = 10;
+    bool Success = 11;
+    uint32 CurrentFragmentIndex = 12;
+    uint32 CurrentSequenceNumber = 13;
 }

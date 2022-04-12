@@ -2674,7 +2674,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     DecodingUpdate() = default;
     DecodingUpdate(const DecodingUpdate& rhs )
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2692,7 +2691,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
 
     DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2713,25 +2711,23 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      MATRIXCRC8 = 1,
-      FIRSTROWCRC8 = 2,
-      LASTROWCRC8 = 3,
-      LASTROWINDEX = 4,
-      RANKPROGRESS = 5,
-      RECEIVEDFRAGMENTS = 6,
-      CURRENTGENERATIONINDEX = 7,
-      ISRUNNING = 8,
-      USEDPRNGSEEDSTATE = 9,
-      CURRENTPRNGSTATE = 10,
-      MISSEDGENFRAGMENTS = 11,
-      SUCCESS = 12,
-      CURRENTFRAGMENTINDEX = 13,
-      CURRENTSEQUENCENUMBER = 14
+      FIRSTROWCRC8 = 1,
+      LASTROWCRC8 = 2,
+      LASTROWINDEX = 3,
+      RANKPROGRESS = 4,
+      RECEIVEDFRAGMENTS = 5,
+      CURRENTGENERATIONINDEX = 6,
+      ISRUNNING = 7,
+      USEDPRNGSEEDSTATE = 8,
+      CURRENTPRNGSTATE = 9,
+      MISSEDGENFRAGMENTS = 10,
+      SUCCESS = 11,
+      CURRENTFRAGMENTINDEX = 12,
+      CURRENTSEQUENCENUMBER = 13
     };
 
     DecodingUpdate& operator=(const DecodingUpdate& rhs)
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2750,7 +2746,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
 
     DecodingUpdate& operator=(const DecodingUpdate&& rhs) noexcept
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2766,13 +2761,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
       return *this;
     }
-
-    inline void clear_MatrixCrc8() { MatrixCrc8_.clear(); }
-    inline void set_MatrixCrc8(const EmbeddedProto::uint32& value) { MatrixCrc8_ = value; }
-    inline void set_MatrixCrc8(const EmbeddedProto::uint32&& value) { MatrixCrc8_ = value; }
-    inline EmbeddedProto::uint32& mutable_MatrixCrc8() { return MatrixCrc8_; }
-    inline const EmbeddedProto::uint32& get_MatrixCrc8() const { return MatrixCrc8_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MatrixCrc8() const { return MatrixCrc8_.get(); }
 
     inline void clear_FirstRowCrc8() { FirstRowCrc8_.clear(); }
     inline void set_FirstRowCrc8(const EmbeddedProto::uint32& value) { FirstRowCrc8_ = value; }
@@ -2870,11 +2858,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((0U != MatrixCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MatrixCrc8_.serialize_with_id(static_cast<uint32_t>(id::MATRIXCRC8), buffer, false);
-      }
-
       if((0U != FirstRowCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = FirstRowCrc8_.serialize_with_id(static_cast<uint32_t>(id::FIRSTROWCRC8), buffer, false);
@@ -2956,10 +2939,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::MATRIXCRC8:
-            return_value = MatrixCrc8_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case id::FIRSTROWCRC8:
             return_value = FirstRowCrc8_.deserialize_check_type(buffer, wire_type);
             break;
@@ -3041,7 +3020,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_MatrixCrc8();
       clear_FirstRowCrc8();
       clear_LastRowCrc8();
       clear_LastRowIndex();
@@ -3061,7 +3039,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     private:
 
 
-      EmbeddedProto::uint32 MatrixCrc8_ = 0U;
       EmbeddedProto::uint32 FirstRowCrc8_ = 0U;
       EmbeddedProto::uint32 LastRowCrc8_ = 0U;
       EmbeddedProto::uint32 LastRowIndex_ = 0U;

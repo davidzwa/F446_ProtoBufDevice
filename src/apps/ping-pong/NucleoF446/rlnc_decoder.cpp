@@ -446,12 +446,12 @@ void RlncDecoder::EliminateRow(uint8_t row, uint8_t pivotRow, uint8_t pivotCol, 
 }
 
 void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
-    uint32_t encVectorLength = GetEncodingVectorLength();
+    uint32_t e = GetEncodingVectorLength();
     uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
-    uint32_t numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
-    uint32_t firstNumber = decodingMatrix[0][numberColumn];
-    uint32_t lastRowIndex = encVectorLength - 1;
-    uint32_t lastNumber = decodingMatrix[lastRowIndex][numberColumn];
+    uint32_t r = e - 1;
+    
+    uint32_t firstNumber = BytesToInt(decodingMatrix[0][e], decodingMatrix[0][e + 1], decodingMatrix[0][e + 2], decodingMatrix[0][e + 3]);
+    uint32_t lastNumber = BytesToInt(decodingMatrix[r][e], decodingMatrix[r][e + 1], decodingMatrix[r][e + 2], decodingMatrix[r][e + 3]);
 
     bool success = DetermineSuccess();
     if (success) {
