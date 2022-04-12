@@ -17,4 +17,6 @@ DeviceId GetDeviceId();
 
 bool IsDeviceId(const uint32_t& compareId);
 
+uint32_t BytesToInt(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4);
+
 #endif  // UTILS_H__

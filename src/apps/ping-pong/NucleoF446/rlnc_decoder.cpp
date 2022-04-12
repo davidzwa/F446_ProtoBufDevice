@@ -151,7 +151,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         ReserveGenerationStorage();
     }
 
-    if (generationSucceeded) return;
+    // if (generationSucceeded) return;
 
     uint32_t totalFragmentIndex = receivedGenFragments + missedGenFragments;
     if (tempFragmentIndex > totalFragmentIndex) {
@@ -195,10 +195,13 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     }
 
     // Store the augmented matrix row
-    bool success = DetermineSuccess(); // Before spoiling the matrix
     uint8_t rowIndex = AddFrameAsMatrixRow(augVector);
 
+    // Decoding should not fail when incomplete
+    DecodeFragments();
+
     // Debug previous decoding action and any new packet
+    bool success = DetermineSuccess();  // Before spoiling the matrix
     uint8_t crc1 = ComputeChecksum(decodingMatrix[0].data(), decodingMatrix[0].size());
     uint8_t crc2 = ComputeChecksum(decodingMatrix[rowIndex].data(), decodingMatrix[0].size());
     DecodingUpdate decodingUpdate;
@@ -221,18 +224,15 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
         UartSendDecodingUpdateWithoutPayload(decodingUpdate);
     }
 
-    // Decoding should not fail when incomplete
-    DecodeFragments(lastDecodingResult);
-
     // Process the results - if any
     if (tempFragmentIndex == encodingColCount - 1 || (receivedGenFragments >= encodingColCount && lastDecodingResult.get_Success())) {
-        // Delegate to Flash, UART or LoRa
+        // Skip the send, clear the result
         SendUartDecodingResult(lastDecodingResult);
         // StoreDecodingResult(result);
     }
 }
 
-void RlncDecoder::DecodeFragments(DecodingResult& result) {
+void RlncDecoder::DecodeFragments() {
     CRITICAL_SECTION_BEGIN();
 
     // Get the symbols to skip in RREF
@@ -454,7 +454,7 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
 
     bool success = DetermineSuccess();
     if (success) {
-        generationSucceeded = true;
+        // generationSucceeded = true;
     }
 
     result.set_Success(success);
@@ -464,25 +464,25 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
     result.set_CurrentGenerationIndex(generationIndex);
     result.set_FirstDecodedNumber(firstNumber);
     result.set_LastDecodedNumber(lastNumber);
-    UartSendDecodingResult(result);
+    // UartSendDecodingResult(result);
 
     // Clear the results after sending for better state management
     result.clear();
 }
 
 bool RlncDecoder::DetermineSuccess() {
-    auto encVectorLength = GetEncodingVectorLength();
-    auto generationSize = rlncConfig.get_GenerationSize();
-    auto numberColumn = encVectorLength + 3;  // 4th byte is a fixated column
-    auto firstNumber = decodingMatrix[0][numberColumn];
-    auto lastRowIndex = encVectorLength - 1;
-    auto lastNumber = decodingMatrix[lastRowIndex][numberColumn];
-    auto correctFirstNumber = generationSize * generationIndex;
-    auto correctLastNumber = correctFirstNumber + encVectorLength - 1;
+    uint32_t e = GetEncodingVectorLength();
+    uint32_t r = e - 1;
+    uint32_t generationSize = rlncConfig.get_GenerationSize();
 
-    bool success = firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
+    // First and last number are enough constraints for succesfull decoding
+    uint32_t firstNumber = BytesToInt(decodingMatrix[0][e], decodingMatrix[0][e + 1], decodingMatrix[0][e + 2], decodingMatrix[0][e + 3]);
+    uint32_t lastNumber = BytesToInt(decodingMatrix[r][e], decodingMatrix[r][e + 1], decodingMatrix[r][e + 2], decodingMatrix[r][e + 3]);
 
-    return success;
+    uint32_t correctFirstNumber = generationSize * generationIndex;
+    uint32_t correctLastNumber = correctFirstNumber + e - 1;
+
+    return firstNumber == correctFirstNumber && lastNumber == (correctLastNumber);
 }
 
 void RlncDecoder::ThrowDecodingError(DecodingError error) {
