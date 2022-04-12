@@ -65,6 +65,14 @@ message RlncRemoteFlashResponse {
     uint32 CurrentTimerDelay = 6;
     bool CurrentSetIsMulticast = 7;
     uint32 CurrentDeviceId0 = 8;
+
+    // Experiment configuration loaded from RlncInitCommand
+    uint32 GenerationSize = 9;
+    uint32 GenerationRedundancySize = 10;
+    uint32 GenerationCount = 11;
+    uint32 FrameSize = 12;
+    uint32 TotalFrameCount = 13;
+    ReceptionRateConfig receptionRateConfig = 14;
 }
 
 message RlncInitConfigCommand {
@@ -125,15 +133,17 @@ message DecodingMatrix {
 }
 
 message DecodingUpdate {
-    uint32 MatrixCrc8 = 1;
-    uint32 FirstRowCrc8 = 2;
-    uint32 LastRowCrc8 = 3;
-    uint32 LastRowIndex = 4;
-    uint32 RankProgress = 5;
-    uint32 ReceivedFragments = 6;
-    uint32 CurrentGenerationIndex = 7;
-    bool IsRunning = 8;
-    uint32 UsedPrngSeedState = 9;
-    uint32 CurrentPrngState = 10;
-    uint32 MissedGenFragments = 11;
+    uint32 FirstRowCrc8 = 1;
+    uint32 LastRowCrc8 = 2;
+    uint32 LastRowIndex = 3;
+    uint32 RankProgress = 4;
+    uint32 ReceivedFragments = 5;
+    uint32 CurrentGenerationIndex = 6;
+    bool IsRunning = 7;
+    uint32 UsedPrngSeedState = 8;
+    uint32 CurrentPrngState = 9;
+    uint32 MissedGenFragments = 10;
+    bool Success = 11;
+    uint32 CurrentFragmentIndex = 12;
+    uint32 CurrentSequenceNumber = 13;
 }

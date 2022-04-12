@@ -7,6 +7,7 @@
 #include "ProtoReadBuffer.h"
 #include "cli.h"
 #include "config.h"
+#include "delay.h"
 #include "lora_device_messages.h"
 #include "nvmm.h"
 #include "radio_config.h"
@@ -151,6 +152,7 @@ uint16_t ProgressRlncSession() {
         sessionState = RlncSessionState::IN_GENERATION;
         UartDebug("RLNC_NVM", 4000 + currentGenerationIndex, 8);
     } else if (sessionState == RlncSessionState::PRE_TERMINATION) {
+        DelayMs(200);
         TransmitLoRaMessageWithDeviceFilter(terminationCommand);
         sessionState = RlncSessionState::POST_TERMINATION;
         UartDebug("RLNC_NVM", 0xFE, 8);
@@ -181,17 +183,30 @@ void SendLoRaRlncSessionResponse() {
     stateResponse.clear();
     RlncRemoteFlashResponse response;
 
+    // State
     response.set_RlncFlashState(state);
     response.set_RlncSessionState(sessionState);
 
+    // Timing and identity
     response.set_CurrentDeviceId0(deviceId0Filter);
     response.set_CurrentSetIsMulticast(isMulticastFilter);
     response.set_CurrentTimerDelay(GetCurrentTimerPeriod());
 
+    // Tranmission settings
     response.set_CurrentTxPower(GetTxPower());
     response.set_CurrentTxBandwidth(GetTxBandwidth());
     response.set_CurrentTxDataRate(GetTxDataRate());
 
+    // Experimental config
+    auto config = GetConfig();
+    response.set_GenerationSize(config.get_GenerationSize());
+    response.set_GenerationRedundancySize(config.get_GenerationRedundancySize());
+    response.set_GenerationCount(config.get_GenerationCount());
+    response.set_FrameSize(config.get_FrameSize());
+    response.set_TotalFrameCount(config.get_TotalFrameCount());
+    response.set_receptionRateConfig(config.get_receptionRateConfig());
+
+    // Body & Control plane settings
     stateResponse.set_rlncRemoteFlashResponse(response);
     stateResponse.set_IsMulticast(false);
     stateResponse.set_DeviceId(NETWORK_RESPONSE_ID);

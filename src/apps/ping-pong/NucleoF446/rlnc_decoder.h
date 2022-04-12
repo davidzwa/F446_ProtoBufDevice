@@ -52,7 +52,8 @@ class RlncDecoder {
 
     uint32_t GetMatrixColumnCount();
     uint32_t GetEncodingVectorLength();
-    void DecodeFragments(DecodingResult& result);
+    void DecodeFragments();
+    bool DetermineSuccess();
     void SendUartDecodingResult(DecodingResult& result);
     void StoreDecodingResult(DecodingResult& decodingResult);
 

@@ -1049,6 +1049,12 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
       set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
       set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+      set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
+      set_GenerationCount(rhs.get_GenerationCount());
+      set_FrameSize(rhs.get_FrameSize());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
     }
 
     RlncRemoteFlashResponse(const RlncRemoteFlashResponse&& rhs ) noexcept
@@ -1061,6 +1067,12 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
       set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
       set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+      set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
+      set_GenerationCount(rhs.get_GenerationCount());
+      set_FrameSize(rhs.get_FrameSize());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
     }
 
     ~RlncRemoteFlashResponse() override = default;
@@ -1075,7 +1087,13 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       CURRENTTXDATARATE = 5,
       CURRENTTIMERDELAY = 6,
       CURRENTSETISMULTICAST = 7,
-      CURRENTDEVICEID0 = 8
+      CURRENTDEVICEID0 = 8,
+      GENERATIONSIZE = 9,
+      GENERATIONREDUNDANCYSIZE = 10,
+      GENERATIONCOUNT = 11,
+      FRAMESIZE = 12,
+      TOTALFRAMECOUNT = 13,
+      RECEPTIONRATECONFIG = 14
     };
 
     RlncRemoteFlashResponse& operator=(const RlncRemoteFlashResponse& rhs)
@@ -1088,6 +1106,12 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
       set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
       set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+      set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
+      set_GenerationCount(rhs.get_GenerationCount());
+      set_FrameSize(rhs.get_FrameSize());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       return *this;
     }
 
@@ -1101,6 +1125,12 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       set_CurrentTimerDelay(rhs.get_CurrentTimerDelay());
       set_CurrentSetIsMulticast(rhs.get_CurrentSetIsMulticast());
       set_CurrentDeviceId0(rhs.get_CurrentDeviceId0());
+      set_GenerationSize(rhs.get_GenerationSize());
+      set_GenerationRedundancySize(rhs.get_GenerationRedundancySize());
+      set_GenerationCount(rhs.get_GenerationCount());
+      set_FrameSize(rhs.get_FrameSize());
+      set_TotalFrameCount(rhs.get_TotalFrameCount());
+      set_receptionRateConfig(rhs.get_receptionRateConfig());
       return *this;
     }
 
@@ -1160,6 +1190,48 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_CurrentDeviceId0() const { return CurrentDeviceId0_; }
     inline EmbeddedProto::uint32::FIELD_TYPE CurrentDeviceId0() const { return CurrentDeviceId0_.get(); }
 
+    inline void clear_GenerationSize() { GenerationSize_.clear(); }
+    inline void set_GenerationSize(const EmbeddedProto::uint32& value) { GenerationSize_ = value; }
+    inline void set_GenerationSize(const EmbeddedProto::uint32&& value) { GenerationSize_ = value; }
+    inline EmbeddedProto::uint32& mutable_GenerationSize() { return GenerationSize_; }
+    inline const EmbeddedProto::uint32& get_GenerationSize() const { return GenerationSize_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE GenerationSize() const { return GenerationSize_.get(); }
+
+    inline void clear_GenerationRedundancySize() { GenerationRedundancySize_.clear(); }
+    inline void set_GenerationRedundancySize(const EmbeddedProto::uint32& value) { GenerationRedundancySize_ = value; }
+    inline void set_GenerationRedundancySize(const EmbeddedProto::uint32&& value) { GenerationRedundancySize_ = value; }
+    inline EmbeddedProto::uint32& mutable_GenerationRedundancySize() { return GenerationRedundancySize_; }
+    inline const EmbeddedProto::uint32& get_GenerationRedundancySize() const { return GenerationRedundancySize_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE GenerationRedundancySize() const { return GenerationRedundancySize_.get(); }
+
+    inline void clear_GenerationCount() { GenerationCount_.clear(); }
+    inline void set_GenerationCount(const EmbeddedProto::uint32& value) { GenerationCount_ = value; }
+    inline void set_GenerationCount(const EmbeddedProto::uint32&& value) { GenerationCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_GenerationCount() { return GenerationCount_; }
+    inline const EmbeddedProto::uint32& get_GenerationCount() const { return GenerationCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE GenerationCount() const { return GenerationCount_.get(); }
+
+    inline void clear_FrameSize() { FrameSize_.clear(); }
+    inline void set_FrameSize(const EmbeddedProto::uint32& value) { FrameSize_ = value; }
+    inline void set_FrameSize(const EmbeddedProto::uint32&& value) { FrameSize_ = value; }
+    inline EmbeddedProto::uint32& mutable_FrameSize() { return FrameSize_; }
+    inline const EmbeddedProto::uint32& get_FrameSize() const { return FrameSize_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE FrameSize() const { return FrameSize_.get(); }
+
+    inline void clear_TotalFrameCount() { TotalFrameCount_.clear(); }
+    inline void set_TotalFrameCount(const EmbeddedProto::uint32& value) { TotalFrameCount_ = value; }
+    inline void set_TotalFrameCount(const EmbeddedProto::uint32&& value) { TotalFrameCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_TotalFrameCount() { return TotalFrameCount_; }
+    inline const EmbeddedProto::uint32& get_TotalFrameCount() const { return TotalFrameCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TotalFrameCount() const { return TotalFrameCount_.get(); }
+
+    inline void clear_receptionRateConfig() { receptionRateConfig_.clear(); }
+    inline void set_receptionRateConfig(const ReceptionRateConfig& value) { receptionRateConfig_ = value; }
+    inline void set_receptionRateConfig(const ReceptionRateConfig&& value) { receptionRateConfig_ = value; }
+    inline ReceptionRateConfig& mutable_receptionRateConfig() { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& get_receptionRateConfig() const { return receptionRateConfig_; }
+    inline const ReceptionRateConfig& receptionRateConfig() const { return receptionRateConfig_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1203,6 +1275,36 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       if((0U != CurrentDeviceId0_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = CurrentDeviceId0_.serialize_with_id(static_cast<uint32_t>(id::CURRENTDEVICEID0), buffer, false);
+      }
+
+      if((0U != GenerationSize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = GenerationSize_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONSIZE), buffer, false);
+      }
+
+      if((0U != GenerationRedundancySize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = GenerationRedundancySize_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONREDUNDANCYSIZE), buffer, false);
+      }
+
+      if((0U != GenerationCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = GenerationCount_.serialize_with_id(static_cast<uint32_t>(id::GENERATIONCOUNT), buffer, false);
+      }
+
+      if((0U != FrameSize_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = FrameSize_.serialize_with_id(static_cast<uint32_t>(id::FRAMESIZE), buffer, false);
+      }
+
+      if((0U != TotalFrameCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TotalFrameCount_.serialize_with_id(static_cast<uint32_t>(id::TOTALFRAMECOUNT), buffer, false);
+      }
+
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+      {
+        return_value = receptionRateConfig_.serialize_with_id(static_cast<uint32_t>(id::RECEPTIONRATECONFIG), buffer, false);
       }
 
       return return_value;
@@ -1253,6 +1355,30 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
             return_value = CurrentDeviceId0_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::GENERATIONSIZE:
+            return_value = GenerationSize_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::GENERATIONREDUNDANCYSIZE:
+            return_value = GenerationRedundancySize_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::GENERATIONCOUNT:
+            return_value = GenerationCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::FRAMESIZE:
+            return_value = FrameSize_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TOTALFRAMECOUNT:
+            return_value = TotalFrameCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::RECEPTIONRATECONFIG:
+            return_value = receptionRateConfig_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -1290,6 +1416,12 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       clear_CurrentTimerDelay();
       clear_CurrentSetIsMulticast();
       clear_CurrentDeviceId0();
+      clear_GenerationSize();
+      clear_GenerationRedundancySize();
+      clear_GenerationCount();
+      clear_FrameSize();
+      clear_TotalFrameCount();
+      clear_receptionRateConfig();
 
     }
 
@@ -1304,6 +1436,12 @@ class RlncRemoteFlashResponse final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 CurrentTimerDelay_ = 0U;
       EmbeddedProto::boolean CurrentSetIsMulticast_ = false;
       EmbeddedProto::uint32 CurrentDeviceId0_ = 0U;
+      EmbeddedProto::uint32 GenerationSize_ = 0U;
+      EmbeddedProto::uint32 GenerationRedundancySize_ = 0U;
+      EmbeddedProto::uint32 GenerationCount_ = 0U;
+      EmbeddedProto::uint32 FrameSize_ = 0U;
+      EmbeddedProto::uint32 TotalFrameCount_ = 0U;
+      ReceptionRateConfig receptionRateConfig_;
 
 };
 
@@ -2536,7 +2674,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     DecodingUpdate() = default;
     DecodingUpdate(const DecodingUpdate& rhs )
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2547,11 +2684,13 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
     }
 
     DecodingUpdate(const DecodingUpdate&& rhs ) noexcept
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2562,6 +2701,9 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
     }
 
     ~DecodingUpdate() override = default;
@@ -2569,22 +2711,23 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      MATRIXCRC8 = 1,
-      FIRSTROWCRC8 = 2,
-      LASTROWCRC8 = 3,
-      LASTROWINDEX = 4,
-      RANKPROGRESS = 5,
-      RECEIVEDFRAGMENTS = 6,
-      CURRENTGENERATIONINDEX = 7,
-      ISRUNNING = 8,
-      USEDPRNGSEEDSTATE = 9,
-      CURRENTPRNGSTATE = 10,
-      MISSEDGENFRAGMENTS = 11
+      FIRSTROWCRC8 = 1,
+      LASTROWCRC8 = 2,
+      LASTROWINDEX = 3,
+      RANKPROGRESS = 4,
+      RECEIVEDFRAGMENTS = 5,
+      CURRENTGENERATIONINDEX = 6,
+      ISRUNNING = 7,
+      USEDPRNGSEEDSTATE = 8,
+      CURRENTPRNGSTATE = 9,
+      MISSEDGENFRAGMENTS = 10,
+      SUCCESS = 11,
+      CURRENTFRAGMENTINDEX = 12,
+      CURRENTSEQUENCENUMBER = 13
     };
 
     DecodingUpdate& operator=(const DecodingUpdate& rhs)
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2595,12 +2738,14 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
       return *this;
     }
 
     DecodingUpdate& operator=(const DecodingUpdate&& rhs) noexcept
     {
-      set_MatrixCrc8(rhs.get_MatrixCrc8());
       set_FirstRowCrc8(rhs.get_FirstRowCrc8());
       set_LastRowCrc8(rhs.get_LastRowCrc8());
       set_LastRowIndex(rhs.get_LastRowIndex());
@@ -2611,15 +2756,11 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       set_UsedPrngSeedState(rhs.get_UsedPrngSeedState());
       set_CurrentPrngState(rhs.get_CurrentPrngState());
       set_MissedGenFragments(rhs.get_MissedGenFragments());
+      set_Success(rhs.get_Success());
+      set_CurrentFragmentIndex(rhs.get_CurrentFragmentIndex());
+      set_CurrentSequenceNumber(rhs.get_CurrentSequenceNumber());
       return *this;
     }
-
-    inline void clear_MatrixCrc8() { MatrixCrc8_.clear(); }
-    inline void set_MatrixCrc8(const EmbeddedProto::uint32& value) { MatrixCrc8_ = value; }
-    inline void set_MatrixCrc8(const EmbeddedProto::uint32&& value) { MatrixCrc8_ = value; }
-    inline EmbeddedProto::uint32& mutable_MatrixCrc8() { return MatrixCrc8_; }
-    inline const EmbeddedProto::uint32& get_MatrixCrc8() const { return MatrixCrc8_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE MatrixCrc8() const { return MatrixCrc8_.get(); }
 
     inline void clear_FirstRowCrc8() { FirstRowCrc8_.clear(); }
     inline void set_FirstRowCrc8(const EmbeddedProto::uint32& value) { FirstRowCrc8_ = value; }
@@ -2691,15 +2832,31 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::uint32& get_MissedGenFragments() const { return MissedGenFragments_; }
     inline EmbeddedProto::uint32::FIELD_TYPE MissedGenFragments() const { return MissedGenFragments_.get(); }
 
+    inline void clear_Success() { Success_.clear(); }
+    inline void set_Success(const EmbeddedProto::boolean& value) { Success_ = value; }
+    inline void set_Success(const EmbeddedProto::boolean&& value) { Success_ = value; }
+    inline EmbeddedProto::boolean& mutable_Success() { return Success_; }
+    inline const EmbeddedProto::boolean& get_Success() const { return Success_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE Success() const { return Success_.get(); }
+
+    inline void clear_CurrentFragmentIndex() { CurrentFragmentIndex_.clear(); }
+    inline void set_CurrentFragmentIndex(const EmbeddedProto::uint32& value) { CurrentFragmentIndex_ = value; }
+    inline void set_CurrentFragmentIndex(const EmbeddedProto::uint32&& value) { CurrentFragmentIndex_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentFragmentIndex() { return CurrentFragmentIndex_; }
+    inline const EmbeddedProto::uint32& get_CurrentFragmentIndex() const { return CurrentFragmentIndex_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentFragmentIndex() const { return CurrentFragmentIndex_.get(); }
+
+    inline void clear_CurrentSequenceNumber() { CurrentSequenceNumber_.clear(); }
+    inline void set_CurrentSequenceNumber(const EmbeddedProto::uint32& value) { CurrentSequenceNumber_ = value; }
+    inline void set_CurrentSequenceNumber(const EmbeddedProto::uint32&& value) { CurrentSequenceNumber_ = value; }
+    inline EmbeddedProto::uint32& mutable_CurrentSequenceNumber() { return CurrentSequenceNumber_; }
+    inline const EmbeddedProto::uint32& get_CurrentSequenceNumber() const { return CurrentSequenceNumber_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE CurrentSequenceNumber() const { return CurrentSequenceNumber_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
-
-      if((0U != MatrixCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
-      {
-        return_value = MatrixCrc8_.serialize_with_id(static_cast<uint32_t>(id::MATRIXCRC8), buffer, false);
-      }
 
       if((0U != FirstRowCrc8_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
@@ -2751,6 +2908,21 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
         return_value = MissedGenFragments_.serialize_with_id(static_cast<uint32_t>(id::MISSEDGENFRAGMENTS), buffer, false);
       }
 
+      if((false != Success_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Success_.serialize_with_id(static_cast<uint32_t>(id::SUCCESS), buffer, false);
+      }
+
+      if((0U != CurrentFragmentIndex_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentFragmentIndex_.serialize_with_id(static_cast<uint32_t>(id::CURRENTFRAGMENTINDEX), buffer, false);
+      }
+
+      if((0U != CurrentSequenceNumber_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = CurrentSequenceNumber_.serialize_with_id(static_cast<uint32_t>(id::CURRENTSEQUENCENUMBER), buffer, false);
+      }
+
       return return_value;
     };
 
@@ -2767,10 +2939,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::MATRIXCRC8:
-            return_value = MatrixCrc8_.deserialize_check_type(buffer, wire_type);
-            break;
-
           case id::FIRSTROWCRC8:
             return_value = FirstRowCrc8_.deserialize_check_type(buffer, wire_type);
             break;
@@ -2811,6 +2979,18 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
             return_value = MissedGenFragments_.deserialize_check_type(buffer, wire_type);
             break;
 
+          case id::SUCCESS:
+            return_value = Success_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTFRAGMENTINDEX:
+            return_value = CurrentFragmentIndex_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::CURRENTSEQUENCENUMBER:
+            return_value = CurrentSequenceNumber_.deserialize_check_type(buffer, wire_type);
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -2840,7 +3020,6 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_MatrixCrc8();
       clear_FirstRowCrc8();
       clear_LastRowCrc8();
       clear_LastRowIndex();
@@ -2851,13 +3030,15 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       clear_UsedPrngSeedState();
       clear_CurrentPrngState();
       clear_MissedGenFragments();
+      clear_Success();
+      clear_CurrentFragmentIndex();
+      clear_CurrentSequenceNumber();
 
     }
 
     private:
 
 
-      EmbeddedProto::uint32 MatrixCrc8_ = 0U;
       EmbeddedProto::uint32 FirstRowCrc8_ = 0U;
       EmbeddedProto::uint32 LastRowCrc8_ = 0U;
       EmbeddedProto::uint32 LastRowIndex_ = 0U;
@@ -2868,6 +3049,9 @@ class DecodingUpdate final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::uint32 UsedPrngSeedState_ = 0U;
       EmbeddedProto::uint32 CurrentPrngState_ = 0U;
       EmbeddedProto::uint32 MissedGenFragments_ = 0U;
+      EmbeddedProto::boolean Success_ = false;
+      EmbeddedProto::uint32 CurrentFragmentIndex_ = 0U;
+      EmbeddedProto::uint32 CurrentSequenceNumber_ = 0U;
 
 };
 
