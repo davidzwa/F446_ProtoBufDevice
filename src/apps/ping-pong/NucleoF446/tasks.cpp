@@ -23,8 +23,6 @@ uint16_t periodicTxInterval = DEFAULT_TX_PERIOD;
 
 // Sequencer as test
 bool standaloneAlwaysSendPeriodically = false;
-uint16_t sequenceMessageCount = 0;
-bool sequenceTestRunning = false;
 
 bool IsSending() {
     return periodicTxTimer.IsStarted;
@@ -78,8 +76,8 @@ static void OnPeriodicTx(void* context) {
     TransmitLoRaMessage(command);
     UartDebug("PeriodTX", periodicCurrentCounter, 8);
     periodicCurrentCounter++;
-
-    if (periodicCurrentCounter > sequenceNumberLimit) {
+    
+    if (periodicCurrentCounter >= sequenceNumberLimit) {
         if (standaloneAlwaysSendPeriodically) {
             // We start again with new counter
             periodicCurrentCounter = 0;
