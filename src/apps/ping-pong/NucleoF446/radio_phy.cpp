@@ -115,15 +115,15 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     }
 
     // Processing
-    bool isResponding = false;
+    bool needsRadioRx = false;
     auto isMulticast = loraPhyMessage.get_IsMulticast();
     bool isDeviceId = IsDeviceId(loraPhyMessage.get_DeviceId());
     if (isMulticast) {
         UartDebug("MC", isDeviceId + 200, 2);
-        isResponding = HandleLoRaProtoMulticastPayload(loraPhyMessage, rssi, snr);
+        needsRadioRx = HandleLoRaProtoMulticastPayload(loraPhyMessage, rssi, snr);
     } else if (isDeviceId) {
         UartDebug("UC", isDeviceId + 100, 2);
-        isResponding = HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
+        needsRadioRx = HandleLoRaProtoPayload(loraPhyMessage, rssi, snr);
     }
 
     // Only specific RLNC messages are registered as measurement
@@ -140,7 +140,7 @@ void OnRxDone(uint8_t* payload, uint16_t size, int16_t rssi, int8_t snr) {
     loraPhyMessage.clear();
 
     // Re-enable continuous listening
-    if (!isResponding) {
+    if (!needsRadioRx) {
         Radio.Rx(0);
     }
 }
@@ -181,6 +181,8 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             SetTxConfig(config.get_transmitConfiguration());
             ApplyAlwaysSendPeriodically(config);
             UartDebug("DevConf", 0, 7);
+
+            return true;
         }
         return false;
     } else if (message.has_forwardExperimentCommand()) {
