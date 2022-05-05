@@ -29,6 +29,12 @@ message LoRaAck {
     uint32 DeviceId = 1;
 }
 
+message DummyConfig {
+    int32 TxPower = 1;
+    uint32 TxRxBandwidth = 2;
+    uint32 TxRxDataRate = 3;
+}
+
 message LoRaMessage {
     bool IsMulticast = 1;
     
@@ -62,5 +68,7 @@ message LoRaMessage {
         BootMessage bootMessage = 21;
         LoRaReset resetRadio = 22;
         LoRaAck ack = 23;
+
+        DummyConfig dummyConfig = 24;
     }
 }

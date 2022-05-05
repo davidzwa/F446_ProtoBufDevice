@@ -561,6 +561,163 @@ class LoRaAck final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class DummyConfig final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DummyConfig() = default;
+    DummyConfig(const DummyConfig& rhs )
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+    }
+
+    DummyConfig(const DummyConfig&& rhs ) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+    }
+
+    ~DummyConfig() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      TXPOWER = 1,
+      TXRXBANDWIDTH = 2,
+      TXRXDATARATE = 3
+    };
+
+    DummyConfig& operator=(const DummyConfig& rhs)
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      return *this;
+    }
+
+    DummyConfig& operator=(const DummyConfig&& rhs) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      return *this;
+    }
+
+    inline void clear_TxPower() { TxPower_.clear(); }
+    inline void set_TxPower(const EmbeddedProto::int32& value) { TxPower_ = value; }
+    inline void set_TxPower(const EmbeddedProto::int32&& value) { TxPower_ = value; }
+    inline EmbeddedProto::int32& mutable_TxPower() { return TxPower_; }
+    inline const EmbeddedProto::int32& get_TxPower() const { return TxPower_; }
+    inline EmbeddedProto::int32::FIELD_TYPE TxPower() const { return TxPower_.get(); }
+
+    inline void clear_TxRxBandwidth() { TxRxBandwidth_.clear(); }
+    inline void set_TxRxBandwidth(const EmbeddedProto::uint32& value) { TxRxBandwidth_ = value; }
+    inline void set_TxRxBandwidth(const EmbeddedProto::uint32&& value) { TxRxBandwidth_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxRxBandwidth() { return TxRxBandwidth_; }
+    inline const EmbeddedProto::uint32& get_TxRxBandwidth() const { return TxRxBandwidth_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxRxBandwidth() const { return TxRxBandwidth_.get(); }
+
+    inline void clear_TxRxDataRate() { TxRxDataRate_.clear(); }
+    inline void set_TxRxDataRate(const EmbeddedProto::uint32& value) { TxRxDataRate_ = value; }
+    inline void set_TxRxDataRate(const EmbeddedProto::uint32&& value) { TxRxDataRate_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxRxDataRate() { return TxRxDataRate_; }
+    inline const EmbeddedProto::uint32& get_TxRxDataRate() const { return TxRxDataRate_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxRxDataRate() const { return TxRxDataRate_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0 != TxPower_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxPower_.serialize_with_id(static_cast<uint32_t>(id::TXPOWER), buffer, false);
+      }
+
+      if((0U != TxRxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxRxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXRXBANDWIDTH), buffer, false);
+      }
+
+      if((0U != TxRxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxRxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXRXDATARATE), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::TXPOWER:
+            return_value = TxPower_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXRXBANDWIDTH:
+            return_value = TxRxBandwidth_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXRXDATARATE:
+            return_value = TxRxDataRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_TxPower();
+      clear_TxRxBandwidth();
+      clear_TxRxDataRate();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::int32 TxPower_ = 0;
+      EmbeddedProto::uint32 TxRxBandwidth_ = 0U;
+      EmbeddedProto::uint32 TxRxDataRate_ = 0U;
+
+};
+
 template<uint32_t Payload_LENGTH>
 class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 {
@@ -654,6 +811,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::ACK:
           set_ack(rhs.get_ack());
+          break;
+
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
           break;
 
         default:
@@ -752,6 +913,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_ack(rhs.get_ack());
           break;
 
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
+          break;
+
         default:
           break;
       }
@@ -785,7 +950,8 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       REQUESTBOOTINFO = 20,
       BOOTMESSAGE = 21,
       RESETRADIO = 22,
-      ACK = 23
+      ACK = 23,
+      DUMMYCONFIG = 24
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -876,6 +1042,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::ACK:
           set_ack(rhs.get_ack());
+          break;
+
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
           break;
 
         default:
@@ -973,6 +1143,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::ACK:
           set_ack(rhs.get_ack());
+          break;
+
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
           break;
 
         default:
@@ -1752,6 +1926,45 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const LoRaAck& get_ack() const { return Body_.ack_; }
     inline const LoRaAck& ack() const { return Body_.ack_; }
 
+    inline bool has_dummyConfig() const
+    {
+      return id::DUMMYCONFIG == which_Body_;
+    }
+    inline void clear_dummyConfig()
+    {
+      if(id::DUMMYCONFIG == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.dummyConfig_.~DummyConfig();
+      }
+    }
+    inline void set_dummyConfig(const DummyConfig& value)
+    {
+      if(id::DUMMYCONFIG != which_Body_)
+      {
+        init_Body(id::DUMMYCONFIG);
+      }
+      Body_.dummyConfig_ = value;
+    }
+    inline void set_dummyConfig(const DummyConfig&& value)
+    {
+      if(id::DUMMYCONFIG != which_Body_)
+      {
+        init_Body(id::DUMMYCONFIG);
+      }
+      Body_.dummyConfig_ = value;
+    }
+    inline DummyConfig& mutable_dummyConfig()
+    {
+      if(id::DUMMYCONFIG != which_Body_)
+      {
+        init_Body(id::DUMMYCONFIG);
+      }
+      return Body_.dummyConfig_;
+    }
+    inline const DummyConfig& get_dummyConfig() const { return Body_.dummyConfig_; }
+    inline const DummyConfig& dummyConfig() const { return Body_.dummyConfig_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1912,6 +2125,13 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::DUMMYCONFIG:
+          if(has_dummyConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.dummyConfig_.serialize_with_id(static_cast<uint32_t>(id::DUMMYCONFIG), buffer, true);
+          }
+          break;
+
         default:
           break;
       }
@@ -2043,6 +2263,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::DUMMYCONFIG:
+            return_value = deserialize_Body(id::DUMMYCONFIG, Body_.dummyConfig_, buffer, wire_type);
+
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -2112,6 +2337,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         BootMessage bootMessage_;
         LoRaReset resetRadio_;
         LoRaAck ack_;
+        DummyConfig dummyConfig_;
       };
       Body Body_;
 
@@ -2221,6 +2447,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::ACK;
             break;
 
+          case id::DUMMYCONFIG:
+            new(&Body_.dummyConfig_) DummyConfig;
+            which_Body_ = id::DUMMYCONFIG;
+            break;
+
           default:
             break;
          }
@@ -2288,6 +2519,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::ACK:
             Body_.ack_.~LoRaAck(); // NOSONAR Unions require this.
+            break;
+          case id::DUMMYCONFIG:
+            Body_.dummyConfig_.~DummyConfig(); // NOSONAR Unions require this.
             break;
           default:
             break;

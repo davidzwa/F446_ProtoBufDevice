@@ -5,6 +5,7 @@
 #include "delay.h"
 #include "measurements.h"
 #include "radio_phy.h"
+#include "radio_config.h"
 #include "timer.h"
 
 #define MAX_SEQUENCE_NUMBERS 5000
@@ -72,6 +73,11 @@ static void OnPeriodicTx(void* context) {
     auto payload = command.mutable_Payload();
     payload.set(test_message, sizeof(test_message));
     command.set_CorrelationCode(periodicCurrentCounter);
+
+    auto dummyConfig = command.mutable_dummyConfig();
+    dummyConfig.set_TxPower(GetTxPower());
+    dummyConfig.set_TxRxBandwidth(GetTxBandwidth());
+    dummyConfig.set_TxRxDataRate(GetTxDataRate());
 
     TransmitLoRaMessage(command);
     UartDebug("PeriodTX", periodicCurrentCounter, 8);
