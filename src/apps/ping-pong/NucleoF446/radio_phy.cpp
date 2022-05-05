@@ -185,7 +185,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
 
             // Ack receipt
             DelayMs(10);
-            TxLoRaAck(1);
+            UartSendAck(1);
         }
         else {
             StopPeriodicTransmit();
@@ -194,13 +194,13 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
         
         if (config.get_enableSequenceTransmit()) {
             DelayMs(10);
-            TxLoRaAck(2);
+            UartSendAck(2);
 
             auto preConfigDelay = config.get_sequenceConfiguration().Delay();
             if (preConfigDelay > 0) {
                 DelayMs(preConfigDelay);
             }
-            TxLoRaAck(3);
+            UartSendAck(3);
             DelayMs(10);
 
             ApplyAlwaysSendPeriodically(config);
