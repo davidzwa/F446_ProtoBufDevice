@@ -18,6 +18,7 @@ void TransmitLoRaFlashInfo(bool wasCleared);
 void TxSequenceCommand(uint8_t* serialBuf, uint8_t bufSize);
 void TxSequenceTestTimerCallback(void *context);
 void TxStartSequenceTest(uint16_t messageCount, uint16_t intervalMs);
+void TxLoRaAck(int correlationCode);
 void TxTestProcess();
 
 // For handling uart test messages through our processing pipeline

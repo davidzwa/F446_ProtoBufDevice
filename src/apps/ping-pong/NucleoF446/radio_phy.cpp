@@ -24,6 +24,8 @@ int8_t lastSnrValue = 0;
 bool HandleLoRaProtoMulticastPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr);
 bool HandleRlncCommand(LORA_MSG_TEMPLATE& message);
 
+void TxLoRaAck(int correlationCode);
+
 /*!
  * \brief Radio interupts
  */
@@ -152,6 +154,8 @@ bool HandleLoRaProtoMulticastPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, i
         // Broadcast emergency stop command
         StopPeriodicTransmit();
     } 
+
+    // Disabled explicitly due to bad behaviour so far
     // else if (message.has_forwardExperimentCommand()) {
         // auto msg = message.get_forwardExperimentCommand();
         // auto slaveCommand = msg.get_slaveCommand();
@@ -172,19 +176,38 @@ bool HandleLoRaProtoMulticastPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, i
  */
 bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr) {
     if (message.has_deviceConfiguration()) {
-        // Periodic/sequence sending
-        if (IsSending()) {
+        auto config = message.get_deviceConfiguration();
+
+        if (config.get_applyTransmitConfig()) {
+            // Set the TXRX config
+            SetTxRxConfig(config.get_transmitConfiguration(), false);
+            UartDebug("TxConf", 0, 6);
+
+            // Ack receipt
+            DelayMs(10);
+            TxLoRaAck(1);
+        }
+        else {
             StopPeriodicTransmit();
             UartDebug("DevConfStop", 0, 12);
-        } else {
-            auto config = message.get_deviceConfiguration();
-            SetTxConfig(config.get_transmitConfiguration());
+        }
+        
+        if (config.get_enableSequenceTransmit()) {
+            DelayMs(10);
+            TxLoRaAck(2);
+
+            auto preConfigDelay = config.get_sequenceConfiguration().Delay();
+            if (preConfigDelay > 0) {
+                DelayMs(preConfigDelay);
+            }
+            TxLoRaAck(3);
+            DelayMs(10);
+
             ApplyAlwaysSendPeriodically(config);
             UartDebug("DevConf", 0, 7);
-
-            return true;
         }
-        return false;
+
+        return true;
     } else if (message.has_forwardExperimentCommand()) {
         auto msg = message.get_forwardExperimentCommand();
         auto slaveCommand = msg.get_slaveCommand();
@@ -192,7 +215,7 @@ bool HandleLoRaProtoPayload(LORA_MSG_TEMPLATE& message, int16_t rssi, int8_t snr
             ClearMeasurements();
         }
 
-        UartDebug("LORA-ACK", 1, 8);
+        UartDebug("LORA_ACK", 1, 8);
         TransmitLoRaFlashInfo(true);
         return true;
     } else if (message.has_rlncRemoteFlashStartCommand()) {
@@ -251,8 +274,9 @@ void TransmitLoRaFlashInfo(bool wasCleared) {
     TransmitLoRaMessage(message);
 }
 
-void TransmitLoRaAck() {
+void TxLoRaAck(int correlationCode) {
     LORA_MSG_TEMPLATE message;
+    message.set_CorrelationCode(correlationCode);
     auto& ack = message.mutable_ack();
     ack.set_DeviceId(NETWORK_RESPONSE_ID);
 

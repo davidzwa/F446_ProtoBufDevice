@@ -27,11 +27,22 @@ message MeasurementStreamFragment {
     // Payload in generic bytes field
 }
 
-message TransmitConfiguration {
+message SequenceConfiguration {
+    bool EnableAlwaysSend = 1;
+    uint32 AlwaysSendPeriod = 2;
+    // Ignored if EnableAlwaysSend is true
+    uint32 LimitedSendCount = 3;
+    // Apply a DelayMs before the config goes into effect
+    uint32 Delay = 4;
+}
+
+message TransmitReceiveConfiguration {
     // TX power, BW and SF
     int32 TxPower = 1;
-    uint32 TxBandwidth = 2;
-    uint32 TxDataRate = 3;
+    uint32 TxRxBandwidth = 2;
+    uint32 TxRxDataRate = 3;
+    bool SetRx = 4;
+    bool SetTx = 5;
 }
 
 message ReceptionRateConfig {

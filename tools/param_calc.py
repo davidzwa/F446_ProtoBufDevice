@@ -1,33 +1,55 @@
 import numpy as np
 import math
 
-# Fixed-point optimization
-optimization_iterations_max: int = 96
-frame_size_min: int = 10
-
-# Target payload
-firmware_size = 1000
-firmware_size_kb = firmware_size / 1000
-generation_size: int = 26
-generation_redundancy_perc: float = 0.3
-generation_total_size: int = math.ceil(
-    generation_size * (1+generation_redundancy_perc))
-generation_count = math.ceil(firmware_size / generation_size)
-
-frame_period_tx = 50
-gen_period = 1000
-class_b_periodicity = 128
-class_b_duty_cycle = 0.1
-beacon_occupation: float = 128.0 * class_b_duty_cycle
-# Duration of ping slot
-pingslot_duration: float = beacon_occupation / class_b_periodicity
-pingslot_duration_ms: float = pingslot_duration * 1000
-
+# Phy config
 SF: int = 7
 CR: int = 1
 BW: int = 500 * math.pow(10, 3)
 PreSymb: int = 8
 PayloadMax: int = 22
+
+# Fixed-point optimization
+optimization_iterations_max: int = 96
+
+# Sending without limits
+frame_period_tx = 50
+gen_period = 1000
+
+# Sending with limits Class B
+class_b_periodicity = 2**7
+class_b_duty_cycle = 0.1
+
+# RLNC parameters
+frame_size_min: int = 10
+firmware_size = 200000
+generation_size: int = 20
+generation_redundancy: float = 3
+
+# Target payload
+firmware_size_kb = firmware_size / 1000
+frame_count = firmware_size / frame_size_min
+generation_redundancy_perc = generation_redundancy * 100
+generation_total_size: int = math.ceil(
+    generation_size * (1+generation_redundancy))
+generation_count = math.ceil(firmware_size / (generation_size * firmware_size_kb))
+
+beacon_occupation: float = 128.0 * class_b_duty_cycle
+# Duration of ping slot
+pingslot_duration: float = beacon_occupation / class_b_periodicity
+pingslot_duration_ms: float = pingslot_duration * 1000
+
+print("\n-- RLNC")
+print(f"Firmware size {firmware_size_kb}kB")
+print(f"Frame    size {frame_size_min}b")
+print(f"Frame   count {frame_count:.0f} (min size {frame_size_min}b)")
+print(
+    f"Generation size {generation_size} (with {generation_redundancy_perc}% redundancy: {generation_total_size})")
+fragment_total = generation_total_size * generation_count
+fragment_min = generation_size * generation_count
+print(
+    f"Generation count {generation_count} ({generation_size} frames each)")
+print(
+    f"Fragment total {fragment_total} > {fragment_min} optimum")
 
 def calc_lora_toa(frame_size: int, implHdr: bool = False):
     tSymb = math.pow(2, SF) / BW
@@ -74,12 +96,10 @@ def calc_optimal_frame_size(min_frag: int):
             current_duration = calc_lora_tpacket(current_frag)
             return current_frag, current_duration
 
-        print(f"frag {current_frag:.4f} {current_duration:.4f} {pingslot_duration:.4f}")
+        # print(f"frag {current_frag:.4f} {current_duration:.4f} {pingslot_duration:.4f}")
         last_duration = current_duration
         last_frag = current_frag
         iterations +=1
-
-    print("done", pingslot_duration-current_duration)
 
     if (current_duration > pingslot_duration):
         return last_frag, last_duration
@@ -87,6 +107,7 @@ def calc_optimal_frame_size(min_frag: int):
         return current_frag, current_duration
 
 max_frame_size, duration = calc_optimal_frame_size(frame_size_min)    
+print(f"-> done duration {duration:.4f}")
 
 fragment_size = max_frame_size - frame_meta_size - proto_extra
 t_packet, t_payload, payload_symb, payload_symb_nb = calc_lora_toa(
@@ -105,29 +126,20 @@ print(f"Time {t_packet} slot {pingslot_duration} frame_max {max_frame_size} frag
 # for i in range(0, len(generation_sizes)):
 #     print(generation_sizes[i], matrix_size_range[i])
 
-print("--")
-fragment_total = generation_total_size * generation_count
-fragment_min = generation_size * generation_count
-print(f"Firmware size {firmware_size_kb}kB")
-print(
-    f"Generation count {generation_count} ({generation_size} core frames per gen)")
-print(
-    f"Fragment total {fragment_total} > {fragment_min} optimum ({generation_total_size} per gen)")
-
-print("-- Physical")
+print("\n-- Physical")
 aug_matrix_size = generation_size * (generation_size + frame_size_min)
 aug_matrix_real_size = aug_matrix_size * 4
 print(
     f"Decoding matrix size {aug_matrix_size}, {aug_matrix_real_size}b memory")
 print("Frame size", max_frame_size)
-print("Fragment size", fragment_size)
+print("Payload size", fragment_size)
 t_packet_ms = t_packet * 1000
 t_payload_ms = t_payload * 1000
 overhead = 100 * (1.0 - payload_symb_nb / (fragment_size + payload_symb_nb))
 print(f"LoRa bytes {payload_symb_nb} (overhead {overhead:.1f}%)")
 print(f"LoRa ToA {t_packet_ms:.2f}ms, payload ToA {t_payload_ms:.2f}ms")
 
-print("-- Time")
+print("\n-- Time")
 print(f"Beacon occupation {beacon_occupation}s")
 print(
     f"Class B ping slot duration {class_b_periodicity} slots of {pingslot_duration_ms}ms each")
@@ -145,4 +157,3 @@ limitless_duration = (frame_period_tx * fragment_total +
 print(f"Duration high-speed experiment {limitless_duration}s")
 optimal_real_duration_min = min(real_duration_min * optimality, fragment_total / math.floor(beacon_occupation / t_packet) * 128)
 print(f"Class B duration {real_duration_min:.1f}min ({optimality_perc:.1f}% eff, opt. {optimal_real_duration_min:.1f}min at {t_packet_ms:.2f}ms out of {pingslot_duration_ms}ms)")
-

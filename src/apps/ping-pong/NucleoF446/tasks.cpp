@@ -95,18 +95,22 @@ static void OnPeriodicTx(void* context) {
 /**
  * Send periodically indefinitely
  * */
-void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
-    standaloneAlwaysSendPeriodically = configuration.get_EnableAlwaysSend();
-    auto alwaysSendPeriod = configuration.get_AlwaysSendPeriod();
-    auto limitedSendCount = configuration.get_LimitedSendCount();
+void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {   
+    // Patch/Apply the config
+    auto sequenceConfig = configuration.get_sequenceConfiguration();  
+    standaloneAlwaysSendPeriodically = sequenceConfig.EnableAlwaysSend();
+    auto alwaysSendPeriod = sequenceConfig.get_AlwaysSendPeriod();
+    auto limitedSendCount = sequenceConfig.get_LimitedSendCount();
 
     if (standaloneAlwaysSendPeriodically) {
+        // Rare case of infinite transmitting
         standaloneAlwaysSendPeriodically = true;
         periodicCurrentCounter = 0;
         sequenceNumberLimit = limitedSendCount; // Sequence looparound 
 
         ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
     } else {
+        // Common case - limited sequence
         standaloneAlwaysSendPeriodically = false;
         sequenceNumberLimit = limitedSendCount;
         periodicCurrentCounter = 0;

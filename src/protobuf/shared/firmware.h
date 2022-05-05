@@ -675,11 +675,11 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     }
 
     inline void clear_transmitConfiguration() { transmitConfiguration_.clear(); }
-    inline void set_transmitConfiguration(const TransmitConfiguration& value) { transmitConfiguration_ = value; }
-    inline void set_transmitConfiguration(const TransmitConfiguration&& value) { transmitConfiguration_ = value; }
-    inline TransmitConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
-    inline const TransmitConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
-    inline const TransmitConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+    inline void set_transmitConfiguration(const TransmitReceiveConfiguration& value) { transmitConfiguration_ = value; }
+    inline void set_transmitConfiguration(const TransmitReceiveConfiguration&& value) { transmitConfiguration_ = value; }
+    inline TransmitReceiveConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
+    inline const TransmitReceiveConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
+    inline const TransmitReceiveConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
 
     inline void clear_receptionRateConfig() { receptionRateConfig_.clear(); }
     inline void set_receptionRateConfig(const ReceptionRateConfig& value) { receptionRateConfig_ = value; }
@@ -849,7 +849,7 @@ class RlncRemoteFlashStartCommand final: public ::EmbeddedProto::MessageInterfac
     private:
 
 
-      TransmitConfiguration transmitConfiguration_;
+      TransmitReceiveConfiguration transmitConfiguration_;
       ReceptionRateConfig receptionRateConfig_;
       EmbeddedProto::uint32 TimerDelay_ = 0U;
       EmbeddedProto::boolean SetIsMulticast_ = false;

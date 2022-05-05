@@ -88,7 +88,7 @@ bool IsRlncSessionStarted() {
 uint16_t StartRlncSessionFromFlash(const RlncRemoteFlashStartCommand& command) {
     if (state != RlncFlashState::VALID) return state;
 
-    SetTxConfig(command.get_transmitConfiguration());
+    SetTxRxConfig(command.get_transmitConfiguration(), true);
 
     // Set message control plane filter
     deviceId0Filter = command.get_DeviceId0();

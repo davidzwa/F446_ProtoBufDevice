@@ -165,18 +165,20 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     DeviceConfiguration() = default;
     DeviceConfiguration(const DeviceConfiguration& rhs )
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
     }
 
     DeviceConfiguration(const DeviceConfiguration&& rhs ) noexcept
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
     }
 
     ~DeviceConfiguration() override = default;
@@ -184,81 +186,96 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      ENABLEALWAYSSEND = 1,
-      ALWAYSSENDPERIOD = 2,
-      LIMITEDSENDCOUNT = 3,
-      TRANSMITCONFIGURATION = 4
+      SEQUENCECONFIGURATION = 1,
+      ENABLESEQUENCETRANSMIT = 2,
+      ACKREQUIRED = 3,
+      TRANSMITCONFIGURATION = 4,
+      APPLYTRANSMITCONFIG = 5
     };
 
     DeviceConfiguration& operator=(const DeviceConfiguration& rhs)
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
       return *this;
     }
 
     DeviceConfiguration& operator=(const DeviceConfiguration&& rhs) noexcept
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
       return *this;
     }
 
-    inline void clear_EnableAlwaysSend() { EnableAlwaysSend_.clear(); }
-    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean& value) { EnableAlwaysSend_ = value; }
-    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean&& value) { EnableAlwaysSend_ = value; }
-    inline EmbeddedProto::boolean& mutable_EnableAlwaysSend() { return EnableAlwaysSend_; }
-    inline const EmbeddedProto::boolean& get_EnableAlwaysSend() const { return EnableAlwaysSend_; }
-    inline EmbeddedProto::boolean::FIELD_TYPE EnableAlwaysSend() const { return EnableAlwaysSend_.get(); }
+    inline void clear_sequenceConfiguration() { sequenceConfiguration_.clear(); }
+    inline void set_sequenceConfiguration(const SequenceConfiguration& value) { sequenceConfiguration_ = value; }
+    inline void set_sequenceConfiguration(const SequenceConfiguration&& value) { sequenceConfiguration_ = value; }
+    inline SequenceConfiguration& mutable_sequenceConfiguration() { return sequenceConfiguration_; }
+    inline const SequenceConfiguration& get_sequenceConfiguration() const { return sequenceConfiguration_; }
+    inline const SequenceConfiguration& sequenceConfiguration() const { return sequenceConfiguration_; }
 
-    inline void clear_AlwaysSendPeriod() { AlwaysSendPeriod_.clear(); }
-    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32& value) { AlwaysSendPeriod_ = value; }
-    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32&& value) { AlwaysSendPeriod_ = value; }
-    inline EmbeddedProto::uint32& mutable_AlwaysSendPeriod() { return AlwaysSendPeriod_; }
-    inline const EmbeddedProto::uint32& get_AlwaysSendPeriod() const { return AlwaysSendPeriod_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE AlwaysSendPeriod() const { return AlwaysSendPeriod_.get(); }
+    inline void clear_enableSequenceTransmit() { enableSequenceTransmit_.clear(); }
+    inline void set_enableSequenceTransmit(const EmbeddedProto::boolean& value) { enableSequenceTransmit_ = value; }
+    inline void set_enableSequenceTransmit(const EmbeddedProto::boolean&& value) { enableSequenceTransmit_ = value; }
+    inline EmbeddedProto::boolean& mutable_enableSequenceTransmit() { return enableSequenceTransmit_; }
+    inline const EmbeddedProto::boolean& get_enableSequenceTransmit() const { return enableSequenceTransmit_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE enableSequenceTransmit() const { return enableSequenceTransmit_.get(); }
 
-    inline void clear_LimitedSendCount() { LimitedSendCount_.clear(); }
-    inline void set_LimitedSendCount(const EmbeddedProto::uint32& value) { LimitedSendCount_ = value; }
-    inline void set_LimitedSendCount(const EmbeddedProto::uint32&& value) { LimitedSendCount_ = value; }
-    inline EmbeddedProto::uint32& mutable_LimitedSendCount() { return LimitedSendCount_; }
-    inline const EmbeddedProto::uint32& get_LimitedSendCount() const { return LimitedSendCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LimitedSendCount() const { return LimitedSendCount_.get(); }
+    inline void clear_ackRequired() { ackRequired_.clear(); }
+    inline void set_ackRequired(const EmbeddedProto::boolean& value) { ackRequired_ = value; }
+    inline void set_ackRequired(const EmbeddedProto::boolean&& value) { ackRequired_ = value; }
+    inline EmbeddedProto::boolean& mutable_ackRequired() { return ackRequired_; }
+    inline const EmbeddedProto::boolean& get_ackRequired() const { return ackRequired_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE ackRequired() const { return ackRequired_.get(); }
 
     inline void clear_transmitConfiguration() { transmitConfiguration_.clear(); }
-    inline void set_transmitConfiguration(const TransmitConfiguration& value) { transmitConfiguration_ = value; }
-    inline void set_transmitConfiguration(const TransmitConfiguration&& value) { transmitConfiguration_ = value; }
-    inline TransmitConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
-    inline const TransmitConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
-    inline const TransmitConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+    inline void set_transmitConfiguration(const TransmitReceiveConfiguration& value) { transmitConfiguration_ = value; }
+    inline void set_transmitConfiguration(const TransmitReceiveConfiguration&& value) { transmitConfiguration_ = value; }
+    inline TransmitReceiveConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
+    inline const TransmitReceiveConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
+    inline const TransmitReceiveConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+
+    inline void clear_applyTransmitConfig() { applyTransmitConfig_.clear(); }
+    inline void set_applyTransmitConfig(const EmbeddedProto::boolean& value) { applyTransmitConfig_ = value; }
+    inline void set_applyTransmitConfig(const EmbeddedProto::boolean&& value) { applyTransmitConfig_ = value; }
+    inline EmbeddedProto::boolean& mutable_applyTransmitConfig() { return applyTransmitConfig_; }
+    inline const EmbeddedProto::boolean& get_applyTransmitConfig() const { return applyTransmitConfig_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE applyTransmitConfig() const { return applyTransmitConfig_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((false != EnableAlwaysSend_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
-        return_value = EnableAlwaysSend_.serialize_with_id(static_cast<uint32_t>(id::ENABLEALWAYSSEND), buffer, false);
+        return_value = sequenceConfiguration_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCECONFIGURATION), buffer, false);
       }
 
-      if((0U != AlwaysSendPeriod_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((false != enableSequenceTransmit_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = AlwaysSendPeriod_.serialize_with_id(static_cast<uint32_t>(id::ALWAYSSENDPERIOD), buffer, false);
+        return_value = enableSequenceTransmit_.serialize_with_id(static_cast<uint32_t>(id::ENABLESEQUENCETRANSMIT), buffer, false);
       }
 
-      if((0U != LimitedSendCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((false != ackRequired_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = LimitedSendCount_.serialize_with_id(static_cast<uint32_t>(id::LIMITEDSENDCOUNT), buffer, false);
+        return_value = ackRequired_.serialize_with_id(static_cast<uint32_t>(id::ACKREQUIRED), buffer, false);
       }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
         return_value = transmitConfiguration_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCONFIGURATION), buffer, false);
+      }
+
+      if((false != applyTransmitConfig_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = applyTransmitConfig_.serialize_with_id(static_cast<uint32_t>(id::APPLYTRANSMITCONFIG), buffer, false);
       }
 
       return return_value;
@@ -277,20 +294,24 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::ENABLEALWAYSSEND:
-            return_value = EnableAlwaysSend_.deserialize_check_type(buffer, wire_type);
+          case id::SEQUENCECONFIGURATION:
+            return_value = sequenceConfiguration_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::ALWAYSSENDPERIOD:
-            return_value = AlwaysSendPeriod_.deserialize_check_type(buffer, wire_type);
+          case id::ENABLESEQUENCETRANSMIT:
+            return_value = enableSequenceTransmit_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::LIMITEDSENDCOUNT:
-            return_value = LimitedSendCount_.deserialize_check_type(buffer, wire_type);
+          case id::ACKREQUIRED:
+            return_value = ackRequired_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::TRANSMITCONFIGURATION:
             return_value = transmitConfiguration_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::APPLYTRANSMITCONFIG:
+            return_value = applyTransmitConfig_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -322,20 +343,22 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_EnableAlwaysSend();
-      clear_AlwaysSendPeriod();
-      clear_LimitedSendCount();
+      clear_sequenceConfiguration();
+      clear_enableSequenceTransmit();
+      clear_ackRequired();
       clear_transmitConfiguration();
+      clear_applyTransmitConfig();
 
     }
 
     private:
 
 
-      EmbeddedProto::boolean EnableAlwaysSend_ = false;
-      EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
-      EmbeddedProto::uint32 LimitedSendCount_ = 0U;
-      TransmitConfiguration transmitConfiguration_;
+      SequenceConfiguration sequenceConfiguration_;
+      EmbeddedProto::boolean enableSequenceTransmit_ = false;
+      EmbeddedProto::boolean ackRequired_ = false;
+      TransmitReceiveConfiguration transmitConfiguration_;
+      EmbeddedProto::boolean applyTransmitConfig_ = false;
 
 };
 

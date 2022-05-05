@@ -31,7 +31,7 @@ message RlncRemoteFlashStartCommand {
     // uint32 ReducedGenerationRedundancySize = 1;
 
     // TX power, BW and SF
-    TransmitConfiguration transmitConfiguration = 2;
+    TransmitReceiveConfiguration transmitConfiguration = 2;
     ReceptionRateConfig receptionRateConfig = 3;
 
     // Timer delay between each packet

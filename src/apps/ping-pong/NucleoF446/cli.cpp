@@ -160,11 +160,6 @@ void ProcessCliCommand() {
     // We dont want to process twice, so we immediately set it to false
     newCommandReceived = false;
 
-    // if (uartCommand.has_rxConfig()) {
-    //     // rxConf = uartCommand.get_rxConfig();
-    //     UartSendAck(1);
-    //     // TODO apply
-    // } else
     if (uartCommand.has_txConfig()) {
         auto txConf = uartCommand.get_txConfig();
         SetTxPower(txConf.get_Power());
@@ -192,9 +187,20 @@ void ProcessCliCommand() {
             UartSendAck(1);
         }
     } else if (uartCommand.has_deviceConfiguration()) {
+        // Set the Radio configuration or sequence config
         auto config = uartCommand.get_deviceConfiguration();
-        SetTxConfig(config.get_transmitConfiguration());
-        ApplyAlwaysSendPeriodically(config);
+        
+        if (config.get_applyTransmitConfig()) {
+            SetTxRxConfig(config.get_transmitConfiguration(), true);
+        }
+
+        if (config.get_enableSequenceTransmit()) {
+            ApplyAlwaysSendPeriodically(config);
+        }
+        else {
+            StopPeriodicTransmit();
+        }
+
         UartSendAck(1);
     } else {
         UartSendAck(250);
