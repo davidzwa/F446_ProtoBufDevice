@@ -13,6 +13,6 @@ int32_t GetTxPower();
 uint32_t GetTxDataRate();
 uint32_t GetTxBandwidth();
 void SetTxPower(int8_t power);
-void SetTxConfig(const TransmitConfiguration& config);
+void SetTxRxConfig(const TransmitReceiveConfiguration& config, bool listenAfter);
 
 #endif  // RADIO_CONFIG_H

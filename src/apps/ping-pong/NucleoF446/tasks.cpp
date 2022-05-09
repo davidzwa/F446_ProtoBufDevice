@@ -5,6 +5,7 @@
 #include "delay.h"
 #include "measurements.h"
 #include "radio_phy.h"
+#include "radio_config.h"
 #include "timer.h"
 
 #define MAX_SEQUENCE_NUMBERS 5000
@@ -73,6 +74,11 @@ static void OnPeriodicTx(void* context) {
     payload.set(test_message, sizeof(test_message));
     command.set_CorrelationCode(periodicCurrentCounter);
 
+    auto dummyConfig = command.mutable_dummyConfig();
+    dummyConfig.set_TxPower(GetTxPower());
+    dummyConfig.set_TxRxBandwidth(GetTxBandwidth());
+    dummyConfig.set_TxRxDataRate(GetTxDataRate());
+
     TransmitLoRaMessage(command);
     UartDebug("PeriodTX", periodicCurrentCounter, 8);
     periodicCurrentCounter++;
@@ -95,18 +101,22 @@ static void OnPeriodicTx(void* context) {
 /**
  * Send periodically indefinitely
  * */
-void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {
-    standaloneAlwaysSendPeriodically = configuration.get_EnableAlwaysSend();
-    auto alwaysSendPeriod = configuration.get_AlwaysSendPeriod();
-    auto limitedSendCount = configuration.get_LimitedSendCount();
+void ApplyAlwaysSendPeriodically(DeviceConfiguration& configuration) {   
+    // Patch/Apply the config
+    auto sequenceConfig = configuration.get_sequenceConfiguration();  
+    standaloneAlwaysSendPeriodically = sequenceConfig.EnableAlwaysSend();
+    auto alwaysSendPeriod = sequenceConfig.get_AlwaysSendPeriod();
+    auto limitedSendCount = sequenceConfig.get_LimitedSendCount();
 
     if (standaloneAlwaysSendPeriodically) {
+        // Rare case of infinite transmitting
         standaloneAlwaysSendPeriodically = true;
         periodicCurrentCounter = 0;
         sequenceNumberLimit = limitedSendCount; // Sequence looparound 
 
         ApplyPeriodicTxIntervalSafely(alwaysSendPeriod);
     } else {
+        // Common case - limited sequence
         standaloneAlwaysSendPeriodically = false;
         sequenceNumberLimit = limitedSendCount;
         periodicCurrentCounter = 0;

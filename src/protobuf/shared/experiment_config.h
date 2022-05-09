@@ -590,47 +590,237 @@ class MeasurementStreamFragment final: public ::EmbeddedProto::MessageInterface
 
 };
 
-class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
+class SequenceConfiguration final: public ::EmbeddedProto::MessageInterface
 {
   public:
-    TransmitConfiguration() = default;
-    TransmitConfiguration(const TransmitConfiguration& rhs )
+    SequenceConfiguration() = default;
+    SequenceConfiguration(const SequenceConfiguration& rhs )
     {
-      set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_Delay(rhs.get_Delay());
     }
 
-    TransmitConfiguration(const TransmitConfiguration&& rhs ) noexcept
+    SequenceConfiguration(const SequenceConfiguration&& rhs ) noexcept
     {
-      set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_Delay(rhs.get_Delay());
     }
 
-    ~TransmitConfiguration() override = default;
+    ~SequenceConfiguration() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      ENABLEALWAYSSEND = 1,
+      ALWAYSSENDPERIOD = 2,
+      LIMITEDSENDCOUNT = 3,
+      DELAY = 4
+    };
+
+    SequenceConfiguration& operator=(const SequenceConfiguration& rhs)
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_Delay(rhs.get_Delay());
+      return *this;
+    }
+
+    SequenceConfiguration& operator=(const SequenceConfiguration&& rhs) noexcept
+    {
+      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
+      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
+      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_Delay(rhs.get_Delay());
+      return *this;
+    }
+
+    inline void clear_EnableAlwaysSend() { EnableAlwaysSend_.clear(); }
+    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean& value) { EnableAlwaysSend_ = value; }
+    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean&& value) { EnableAlwaysSend_ = value; }
+    inline EmbeddedProto::boolean& mutable_EnableAlwaysSend() { return EnableAlwaysSend_; }
+    inline const EmbeddedProto::boolean& get_EnableAlwaysSend() const { return EnableAlwaysSend_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE EnableAlwaysSend() const { return EnableAlwaysSend_.get(); }
+
+    inline void clear_AlwaysSendPeriod() { AlwaysSendPeriod_.clear(); }
+    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32& value) { AlwaysSendPeriod_ = value; }
+    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32&& value) { AlwaysSendPeriod_ = value; }
+    inline EmbeddedProto::uint32& mutable_AlwaysSendPeriod() { return AlwaysSendPeriod_; }
+    inline const EmbeddedProto::uint32& get_AlwaysSendPeriod() const { return AlwaysSendPeriod_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE AlwaysSendPeriod() const { return AlwaysSendPeriod_.get(); }
+
+    inline void clear_LimitedSendCount() { LimitedSendCount_.clear(); }
+    inline void set_LimitedSendCount(const EmbeddedProto::uint32& value) { LimitedSendCount_ = value; }
+    inline void set_LimitedSendCount(const EmbeddedProto::uint32&& value) { LimitedSendCount_ = value; }
+    inline EmbeddedProto::uint32& mutable_LimitedSendCount() { return LimitedSendCount_; }
+    inline const EmbeddedProto::uint32& get_LimitedSendCount() const { return LimitedSendCount_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE LimitedSendCount() const { return LimitedSendCount_.get(); }
+
+    inline void clear_Delay() { Delay_.clear(); }
+    inline void set_Delay(const EmbeddedProto::uint32& value) { Delay_ = value; }
+    inline void set_Delay(const EmbeddedProto::uint32&& value) { Delay_ = value; }
+    inline EmbeddedProto::uint32& mutable_Delay() { return Delay_; }
+    inline const EmbeddedProto::uint32& get_Delay() const { return Delay_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE Delay() const { return Delay_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((false != EnableAlwaysSend_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = EnableAlwaysSend_.serialize_with_id(static_cast<uint32_t>(id::ENABLEALWAYSSEND), buffer, false);
+      }
+
+      if((0U != AlwaysSendPeriod_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = AlwaysSendPeriod_.serialize_with_id(static_cast<uint32_t>(id::ALWAYSSENDPERIOD), buffer, false);
+      }
+
+      if((0U != LimitedSendCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = LimitedSendCount_.serialize_with_id(static_cast<uint32_t>(id::LIMITEDSENDCOUNT), buffer, false);
+      }
+
+      if((0U != Delay_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = Delay_.serialize_with_id(static_cast<uint32_t>(id::DELAY), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::ENABLEALWAYSSEND:
+            return_value = EnableAlwaysSend_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::ALWAYSSENDPERIOD:
+            return_value = AlwaysSendPeriod_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::LIMITEDSENDCOUNT:
+            return_value = LimitedSendCount_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::DELAY:
+            return_value = Delay_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_EnableAlwaysSend();
+      clear_AlwaysSendPeriod();
+      clear_LimitedSendCount();
+      clear_Delay();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::boolean EnableAlwaysSend_ = false;
+      EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
+      EmbeddedProto::uint32 LimitedSendCount_ = 0U;
+      EmbeddedProto::uint32 Delay_ = 0U;
+
+};
+
+class TransmitReceiveConfiguration final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    TransmitReceiveConfiguration() = default;
+    TransmitReceiveConfiguration(const TransmitReceiveConfiguration& rhs )
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      set_SetRx(rhs.get_SetRx());
+      set_SetTx(rhs.get_SetTx());
+    }
+
+    TransmitReceiveConfiguration(const TransmitReceiveConfiguration&& rhs ) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      set_SetRx(rhs.get_SetRx());
+      set_SetTx(rhs.get_SetTx());
+    }
+
+    ~TransmitReceiveConfiguration() override = default;
 
     enum class id : uint32_t
     {
       NOT_SET = 0,
       TXPOWER = 1,
-      TXBANDWIDTH = 2,
-      TXDATARATE = 3
+      TXRXBANDWIDTH = 2,
+      TXRXDATARATE = 3,
+      SETRX = 4,
+      SETTX = 5
     };
 
-    TransmitConfiguration& operator=(const TransmitConfiguration& rhs)
+    TransmitReceiveConfiguration& operator=(const TransmitReceiveConfiguration& rhs)
     {
       set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      set_SetRx(rhs.get_SetRx());
+      set_SetTx(rhs.get_SetTx());
       return *this;
     }
 
-    TransmitConfiguration& operator=(const TransmitConfiguration&& rhs) noexcept
+    TransmitReceiveConfiguration& operator=(const TransmitReceiveConfiguration&& rhs) noexcept
     {
       set_TxPower(rhs.get_TxPower());
-      set_TxBandwidth(rhs.get_TxBandwidth());
-      set_TxDataRate(rhs.get_TxDataRate());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      set_SetRx(rhs.get_SetRx());
+      set_SetTx(rhs.get_SetTx());
       return *this;
     }
 
@@ -641,19 +831,33 @@ class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::int32& get_TxPower() const { return TxPower_; }
     inline EmbeddedProto::int32::FIELD_TYPE TxPower() const { return TxPower_.get(); }
 
-    inline void clear_TxBandwidth() { TxBandwidth_.clear(); }
-    inline void set_TxBandwidth(const EmbeddedProto::uint32& value) { TxBandwidth_ = value; }
-    inline void set_TxBandwidth(const EmbeddedProto::uint32&& value) { TxBandwidth_ = value; }
-    inline EmbeddedProto::uint32& mutable_TxBandwidth() { return TxBandwidth_; }
-    inline const EmbeddedProto::uint32& get_TxBandwidth() const { return TxBandwidth_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE TxBandwidth() const { return TxBandwidth_.get(); }
+    inline void clear_TxRxBandwidth() { TxRxBandwidth_.clear(); }
+    inline void set_TxRxBandwidth(const EmbeddedProto::uint32& value) { TxRxBandwidth_ = value; }
+    inline void set_TxRxBandwidth(const EmbeddedProto::uint32&& value) { TxRxBandwidth_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxRxBandwidth() { return TxRxBandwidth_; }
+    inline const EmbeddedProto::uint32& get_TxRxBandwidth() const { return TxRxBandwidth_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxRxBandwidth() const { return TxRxBandwidth_.get(); }
 
-    inline void clear_TxDataRate() { TxDataRate_.clear(); }
-    inline void set_TxDataRate(const EmbeddedProto::uint32& value) { TxDataRate_ = value; }
-    inline void set_TxDataRate(const EmbeddedProto::uint32&& value) { TxDataRate_ = value; }
-    inline EmbeddedProto::uint32& mutable_TxDataRate() { return TxDataRate_; }
-    inline const EmbeddedProto::uint32& get_TxDataRate() const { return TxDataRate_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE TxDataRate() const { return TxDataRate_.get(); }
+    inline void clear_TxRxDataRate() { TxRxDataRate_.clear(); }
+    inline void set_TxRxDataRate(const EmbeddedProto::uint32& value) { TxRxDataRate_ = value; }
+    inline void set_TxRxDataRate(const EmbeddedProto::uint32&& value) { TxRxDataRate_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxRxDataRate() { return TxRxDataRate_; }
+    inline const EmbeddedProto::uint32& get_TxRxDataRate() const { return TxRxDataRate_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxRxDataRate() const { return TxRxDataRate_.get(); }
+
+    inline void clear_SetRx() { SetRx_.clear(); }
+    inline void set_SetRx(const EmbeddedProto::boolean& value) { SetRx_ = value; }
+    inline void set_SetRx(const EmbeddedProto::boolean&& value) { SetRx_ = value; }
+    inline EmbeddedProto::boolean& mutable_SetRx() { return SetRx_; }
+    inline const EmbeddedProto::boolean& get_SetRx() const { return SetRx_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE SetRx() const { return SetRx_.get(); }
+
+    inline void clear_SetTx() { SetTx_.clear(); }
+    inline void set_SetTx(const EmbeddedProto::boolean& value) { SetTx_ = value; }
+    inline void set_SetTx(const EmbeddedProto::boolean&& value) { SetTx_ = value; }
+    inline EmbeddedProto::boolean& mutable_SetTx() { return SetTx_; }
+    inline const EmbeddedProto::boolean& get_SetTx() const { return SetTx_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE SetTx() const { return SetTx_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
@@ -665,14 +869,24 @@ class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
         return_value = TxPower_.serialize_with_id(static_cast<uint32_t>(id::TXPOWER), buffer, false);
       }
 
-      if((0U != TxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != TxRxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = TxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXBANDWIDTH), buffer, false);
+        return_value = TxRxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXRXBANDWIDTH), buffer, false);
       }
 
-      if((0U != TxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((0U != TxRxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = TxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXDATARATE), buffer, false);
+        return_value = TxRxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXRXDATARATE), buffer, false);
+      }
+
+      if((false != SetRx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SetRx_.serialize_with_id(static_cast<uint32_t>(id::SETRX), buffer, false);
+      }
+
+      if((false != SetTx_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = SetTx_.serialize_with_id(static_cast<uint32_t>(id::SETTX), buffer, false);
       }
 
       return return_value;
@@ -695,12 +909,20 @@ class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
             return_value = TxPower_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::TXBANDWIDTH:
-            return_value = TxBandwidth_.deserialize_check_type(buffer, wire_type);
+          case id::TXRXBANDWIDTH:
+            return_value = TxRxBandwidth_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::TXDATARATE:
-            return_value = TxDataRate_.deserialize_check_type(buffer, wire_type);
+          case id::TXRXDATARATE:
+            return_value = TxRxDataRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SETRX:
+            return_value = SetRx_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::SETTX:
+            return_value = SetTx_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -733,8 +955,10 @@ class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
     void clear() override
     {
       clear_TxPower();
-      clear_TxBandwidth();
-      clear_TxDataRate();
+      clear_TxRxBandwidth();
+      clear_TxRxDataRate();
+      clear_SetRx();
+      clear_SetTx();
 
     }
 
@@ -742,8 +966,10 @@ class TransmitConfiguration final: public ::EmbeddedProto::MessageInterface
 
 
       EmbeddedProto::int32 TxPower_ = 0;
-      EmbeddedProto::uint32 TxBandwidth_ = 0U;
-      EmbeddedProto::uint32 TxDataRate_ = 0U;
+      EmbeddedProto::uint32 TxRxBandwidth_ = 0U;
+      EmbeddedProto::uint32 TxRxDataRate_ = 0U;
+      EmbeddedProto::boolean SetRx_ = false;
+      EmbeddedProto::boolean SetTx_ = false;
 
 };
 

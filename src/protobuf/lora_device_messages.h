@@ -165,18 +165,20 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     DeviceConfiguration() = default;
     DeviceConfiguration(const DeviceConfiguration& rhs )
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
     }
 
     DeviceConfiguration(const DeviceConfiguration&& rhs ) noexcept
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
     }
 
     ~DeviceConfiguration() override = default;
@@ -184,81 +186,96 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
     enum class id : uint32_t
     {
       NOT_SET = 0,
-      ENABLEALWAYSSEND = 1,
-      ALWAYSSENDPERIOD = 2,
-      LIMITEDSENDCOUNT = 3,
-      TRANSMITCONFIGURATION = 4
+      SEQUENCECONFIGURATION = 1,
+      ENABLESEQUENCETRANSMIT = 2,
+      ACKREQUIRED = 3,
+      TRANSMITCONFIGURATION = 4,
+      APPLYTRANSMITCONFIG = 5
     };
 
     DeviceConfiguration& operator=(const DeviceConfiguration& rhs)
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
       return *this;
     }
 
     DeviceConfiguration& operator=(const DeviceConfiguration&& rhs) noexcept
     {
-      set_EnableAlwaysSend(rhs.get_EnableAlwaysSend());
-      set_AlwaysSendPeriod(rhs.get_AlwaysSendPeriod());
-      set_LimitedSendCount(rhs.get_LimitedSendCount());
+      set_sequenceConfiguration(rhs.get_sequenceConfiguration());
+      set_enableSequenceTransmit(rhs.get_enableSequenceTransmit());
+      set_ackRequired(rhs.get_ackRequired());
       set_transmitConfiguration(rhs.get_transmitConfiguration());
+      set_applyTransmitConfig(rhs.get_applyTransmitConfig());
       return *this;
     }
 
-    inline void clear_EnableAlwaysSend() { EnableAlwaysSend_.clear(); }
-    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean& value) { EnableAlwaysSend_ = value; }
-    inline void set_EnableAlwaysSend(const EmbeddedProto::boolean&& value) { EnableAlwaysSend_ = value; }
-    inline EmbeddedProto::boolean& mutable_EnableAlwaysSend() { return EnableAlwaysSend_; }
-    inline const EmbeddedProto::boolean& get_EnableAlwaysSend() const { return EnableAlwaysSend_; }
-    inline EmbeddedProto::boolean::FIELD_TYPE EnableAlwaysSend() const { return EnableAlwaysSend_.get(); }
+    inline void clear_sequenceConfiguration() { sequenceConfiguration_.clear(); }
+    inline void set_sequenceConfiguration(const SequenceConfiguration& value) { sequenceConfiguration_ = value; }
+    inline void set_sequenceConfiguration(const SequenceConfiguration&& value) { sequenceConfiguration_ = value; }
+    inline SequenceConfiguration& mutable_sequenceConfiguration() { return sequenceConfiguration_; }
+    inline const SequenceConfiguration& get_sequenceConfiguration() const { return sequenceConfiguration_; }
+    inline const SequenceConfiguration& sequenceConfiguration() const { return sequenceConfiguration_; }
 
-    inline void clear_AlwaysSendPeriod() { AlwaysSendPeriod_.clear(); }
-    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32& value) { AlwaysSendPeriod_ = value; }
-    inline void set_AlwaysSendPeriod(const EmbeddedProto::uint32&& value) { AlwaysSendPeriod_ = value; }
-    inline EmbeddedProto::uint32& mutable_AlwaysSendPeriod() { return AlwaysSendPeriod_; }
-    inline const EmbeddedProto::uint32& get_AlwaysSendPeriod() const { return AlwaysSendPeriod_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE AlwaysSendPeriod() const { return AlwaysSendPeriod_.get(); }
+    inline void clear_enableSequenceTransmit() { enableSequenceTransmit_.clear(); }
+    inline void set_enableSequenceTransmit(const EmbeddedProto::boolean& value) { enableSequenceTransmit_ = value; }
+    inline void set_enableSequenceTransmit(const EmbeddedProto::boolean&& value) { enableSequenceTransmit_ = value; }
+    inline EmbeddedProto::boolean& mutable_enableSequenceTransmit() { return enableSequenceTransmit_; }
+    inline const EmbeddedProto::boolean& get_enableSequenceTransmit() const { return enableSequenceTransmit_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE enableSequenceTransmit() const { return enableSequenceTransmit_.get(); }
 
-    inline void clear_LimitedSendCount() { LimitedSendCount_.clear(); }
-    inline void set_LimitedSendCount(const EmbeddedProto::uint32& value) { LimitedSendCount_ = value; }
-    inline void set_LimitedSendCount(const EmbeddedProto::uint32&& value) { LimitedSendCount_ = value; }
-    inline EmbeddedProto::uint32& mutable_LimitedSendCount() { return LimitedSendCount_; }
-    inline const EmbeddedProto::uint32& get_LimitedSendCount() const { return LimitedSendCount_; }
-    inline EmbeddedProto::uint32::FIELD_TYPE LimitedSendCount() const { return LimitedSendCount_.get(); }
+    inline void clear_ackRequired() { ackRequired_.clear(); }
+    inline void set_ackRequired(const EmbeddedProto::boolean& value) { ackRequired_ = value; }
+    inline void set_ackRequired(const EmbeddedProto::boolean&& value) { ackRequired_ = value; }
+    inline EmbeddedProto::boolean& mutable_ackRequired() { return ackRequired_; }
+    inline const EmbeddedProto::boolean& get_ackRequired() const { return ackRequired_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE ackRequired() const { return ackRequired_.get(); }
 
     inline void clear_transmitConfiguration() { transmitConfiguration_.clear(); }
-    inline void set_transmitConfiguration(const TransmitConfiguration& value) { transmitConfiguration_ = value; }
-    inline void set_transmitConfiguration(const TransmitConfiguration&& value) { transmitConfiguration_ = value; }
-    inline TransmitConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
-    inline const TransmitConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
-    inline const TransmitConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+    inline void set_transmitConfiguration(const TransmitReceiveConfiguration& value) { transmitConfiguration_ = value; }
+    inline void set_transmitConfiguration(const TransmitReceiveConfiguration&& value) { transmitConfiguration_ = value; }
+    inline TransmitReceiveConfiguration& mutable_transmitConfiguration() { return transmitConfiguration_; }
+    inline const TransmitReceiveConfiguration& get_transmitConfiguration() const { return transmitConfiguration_; }
+    inline const TransmitReceiveConfiguration& transmitConfiguration() const { return transmitConfiguration_; }
+
+    inline void clear_applyTransmitConfig() { applyTransmitConfig_.clear(); }
+    inline void set_applyTransmitConfig(const EmbeddedProto::boolean& value) { applyTransmitConfig_ = value; }
+    inline void set_applyTransmitConfig(const EmbeddedProto::boolean&& value) { applyTransmitConfig_ = value; }
+    inline EmbeddedProto::boolean& mutable_applyTransmitConfig() { return applyTransmitConfig_; }
+    inline const EmbeddedProto::boolean& get_applyTransmitConfig() const { return applyTransmitConfig_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE applyTransmitConfig() const { return applyTransmitConfig_.get(); }
 
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
       ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
 
-      if((false != EnableAlwaysSend_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
-        return_value = EnableAlwaysSend_.serialize_with_id(static_cast<uint32_t>(id::ENABLEALWAYSSEND), buffer, false);
+        return_value = sequenceConfiguration_.serialize_with_id(static_cast<uint32_t>(id::SEQUENCECONFIGURATION), buffer, false);
       }
 
-      if((0U != AlwaysSendPeriod_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((false != enableSequenceTransmit_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = AlwaysSendPeriod_.serialize_with_id(static_cast<uint32_t>(id::ALWAYSSENDPERIOD), buffer, false);
+        return_value = enableSequenceTransmit_.serialize_with_id(static_cast<uint32_t>(id::ENABLESEQUENCETRANSMIT), buffer, false);
       }
 
-      if((0U != LimitedSendCount_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      if((false != ackRequired_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
-        return_value = LimitedSendCount_.serialize_with_id(static_cast<uint32_t>(id::LIMITEDSENDCOUNT), buffer, false);
+        return_value = ackRequired_.serialize_with_id(static_cast<uint32_t>(id::ACKREQUIRED), buffer, false);
       }
 
       if(::EmbeddedProto::Error::NO_ERRORS == return_value)
       {
         return_value = transmitConfiguration_.serialize_with_id(static_cast<uint32_t>(id::TRANSMITCONFIGURATION), buffer, false);
+      }
+
+      if((false != applyTransmitConfig_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = applyTransmitConfig_.serialize_with_id(static_cast<uint32_t>(id::APPLYTRANSMITCONFIG), buffer, false);
       }
 
       return return_value;
@@ -277,20 +294,24 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
         id_tag = static_cast<id>(id_number);
         switch(id_tag)
         {
-          case id::ENABLEALWAYSSEND:
-            return_value = EnableAlwaysSend_.deserialize_check_type(buffer, wire_type);
+          case id::SEQUENCECONFIGURATION:
+            return_value = sequenceConfiguration_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::ALWAYSSENDPERIOD:
-            return_value = AlwaysSendPeriod_.deserialize_check_type(buffer, wire_type);
+          case id::ENABLESEQUENCETRANSMIT:
+            return_value = enableSequenceTransmit_.deserialize_check_type(buffer, wire_type);
             break;
 
-          case id::LIMITEDSENDCOUNT:
-            return_value = LimitedSendCount_.deserialize_check_type(buffer, wire_type);
+          case id::ACKREQUIRED:
+            return_value = ackRequired_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::TRANSMITCONFIGURATION:
             return_value = transmitConfiguration_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::APPLYTRANSMITCONFIG:
+            return_value = applyTransmitConfig_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -322,20 +343,22 @@ class DeviceConfiguration final: public ::EmbeddedProto::MessageInterface
 
     void clear() override
     {
-      clear_EnableAlwaysSend();
-      clear_AlwaysSendPeriod();
-      clear_LimitedSendCount();
+      clear_sequenceConfiguration();
+      clear_enableSequenceTransmit();
+      clear_ackRequired();
       clear_transmitConfiguration();
+      clear_applyTransmitConfig();
 
     }
 
     private:
 
 
-      EmbeddedProto::boolean EnableAlwaysSend_ = false;
-      EmbeddedProto::uint32 AlwaysSendPeriod_ = 0U;
-      EmbeddedProto::uint32 LimitedSendCount_ = 0U;
-      TransmitConfiguration transmitConfiguration_;
+      SequenceConfiguration sequenceConfiguration_;
+      EmbeddedProto::boolean enableSequenceTransmit_ = false;
+      EmbeddedProto::boolean ackRequired_ = false;
+      TransmitReceiveConfiguration transmitConfiguration_;
+      EmbeddedProto::boolean applyTransmitConfig_ = false;
 
 };
 
@@ -538,6 +561,163 @@ class LoRaAck final: public ::EmbeddedProto::MessageInterface
 
 };
 
+class DummyConfig final: public ::EmbeddedProto::MessageInterface
+{
+  public:
+    DummyConfig() = default;
+    DummyConfig(const DummyConfig& rhs )
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+    }
+
+    DummyConfig(const DummyConfig&& rhs ) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+    }
+
+    ~DummyConfig() override = default;
+
+    enum class id : uint32_t
+    {
+      NOT_SET = 0,
+      TXPOWER = 1,
+      TXRXBANDWIDTH = 2,
+      TXRXDATARATE = 3
+    };
+
+    DummyConfig& operator=(const DummyConfig& rhs)
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      return *this;
+    }
+
+    DummyConfig& operator=(const DummyConfig&& rhs) noexcept
+    {
+      set_TxPower(rhs.get_TxPower());
+      set_TxRxBandwidth(rhs.get_TxRxBandwidth());
+      set_TxRxDataRate(rhs.get_TxRxDataRate());
+      return *this;
+    }
+
+    inline void clear_TxPower() { TxPower_.clear(); }
+    inline void set_TxPower(const EmbeddedProto::int32& value) { TxPower_ = value; }
+    inline void set_TxPower(const EmbeddedProto::int32&& value) { TxPower_ = value; }
+    inline EmbeddedProto::int32& mutable_TxPower() { return TxPower_; }
+    inline const EmbeddedProto::int32& get_TxPower() const { return TxPower_; }
+    inline EmbeddedProto::int32::FIELD_TYPE TxPower() const { return TxPower_.get(); }
+
+    inline void clear_TxRxBandwidth() { TxRxBandwidth_.clear(); }
+    inline void set_TxRxBandwidth(const EmbeddedProto::uint32& value) { TxRxBandwidth_ = value; }
+    inline void set_TxRxBandwidth(const EmbeddedProto::uint32&& value) { TxRxBandwidth_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxRxBandwidth() { return TxRxBandwidth_; }
+    inline const EmbeddedProto::uint32& get_TxRxBandwidth() const { return TxRxBandwidth_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxRxBandwidth() const { return TxRxBandwidth_.get(); }
+
+    inline void clear_TxRxDataRate() { TxRxDataRate_.clear(); }
+    inline void set_TxRxDataRate(const EmbeddedProto::uint32& value) { TxRxDataRate_ = value; }
+    inline void set_TxRxDataRate(const EmbeddedProto::uint32&& value) { TxRxDataRate_ = value; }
+    inline EmbeddedProto::uint32& mutable_TxRxDataRate() { return TxRxDataRate_; }
+    inline const EmbeddedProto::uint32& get_TxRxDataRate() const { return TxRxDataRate_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE TxRxDataRate() const { return TxRxDataRate_.get(); }
+
+
+    ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+
+      if((0 != TxPower_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxPower_.serialize_with_id(static_cast<uint32_t>(id::TXPOWER), buffer, false);
+      }
+
+      if((0U != TxRxBandwidth_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxRxBandwidth_.serialize_with_id(static_cast<uint32_t>(id::TXRXBANDWIDTH), buffer, false);
+      }
+
+      if((0U != TxRxDataRate_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = TxRxDataRate_.serialize_with_id(static_cast<uint32_t>(id::TXRXDATARATE), buffer, false);
+      }
+
+      return return_value;
+    };
+
+    ::EmbeddedProto::Error deserialize(::EmbeddedProto::ReadBufferInterface& buffer) override
+    {
+      ::EmbeddedProto::Error return_value = ::EmbeddedProto::Error::NO_ERRORS;
+      ::EmbeddedProto::WireFormatter::WireType wire_type = ::EmbeddedProto::WireFormatter::WireType::VARINT;
+      uint32_t id_number = 0;
+      id id_tag = id::NOT_SET;
+
+      ::EmbeddedProto::Error tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+      while((::EmbeddedProto::Error::NO_ERRORS == return_value) && (::EmbeddedProto::Error::NO_ERRORS == tag_value))
+      {
+        id_tag = static_cast<id>(id_number);
+        switch(id_tag)
+        {
+          case id::TXPOWER:
+            return_value = TxPower_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXRXBANDWIDTH:
+            return_value = TxRxBandwidth_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::TXRXDATARATE:
+            return_value = TxRxDataRate_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::NOT_SET:
+            return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
+            break;
+
+          default:
+            return_value = skip_unknown_field(buffer, wire_type);
+            break;
+        }
+
+        if(::EmbeddedProto::Error::NO_ERRORS == return_value)
+        {
+          // Read the next tag.
+          tag_value = ::EmbeddedProto::WireFormatter::DeserializeTag(buffer, wire_type, id_number);
+        }
+      }
+
+      // When an error was detect while reading the tag but no other errors where found, set it in the return value.
+      if((::EmbeddedProto::Error::NO_ERRORS == return_value)
+         && (::EmbeddedProto::Error::NO_ERRORS != tag_value)
+         && (::EmbeddedProto::Error::END_OF_BUFFER != tag_value)) // The end of the buffer is not an array in this case.
+      {
+        return_value = tag_value;
+      }
+
+      return return_value;
+    };
+
+    void clear() override
+    {
+      clear_TxPower();
+      clear_TxRxBandwidth();
+      clear_TxRxDataRate();
+
+    }
+
+    private:
+
+
+      EmbeddedProto::int32 TxPower_ = 0;
+      EmbeddedProto::uint32 TxRxBandwidth_ = 0U;
+      EmbeddedProto::uint32 TxRxDataRate_ = 0U;
+
+};
+
 template<uint32_t Payload_LENGTH>
 class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 {
@@ -631,6 +811,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::ACK:
           set_ack(rhs.get_ack());
+          break;
+
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
           break;
 
         default:
@@ -729,6 +913,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           set_ack(rhs.get_ack());
           break;
 
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
+          break;
+
         default:
           break;
       }
@@ -762,7 +950,8 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
       REQUESTBOOTINFO = 20,
       BOOTMESSAGE = 21,
       RESETRADIO = 22,
-      ACK = 23
+      ACK = 23,
+      DUMMYCONFIG = 24
     };
 
     LoRaMessage& operator=(const LoRaMessage& rhs)
@@ -853,6 +1042,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::ACK:
           set_ack(rhs.get_ack());
+          break;
+
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
           break;
 
         default:
@@ -950,6 +1143,10 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
         case id::ACK:
           set_ack(rhs.get_ack());
+          break;
+
+        case id::DUMMYCONFIG:
+          set_dummyConfig(rhs.get_dummyConfig());
           break;
 
         default:
@@ -1729,6 +1926,45 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
     inline const LoRaAck& get_ack() const { return Body_.ack_; }
     inline const LoRaAck& ack() const { return Body_.ack_; }
 
+    inline bool has_dummyConfig() const
+    {
+      return id::DUMMYCONFIG == which_Body_;
+    }
+    inline void clear_dummyConfig()
+    {
+      if(id::DUMMYCONFIG == which_Body_)
+      {
+        which_Body_ = id::NOT_SET;
+        Body_.dummyConfig_.~DummyConfig();
+      }
+    }
+    inline void set_dummyConfig(const DummyConfig& value)
+    {
+      if(id::DUMMYCONFIG != which_Body_)
+      {
+        init_Body(id::DUMMYCONFIG);
+      }
+      Body_.dummyConfig_ = value;
+    }
+    inline void set_dummyConfig(const DummyConfig&& value)
+    {
+      if(id::DUMMYCONFIG != which_Body_)
+      {
+        init_Body(id::DUMMYCONFIG);
+      }
+      Body_.dummyConfig_ = value;
+    }
+    inline DummyConfig& mutable_dummyConfig()
+    {
+      if(id::DUMMYCONFIG != which_Body_)
+      {
+        init_Body(id::DUMMYCONFIG);
+      }
+      return Body_.dummyConfig_;
+    }
+    inline const DummyConfig& get_dummyConfig() const { return Body_.dummyConfig_; }
+    inline const DummyConfig& dummyConfig() const { return Body_.dummyConfig_; }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1889,6 +2125,13 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
           }
           break;
 
+        case id::DUMMYCONFIG:
+          if(has_dummyConfig() && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+          {
+            return_value = Body_.dummyConfig_.serialize_with_id(static_cast<uint32_t>(id::DUMMYCONFIG), buffer, true);
+          }
+          break;
+
         default:
           break;
       }
@@ -2020,6 +2263,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
 
             break;
 
+          case id::DUMMYCONFIG:
+            return_value = deserialize_Body(id::DUMMYCONFIG, Body_.dummyConfig_, buffer, wire_type);
+
+            break;
+
           case id::NOT_SET:
             return_value = ::EmbeddedProto::Error::INVALID_FIELD_ID;
             break;
@@ -2089,6 +2337,7 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
         BootMessage bootMessage_;
         LoRaReset resetRadio_;
         LoRaAck ack_;
+        DummyConfig dummyConfig_;
       };
       Body Body_;
 
@@ -2198,6 +2447,11 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             which_Body_ = id::ACK;
             break;
 
+          case id::DUMMYCONFIG:
+            new(&Body_.dummyConfig_) DummyConfig;
+            which_Body_ = id::DUMMYCONFIG;
+            break;
+
           default:
             break;
          }
@@ -2265,6 +2519,9 @@ class LoRaMessage final: public ::EmbeddedProto::MessageInterface
             break;
           case id::ACK:
             Body_.ack_.~LoRaAck(); // NOSONAR Unions require this.
+            break;
+          case id::DUMMYCONFIG:
+            Body_.dummyConfig_.~DummyConfig(); // NOSONAR Unions require this.
             break;
           default:
             break;

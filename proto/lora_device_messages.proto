@@ -14,12 +14,11 @@ message RequestBootInfo {
 
 // Shared with uart_control
 message DeviceConfiguration {
-    bool EnableAlwaysSend = 1;
-    uint32 AlwaysSendPeriod = 2;
-    // Ignored if EnableAlwaysSend is true
-    uint32 LimitedSendCount = 3;
-
-    TransmitConfiguration transmitConfiguration = 4;
+    SequenceConfiguration sequenceConfiguration = 1;
+    bool enableSequenceTransmit = 2;
+    bool ackRequired = 3;
+    TransmitReceiveConfiguration transmitConfiguration = 4;
+    bool applyTransmitConfig = 5;
 }
 
 message LoRaReset {
@@ -28,6 +27,12 @@ message LoRaReset {
 
 message LoRaAck {
     uint32 DeviceId = 1;
+}
+
+message DummyConfig {
+    int32 TxPower = 1;
+    uint32 TxRxBandwidth = 2;
+    uint32 TxRxDataRate = 3;
 }
 
 message LoRaMessage {
@@ -63,5 +68,7 @@ message LoRaMessage {
         BootMessage bootMessage = 21;
         LoRaReset resetRadio = 22;
         LoRaAck ack = 23;
+
+        DummyConfig dummyConfig = 24;
     }
 }

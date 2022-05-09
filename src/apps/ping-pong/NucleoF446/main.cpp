@@ -118,7 +118,7 @@ int main(void) {
             if (IsCrcValid()) {
                 ProcessCliCommand();
             } else {
-                UartDebug("CRC-FAIL", 400, 8);
+                UartDebug("CRC_FAIL_UART_MAIN", 400, 19);
                 ResetCrcFailure();
             }
         }

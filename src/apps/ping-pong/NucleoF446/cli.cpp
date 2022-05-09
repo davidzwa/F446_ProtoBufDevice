@@ -122,8 +122,8 @@ void UartISR(UartNotifyId_t id) {
         checksumSuccess = crc8 == checksumResult;
         if (!checksumSuccess) {
             // Process CRC failure
+            UartDebug("CRC_FAIL_UART", 400, 14);
             UartDebug((const char*)readBuffer.get_data_array(), (uint32_t)checksumResult, readBuffer.get_size());
-            UartDebug("CRC_FAIL", 400, 8);
         } else {
             auto deserialize_status = uartCommand.deserialize(readBuffer);
             if (::EmbeddedProto::Error::NO_ERRORS == deserialize_status) {
@@ -160,11 +160,6 @@ void ProcessCliCommand() {
     // We dont want to process twice, so we immediately set it to false
     newCommandReceived = false;
 
-    // if (uartCommand.has_rxConfig()) {
-    //     // rxConf = uartCommand.get_rxConfig();
-    //     UartSendAck(1);
-    //     // TODO apply
-    // } else
     if (uartCommand.has_txConfig()) {
         auto txConf = uartCommand.get_txConfig();
         SetTxPower(txConf.get_Power());
@@ -192,9 +187,20 @@ void ProcessCliCommand() {
             UartSendAck(1);
         }
     } else if (uartCommand.has_deviceConfiguration()) {
+        // Set the Radio configuration or sequence config
         auto config = uartCommand.get_deviceConfiguration();
-        SetTxConfig(config.get_transmitConfiguration());
-        ApplyAlwaysSendPeriodically(config);
+        
+        if (config.get_applyTransmitConfig()) {
+            SetTxRxConfig(config.get_transmitConfiguration(), true);
+        }
+
+        if (config.get_enableSequenceTransmit()) {
+            ApplyAlwaysSendPeriodically(config);
+        }
+        else {
+            StopPeriodicTransmit();
+        }
+
         UartSendAck(1);
     } else {
         UartSendAck(250);
