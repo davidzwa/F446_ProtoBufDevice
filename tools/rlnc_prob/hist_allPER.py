@@ -58,8 +58,8 @@ failures_PERs = {}
 
 for delta in redundancies:
     total_sent = threshold + delta
-    imperfect = failure_rate(threshold, total_sent, PER, 0, pow(2, 8), False)
-    perfect = failure_rate(threshold, total_sent, PER, 0, pow(2, 8), True)
+    imperfect = failure_rate(threshold, total_sent, PER, pow(2, 8), False, 0)
+    perfect = failure_rate(threshold, total_sent, PER, pow(2, 8), True, 0)
     failure_rates_0_256.append(imperfect)
     failure_rates_0_256_perfect.append(perfect)
     print(imperfect - perfect)

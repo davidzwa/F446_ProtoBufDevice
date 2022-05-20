@@ -2,7 +2,7 @@ from math import comb
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
-from shared import success_rate
+from shared import failure_rate
 
 max_red = 60
 vals = []
@@ -21,8 +21,9 @@ failure_rates_0_256_perfect = []
 q = pow(2, 8)
 for delta in redundancies:
     total_sent = threshold + delta
-    imperfect = success_rate(threshold, total_sent, PER, 0, pow(2, 8), False)
-    perfect = imperfect = success_rate(threshold, total_sent, PER, 0, pow(2, 8), True)
+    imperfect = failure_rate(threshold, total_sent, PER, pow(2, 8), False, 0)
+    perfect = imperfect = failure_rate(
+    	threshold, total_sent, PER, pow(2, 8), True, 0)
     failure_rates_0_256.append(imperfect)
     failure_rates_0_256_perfect.append(perfect)
     print(imperfect - perfect)

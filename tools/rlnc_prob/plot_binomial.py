@@ -17,21 +17,22 @@ failure_rates_0_1 = []
 perfect_rates = []
 output_data = []
 employee_info = ['FieldSize', 'FailureRate']
-   
+
 for delta in redundancies:
     total_sent = threshold + delta
-    perfect_rate = failure_rate(threshold, total_sent, PER, 0, pow(2, 8), False)
-    rate_8 = failure_rate(threshold, total_sent, PER, 0, pow(2, 8), True)
-    rate_4 = failure_rate(threshold, total_sent, PER, 0, pow(2, 4), True)
-    rate_2 = failure_rate(threshold, total_sent, PER, 0, pow(2, 2), True)
-    rate_1 = failure_rate(threshold, total_sent, PER, 0, pow(2, 1), True)
-    
+    perfect_rate = failure_rate(
+        threshold, total_sent, PER, pow(2, 8), False, 0)
+    rate_8 = failure_rate(threshold, total_sent, PER, pow(2, 8), True, 0)
+    rate_4 = failure_rate(threshold, total_sent, PER, pow(2, 4), True, 0)
+    rate_2 = failure_rate(threshold, total_sent, PER, pow(2, 2), True, 0)
+    rate_1 = failure_rate(threshold, total_sent, PER, pow(2, 1), True, 0)
+
     output_data.append({'FieldSize': 8, 'FailureRate': rate_8})
     output_data.append({'FieldSize': 4, 'FailureRate': rate_4})
     output_data.append({'FieldSize': 2, 'FailureRate': rate_2})
     output_data.append({'FieldSize': 1, 'FailureRate': rate_1})
     output_data.append({'FieldSize': 'Inf', 'FailureRate': perfect_rate})
-    
+
     failure_rates_0_8.append(rate_8)
     failure_rates_0_4.append(rate_4)
     failure_rates_0_2.append(rate_2)
@@ -94,14 +95,14 @@ exit(0)
 
 # setting the values
 # of n and p
-n=6
-p=0.6
+n = 6
+p = 0.6
 # defining the list of r values
-r_values=list(range(n + 1))
+r_values = list(range(n + 1))
 # obtaining the mean and variance
-mean, var=binom.stats(n, p)
+mean, var = binom.stats(n, p)
 # list of pmf values
-dist=[binom.pmf(r, n, p) for r in r_values]
+dist = [binom.pmf(r, n, p) for r in r_values]
 # printing the table
 print("r\tp(r)")
 for i in range(n + 1):
@@ -112,39 +113,39 @@ print("variance = "+str(var))
 
 # setting the values
 # of n and p
-fig, axs=plt.subplots(4)
-n=40
-p=0.2
-loc=20
+fig, axs = plt.subplots(4)
+n = 40
+p = 0.2
+loc = 20
 # defining list of r values
-r_values=list(range(n + 1))
+r_values = list(range(n + 1))
 # list of pmf values
-dist=[binom.cdf(r, n, p, loc) for r in r_values]
+dist = [binom.cdf(r, n, p, loc) for r in r_values]
 # plotting the graph
 axs[0].set_title("PER 20%")
 axs[0].stem(r_values, dist)
 plt.show(block=False)
-p=0.4
+p = 0.4
 # defining list of r values
-r_values=list(range(n + 1))
+r_values = list(range(n + 1))
 # list of pmf values
-dist=[binom.cdf(r, n, p, loc) for r in r_values]
+dist = [binom.cdf(r, n, p, loc) for r in r_values]
 # plotting the graph
 axs[1].set_title("PER 40%")
 axs[1].stem(r_values, dist)
-p=0.5
+p = 0.5
 # defining list of r values
-r_values=list(range(n + 1))
+r_values = list(range(n + 1))
 # list of pmf values
-dist=[binom.cdf(r, n, p, loc) for r in r_values]
+dist = [binom.cdf(r, n, p, loc) for r in r_values]
 # plotting the graph
 axs[2].set_title("PER 50%")
 axs[2].stem(r_values, dist)
-p=0.6
+p = 0.6
 # defining list of r values
-r_values=list(range(n + 1))
+r_values = list(range(n + 1))
 # list of pmf values
-dist=[binom.cdf(r, n, p, loc) for r in r_values]
+dist = [binom.cdf(r, n, p, loc) for r in r_values]
 # plotting the graph
 axs[3].set_title("PER 60%")
 axs[3].stem(r_values, dist)
