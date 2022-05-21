@@ -1,4 +1,5 @@
 from math import comb, ceil
+import numpy as np
 
 
 def P(m, n, r, q):
@@ -49,18 +50,39 @@ def success_rates(n, delta_max, PER, q, include_rref):
 
     return redundancies, success_probs
 
+def meanfilt(x, k):
+    """Apply a length-k mean filter to a 1D array x.
+    Boundaries are extended by repeating endpoints.
+    
+    https://stackoverflow.com/questions/61147532/mean-filter-in-python-without-loops
+    """
 
-def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):   
+    assert k % 2 == 1, "Mean filter length must be odd."
+    assert x.ndim == 1, "Input must be one-dimensional."
+
+    k2 = (k - 1) // 2
+    y = np.zeros((len(x), k), dtype=x.dtype)
+    y[:, k2] = x
+    for i in range(k2):
+        j = k2 - i
+        y[j:, i] = x[:-j]
+        y[:j, i] = x[0]
+        y[:-j, -(i+1)] = x[j:]
+        y[-j:, -(i+1)] = x[-1]
+    return np.mean(y, axis=1)
+
+
+def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
     # Total generation frame count
     f = ceil(F / (s_f))  # Frame count
     n_g = ceil(f / G)  # Generation count
     N = G * (1+delta)
-    
+
     print(f"Firmware of {F} bytes")
     print(f"{f} frames")
     print(f"Number of gens {n_g}")
     print(f"{G}/{N} gen frame ratio")
-    
+
     decoding_probs = []
     all_gen_probs = []
     all_devices_probs = []
@@ -72,7 +94,7 @@ def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
         p_success_decode = 1.0 - p_fail_decode
 
         p_all_gen_success = pow(p_success_decode, n_g)
-        
+
         # p_all_gen_failure = 1.0 - p_all_gen_success
         # Suspicious calculation
         # p_98perc_failure_prob = 0
@@ -87,7 +109,7 @@ def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
         all_gen_probs.append(p_all_gen_success)
         all_devices_probs.append(p_all_devices_success)
         # part_devices_probs.append(p_98perc_failure_prob)
-        
+
     # Old suspicious and heavy binomial calculation
     # device_perc = 0.99
     # plt.plot(redundancies, part_devices_probs, '--',
