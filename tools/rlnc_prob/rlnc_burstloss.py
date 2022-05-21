@@ -50,16 +50,17 @@ def calculate_burst_timeseries(init, count, p, r, h, k):
 
 
 p = 0.0015  # move to burst prob
+p2 = 0.0005
 r = 0.03  # move to good prob (stays stuck)
 h = 1  # 100% PER
-k = 0  # 0% PER
+k = 0.03  # 3% PER
 count = 10000
 init = 1  # Good/Burst initial state
 filter_window = 91
 
 pi_G, pi_B, p_E = calculate_steady_state(p,r,h,k)
 steps, samples = calculate_burst_timeseries(init, count, p, r, h, k)
-steps2, samples2 = calculate_burst_timeseries(init, count, 0.001, r, h, k)
+steps2, samples2 = calculate_burst_timeseries(init, count, p2, r, h, k)
 
 avg = np.average(samples)
 err = abs(p_E - avg)
