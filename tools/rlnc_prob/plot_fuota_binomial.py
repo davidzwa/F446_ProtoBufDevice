@@ -32,7 +32,7 @@ def save_device_plot(plot_prefix, F, s_f, G, devices, q, PER, delta):
     plt.xlabel('Redundant packet count')
     plt.ylabel('Decoding Probability')
     size = int(ceil(F/1E3))
-    plt.title(f"{size}kB vs Redundancy (n=20,N=80,PER={PER})")
+    plt.title(f"{size}kB vs Redundancy (n=20,N=80,PER={PER:.1f})")
 
     filename = f'{plot_prefix}_{PER:.1f}PER.pdf'
     print(f"Exporting pdf plot {filename}")
@@ -49,7 +49,6 @@ N_d = 3000
 delta = 3  # 300% so in total 80 packets per generation
 
 for PER in np.arange(0, 0.6, 0.1):
-    
     plot_prefix = '23_alldevices_prob'
     save_device_plot(plot_prefix, F, s_f, G, N_d, q, PER, delta)
 
