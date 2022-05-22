@@ -983,6 +983,12 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       set_OverrideSeed(rhs.get_OverrideSeed());
       set_Seed(rhs.get_Seed());
       set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+      set_UseBurstLoss(rhs.get_UseBurstLoss());
+      set_InitState(rhs.get_InitState());
+      set_ProbP(rhs.get_ProbP());
+      set_ProbR(rhs.get_ProbR());
+      set_ProbK(rhs.get_ProbK());
+      set_ProbH(rhs.get_ProbH());
     }
 
     ReceptionRateConfig(const ReceptionRateConfig&& rhs ) noexcept
@@ -991,6 +997,12 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       set_OverrideSeed(rhs.get_OverrideSeed());
       set_Seed(rhs.get_Seed());
       set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+      set_UseBurstLoss(rhs.get_UseBurstLoss());
+      set_InitState(rhs.get_InitState());
+      set_ProbP(rhs.get_ProbP());
+      set_ProbR(rhs.get_ProbR());
+      set_ProbK(rhs.get_ProbK());
+      set_ProbH(rhs.get_ProbH());
     }
 
     ~ReceptionRateConfig() override = default;
@@ -1001,7 +1013,13 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       PACKETERRORRATE = 1,
       OVERRIDESEED = 2,
       SEED = 3,
-      DROPUPDATECOMMANDS = 4
+      DROPUPDATECOMMANDS = 4,
+      USEBURSTLOSS = 5,
+      INITSTATE = 6,
+      PROBP = 7,
+      PROBR = 8,
+      PROBK = 9,
+      PROBH = 10
     };
 
     ReceptionRateConfig& operator=(const ReceptionRateConfig& rhs)
@@ -1010,6 +1028,12 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       set_OverrideSeed(rhs.get_OverrideSeed());
       set_Seed(rhs.get_Seed());
       set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+      set_UseBurstLoss(rhs.get_UseBurstLoss());
+      set_InitState(rhs.get_InitState());
+      set_ProbP(rhs.get_ProbP());
+      set_ProbR(rhs.get_ProbR());
+      set_ProbK(rhs.get_ProbK());
+      set_ProbH(rhs.get_ProbH());
       return *this;
     }
 
@@ -1019,6 +1043,12 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       set_OverrideSeed(rhs.get_OverrideSeed());
       set_Seed(rhs.get_Seed());
       set_DropUpdateCommands(rhs.get_DropUpdateCommands());
+      set_UseBurstLoss(rhs.get_UseBurstLoss());
+      set_InitState(rhs.get_InitState());
+      set_ProbP(rhs.get_ProbP());
+      set_ProbR(rhs.get_ProbR());
+      set_ProbK(rhs.get_ProbK());
+      set_ProbH(rhs.get_ProbH());
       return *this;
     }
 
@@ -1050,6 +1080,48 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
     inline const EmbeddedProto::boolean& get_DropUpdateCommands() const { return DropUpdateCommands_; }
     inline EmbeddedProto::boolean::FIELD_TYPE DropUpdateCommands() const { return DropUpdateCommands_.get(); }
 
+    inline void clear_UseBurstLoss() { UseBurstLoss_.clear(); }
+    inline void set_UseBurstLoss(const EmbeddedProto::boolean& value) { UseBurstLoss_ = value; }
+    inline void set_UseBurstLoss(const EmbeddedProto::boolean&& value) { UseBurstLoss_ = value; }
+    inline EmbeddedProto::boolean& mutable_UseBurstLoss() { return UseBurstLoss_; }
+    inline const EmbeddedProto::boolean& get_UseBurstLoss() const { return UseBurstLoss_; }
+    inline EmbeddedProto::boolean::FIELD_TYPE UseBurstLoss() const { return UseBurstLoss_.get(); }
+
+    inline void clear_InitState() { InitState_.clear(); }
+    inline void set_InitState(const EmbeddedProto::uint32& value) { InitState_ = value; }
+    inline void set_InitState(const EmbeddedProto::uint32&& value) { InitState_ = value; }
+    inline EmbeddedProto::uint32& mutable_InitState() { return InitState_; }
+    inline const EmbeddedProto::uint32& get_InitState() const { return InitState_; }
+    inline EmbeddedProto::uint32::FIELD_TYPE InitState() const { return InitState_.get(); }
+
+    inline void clear_ProbP() { ProbP_.clear(); }
+    inline void set_ProbP(const EmbeddedProto::floatfixed& value) { ProbP_ = value; }
+    inline void set_ProbP(const EmbeddedProto::floatfixed&& value) { ProbP_ = value; }
+    inline EmbeddedProto::floatfixed& mutable_ProbP() { return ProbP_; }
+    inline const EmbeddedProto::floatfixed& get_ProbP() const { return ProbP_; }
+    inline EmbeddedProto::floatfixed::FIELD_TYPE ProbP() const { return ProbP_.get(); }
+
+    inline void clear_ProbR() { ProbR_.clear(); }
+    inline void set_ProbR(const EmbeddedProto::floatfixed& value) { ProbR_ = value; }
+    inline void set_ProbR(const EmbeddedProto::floatfixed&& value) { ProbR_ = value; }
+    inline EmbeddedProto::floatfixed& mutable_ProbR() { return ProbR_; }
+    inline const EmbeddedProto::floatfixed& get_ProbR() const { return ProbR_; }
+    inline EmbeddedProto::floatfixed::FIELD_TYPE ProbR() const { return ProbR_.get(); }
+
+    inline void clear_ProbK() { ProbK_.clear(); }
+    inline void set_ProbK(const EmbeddedProto::floatfixed& value) { ProbK_ = value; }
+    inline void set_ProbK(const EmbeddedProto::floatfixed&& value) { ProbK_ = value; }
+    inline EmbeddedProto::floatfixed& mutable_ProbK() { return ProbK_; }
+    inline const EmbeddedProto::floatfixed& get_ProbK() const { return ProbK_; }
+    inline EmbeddedProto::floatfixed::FIELD_TYPE ProbK() const { return ProbK_.get(); }
+
+    inline void clear_ProbH() { ProbH_.clear(); }
+    inline void set_ProbH(const EmbeddedProto::floatfixed& value) { ProbH_ = value; }
+    inline void set_ProbH(const EmbeddedProto::floatfixed&& value) { ProbH_ = value; }
+    inline EmbeddedProto::floatfixed& mutable_ProbH() { return ProbH_; }
+    inline const EmbeddedProto::floatfixed& get_ProbH() const { return ProbH_; }
+    inline EmbeddedProto::floatfixed::FIELD_TYPE ProbH() const { return ProbH_.get(); }
+
 
     ::EmbeddedProto::Error serialize(::EmbeddedProto::WriteBufferInterface& buffer) const override
     {
@@ -1073,6 +1145,36 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       if((false != DropUpdateCommands_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
       {
         return_value = DropUpdateCommands_.serialize_with_id(static_cast<uint32_t>(id::DROPUPDATECOMMANDS), buffer, false);
+      }
+
+      if((false != UseBurstLoss_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = UseBurstLoss_.serialize_with_id(static_cast<uint32_t>(id::USEBURSTLOSS), buffer, false);
+      }
+
+      if((0U != InitState_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = InitState_.serialize_with_id(static_cast<uint32_t>(id::INITSTATE), buffer, false);
+      }
+
+      if((0.0 != ProbP_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ProbP_.serialize_with_id(static_cast<uint32_t>(id::PROBP), buffer, false);
+      }
+
+      if((0.0 != ProbR_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ProbR_.serialize_with_id(static_cast<uint32_t>(id::PROBR), buffer, false);
+      }
+
+      if((0.0 != ProbK_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ProbK_.serialize_with_id(static_cast<uint32_t>(id::PROBK), buffer, false);
+      }
+
+      if((0.0 != ProbH_.get()) && (::EmbeddedProto::Error::NO_ERRORS == return_value))
+      {
+        return_value = ProbH_.serialize_with_id(static_cast<uint32_t>(id::PROBH), buffer, false);
       }
 
       return return_value;
@@ -1105,6 +1207,30 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
 
           case id::DROPUPDATECOMMANDS:
             return_value = DropUpdateCommands_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::USEBURSTLOSS:
+            return_value = UseBurstLoss_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::INITSTATE:
+            return_value = InitState_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PROBP:
+            return_value = ProbP_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PROBR:
+            return_value = ProbR_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PROBK:
+            return_value = ProbK_.deserialize_check_type(buffer, wire_type);
+            break;
+
+          case id::PROBH:
+            return_value = ProbH_.deserialize_check_type(buffer, wire_type);
             break;
 
           case id::NOT_SET:
@@ -1140,6 +1266,12 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       clear_OverrideSeed();
       clear_Seed();
       clear_DropUpdateCommands();
+      clear_UseBurstLoss();
+      clear_InitState();
+      clear_ProbP();
+      clear_ProbR();
+      clear_ProbK();
+      clear_ProbH();
 
     }
 
@@ -1150,6 +1282,12 @@ class ReceptionRateConfig final: public ::EmbeddedProto::MessageInterface
       EmbeddedProto::boolean OverrideSeed_ = false;
       EmbeddedProto::uint32 Seed_ = 0U;
       EmbeddedProto::boolean DropUpdateCommands_ = false;
+      EmbeddedProto::boolean UseBurstLoss_ = false;
+      EmbeddedProto::uint32 InitState_ = 0U;
+      EmbeddedProto::floatfixed ProbP_ = 0.0;
+      EmbeddedProto::floatfixed ProbR_ = 0.0;
+      EmbeddedProto::floatfixed ProbK_ = 0.0;
+      EmbeddedProto::floatfixed ProbH_ = 0.0;
 
 };
 

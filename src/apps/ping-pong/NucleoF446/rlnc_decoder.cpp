@@ -21,7 +21,6 @@ void SendUartTermination() {
 }
 
 RlncDecoder::RlncDecoder() {
-    
     rng = xoshiro32starstar8(0x00, 0x00, 0x00, 0x01);
     terminated = true;
 
@@ -41,6 +40,11 @@ void RlncDecoder::InitRlncDecodingSession(RlncInitConfigCommand& rlncInitConfig)
     if (receptionConfig.get_OverrideSeed()) {
         srand1(receptionConfig.get_Seed());
         UartDebug("RLNC_PER_SEED", GetSeed(), 13);
+    }
+
+    auto reception = rlncConfig.get_receptionRateConfig();
+    if (rlncConfig.has_receptionRateConfig() && reception.get_UseBurstLoss()) {
+        this->burstState = reception.get_InitState();
     }
 
     terminated = false;
@@ -82,6 +86,38 @@ uint32_t RlncDecoder::GetMatrixColumnCount() {
     return fragmentLength + encodingVectorLength;
 }
 
+bool RlncDecoder::ErasureChoiceSimple(float probability) {
+    if (probability < 0.0000001f || probability > 0.999999f) {
+        return false;
+    }
+
+    int32_t fixedPer = (int32_t)(probability * 10000.0f);
+    int32_t randomValue = randr(0, 10000);
+    return randomValue < fixedPer;
+}
+
+/**
+ * Burst-loss based on Gilbert-Elliot (2 states tracked with memory)
+ */
+bool RlncDecoder::ErasureChoiceBurst() {
+    auto receptionConfig = rlncConfig.get_receptionRateConfig();
+    float probabilityBurstH = receptionConfig.get_ProbH();
+    float probabilityGoodK = receptionConfig.get_ProbK();
+    float p = receptionConfig.get_ProbP();
+    float r = receptionConfig.get_ProbR();
+
+    if (this->burstState == 0) {
+        this->burstState = !ErasureChoiceSimple(1 - r);
+        return ErasureChoiceSimple(1 - probabilityBurstH);
+    } else if (this->burstState == 1) {
+        this->burstState = ErasureChoiceSimple(1 - p);
+        return ErasureChoiceSimple(1 - probabilityGoodK);
+    }
+
+    ThrowDecodingError(DecodingError::ILLEGAL_BURST_STATE);
+    return false;
+}
+
 /**
  * @brief Gets the encoding vector length, which is equal to the amount of innovative fragments in the mixture
  *
@@ -102,33 +138,19 @@ uint32_t RlncDecoder::GetEncodingVectorLength() {
 
 bool RlncDecoder::DecidePacketErrorDroppage(bool isUpdatePacket) {
     auto receptionConfig = rlncConfig.get_receptionRateConfig();
-
     if (!receptionConfig.get_DropUpdateCommands() && isUpdatePacket) {
         return false;
     }
 
     float approxPer = receptionConfig.get_PacketErrorRate();
-    int32_t fixedPer = (int32_t)(approxPer * 10000.0f);
-    if (approxPer > 0.0000001f && approxPer < 0.999999f) {
-        int32_t randomValue = randr(0, 10000);
-        bool willDropPacket = randomValue < fixedPer;
-        if (willDropPacket) {
-            if (isUpdatePacket) {
-                UartDebug("RLNC_RNG_DROP", 0, 14);
-            } else {
-                UartDebug("RLNC_RNG_DROP", randomValue, 14);
-            }
-        } else {
-            if (!isUpdatePacket) {
-                UartDebug("RLNC_RNG_ACPT", randomValue, 14);
-            } else {
-                UartDebug("RLNC_RNG_ACPT", 0, 14);
-            }
-        }
-        return willDropPacket;
+    bool dropPacketChoice = receptionConfig.get_UseBurstLoss() ? ErasureChoiceBurst()
+                                                               : ErasureChoiceSimple(approxPer);
+    if (dropPacketChoice) {
+        UartDebug("RLNC_RNG_DROP", 0, 14);
+    } else {
+        UartDebug("RLNC_RNG_ACPT", 0, 14);
     }
-
-    return false;
+    return dropPacketChoice;
 }
 
 void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
@@ -162,7 +184,7 @@ void RlncDecoder::ProcessRlncFragment(LORA_MSG_TEMPLATE& message) {
     // Fetch the encoding vector length
     auto encodingColCount = GetEncodingVectorLength();
     uint32_t prngSeedState = message.get_rlncEncodedFragment().get_PRngSeedState();
-    
+
     auto frame = message.get_Payload();
     auto frameSize = frame.get_length();
     if (frameSize != rlncConfig.get_FrameSize()) {
@@ -274,7 +296,7 @@ void RlncDecoder::TerminateRlnc(const RlncTerminationCommand& RlncTerminationCom
 void RlncDecoder::AutoTerminateRlnc() {
     // Reset state
     generationIndex = 0x0;
-    rng.set_State(0x00, 0x00, 0x00, 0x00); // Would cause an error
+    rng.set_State(0x00, 0x00, 0x00, 0x00);  // Would cause an error
     ClearDecodingMatrix();
     terminated = true;
 
@@ -449,7 +471,7 @@ void RlncDecoder::SendUartDecodingResult(DecodingResult& result) {
     uint32_t e = GetEncodingVectorLength();
     uint8_t progress = DetermineNextInnovativeRowIndex() + 1;
     uint32_t r = e - 1;
-    
+
     uint32_t firstNumber = BytesToInt(decodingMatrix[0][e], decodingMatrix[0][e + 1], decodingMatrix[0][e + 2], decodingMatrix[0][e + 3]);
     uint32_t lastNumber = BytesToInt(decodingMatrix[r][e], decodingMatrix[r][e + 1], decodingMatrix[r][e + 2], decodingMatrix[r][e + 3]);
 
