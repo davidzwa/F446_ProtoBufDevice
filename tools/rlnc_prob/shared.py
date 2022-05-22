@@ -2,6 +2,49 @@ from math import comb, ceil
 import numpy as np
 
 
+nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
+nullword_bytes = bytes([int(x, 0) for x in nullword])
+
+def signed8(value):
+    return -(value & 0x80) | (value & 0x7f)
+
+
+def equals_nullword(bytestring):
+    return bytestring == nullword_bytes
+
+
+def index_to_time(index, rate):
+    return index / rate / 60 / 60
+
+def parse_flash_file(path):
+    file = open(path, "rb")
+
+    # Skip standard headers
+    header = file.read(4)
+    reserved1 = file.read(4)
+    reserved2 = file.read(4)
+    reserved3 = file.read(4)
+    
+    sequence_numbers = []
+    rssis = []
+    snrs = []
+    
+    word = file.read(4)
+    while word:
+        if equals_nullword(word):
+            print("Empty word found. Done.")
+            break
+
+        # Process word into measurement
+        sequence_numbers.append(word[3] << 8 | word[2])
+        rssis.append(word[1]-150)
+        snrs.append(signed8(word[0]))
+        
+        # Iterate
+        word = file.read(4)
+        
+    return sequence_numbers, rssis, snrs
+
 def P(m, n, r, q):
     p = 1.0
     for i in range(0, n+r):
@@ -116,3 +159,47 @@ def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
     #          label='98% Devices Prob', alpha=alpha)
 
     return redundancies, decoding_probs, all_gen_probs, all_devices_probs
+
+
+def find_erasures(sequence_numbers, rate, print_debug=False):
+    counter = 0
+    last_seq_number = None
+    packets_missed = 0
+    resets = 0
+    erasures_found = []
+    timestrings = []
+    for index in range(0, len(sequence_numbers)):
+        sequence_number = sequence_numbers[index]
+
+        # Startup
+        if last_seq_number is None:
+            last_seq_number = sequence_number
+
+        seq_diff = sequence_number - last_seq_number
+        if sequence_number == 0:
+            last_seq_number = 0
+            resets += 1
+            counter = 0
+            print("Diff 0 (start?)")
+
+        if seq_diff > 1:
+            missed_pkts = seq_diff - 1
+            packets_missed += missed_pkts
+
+            miss_entries = [1] * seq_diff
+            miss_entries[-1] = 0
+            erasures_found += miss_entries
+
+            if print_debug:
+                print("Packet count missing", missed_pkts, miss_entries)
+        else:
+            erasures_found.append(0)
+
+        data_time = index_to_time(sequence_number, rate)
+        timestrings.append(data_time)
+
+        # Iterate
+        last_seq_number = sequence_number
+        counter += 1
+        
+    return timestrings, erasures_found, counter, last_seq_number, packets_missed, resets

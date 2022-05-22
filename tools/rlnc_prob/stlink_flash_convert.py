@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from rlnc_prob.shared import meanfilt
+from shared import meanfilt, find_erasures, parse_flash_file
 print(os.getcwd())
 
 # 128 64 32 16
@@ -12,106 +12,25 @@ print(os.getcwd())
 #     f".\\stlink\\stlink-1.7.0-x86_64-w64-mingw32\\bin\\st-flash.exe read ..\\data\\nucleo 0x08040000 131072", shell=True, check=True)
 
 rlnc_sequence_numbers = True
-nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
-nullword_bytes = bytes([int(x, 0) for x in nullword])
 PER_datasets = []
 alpha = 0.15
 marker_size = 1
 
-def signed8(value):
-    return -(value & 0x80) | (value & 0x7f)
 
+def plot_file(path, title, rate, PER_filter):
+    sequence_numbers, rssis, snrs = parse_flash_file(path)
 
-def equals_nullword(bytestring):
-    return bytestring == nullword_bytes
+    timestrings, erasures, counter, last_seq_number, packets_missed, resets = find_erasures(
+        sequence_numbers, rate)
 
+    print("First seq", sequence_numbers[0])
+    print("Last seq", sequence_numbers[-1])
+    print(len(erasures), "erasure/reception entries")
+    print(f"{counter} measurements found, total packets missed {packets_missed}, resets {resets}")
 
-def index_to_time(index, rate):
-    return index / rate / 60 / 60
-
-
-def plot_file(path, title, rate):
-    file = open(path, "rb")
-
-    # Skip standard headers
-    header = file.read(4)
-    reserved1 = file.read(4)
-    reserved2 = file.read(4)
-    reserved3 = file.read(4)
-
-    word = file.read(4)
-    counter = 0
-    last_seq_number = None
-    cum_seq_missed = 0
-    data_indices_time = []
-    PER_set = []
-    sequence_number_set = []
-    data_set_rrsi = []
-    data_set_snr = []
-    resets = 0
-
-    erasure_tracker = []
-    while word:
-        if equals_nullword(word):
-            print("Empty word found. Done.")
-            break
-
-        # Process word into measurement
-        sequence_number = word[3] << 8 | word[2]
-        rssi = word[1]-150
-        snr = signed8(word[0])
-
-        # Startup
-        if last_seq_number is None:
-            last_seq_number = sequence_number
-
-        seq_diff = sequence_number - last_seq_number
-        if sequence_number == 0:
-            last_seq_number = 0
-            resets += 1
-            counter = 0
-            print("Diff 0 (start?)")
-        # else:
-        #     if (seq_diff != 1):
-        #         # Diff is >1, so a packet was missed
-        #         print("Diff != 1", sequence_number, seq_diff - 1)
-
-        if seq_diff > 1:
-            missed_pkts = seq_diff - 1
-            cum_seq_missed += missed_pkts
-
-            miss_entries = [1] * seq_diff
-            miss_entries[-1] = 0
-            erasure_tracker += miss_entries
-
-            print("Packet count missing", missed_pkts, miss_entries)
-        else:
-            erasure_tracker.append(0)
-
-        data_set_rrsi.append(rssi)
-        data_set_snr.append(snr)
-        sequence_number_set.append(sequence_number)
-        PER_set.append(cum_seq_missed/(sequence_number+1))
-
-        data_time = index_to_time(sequence_number, rate)
-        data_indices_time.append(data_time)
-
-        # Iterate
-        word = file.read(4)
-        last_seq_number = sequence_number
-        counter += 1
-
-    print("First seq", sequence_number_set[0])
-    print("Last seq", sequence_number_set[-1])
-    print(len(erasure_tracker), "erasure/reception entries")
-    print(f"{counter} measurements found, total packets missed {cum_seq_missed}, resets {resets}")
-
-    PER_filter_size = 21
-    PER_output = meanfilt(np.array(erasure_tracker), PER_filter_size)
-    print(data_indices_time[-1])
+    PER_output = meanfilt(np.array(erasures), PER_filter)
     step = 1/rate/3600
-    erasure_indices = np.arange(0, data_indices_time[-1] + step, step)
-    # erasure_indices = range(0, len(PER_output))
+    erasure_indices = np.arange(0, timestrings[-1] + step, step)
     print("PER mean length", len(erasure_indices), len(PER_output))
 
     fig, axs = plt.subplots(2)
@@ -125,7 +44,7 @@ def plot_file(path, title, rate):
     ax3.set_ylim([0, 1])
     ax3.text(1.5, 0.1, "PER")
     ax4 = ax3.twinx()
-    l4 = ax4.scatter(data_indices_time, sequence_number_set,
+    l4 = ax4.scatter(timestrings, sequence_numbers,
                      s=marker_size,
                      label='sequence_numbers')
     ax4.text(3, 4000, "Seq")
@@ -133,13 +52,13 @@ def plot_file(path, title, rate):
     ax3.set_title("PER over time")
     ax3.set_xlabel('Time (h)')
 
-    l1 = ax1.scatter(data_indices_time, data_set_rrsi,
+    l1 = ax1.scatter(timestrings, rssis,
                      color='orange',
                      alpha=alpha,
                      s=marker_size,
                      label='RSSI')
     ax1.text(1, -95, "RSSI")
-    l2 = ax2.scatter(data_indices_time, data_set_snr,
+    l2 = ax2.scatter(timestrings, snrs,
                      alpha=alpha,
                      s=marker_size,
                      label='SNR')
@@ -154,7 +73,7 @@ def plot_file(path, title, rate):
 
     plt.show(block=False)
 
-    return PER_set
+    return PER_output
 
 
 if __name__ == '__main__':
@@ -179,16 +98,17 @@ if __name__ == '__main__':
     # PER_set2 = plot_file(path2, title2, rate2)
     # PER_datasets.append(PER_set2)
 
+    PER_filter_size = 21
     path3 = base+"4_a4"
     title3 = "RSSI and SNR Floor 3 East (Coffee machine)"
     rate3 = 0.25
-    PER_set3 = plot_file(path3, title3, rate3)
+    PER_set3 = plot_file(path3, title3, rate3, PER_filter_size)
     PER_datasets.append(PER_set3)
 
     path4 = base+"4_a6"
     title4 = "RSSI and SNR Floor 4 East (Coffee machine)"
     rate4 = 0.25
-    PER_set4 = plot_file(path4, title4, rate4)
+    PER_set4 = plot_file(path4, title4, rate4, PER_filter_size)
     PER_datasets.append(PER_set4)
 
     # path5 = base+"3_a5"
