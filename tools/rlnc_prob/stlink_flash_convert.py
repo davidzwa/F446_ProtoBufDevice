@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from shared import meanfilt, find_erasures, parse_flash_file
+from shared import parse_flash_file, plot_erasures_PER
 print(os.getcwd())
 
 # 128 64 32 16
@@ -17,64 +17,12 @@ alpha = 0.15
 marker_size = 1
 
 
-def plot_file(path, title, rate, PER_filter):
+
+def plot_analysis_file(path, title, rate, PER_filter):
     sequence_numbers, rssis, snrs = parse_flash_file(path)
-
-    timestrings, erasures, counter, last_seq_number, packets_missed, resets = find_erasures(
-        sequence_numbers, rate)
-
-    print("First seq", sequence_numbers[0])
-    print("Last seq", sequence_numbers[-1])
-    print(len(erasures), "erasure/reception entries")
-    print(f"{counter} measurements found, total packets missed {packets_missed}, resets {resets}")
-
-    PER_output = meanfilt(np.array(erasures), PER_filter)
-    step = 1/rate/3600
-    erasure_indices = np.arange(0, timestrings[-1] + step, step)
-    print("PER mean length", len(erasure_indices), len(PER_output))
-
-    fig, axs = plt.subplots(2)
-    ax1 = axs[0]
-    ax2 = ax1.twinx()
-
-    ax3 = axs[1]
-    l3 = ax3.scatter(erasure_indices, PER_output,
-                     s=2,
-                     color='orange', label='PER')
-    ax3.set_ylim([0, 1])
-    ax3.text(1.5, 0.1, "PER")
-    ax4 = ax3.twinx()
-    l4 = ax4.scatter(timestrings, sequence_numbers,
-                     s=marker_size,
-                     label='sequence_numbers')
-    ax4.text(3, 4000, "Seq")
-    # ax3.legend(handles=l3+l4)
-    ax3.set_title("PER over time")
-    ax3.set_xlabel('Time (h)')
-
-    l1 = ax1.scatter(timestrings, rssis,
-                     color='orange',
-                     alpha=alpha,
-                     s=marker_size,
-                     label='RSSI')
-    ax1.text(1, -95, "RSSI")
-    l2 = ax2.scatter(timestrings, snrs,
-                     alpha=alpha,
-                     s=marker_size,
-                     label='SNR')
-    ax2.text(2, -7, "SNR")
-    # ax1.legend(handles=l1+l2)
-    ax1.set_xlabel('Time (h)')
-    ax1.set_title(title)
-    ax1.set_ylabel("RSSI [dBm]")
-    ax2.set_ylabel("SNR [dB]")
-
-    fig.tight_layout()  # otherwise the right y-label is slightly clipped
-
-    plt.show(block=False)
-
-    return PER_output
-
+    
+    return plot_erasures_PER(sequence_numbers, rssis, snrs)
+    
 
 if __name__ == '__main__':
     # base1 = "../data/nucleo"
@@ -102,13 +50,14 @@ if __name__ == '__main__':
     path3 = base+"4_a4"
     title3 = "RSSI and SNR Floor 3 East (Coffee machine)"
     rate3 = 0.25
-    PER_set3 = plot_file(path3, title3, rate3, PER_filter_size)
+    PER_set3 = plot_erasures_PER(alpha, marker_size, path3, title3, rate3, PER_filter_size)
     PER_datasets.append(PER_set3)
 
     path4 = base+"4_a6"
     title4 = "RSSI and SNR Floor 4 East (Coffee machine)"
     rate4 = 0.25
-    PER_set4 = plot_file(path4, title4, rate4, PER_filter_size)
+    PER_set4 = plot_erasures_PER(
+        alpha, marker_size, path4, title4, rate4, PER_filter_size)
     PER_datasets.append(PER_set4)
 
     # path5 = base+"3_a5"

@@ -1,9 +1,10 @@
 from math import comb, ceil
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
+
 
 def signed8(value):
     return -(value & 0x80) | (value & 0x7f)
@@ -16,6 +17,7 @@ def equals_nullword(bytestring):
 def index_to_time(index, rate):
     return index / rate / 60 / 60
 
+
 def parse_flash_file(path):
     file = open(path, "rb")
 
@@ -24,11 +26,11 @@ def parse_flash_file(path):
     reserved1 = file.read(4)
     reserved2 = file.read(4)
     reserved3 = file.read(4)
-    
+
     sequence_numbers = []
     rssis = []
     snrs = []
-    
+
     word = file.read(4)
     while word:
         if equals_nullword(word):
@@ -39,11 +41,12 @@ def parse_flash_file(path):
         sequence_numbers.append(word[3] << 8 | word[2])
         rssis.append(word[1]-150)
         snrs.append(signed8(word[0]))
-        
+
         # Iterate
         word = file.read(4)
-        
+
     return sequence_numbers, rssis, snrs
+
 
 def P(m, n, r, q):
     p = 1.0
@@ -93,10 +96,11 @@ def success_rates(n, delta_max, PER, q, include_rref):
 
     return redundancies, success_probs
 
+
 def meanfilt(x, k):
     """Apply a length-k mean filter to a 1D array x.
     Boundaries are extended by repeating endpoints.
-    
+
     https://stackoverflow.com/questions/61147532/mean-filter-in-python-without-loops
     """
 
@@ -201,5 +205,64 @@ def find_erasures(sequence_numbers, rate, print_debug=False):
         # Iterate
         last_seq_number = sequence_number
         counter += 1
-        
+
     return timestrings, erasures_found, counter, last_seq_number, packets_missed, resets
+
+
+def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, rate, PER_filter):
+    timestrings, erasures, counter, last_seq_number, packets_missed, resets = find_erasures(
+        sequence_numbers, rate)
+
+    print("First seq", sequence_numbers[0])
+    print("Last seq", sequence_numbers[-1])
+    print(len(erasures), "erasure/reception entries")
+    print(f"{counter} measurements found, total packets missed {packets_missed}, resets {resets}")
+
+    PER_output = meanfilt(np.array(erasures), PER_filter)
+    step = 1/rate/3600
+    erasure_indices = np.arange(0, timestrings[-1] + 20000 * step, step)
+    erasure_indices = erasure_indices[:len(PER_output)]
+    print("PER mean length", len(erasure_indices),
+          len(PER_output), timestrings[-1], step)
+
+    fig, axs = plt.subplots(2)
+    ax1 = axs[0]
+    ax2 = ax1.twinx()
+
+    ax3 = axs[1]
+    l3 = ax3.scatter(erasure_indices, PER_output,
+                     s=2,
+                     color='orange', label='PER')
+    ax3.set_ylim([0, 1])
+    ax3.text(1.5, 0.1, "PER")
+    ax4 = ax3.twinx()
+    l4 = ax4.scatter(timestrings, sequence_numbers,
+                     s=marker_size,
+                     label='sequence_numbers')
+    ax4.text(3, 4000, "Seq")
+    # ax3.legend(handles=l3+l4)
+    ax3.set_title("PER over time")
+    ax3.set_xlabel('Time (h)')
+
+    l1 = ax1.scatter(timestrings, rssis,
+                     color='orange',
+                     alpha=alpha,
+                     s=marker_size,
+                     label='RSSI')
+    ax1.text(1, -95, "RSSI")
+    l2 = ax2.scatter(timestrings, snrs,
+                     alpha=alpha,
+                     s=marker_size,
+                     label='SNR')
+    ax2.text(2, -7, "SNR")
+    # ax1.legend(handles=l1+l2)
+    ax1.set_xlabel('Time (h)')
+    ax1.set_title(title)
+    ax1.set_ylabel("RSSI [dBm]")
+    ax2.set_ylabel("SNR [dB]")
+
+    # fig.tight_layout()  # otherwise the right y-label is slightly clipped
+
+    plt.show(block=False)
+
+    return PER_output
