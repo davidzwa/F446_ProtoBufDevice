@@ -33,3 +33,5 @@ ipch/
 .vscode/cmake-settings.local.json
 
 data/
+
+tools/rlnc_prob/__pycache__/
