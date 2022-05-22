@@ -20,7 +20,8 @@ enum DecodingError {
     FIND_PIVOT_ROWCOUNT_0 = 0x04,
     INNO_ROW_EXCEEDS_MATRIX_ROWS = 0x05,
     INNO_ROW_EXCEEDS_MATRIX_COLS = 0x06,
-    ILLEGAL_RANK_STATE = 0x07  // Usually a corrupt matrix (bit-flips?)
+    ILLEGAL_RANK_STATE = 0x07,  // Usually a corrupt matrix (bit-flips?)
+    ILLEGAL_BURST_STATE = 0x08
 };
 
 class RlncDecoder {
@@ -46,6 +47,8 @@ class RlncDecoder {
 
    private:
     void RngGenerateMany(std::vector<uint8_t>& output, uint16_t count);
+    bool ErasureChoiceSimple(float probability);
+    bool ErasureChoiceBurst();
     bool DecidePacketErrorDroppage(bool isUpdatePacket);
     void ReserveGenerationStorage();
     void ClearDecodingMatrix();
@@ -66,6 +69,8 @@ class RlncDecoder {
     uint16_t missedGenFragments;
     bool terminated;
     vector<vector<galois::GFSymbol>> decodingMatrix;
+
+    uint32_t burstState = 1;
 };
 
 #endif  // RLNC_DECODER_H__

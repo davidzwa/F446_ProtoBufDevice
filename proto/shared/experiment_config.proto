@@ -50,6 +50,13 @@ message ReceptionRateConfig {
     bool OverrideSeed = 2;
     uint32 Seed = 3;
     bool DropUpdateCommands = 4;
+
+    bool UseBurstLoss = 5;
+    uint32 InitState = 6;
+    float ProbP = 7;
+    float ProbR = 8;
+    float ProbK = 9;
+    float ProbH = 10;
 }
 
 enum PRngImplementation{
