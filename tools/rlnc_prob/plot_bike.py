@@ -32,6 +32,7 @@ rate = 20
 PER_filter = 51
 
 plot_file(csv_file_sf8, 10, "Bike Range Test PER (SF8)")
+plt.savefig('27_SF8_bike.pdf')
 plot_file(csv_file_sf9, 10, "Bike Range Test PER (SF9)")
 plot_file(csv_file_sf10, 10, "Bike Range Test PER (SF10)")
 plot_file(csv_file_sf11, 10, "Bike Range Test PER (SF11)")
