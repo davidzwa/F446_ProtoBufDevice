@@ -80,8 +80,8 @@ p = 0.0015  # move to burst prob
 p2 = 0.0005
 r = 0.03  # move to good prob (stays stuck)
 h = 1  # 100% PER
-k = 0.03  # 3% PER
-count = 1500000
+k = 0  # 3% PER
+count = 15000
 init = 1  # Good/Burst initial state
 filter_window = 91
 
@@ -135,7 +135,7 @@ plt.legend()
 plt.xlabel('Packet index')
 plt.ylabel('Reception Probability')
 plt.title(f"Successful Reception with burst - time series")
-plt.show(block=False)
+plt.show(block=True)
 
 # Export data and PDF plots
 # plt.savefig('24_timeseries_burst.pdf')
@@ -151,13 +151,15 @@ for prob in pmf:
         break
     index += 1
 
-bin_count = 50
+bin_count = 300
 plt.figure(plot_count)
 plot_count += 1
 hist, bins = np.histogram(bdiff, bins=bin_count, range=[0, index+1])
 hist2, bins2 = np.histogram(bdiff2, bins=bin_count, range=[0, index+1])
 plt.bar(bins[:-1], hist, label='Bad burst duration')
 plt.bar(bins2[:-1], hist2, label='Good burst duration')
+plt.xlabel("Burst duration (bins)")
+plt.ylabel("Duration Occurrences")
 plt.grid(True)
 plt.legend()
 plt.title("Duration histograms")
