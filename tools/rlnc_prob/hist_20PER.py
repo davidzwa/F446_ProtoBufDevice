@@ -1,12 +1,12 @@
-from math import comb
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
 from shared import failure_rate
+import matplotlib.ticker as mtick
 
 max_red = 60
 vals = []
-with open('gen_0_2PER.csv', newline='\n') as csvfile:
+with open('20_gen_0_2PER.csv', newline='\n') as csvfile:
 	reader = csv.DictReader(csvfile)
 
 	for row in reader:
@@ -15,29 +15,35 @@ with open('gen_0_2PER.csv', newline='\n') as csvfile:
 PER = 0.2
 delta_max = 60
 threshold = 20
-redundancies = range(0, delta_max+1)
-failure_rates_0_256 = []
-failure_rates_0_256_perfect = []
+redundancies = np.arange(0, delta_max+1, 1)
+success_rates_0_256 = []
+success_rates_0_256_perfect = []
 q = pow(2, 8)
 for delta in redundancies:
     total_sent = threshold + delta
     imperfect = failure_rate(threshold, total_sent, PER, pow(2, 8), False, 0)
-    perfect = imperfect = failure_rate(
+    perfect = failure_rate(
     	threshold, total_sent, PER, pow(2, 8), True, 0)
-    failure_rates_0_256.append(imperfect)
-    failure_rates_0_256_perfect.append(perfect)
-    print(imperfect - perfect)
+    success_rates_0_256.append(1 - imperfect)
+    success_rates_0_256_perfect.append(1 - perfect)
+
+fig, ax = plt.subplots()
+ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 
 hist, bins = np.histogram(vals, bins=max_red, range=[0, 60])
+
+# Convert x-axis to percentage
+redundancies = 100*redundancies / threshold
+bins = 100*bins / threshold
+
 cum_hist = np.cumsum(hist)
-plt.bar(bins[:-1], hist/max(hist), alpha=0.2, color='green', label='RLNC histogram')
-plt.plot(bins[:-1], cum_hist/max(cum_hist), alpha=0.9, color='orange', label='RLNC measured')
-plt.plot(redundancies, failure_rates_0_256, alpha=0.6, label='RLNC model')
-# plt.plot(redundancies, failure_rates_0_256_perfect, '--', alpha=0.6)
-# print(hist, bin_edges)
+plt.bar(bins[:-1], hist/max(hist), alpha=0.4,
+        color='green', width=3.5, label='RLNC histogram')
+plt.plot(bins[:-1], cum_hist/max(cum_hist), color='orange', label='RLNC measured')
+plt.plot(redundancies, success_rates_0_256, label='RLNC model')
 plt.grid(True)
 plt.legend()
-plt.xlabel('Redundant Packets sent')
+plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Probability')
 plt.title('Decoding success vs redundancy (PER 20%, n=20)')
-plt.show()
+plt.savefig('20_rlnc_result_per20.pdf')

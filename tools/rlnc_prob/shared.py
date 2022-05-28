@@ -92,7 +92,7 @@ def success_rates(n, delta_max, PER, q, include_rref):
     success_probs = []
     for delta in redundancies:
         success_probs.append(
-            1 - failure_rate(n, n+delta, PER, 0, q, include_rref))
+            1 - failure_rate(n, n+delta, PER, q, include_rref))
 
     return redundancies, success_probs
 

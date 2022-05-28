@@ -1,15 +1,17 @@
+import numpy as np
 from scipy.stats import binom
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 from shared import failure_rate
 import csv
 
 paper_values = [0.99, 0.98, 0.97, 0.95, 0.87,
                 0.77, 0.66, 0.54, 0.41, 0.295, 0.21]
 PER = 0.2
-alpha = 0.8
+alpha = 1
 delta_max = 10
 threshold = 16
-redundancies = range(0, delta_max+1)
+redundancies = np.arange(0, delta_max+1, 1)
 failure_rates_0_8 = []
 failure_rates_0_4 = []
 failure_rates_0_2 = []
@@ -44,17 +46,19 @@ with open('binomial_output.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(output_data)
 
+redundancies = 100*redundancies / threshold
+fig, ax = plt.subplots()
+ax.xaxis.set_major_formatter(mtick.PercentFormatter())
+
+plt.plot(redundancies, failure_rates_0_1, label='GF(2^1)', alpha=alpha)
+plt.plot(redundancies, failure_rates_0_2,
+         label='GF(2^2)', alpha=alpha)
+plt.plot(redundancies, failure_rates_0_4,
+         label='GF(2^4)', alpha=alpha)
 plt.plot(redundancies, failure_rates_0_8,
-         '*',
-         label='Calculated GF(2^8)', alpha=alpha)
-plt.plot(redundancies, failure_rates_0_4, '--',
-         label='Calculated GF(2^4)', alpha=alpha)
-plt.plot(redundancies, failure_rates_0_2, '--',
-         label='Calculated GF(2^2)', alpha=alpha)
-plt.plot(redundancies, failure_rates_0_1,
-         '--', label='Calculated GF(2^1)', alpha=alpha)
-plt.plot(redundancies, perfect_rates,
-         label='Perfect GF', alpha=alpha)
+         '+',
+         label='GF(2^8)', alpha=alpha)
+plt.plot(redundancies, perfect_rates, '--', label='Perfect GF', alpha=alpha)
 
 # PLOT THE P-Rate
 # pfunc1 = []
@@ -78,16 +82,16 @@ plt.plot(redundancies, perfect_rates,
 # plt.plot(packets, pfunc3, label='2^2')
 # plt.plot(packets, pfunc4, label='2^1')
 
-
 # plt.plot(redundancies, failure_rates_2, '-.', label='Failure R=2', alpha=alpha)
 # plt.plot(redundancies, paper_values, '--', label='Paper Values R=2 GF(2^8)', alpha=alpha)
-
 plt.grid(True)
 plt.legend()
-plt.xlabel('Redundant packet count')
+
+plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Failure Probability')
-plt.title("Decoding Failure vs Redundancy (n=16, N=26, PER=0.2")
-plt.show()
+plt.title("Decoding Failure vs Redundancy (n=16, N=26, PER=0.2)")
+# plt.show()
+plt.savefig('10_rlnc_theory.pdf')
 
 exit(0)
 

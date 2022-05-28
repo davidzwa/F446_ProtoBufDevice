@@ -2,6 +2,7 @@ from math import pow, ceil
 import numpy as np
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 from shared import calculate_decoding_prob_devices
 
 """
@@ -18,8 +19,13 @@ def save_device_plot(plot_prefix, F, s_f, G, devices, q, PER, delta):
     global plot_count
     
     plt.figure(plot_count)
+    fig, ax = plt.subplots()
+    ax.xaxis.set_major_formatter(mtick.PercentFormatter())
+    
     plot_count += 1
-    alpha = 0.6
+    alpha = 1.0
+    # Rescale the x-axis to percentages
+    redundancies = 100*(np.array(redundancies)-G) / G
     plt.plot(redundancies, decode,
              label='Decoding Prob', alpha=alpha)
     plt.plot(redundancies, all_gens, '--',
@@ -29,7 +35,7 @@ def save_device_plot(plot_prefix, F, s_f, G, devices, q, PER, delta):
 
     plt.grid(True)
     plt.legend()
-    plt.xlabel('Redundant packet count')
+    plt.xlabel('Redundancy [%]')
     plt.ylabel('Decoding Probability')
     size = int(ceil(F/1E3))
     plt.title(f"{size}kB vs Redundancy (n=20,N=80,PER={PER:.1f})")
