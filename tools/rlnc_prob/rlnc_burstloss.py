@@ -168,7 +168,7 @@ plt.legend()
 plt.xlabel('Packet index')
 plt.ylabel('Reception Probability')
 plt.title(f"Successful Reception with burst - time series")
-plt.show(block=False)
+# plt.show(block=False)
 
 # Export data and PDF plots
 plt.savefig('24_timeseries_burst.pdf')

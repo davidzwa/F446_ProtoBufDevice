@@ -219,9 +219,12 @@ def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, 
     print(f"{counter} measurements found, total packets missed {packets_missed}, resets {resets}")
 
     PER_output = meanfilt(np.array(erasures), PER_filter)
+    # TODO this x-axis determination is very weak and buggy
     step = 1/rate/3600
     erasure_indices = np.arange(0, timestrings[-1] + 20000 * step, step)
+    # TODO this is very weak and doesnt promise good x axis
     erasure_indices = erasure_indices[:len(PER_output)]
+    
     print("PER mean length", len(erasure_indices),
           len(PER_output), timestrings[-1], step)
 
