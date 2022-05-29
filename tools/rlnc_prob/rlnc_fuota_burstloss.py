@@ -82,13 +82,12 @@ class RlncDecisionFactory():
         return result
 
 
-gens = 500
+gens = 600
 G = 20
 delta = 3
 count = gens * G * (1+delta)
-N_G = 100
 
-xmin = 0.25  # Short burst
+xmin = 0.05  # Short burst
 xmax = 0.5
 xrange = np.arange(xmin, xmax, 0.02)
 
@@ -124,10 +123,15 @@ for x in xrange:
     length = len(results.index)
     results.loc[length] = row
 
-    plt.boxplot(result_experiment['Success'])
+    print(row)
+    plt.scatter([x], 100*(mean(result_experiment['RedundancyUsed']) - G) / G)
 
-plt.xticks(range(1, len(xrange)+1, 1), xrange)
+# plt.xticks(range(1, len(xrange)+1, 1), xrange)
+results.to_csv('27_burst_resistance.csv')
+
 plt.title(f"Decoding Burst Resistance (n=20,N=80)")
 plt.savefig('27_burst_sim.pdf')
+plt.xlabel('Good/burst ratio (x)')
+plt.ylabel('Required Redundancy [%]')
 plt.show()
 print(results)
