@@ -47,7 +47,7 @@ with open('binomial_output.csv', 'w', newline='') as csvfile:
     writer.writerows(output_data)
 
 
-# Construct colormap
+# Construct colormap - https://www.tutorialspoint.com/matplotlib-plot-lines-with-colors-through-colormap
 n = 5
 colors = plt.cm.summer(np.linspace(0, 1, n))
 

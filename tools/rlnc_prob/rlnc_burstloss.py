@@ -131,7 +131,7 @@ if (len(bdiff2) > 0):
     print(
         f"2) Max: {max_burst}, Avg: {avg_burst: .2f}, Min: {min_burst}, Count: {num_bursts}")
 
-avg = np.average(samples)
+avg = 1 - np.average(samples)
 err = abs(p_E - avg)
 print(f"Err: {err:.3f} Sim: {avg:.3f} SS: {p_E:.3f}")
 
