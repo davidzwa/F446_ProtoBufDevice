@@ -7,6 +7,7 @@ import pandas as pd
 PER = 0.2
 delta_max = 60
 threshold = 20
+N_G = 30
 q = pow(2, 8)
 csv_file = '21_experiment_filtered_gen_updates.csv'
 df = pd.read_csv(csv_file)
@@ -19,10 +20,16 @@ gk = df[df.Success == True].groupby('PerConfig')
 fig, ax = plt.subplots()
 ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 
+# Construct colormap
+colors = plt.cm.viridis(np.linspace(0, 1, len(gk)-1))
+
 output_data = []
 df_model = pd.DataFrame({'Redundancy': [], 'SuccessRate': [], 'PER': []})
 for per_name, group in gk:
-    print("Plotting PER", per_name)
+
+    print("Plotting PER", per_name, type(per_name))
+    if per_name == 0.0:
+        continue
 
     grp = group['RedundancyUsed']
 
@@ -38,13 +45,13 @@ for per_name, group in gk:
     # Rescale x-axes
     reds = 100*np.array(reds)/threshold
     bins = 100*bins/threshold
-    
-    # plt.bar(bins[:-1], hist/max(hist), alpha=0.3, label='PER {0}%'.format(name*100.0))
-    plt.plot(bins[:-1], np.cumsum(hist)/30)
-    
-    plt.plot(reds, y, '--')
+
+    # Cumulative norm by gen count N_G
+    plt.plot(bins[:-1], np.cumsum(hist)/N_G, color=colors[color_index])
+
+    plt.plot(reds, y, '--', color='black')
     label = '{0}'.format(per_name)
-    plt.text(color_index * 6* 5, y[30] - color_index / 350, label)
+    plt.text(color_index * 6 * 5, y[30] - color_index / 350, label)
 
     color_index += 1
 
@@ -53,7 +60,7 @@ df_model.to_csv('21_output.csv')
 plt.grid(True)
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Probability')
-plt.title('Decoding success vs redundancy (PER [0%-80%], n=20)')
+plt.title('Decoding success vs redundancy (PER [10%-80%], n=20)')
 plt.savefig('21_rlnc_vs_model.pdf')
 
 exit(0)

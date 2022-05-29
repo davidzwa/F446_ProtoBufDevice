@@ -46,19 +46,31 @@ with open('binomial_output.csv', 'w', newline='') as csvfile:
     writer.writeheader()
     writer.writerows(output_data)
 
+
+# Construct colormap
+n = 5
+colors = plt.cm.summer(np.linspace(0, 1, n))
+
 redundancies = 100*redundancies / threshold
 fig, ax = plt.subplots()
 ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 
-plt.plot(redundancies, failure_rates_0_1, label='GF(2^1)', alpha=alpha)
-plt.plot(redundancies, failure_rates_0_2,
-         label='GF(2^2)', alpha=alpha)
-plt.plot(redundancies, failure_rates_0_4,
-         label='GF(2^4)', alpha=alpha)
+i=0
+plt.plot(redundancies, perfect_rates, '--',
+         label='Perfect GF', color=colors[i], alpha=alpha)
+i+=1
 plt.plot(redundancies, failure_rates_0_8,
-         '+',
-         label='GF(2^8)', alpha=alpha)
-plt.plot(redundancies, perfect_rates, '--', label='Perfect GF', alpha=alpha)
+         'o',
+         label='GF(2^8)', color=colors[i], alpha=alpha)
+i+=1
+plt.plot(redundancies, failure_rates_0_4,
+         label='GF(2^4)', color=colors[i], alpha=alpha)
+i+=1
+plt.plot(redundancies, failure_rates_0_2,
+         label='GF(2^2)', color=colors[i], alpha=alpha)
+i+=1
+plt.plot(redundancies, failure_rates_0_1,
+         label='GF(2^1)', color=colors[i], alpha=alpha)
 
 # PLOT THE P-Rate
 # pfunc1 = []
@@ -86,6 +98,7 @@ plt.plot(redundancies, perfect_rates, '--', label='Perfect GF', alpha=alpha)
 # plt.plot(redundancies, paper_values, '--', label='Paper Values R=2 GF(2^8)', alpha=alpha)
 plt.grid(True)
 plt.legend()
+# plt.colorbar()
 
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Failure Probability')
