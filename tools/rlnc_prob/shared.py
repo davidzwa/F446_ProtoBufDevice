@@ -1,10 +1,11 @@
 from math import comb, ceil
+from random import Random
 import numpy as np
 import matplotlib.pyplot as plt
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
-
+rng = Random()
 
 def signed8(value):
     return -(value & 0x80) | (value & 0x7f)
@@ -92,7 +93,7 @@ def success_rates(n, delta_max, PER, q, include_rref):
     success_probs = []
     for delta in redundancies:
         success_probs.append(
-            1 - failure_rate(n, n+delta, PER, q, include_rref))
+            1.0 - failure_rate(n, n+delta, PER, q, include_rref))
 
     return redundancies, success_probs
 
@@ -269,3 +270,65 @@ def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, 
     plt.show(block=False)
 
     return PER_output
+
+
+def decide_simple(p):
+    global rng
+    return 1 if rng.random() <= p else 0
+
+def calculate_burst_timeseries(count, p, r, h, k, PER_decider):
+    # 0 = B, 1 = G
+    prev_state = 1
+    new_state = 1  # Always mark as good without history for consistency
+    samples = []
+
+    steps = range(0, count)
+    burst_durations = []
+    burst_end_steps = []
+    burst_start_steps = [0] if new_state == 0 else []
+
+    for index in steps:
+        error = None
+        if new_state == 0:
+            # Burst state
+            error = PER_decider(h)
+
+            if prev_state != 0:
+                burst_start_steps.append(index)
+
+            # decide to stay
+            new_state = not decide_simple(1-r)
+            prev_state = 0
+
+        elif new_state == 1:
+            # Good state
+            error = PER_decider(k)
+
+            if prev_state != 1:
+                duration = index - burst_start_steps[-1]
+                if duration < 0:
+                    raise Exception("Burst duration cannot be negative")
+                burst_end_steps.append(index)
+                burst_durations.append(duration)
+
+            # decide to stay
+            new_state = decide_simple(1-p)
+            prev_state = 1
+
+        else:
+            raise Exception("Illegal markov state")
+
+        if error is None:
+            raise Exception("Error was not properly sampled")
+
+        samples.append(error)
+
+    # If last state was burst, we need to wrap that end/avg up
+    if len(burst_start_steps) != len(burst_end_steps):
+        duration = index - burst_start_steps[-1]
+        if duration < 0:
+            raise Exception("Burst duration cannot be negative")
+        burst_end_steps.append(index)
+        burst_durations.append(duration)
+
+    return steps, samples, burst_start_steps, burst_end_steps, burst_durations

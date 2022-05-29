@@ -1,17 +1,11 @@
 from math import ceil, exp, factorial
+from statistics import mean
 import matplotlib.pyplot as plt
 import pandas as pd
-from random import Random
 import numpy as np
-from shared import meanfilt
+from shared import meanfilt, calculate_burst_timeseries, decide_simple
 
-rng = Random()
 plot_count = 1
-
-
-def decide(p):
-    global rng
-    return 1 if rng.random() <= p else 0
 
 
 def calculate_steady_state(p, r, h, k):
@@ -33,73 +27,22 @@ def calculate_burst_duration_pmf(count, r):
     return steps, pmf
 
 
-def calculate_burst_timeseries(count, p, r, h, k):
-    # 0 = B, 1 = G
-    prev_state = 1
-    new_state = 1 # Always mark as good without history for consistency
-    samples = []
+x = 0.25  # Short burst
+x2 = 0.6  # Much longer burst
+pi_b = 0.4  # 5% burst
 
-    steps = range(0, count)
-    burst_durations = []
-    burst_end_steps = []
-    burst_start_steps = [0] if new_state == 0 else []
+p = x * pi_b  # move to burst prob
+r = x * (1-pi_b)  # move to good prob (stays stuck)
 
-    for index in steps:
-        error = None
-        if new_state == 0:
-            # Burst state
-            error = decide(h)
-            
-            if prev_state != 0:
-                burst_start_steps.append(index)
-                
-            # decide to stay
-            new_state = not decide(1-r)
-            prev_state = 0
+# Worse
+p2 = x2 * pi_b
+r2 = x2 * (1-pi_b)
 
-        elif new_state == 1:
-            # Good state
-            error = decide(k)
-
-            if prev_state != 1:
-                duration = index - burst_start_steps[-1]
-                if duration < 0:
-                    raise Exception("Burst duration cannot be negative")
-                burst_end_steps.append(index)
-                burst_durations.append(duration)
-                
-            # decide to stay
-            new_state = decide(1-p)                
-            prev_state = 1
-                
-        else:
-            raise Exception("Illegal markov state")
-
-        if error is None:
-            raise Exception("Error was not properly sampled")
-
-        samples.append(error)
-
-    # If last state was burst, we need to wrap that end/avg up
-    if len(burst_start_steps) != len(burst_end_steps):
-        duration = index - burst_start_steps[-1]
-        if duration < 0:
-            raise Exception("Burst duration cannot be negative")
-        burst_end_steps.append(index)
-        burst_durations.append(duration)
-
-    return steps, samples, burst_start_steps, burst_end_steps, burst_durations
-
-
-x = 0.25
-p = 0.01  # move to burst prob
-r = 0.05  # move to good prob (stays stuck)
-r2 = 0.02
 h = 0  # 100% PER
 k = 1  # 0% PER
 count = 5000000
 filter_window = 1501
-pmf_steps = ceil(3 * 1/r2) # 150
+pmf_steps = ceil(10 * 1/r2)  # 150
 
 # Calculate PMF
 plt.figure(plot_count)
@@ -111,10 +54,11 @@ plt.plot(steps4, pmf2, label='Burst Duration PMF Bad')
 
 # Simulate Burst
 pi_G, pi_B, p_E = calculate_steady_state(p, r, h, k)
+pi_G2, pi_B2, p_E2 = calculate_steady_state(p2, r2, h, k)
 steps, samples, bs, be, bdiff = calculate_burst_timeseries(
-    count, p, r, h, k)
+    count, p, r, h, k, decide_simple)
 steps2, samples2, bs2, be2, bdiff2 = calculate_burst_timeseries(
-    count, p, r2, h, k)
+    count, p2, r2, h, k, decide_simple)
 
 if (len(bdiff) > 0):
     max_burst = max(bdiff)
@@ -123,6 +67,9 @@ if (len(bdiff) > 0):
     num_bursts = len(bdiff)
     print(
         f"1) Max: {max_burst}, Avg: {avg_burst: .2f}, Min: {min_burst}, Count: {num_bursts}")
+    avg = 1 - np.average(samples)
+    err = abs(p_E - avg)
+    print(f"1) Err: {err:.3f} Sim: {avg:.3f} SS: {p_E:.3f}")
 if (len(bdiff2) > 0):
     max_burst = max(bdiff2)
     avg_burst = np.average(bdiff2)
@@ -130,12 +77,12 @@ if (len(bdiff2) > 0):
     num_bursts = len(bdiff)
     print(
         f"2) Max: {max_burst}, Avg: {avg_burst: .2f}, Min: {min_burst}, Count: {num_bursts}")
+    avg2 = 1 - np.average(samples2)
+    err2 = abs(p_E2 - avg)
+    print(f"2) Err: {err2:.3f} Sim: {avg2:.3f} SS: {p_E2:.3f}")
 
-avg = 1 - np.average(samples)
-err = abs(p_E - avg)
-print(f"Err: {err:.3f} Sim: {avg:.3f} SS: {p_E:.3f}")
 
-bin_count = 30
+bin_count = pmf_steps
 plt.hist(bdiff, bins=bin_count, range=[
          0, pmf_steps+1], label='Bad burst duration', histtype='step', density=True)
 plt.hist(bdiff2, bins=bin_count, range=[
@@ -149,9 +96,10 @@ plt.title("Duration histograms and PMFs")
 # plt.show()
 plt.savefig('25_burst_duration_pmf_histos.pdf')
 
+
 # Verify data length consistency
-print(len(bs), len(bdiff), len(be))
-print(len(bs2), len(bdiff2), len(be2))
+print(mean(bdiff), len(bs), len(bdiff), len(be))
+print(mean(bdiff2), len(bs2), len(bdiff2), len(be2))
 
 # Export data
 df_data = pd.DataFrame({'Start': bs, 'Duration': bdiff, 'End': be})
