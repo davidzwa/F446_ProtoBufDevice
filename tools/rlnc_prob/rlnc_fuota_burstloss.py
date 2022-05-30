@@ -25,7 +25,7 @@ class RlncDecisionFactory():
                                      'Success': [],
                                      'Received': [],
                                      'Lost': [],
-                                     'GFErr': [],
+                                    #  'GFErr': [],
                                      'PER': []})
 
         # If PER is known we can construct a LUT
@@ -39,24 +39,29 @@ class RlncDecisionFactory():
         return self.G + self.delta_max
 
     def switch_gen(self):
-        gen_success_prob = P(
-            self.current_fragment + 1, self.G, 0, self.q)
-        gen_success_prob_perc = 100.0 * gen_success_prob
+        # gen_success_prob = P(
+        #     self.current_fragment + 1, self.G, 0, self.q)
+        # gen_success_prob_perc = 100.0 * gen_success_prob
         gen_success = 0
         if self.received >= self.G:
-            gen_success = decide_simple(gen_success_prob)
-        else:
-            gen_success_prob = 0
-            gen_success_prob_perc = 0
+            #     gen_success = decide_simple(gen_success_prob)
+            gen_success = 1
+        # else:
+        #     gen_success_prob = 0
+        #     gen_success_prob_perc = 0
 
         # print(
         #     f"RX: {self.received} Err: {self.lost} Gen: {gen_success} (Prob:{gen_success_prob_perc:.1f}%)")
 
-        redundancy_used = self.received - \
-            self.G if self.received >= self.G else self.delta_max
+        redundancy_used = self.lost \
+            if self.received >= self.G else self.delta_max
         PER = self.lost / (self.received + self.lost)
-        row = [self.current_generation, redundancy_used, gen_success,
-               self.received, self.lost, gen_success_prob_perc, PER]
+        row = [self.current_generation,
+               redundancy_used,
+               gen_success,
+               self.received, self.lost,
+               #    gen_success_prob_perc,
+               PER]
 
         length = len(self.gen_log.index)
         self.gen_log.loc[length] = row
@@ -70,33 +75,34 @@ class RlncDecisionFactory():
 
         # print("Deciding", self.current_fragment, self.__total(), self.current_fragment % self.__total())
 
-        self.current_fragment += 1
-        if self.current_fragment % self.__total() == 0:
-            self.switch_gen()
-
         result = decide_simple(PER)
         if result:
             self.received += 1
         else:
             self.lost += 1
+
+        self.current_fragment += 1
+        if self.current_fragment % self.__total() == 0:
+            self.switch_gen()
+
         return result
 
 
-gens = 100
+gens = 1200
 G = 20
 delta = 3
 count = gens * G * (1+delta)
 
-xmin = -3  # Short burst
-xmax = 0
-xcount = 200
+xmin = -2  # Heavy bursts, low frequency p=0.1 r=0.15
+xmax = 0  # Slight bursts, high frequency p=0.4 r=0.6
+xcount = 250
 h = 0  # 100% PER
 k = 1  # 0% PER
-pi_b = 0.2  # 40% burst
+pi_b = 0.1  # % burst PER
 xrange = np.logspace(xmin, xmax, num=xcount)
 results = None
 
-read_csv = True
+read_csv = False
 
 if read_csv:
     results = pd.read_csv('27_burst_resistance.csv')
@@ -105,7 +111,10 @@ else:
         'x': [],
         'SuccessRate': [],
         'PER': [],
-        'RedundancyUsed': []})
+        'RedundancyUsedMin': [],
+        'RedundancyUsed': [],
+        'RedundancyUsedMax': []
+    })
 
     for x in xrange:
         print(f'Running x {x:.5f}')
@@ -121,16 +130,19 @@ else:
 
         result_experiment = decider.gen_log
         # print(decider.gen_log)
-        print(x,
-              mean(result_experiment['Success']),
-              mean(result_experiment['PER']),
-              mean(result_experiment['RedundancyUsed'])
-              )
+        suc = mean(result_experiment['Success'])
+        per = mean(result_experiment['PER'])
+        min_red = 100 * min(result_experiment['RedundancyUsed']) / G
+        mean_red = 100 * mean(result_experiment['RedundancyUsed']) / G
+        max_red = 100 * max(result_experiment['RedundancyUsed']) / G
+        print(f"{x:.4f} {suc:.2f} {min_red:.1f} {mean_red:.1f} {max_red:.1f}")
 
         row = [x,
-               mean(result_experiment['Success']),
-               mean(result_experiment['PER']),
-               100*(mean(result_experiment['RedundancyUsed'])) / G
+               suc,
+               per,
+               min_red,
+               mean_red,
+               max_red
                ]
 
         length = len(results.index)
@@ -139,12 +151,21 @@ else:
     results.to_csv('27_burst_resistance.csv')
 
 fig, ax1 = plt.subplots()
-plt.title(f"Decoding Burst Resistance (n=20,N=80,PER=20%)")
+per_perc = pi_b * 100
+plt.title(f"Decoding Burst Resistance (n=20,N=80,PER={per_perc:.0f}%)")
 plt.grid(True)
-plt.xlabel('Good/burst ratio (x)')
+plt.xlabel('Burst Frequency/Duration coefficient (x)')
 plt.xscale('log')
-p1 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsed"],
-              '-', color='blue', label="Redundancy Used")[0]
+p1 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMin"],
+              '-',
+              linewidth=0.3,
+              color='darkblue', label="Redundancy Used (min)")[0]
+p11 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsed"],
+               '-', color='blue', linewidth=0.2, label="Redundancy Used (mean)")[0]
+p12 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMax"],
+               '-', color='black', linewidth=0.3, label="Redundancy Used (max)")[0]
+
+plt.legend()
 plt.ylabel('Required Redundancy [%]')
 ax2 = ax1.twinx()
 p2 = ax2.plot(results.loc[:, "x"], results.loc[:, "SuccessRate"],
