@@ -29,7 +29,7 @@ def calculate_burst_duration_pmf(count, r):
 
 x = 0.25  # Short burst
 x2 = 0.6  # Much longer burst
-pi_b = 0.4  # 5% burst
+pi_b = 0.4  # 40% burst
 
 p = x * pi_b  # move to burst prob
 r = x * (1-pi_b)  # move to good prob (stays stuck)
@@ -93,8 +93,8 @@ plt.ylabel("Duration Probability")
 plt.grid(True)
 plt.legend()
 plt.title("Duration histograms and PMFs")
-# plt.show()
 plt.savefig('25_burst_duration_pmf_histos.pdf')
+# plt.show()
 
 
 # Verify data length consistency

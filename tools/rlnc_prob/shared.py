@@ -7,6 +7,7 @@ nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
 rng = Random()
 
+
 def signed8(value):
     return -(value & 0x80) | (value & 0x7f)
 
@@ -225,7 +226,7 @@ def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, 
     erasure_indices = np.arange(0, timestrings[-1] + 20000 * step, step)
     # TODO this is very weak and doesnt promise good x axis
     erasure_indices = erasure_indices[:len(PER_output)]
-    
+
     print("PER mean length", len(erasure_indices),
           len(PER_output), timestrings[-1], step)
 
@@ -276,13 +277,14 @@ def decide_simple(p):
     global rng
     return 1 if rng.random() <= p else 0
 
+
 def calculate_burst_timeseries(count, p, r, h, k, PER_decider):
     # 0 = B, 1 = G
     prev_state = 1
     new_state = 1  # Always mark as good without history for consistency
     samples = []
 
-    steps = range(0, count)
+    steps = range(0, count+1)
     burst_durations = []
     burst_end_steps = []
     burst_start_steps = [0] if new_state == 0 else []

@@ -43,8 +43,8 @@ for per_name, group in gk:
     df_model = pd.concat([df_model, added_df], ignore_index=True)
 
     # Rescale x-axes
-    reds = 100*np.array(reds)/threshold
-    bins = 100*bins/threshold
+    reds = 100*(np.array(reds))/threshold
+    bins = 100*(bins)/threshold
 
     # Cumulative norm by gen count N_G
     plt.plot(bins[:-1], np.cumsum(hist)/N_G, color=colors[color_index])

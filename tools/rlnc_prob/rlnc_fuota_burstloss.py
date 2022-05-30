@@ -42,7 +42,7 @@ class RlncDecisionFactory():
         gen_success_prob = P(
             self.current_fragment + 1, self.G, 0, self.q)
         gen_success_prob_perc = 100.0 * gen_success_prob
-        gen_success = False
+        gen_success = 0
         if self.received >= self.G:
             gen_success = decide_simple(gen_success_prob)
         else:
@@ -52,10 +52,10 @@ class RlncDecisionFactory():
         # print(
         #     f"RX: {self.received} Err: {self.lost} Gen: {gen_success} (Prob:{gen_success_prob_perc:.1f}%)")
 
-        redudancy_used = self.received - \
-            self.G if self.received > self.G else self.delta_max
+        redundancy_used = self.received - \
+            self.G if self.received >= self.G else self.delta_max
         PER = self.lost / (self.received + self.lost)
-        row = [self.current_generation, redudancy_used, gen_success,
+        row = [self.current_generation, redundancy_used, gen_success,
                self.received, self.lost, gen_success_prob_perc, PER]
 
         length = len(self.gen_log.index)
@@ -67,8 +67,8 @@ class RlncDecisionFactory():
 
     def decide_prob(self, PER):
         """Generate the dynamic probability of successful decoding"""
-        # success_rate = 1.0 - \
-        #     failure_rate(self.G, self.current_fragment+1, PER, self.q, True)
+
+        # print("Deciding", self.current_fragment, self.__total(), self.current_fragment % self.__total())
 
         self.current_fragment += 1
         if self.current_fragment % self.__total() == 0:
@@ -82,56 +82,87 @@ class RlncDecisionFactory():
         return result
 
 
-gens = 600
+gens = 100
 G = 20
 delta = 3
 count = gens * G * (1+delta)
 
-xmin = 0.05  # Short burst
-xmax = 0.5
-xrange = np.arange(xmin, xmax, 0.02)
+xmin = -3  # Short burst
+xmax = 0
+xcount = 200
+h = 0  # 100% PER
+k = 1  # 0% PER
+pi_b = 0.2  # 40% burst
+xrange = np.logspace(xmin, xmax, num=xcount)
+results = None
 
-results = pd.DataFrame({
-    'x': [],
-    'SuccessRate': [],
-    'PER': [],
-    'Redundancy': []})
+read_csv = True
 
-for x in xrange:
-    print(f'Running x {x:.2f}')
-    pi_b = 0.4  # 5% burst
-    h = 0  # 100% PER
-    k = 1  # 0% PER
+if read_csv:
+    results = pd.read_csv('27_burst_resistance.csv')
+else:
+    results = pd.DataFrame({
+        'x': [],
+        'SuccessRate': [],
+        'PER': [],
+        'RedundancyUsed': []})
 
-    p = x * pi_b  # move to burst prob
-    r = x * (1-pi_b)  # move to good prob (stays stuck)
+    for x in xrange:
+        print(f'Running x {x:.5f}')
+        p = x * pi_b  # move to burst prob
+        r = x * (1-pi_b)  # move to good prob (stays stuck)
 
-    delta_max = G * (delta)
-    decider = RlncDecisionFactory(G, delta_max)
-    steps, samples, bs, be, bdiff = calculate_burst_timeseries(
-        count, p, r, h, k, PER_decider=decider.decide_prob)
+        # Reset the rng decider
+        delta_max = G * (delta)
+        decider = RlncDecisionFactory(G, delta_max)
 
-    # results = decider.gen_log
-    # print(x, mean(results['Success']), mean(
-    #     results['PER']), mean(results['RedundancyUsed']))
-    result_experiment = decider.gen_log
-    row = [x,
-           mean(result_experiment['Success']),
-           mean(result_experiment['PER']),
-           mean(result_experiment['RedundancyUsed'])]
+        steps, samples, bs, be, bdiff = calculate_burst_timeseries(
+            count, p, r, h, k, PER_decider=decider.decide_prob)
 
-    length = len(results.index)
-    results.loc[length] = row
+        result_experiment = decider.gen_log
+        # print(decider.gen_log)
+        print(x,
+              mean(result_experiment['Success']),
+              mean(result_experiment['PER']),
+              mean(result_experiment['RedundancyUsed'])
+              )
 
-    print(row)
-    plt.scatter([x], 100*(mean(result_experiment['RedundancyUsed']) - G) / G)
+        row = [x,
+               mean(result_experiment['Success']),
+               mean(result_experiment['PER']),
+               100*(mean(result_experiment['RedundancyUsed'])) / G
+               ]
 
-# plt.xticks(range(1, len(xrange)+1, 1), xrange)
-results.to_csv('27_burst_resistance.csv')
+        length = len(results.index)
+        results.loc[length] = row
 
-plt.title(f"Decoding Burst Resistance (n=20,N=80)")
-plt.savefig('27_burst_sim.pdf')
+    results.to_csv('27_burst_resistance.csv')
+
+fig, ax1 = plt.subplots()
+plt.title(f"Decoding Burst Resistance (n=20,N=80,PER=20%)")
+plt.grid(True)
 plt.xlabel('Good/burst ratio (x)')
+plt.xscale('log')
+p1 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsed"],
+              '-', color='blue', label="Redundancy Used")[0]
 plt.ylabel('Required Redundancy [%]')
-plt.show()
+ax2 = ax1.twinx()
+p2 = ax2.plot(results.loc[:, "x"], results.loc[:, "SuccessRate"],
+              '-', linewidth=0.3, color='green', label="Success Rate")[0]
+plt.plot(results.loc[:, "x"], results.loc[:,
+                                          "PER"], '-', color='red', linewidth=0.3, label="Temporal PER")[0]
+plt.ylabel('Success Rate [%]')
+ax1.yaxis.label.set_color(p1.get_color())
+ax2.yaxis.label.set_color(p2.get_color())
+
+plt.legend()
+plt.savefig('27_burst_resistance.pdf')
+
+plt.figure(2)
+plt.title("PER disitribution (40% PER expected)")
+plt.hist(results.loc[:, "PER"], density=True)
+plt.xlabel("Temporal PER [%]")
+plt.ylabel("Density")
+plt.savefig('27_burst_resistance_PER_hist.pdf')
+# plt.show()
 print(results)
