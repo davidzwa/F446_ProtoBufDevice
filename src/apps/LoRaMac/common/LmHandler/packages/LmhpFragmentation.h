@@ -22,24 +22,23 @@
 #ifndef __LMHP_FRAGMENTATION_H__
 #define __LMHP_FRAGMENTATION_H__
 
-#include "LoRaMac.h"
+#include "FragDecoder.h"
 #include "LmHandlerTypes.h"
 #include "LmhPackage.h"
-#include "FragDecoder.h"
+#include "LoRaMac.h"
 
 /*!
  * Fragmentation data block transport package identifier.
  *
  * \remark This value must be unique amongst the packages
  */
-#define PACKAGE_ID_FRAGMENTATION                    3
+#define PACKAGE_ID_FRAGMENTATION 3
 
 /*!
  * Fragmentation package parameters
  */
-typedef struct LmhpFragmentationParams_s
-{
-#if( FRAG_DECODER_FILE_HANDLING_NEW_API == 1 )
+typedef struct LmhpFragmentationParams_s {
+#if (FRAG_DECODER_FILE_HANDLING_NEW_API == 1)
     /*!
      * FragDecoder Write/Read function callbacks
      */
@@ -62,8 +61,8 @@ typedef struct LmhpFragmentationParams_s
      * \param [IN] fragSize    Size of fragments
      * \param [IN] fragNbLost  Number of lost fragments
      */
-    void ( *OnProgress )( uint16_t fragCounter, uint16_t fragNb, uint8_t fragSize, uint16_t fragNbLost );
-#if( FRAG_DECODER_FILE_HANDLING_NEW_API == 1 )
+    void (*OnProgress)(uint16_t fragCounter, uint16_t fragNb, uint8_t fragSize, uint16_t fragNbLost);
+#if (FRAG_DECODER_FILE_HANDLING_NEW_API == 1)
     /*!
      * Notifies that the fragmentation session is finished
      *
@@ -72,7 +71,7 @@ typedef struct LmhpFragmentationParams_s
      *                                                  FragDecoder.Status.FragNbLost]
      * \param [IN] size   Received file size
      */
-    void ( *OnDone )( int32_t status, uint32_t size );
+    void (*OnDone)(int32_t status, uint32_t size);
 #else
     /*!
      * Notifies that the fragmentation session is finished
@@ -83,10 +82,10 @@ typedef struct LmhpFragmentationParams_s
      * \param [IN] file   Pointer to the reception file buffer
      * \param [IN] size   Received file size
      */
-    void ( *OnDone )( int32_t status, uint8_t *file, uint32_t size );
+    void (*OnDone)(int32_t status, uint8_t *file, uint32_t size);
 #endif
-}LmhpFragmentationParams_t;
+} LmhpFragmentationParams_t;
 
-LmhPackage_t *LmhpFragmentationPackageFactory( void );
+LmhPackage_t *LmhpFragmentationPackageFactory(void);
 
-#endif // __LMHP_FRAGMENTATION_H__
+#endif  // __LMHP_FRAGMENTATION_H__

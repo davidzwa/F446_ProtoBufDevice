@@ -1,16 +1,11 @@
+from math import ceil, exp, factorial
+from statistics import mean
 import matplotlib.pyplot as plt
 import pandas as pd
-from random import Random
 import numpy as np
-from shared import meanfilt
+from shared import meanfilt, calculate_burst_timeseries, decide_simple
 
-rng = Random()
 plot_count = 1
-
-
-def decide(p):
-    global rng
-    return 1 if rng.random() <= p else 0
 
 
 def calculate_steady_state(p, r, h, k):
@@ -22,88 +17,48 @@ def calculate_steady_state(p, r, h, k):
 
 
 def calculate_burst_duration_pmf(count, r):
-    steps = range(0, count)
+    steps = range(0, count + 1)
     pmf = []
-    for i in steps:
-        pmf.append(pow(1-r, i+1) * r)
+    for k in steps:
+        # val = pow(lam, k) * exp(-lam) / factorial(k)
+        val = pow(1-r, k) * r
+        pmf.append(val)
 
     return steps, pmf
 
 
-def calculate_burst_timeseries(init, count, p, r, h, k):
-    # 0 = B, 1 = G
-    state = 1 if init else 0
-    samples = []
+x = 0.25  # Short burst
+x2 = 0.6  # Much longer burst
+pi_b = 0.4  # 40% burst
 
-    steps = range(0, count)
-    burst_durations = []
-    burst_end_steps = []
-    burst_start_steps = [0] if state == 0 else []
+p = x * pi_b  # move to burst prob
+r = x * (1-pi_b)  # move to good prob (stays stuck)
 
-    for index in steps:
-        error = None
-        if state == 0:
-            # Burst state
-            error = decide(1-h)
+# Worse
+p2 = x2 * pi_b
+r2 = x2 * (1-pi_b)
 
-            # decide to stay
-            state = not decide(1-r)
-
-            if state == 1:
-                duration = index - burst_start_steps[-1]
-                if duration < 0:
-                    raise Exception("Burst duration cannot be negative")
-                burst_end_steps.append(index)
-                burst_durations.append(duration)
-
-        elif state == 1:
-            # Good state
-            error = decide(1-k)
-
-            # decide to stay
-            state = decide(1-p)
-
-            if state == 0:
-                burst_start_steps.append(index)
-        else:
-            raise Exception("Illegal markov state")
-
-        if error is None:
-            raise Exception("Error was not properly sampled")
-
-        samples.append(error)
-
-    return steps, samples, burst_start_steps, burst_end_steps, burst_durations
-
-
-p = 0.0015  # move to burst prob
-p2 = 0.0005
-r = 0.03  # move to good prob (stays stuck)
-h = 1  # 100% PER
-k = 0.03  # 3% PER
-count = 1500000
-init = 1  # Good/Burst initial state
-filter_window = 91
+h = 0  # 100% PER
+k = 1  # 0% PER
+count = 5000000
+filter_window = 1501
+pmf_steps = ceil(10 * 1/r2)  # 150
 
 # Calculate PMF
 plt.figure(plot_count)
 plot_count += 1
-steps3, pmf = calculate_burst_duration_pmf(count, r)
+steps3, pmf = calculate_burst_duration_pmf(pmf_steps, r)
+steps4, pmf2 = calculate_burst_duration_pmf(pmf_steps, r2)
 plt.plot(steps3, pmf, label='Burst Duration PMF')
-plt.grid(True)
-plt.legend()
-plt.xlabel('Packet count')
-plt.ylabel('Burst duration probability')
-plt.title(f"Burst duration PMF vs packet count")
-plt.show(block=False)
-plt.savefig('25_burst_duration_pmf.pdf')
+plt.plot(steps4, pmf2, label='Burst Duration PMF Bad')
 
 # Simulate Burst
 pi_G, pi_B, p_E = calculate_steady_state(p, r, h, k)
+pi_G2, pi_B2, p_E2 = calculate_steady_state(p2, r2, h, k)
 steps, samples, bs, be, bdiff = calculate_burst_timeseries(
-    init, count, p, r, h, k)
+    count, p, r, h, k, decide_simple)
 steps2, samples2, bs2, be2, bdiff2 = calculate_burst_timeseries(
-    init, count, p2, r, h, k)
+    count, p2, r2, h, k, decide_simple)
 
 if (len(bdiff) > 0):
     max_burst = max(bdiff)
@@ -112,6 +67,9 @@ if (len(bdiff) > 0):
     num_bursts = len(bdiff)
     print(
         f"1) Max: {max_burst}, Avg: {avg_burst: .2f}, Min: {min_burst}, Count: {num_bursts}")
+    avg = 1 - np.average(samples)
+    err = abs(p_E - avg)
+    print(f"1) Err: {err:.3f} Sim: {avg:.3f} SS: {p_E:.3f}")
 if (len(bdiff2) > 0):
     max_burst = max(bdiff2)
     avg_burst = np.average(bdiff2)
@@ -119,11 +77,40 @@ if (len(bdiff2) > 0):
     num_bursts = len(bdiff)
     print(
         f"2) Max: {max_burst}, Avg: {avg_burst: .2f}, Min: {min_burst}, Count: {num_bursts}")
+    avg2 = 1 - np.average(samples2)
+    err2 = abs(p_E2 - avg)
+    print(f"2) Err: {err2:.3f} Sim: {avg2:.3f} SS: {p_E2:.3f}")
 
-avg = np.average(samples)
-err = abs(p_E - avg)
-print(f"Err: {err:.3f} Sim: {avg:.3f} SS: {p_E:.3f}")
 
+bin_count = pmf_steps
+plt.hist(bdiff, bins=bin_count, range=[
+         0, pmf_steps+1], label='Bad burst duration', histtype='step', density=True)
+plt.hist(bdiff2, bins=bin_count, range=[
+         0, pmf_steps+1], label='Good burst duration', histtype='step', density=True)
+bin_size = round(pmf_steps / bin_count)
+plt.xlabel(f"Burst Duration [Bin Size: {bin_size} time-steps]")
+plt.ylabel("Duration Probability")
+plt.grid(True)
+plt.legend()
+plt.title("Duration histograms and PMFs")
+plt.savefig('25_burst_duration_pmf_histos.pdf')
+# plt.show()
+
+
+# Verify data length consistency
+print(mean(bdiff), len(bs), len(bdiff), len(be))
+print(mean(bdiff2), len(bs2), len(bdiff2), len(be2))
+
+# Export data
+df_data = pd.DataFrame({'Start': bs, 'Duration': bdiff, 'End': be})
+df_data.to_csv('26_burst_durations.csv')
+df_data2 = pd.DataFrame({'Start': bs2, 'Duration': bdiff2, 'End': be2})
+df_data2.to_csv('26_burst_durations_worse.csv')
+
+exit(0)
+
+# Timeseries is not tractable for 1.5 Mill messages
+# Show timeseries
 plt.figure(plot_count)
 plot_count += 1
 filtered = meanfilt(np.array(samples), filter_window)
@@ -135,37 +122,12 @@ plt.legend()
 plt.xlabel('Packet index')
 plt.ylabel('Reception Probability')
 plt.title(f"Successful Reception with burst - time series")
-plt.show(block=False)
+# plt.show(block=False)
 
 # Export data and PDF plots
-# plt.savefig('24_timeseries_burst.pdf')
+plt.savefig('24_timeseries_burst.pdf')
 # df_data = pd.DataFrame({'Steps': steps, 'Success': samples, 'Filtered': filtered})
 # df_data2 = pd.DataFrame(
 #     {'Steps': steps2, 'Success': samples2, 'Filtered': filtered2})
 # df_data.to_csv('24_timeseries_burst.csv')
 # df_data2.to_csv('24_timeseries_burst_worse.csv')
-
-index = 0
-for prob in pmf:
-    if prob < 0.001:
-        break
-    index += 1
-
-bin_count = 50
-plt.figure(plot_count)
-plot_count += 1
-hist, bins = np.histogram(bdiff, bins=bin_count, range=[0, index+1])
-hist2, bins2 = np.histogram(bdiff2, bins=bin_count, range=[0, index+1])
-plt.bar(bins[:-1], hist, label='Bad burst duration')
-plt.bar(bins2[:-1], hist2, label='Good burst duration')
-plt.grid(True)
-plt.legend()
-plt.title("Duration histograms")
-# plt.show()
-
-# Export data and PDF plots
-plt.savefig('26_burst_duration_histos.pdf')
-df_data = pd.DataFrame({'Start': bs, 'Duration': bdiff, 'End': be})
-df_data.to_csv('26_burst_durations.csv')
-df_data2 = pd.DataFrame({'Start': bs2, 'Duration': bdiff2, 'End': be2})
-df_data2.to_csv('26_burst_durations_worse.csv')
