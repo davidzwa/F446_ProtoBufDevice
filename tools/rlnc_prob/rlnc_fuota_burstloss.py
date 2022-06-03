@@ -25,42 +25,27 @@ class RlncDecisionFactory():
                                      'Success': [],
                                      'Received': [],
                                      'Lost': [],
-                                    #  'GFErr': [],
                                      'PER': []})
-
-        # If PER is known we can construct a LUT
-        # if PER is not None:
-        #     self.probabilities = success_rates(
-        #         self.G, self.delta_max, PER, self.q, True)
-        # else:
-        #     self.probabilities = None
 
     def __total(self):
         return self.G + self.delta_max
 
     def switch_gen(self):
-        # gen_success_prob = P(
-        #     self.current_fragment + 1, self.G, 0, self.q)
-        # gen_success_prob_perc = 100.0 * gen_success_prob
         gen_success = 0
+        
+        # We assume perfect decoding non-linearity
         if self.received >= self.G:
-            #     gen_success = decide_simple(gen_success_prob)
             gen_success = 1
-        # else:
-        #     gen_success_prob = 0
-        #     gen_success_prob_perc = 0
-
-        # print(
-        #     f"RX: {self.received} Err: {self.lost} Gen: {gen_success} (Prob:{gen_success_prob_perc:.1f}%)")
-
+            
+        # Apply RLNC threshold
         redundancy_used = self.lost \
-            if self.received >= self.G else self.delta_max
+            if gen_success else self.delta_max
+            
         PER = self.lost / (self.received + self.lost)
         row = [self.current_generation,
                redundancy_used,
                gen_success,
                self.received, self.lost,
-               #    gen_success_prob_perc,
                PER]
 
         length = len(self.gen_log.index)
@@ -70,13 +55,15 @@ class RlncDecisionFactory():
         self.lost = 0
         self.current_generation += 1
 
-    def decide_prob(self, PER):
+    def decide_prob(self, PER, packet_index):
         """Generate the dynamic probability of successful decoding"""
-
-        # print("Deciding", self.current_fragment, self.__total(), self.current_fragment % self.__total())
-
-        result = decide_simple(PER)
-        if result:
+        error = 0
+        if PER > 0:
+            error = decide_simple(PER)
+        elif PER == 1:
+            error = 1
+            
+        if not error:
             self.received += 1
         else:
             self.lost += 1
@@ -85,7 +72,7 @@ class RlncDecisionFactory():
         if self.current_fragment % self.__total() == 0:
             self.switch_gen()
 
-        return result
+        return error
 
 
 gens = 1200
@@ -96,8 +83,8 @@ count = gens * G * (1+delta)
 xmin = -2  # Heavy bursts, low frequency p=0.1 r=0.15
 xmax = 0  # Slight bursts, high frequency p=0.4 r=0.6
 xcount = 250
-h = 0  # 100% PER
-k = 1  # 0% PER
+h = 0  # 0% PRR
+k = 1  # 100% PRR
 pi_b = 0.1  # % burst PER
 xrange = np.logspace(xmin, xmax, num=xcount)
 results = None
@@ -115,9 +102,11 @@ else:
         'RedundancyUsed': [],
         'RedundancyUsedMax': []
     })
+    
+    print("X Succ MinR MeanR MaxR")
 
     for x in xrange:
-        print(f'Running x {x:.5f}')
+        # print(f'Running x {x:.5f}')
         p = x * pi_b  # move to burst prob
         r = x * (1-pi_b)  # move to good prob (stays stuck)
 
@@ -129,7 +118,6 @@ else:
             count, p, r, h, k, PER_decider=decider.decide_prob)
 
         result_experiment = decider.gen_log
-        # print(decider.gen_log)
         suc = mean(result_experiment['Success'])
         per = mean(result_experiment['PER'])
         min_red = 100 * min(result_experiment['RedundancyUsed']) / G
