@@ -5,10 +5,9 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/tools/GatewayController/main.py",
+            "program": "${file}",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/tools/GatewayController",
-            "python": "${workspaceFolder}/tools/GatewayController/venv/Scripts/python.exe"
+            "justMyCode": true
         },
         {
             "name": "Debug-@TARGET_NAME@",
