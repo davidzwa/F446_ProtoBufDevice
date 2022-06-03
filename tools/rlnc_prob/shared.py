@@ -278,7 +278,7 @@ def decide_simple(p):
     return 1 if rng.random() <= p else 0
 
 
-def calculate_burst_timeseries(count, p, r, h, k, PER_decider):
+def calculate_burst_timeseries(count, p, r, burst_prr, good_prr, PER_decider):
     # 0 = B, 1 = G
     prev_state = 1
     new_state = 1  # Always mark as good without history for consistency
@@ -288,13 +288,14 @@ def calculate_burst_timeseries(count, p, r, h, k, PER_decider):
     burst_durations = []
     burst_end_steps = []
     burst_start_steps = [0] if new_state == 0 else []
+    good_per = 1 - good_prr
+    burst_per = 1 - burst_prr
 
     for index in steps:
         error = None
         if new_state == 0:
             # Burst state
-            error = PER_decider(h)
-
+            error = PER_decider(burst_per, index)
             if prev_state != 0:
                 burst_start_steps.append(index)
 
@@ -304,7 +305,7 @@ def calculate_burst_timeseries(count, p, r, h, k, PER_decider):
 
         elif new_state == 1:
             # Good state
-            error = PER_decider(k)
+            error = PER_decider(good_per, index)
 
             if prev_state != 1:
                 duration = index - burst_start_steps[-1]
