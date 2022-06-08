@@ -364,6 +364,7 @@ plt.ylabel("Success Rate [%]")
 plt.grid()
 plt.legend()
 plt.savefig('27_burst_resistance_diff.pdf')
+plt.savefig('27_burst_resistance_diff.png')
 # plt.show()
 
 print(results)
