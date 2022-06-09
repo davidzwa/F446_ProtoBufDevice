@@ -1,6 +1,8 @@
 import numpy as np
 import math
 
+from rlnc_prob.shared import calc_lora_tpacket
+
 # Phy config
 SF: int = 7
 CR: int = 1
@@ -51,22 +53,6 @@ print(
 print(
     f"Fragment total {fragment_total} > {fragment_min} optimum")
 
-def calc_lora_toa(frame_size: int, implHdr: bool = False):
-    tSymb = math.pow(2, SF) / BW
-    tPreamble = (PreSymb + 4.25) * tSymb
-
-    numerator = 8 * frame_size - 4 * SF + 28 + 16 - 20 * implHdr
-    denominator = 4 * SF  # Skipped low DR (=12) for now
-    payload_symb = math.ceil(numerator / denominator) * (CR + 4)
-    payload_symb_nb = 8 + max(payload_symb, 0)
-
-    t_payload = payload_symb_nb * tSymb
-    t_packet = tPreamble + t_payload
-    return t_packet, t_payload, payload_symb, payload_symb_nb
-
-def calc_lora_tpacket(frame_size: int):
-    val, _, _, _ = calc_lora_toa(frame_size)
-    return val
 
 frame_meta_size = 4
 proto_extra = 4
@@ -79,7 +65,7 @@ def calc_optimal_frame_size(min_frag: int):
     
     iterations = 0
     while (iterations < optimization_iterations_max):
-        current_duration = calc_lora_tpacket(current_frag)
+        current_duration = calc_lora_tpacket(current_frag, SF, BW, CR, PreSymb)
 
         diff = current_duration - pingslot_duration
         if (diff > 0):
@@ -93,7 +79,7 @@ def calc_optimal_frame_size(min_frag: int):
         
         if current_frag > 225:
             current_frag = 225
-            current_duration = calc_lora_tpacket(current_frag)
+            current_duration = calc_lora_tpacket(current_frag, SF, BW, CR, PreSymb)
             return current_frag, current_duration
 
         # print(f"frag {current_frag:.4f} {current_duration:.4f} {pingslot_duration:.4f}")
@@ -110,8 +96,8 @@ max_frame_size, duration = calc_optimal_frame_size(frame_size_min)
 print(f"-> done duration {duration:.4f}")
 
 fragment_size = max_frame_size - frame_meta_size - proto_extra
-t_packet, t_payload, payload_symb, payload_symb_nb = calc_lora_toa(
-    fragment_size)
+t_packet, t_payload, payload_symb, payload_symb_nb = calc_lora_tpacket(
+    fragment_size, SF, BW, CR, PreSymb)
 
 print(f"Time {t_packet} slot {pingslot_duration} frame_max {max_frame_size} fragment {fragment_size}")
 

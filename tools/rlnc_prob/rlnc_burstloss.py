@@ -1,4 +1,4 @@
-from math import ceil, exp, factorial
+from math import ceil
 from statistics import mean
 import matplotlib.pyplot as plt
 import pandas as pd
