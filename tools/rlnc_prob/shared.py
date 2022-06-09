@@ -335,3 +335,23 @@ def calculate_burst_timeseries(count, p, r, burst_prr, good_prr, PER_decider):
         burst_durations.append(duration)
 
     return steps, samples, burst_start_steps, burst_end_steps, burst_durations
+
+
+def calc_lora_toa(frame_size: int, SF: int, BW: int, CR: int, num_preamble: int = 8, impl_hdr: bool = False):
+    """https://github.com/tanupoo/lorawan_toa"""
+    tSymb = pow(2, SF) / BW
+    tPreamble = (num_preamble + 4.25) * tSymb
+
+    numerator = 8 * frame_size - 4 * SF + 28 + 16 - 20 * impl_hdr
+    denominator = 4 * SF # Skipped low DR (=12) for now
+    payload_symb = ceil(numerator / denominator) * (CR + 4)
+    payload_symb_nb = 8 + max(payload_symb, 0)
+
+    t_payload = payload_symb_nb * tSymb
+    t_packet = tPreamble + t_payload
+    return t_packet, t_payload, payload_symb, payload_symb_nb
+
+
+def calc_lora_tpacket(frame_size: int, SF: int, BW: int, CR:int, num_preamble: int = 8, impl_hdr: bool = False):
+    val, _, _, _ = calc_lora_toa(frame_size, SF, BW, num_preamble, CR, impl_hdr)
+    return val
