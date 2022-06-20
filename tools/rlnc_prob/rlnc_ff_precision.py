@@ -5,6 +5,8 @@ import matplotlib.ticker as mtick
 from shared import failure_rate
 import csv
 
+from shared import P
+
 paper_values = [0.99, 0.98, 0.97, 0.95, 0.87,
                 0.77, 0.66, 0.54, 0.41, 0.295, 0.21]
 PER = 0.2
@@ -49,7 +51,7 @@ with open('binomial_output.csv', 'w', newline='') as csvfile:
 
 # Construct colormap - https://www.tutorialspoint.com/matplotlib-plot-lines-with-colors-through-colormap
 n = 5
-colors = plt.cm.summer(np.linspace(0, 1, n))
+colors = plt.cm.summer(np.linspace(0.1, .8, n))
 
 redundancies = 100*redundancies / threshold
 fig, ax = plt.subplots()
@@ -57,20 +59,20 @@ ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 
 i=0
 plt.plot(redundancies, perfect_rates, '--',
-         label='Perfect GF', color=colors[i], alpha=alpha)
+         label='Perfect', color=colors[i], alpha=alpha)
 i+=1
 plt.plot(redundancies, failure_rates_0_8,
          'o',
-         label='GF(2^8)', color=colors[i], alpha=alpha)
+         label='GF($2^8$)', color=colors[i], alpha=alpha)
 i+=1
 plt.plot(redundancies, failure_rates_0_4,
-         label='GF(2^4)', color=colors[i], alpha=alpha)
+         label='GF($2^4$)', color=colors[i], alpha=alpha)
 i+=1
 plt.plot(redundancies, failure_rates_0_2,
-         label='GF(2^2)', color=colors[i], alpha=alpha)
+         label='GF($2^2$)', color=colors[i], alpha=alpha)
 i+=1
 plt.plot(redundancies, failure_rates_0_1,
-         label='GF(2^1)', color=colors[i], alpha=alpha)
+         label='GF($2^1$)', color=colors[i], alpha=alpha)
 
 # PLOT THE P-Rate
 # pfunc1 = []
@@ -102,10 +104,14 @@ plt.legend()
 
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Failure Probability')
-plt.title("Decoding Failure vs Redundancy (n=16, N=26, PER=0.2)")
+plt.title("Decoding Failure vs Redundancy (G=16, R=26, PER=0.2)")
 # plt.show()
 plt.savefig('10_rlnc_theory.pdf')
 
+# plt.figure(2)
+G = 10
+for m in range(G, G+10):
+    print(P(m, G, 0, pow(2, 8)))
 exit(0)
 
 # BINOMIAL TESTS BELOW

@@ -38,7 +38,7 @@ def save_device_plot(plot_prefix, F, s_f, G, devices, q, PER, delta):
     plt.xlabel('Redundancy [%]')
     plt.ylabel('Decoding Probability')
     size = int(ceil(F/1E3))
-    plt.title(f"{size}kB vs Redundancy (n=20,N=80,PER={PER:.1f})")
+    plt.title(f"{size}kB vs Redundancy (G=20,R=80,PER={PER:.1f})")
 
     filename = f'{plot_prefix}_{PER:.1f}PER.pdf'
     print(f"Exporting pdf plot {filename}")
