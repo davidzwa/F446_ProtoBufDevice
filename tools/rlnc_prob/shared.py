@@ -125,19 +125,19 @@ def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
     # Total generation frame count
     f = ceil(F / (s_f))  # Frame count
     n_g = ceil(f / G)  # Generation count
-    N = G * (1+delta)
+    R = G * (1+delta)
 
     print(f"Firmware of {F} bytes")
     print(f"{f} frames")
     print(f"Number of gens {n_g}")
-    print(f"{G}/{N} gen frame ratio")
+    print(f"{G}/{R} gen frame ratio")
 
     decoding_probs = []
     all_gen_probs = []
     all_devices_probs = []
     # part_devices_probs = []
 
-    redundancies = range(0, N+1)
+    redundancies = range(0, R+1)
     for redundancy in redundancies:
         p_fail_decode = failure_rate(G, redundancy, PER, q, True)
         p_success_decode = 1.0 - p_fail_decode
