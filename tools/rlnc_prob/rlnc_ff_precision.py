@@ -12,7 +12,8 @@ paper_values = [0.99, 0.98, 0.97, 0.95, 0.87,
 PER = 0.2
 alpha = 1
 delta_max = 10
-threshold = 16
+G = 16
+R = G + delta_max
 redundancies = np.arange(0, delta_max+1, 1)
 failure_rates_0_8 = []
 failure_rates_0_4 = []
@@ -23,13 +24,13 @@ output_data = []
 employee_info = ['FieldSize', 'FailureRate']
 
 for delta in redundancies:
-    total_sent = threshold + delta
+    total_sent = G + delta
     perfect_rate = failure_rate(
-        threshold, total_sent, PER, pow(2, 8), False, 0)
-    rate_8 = failure_rate(threshold, total_sent, PER, pow(2, 8), True, 0)
-    rate_4 = failure_rate(threshold, total_sent, PER, pow(2, 4), True, 0)
-    rate_2 = failure_rate(threshold, total_sent, PER, pow(2, 2), True, 0)
-    rate_1 = failure_rate(threshold, total_sent, PER, pow(2, 1), True, 0)
+        G, total_sent, PER, pow(2, 8), False, 0)
+    rate_8 = failure_rate(G, total_sent, PER, pow(2, 8), True, 0)
+    rate_4 = failure_rate(G, total_sent, PER, pow(2, 4), True, 0)
+    rate_2 = failure_rate(G, total_sent, PER, pow(2, 2), True, 0)
+    rate_1 = failure_rate(G, total_sent, PER, pow(2, 1), True, 0)
 
     output_data.append({'FieldSize': 8, 'FailureRate': rate_8})
     output_data.append({'FieldSize': 4, 'FailureRate': rate_4})
@@ -53,7 +54,7 @@ with open('binomial_output.csv', 'w', newline='') as csvfile:
 n = 5
 colors = plt.cm.summer(np.linspace(0.1, .8, n))
 
-redundancies = 100*redundancies / threshold
+redundancies = 100*redundancies / G
 fig, ax = plt.subplots()
 ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 
@@ -104,7 +105,8 @@ plt.legend()
 
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Failure Probability')
-plt.title("Decoding Failure vs Redundancy (G=16, R=26, PER=0.2)")
+prefix = "Decoding Failure $P_\{fail\}$ vs Redundancy"
+plt.title(f"{prefix} (G={G}, R={R}, $\epsilon$=20%)")
 # plt.show()
 plt.savefig('10_rlnc_theory.pdf')
 
