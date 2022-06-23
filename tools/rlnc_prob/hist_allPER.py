@@ -60,29 +60,5 @@ df_model.to_csv('21_output.csv')
 plt.grid(True)
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Probability')
-plt.title('Decoding success vs redundancy (PER [10%-80%], n=20)')
+plt.title('Decoding probability vs redundancy ($\epsilon$ [10%-80%], G=20)')
 plt.savefig('21_rlnc_vs_model.pdf')
-
-exit(0)
-
-
-redundancies = range(0, delta_max+1)
-failures_PERs = {}
-
-for delta in redundancies:
-    total_sent = threshold + delta
-    imperfect = failure_rate(threshold, total_sent, PER, pow(2, 8), False, 0)
-    perfect = failure_rate(threshold, total_sent, PER, pow(2, 8), True, 0)
-    failure_rates_0_256.append(imperfect)
-    failure_rates_0_256_perfect.append(perfect)
-    print(imperfect - perfect)
-
-hist, bins = np.histogram(vals, bins=max_red, range=[0, 60])
-cum_hist = np.cumsum(hist)
-plt.bar(bins[:-1], hist/max(hist), alpha=0.2,
-        color='green', label='RLNC histogram')
-plt.plot(bins[:-1], cum_hist/max(cum_hist), alpha=0.9,
-         color='orange', label='RLNC measured')
-plt.plot(redundancies, failure_rates_0_256, alpha=0.6, label='RLNC model')
-# plt.plot(redundancies, failure_rates_0_256_perfect, '--', alpha=0.6)
-# print(hist, bin_edges)
