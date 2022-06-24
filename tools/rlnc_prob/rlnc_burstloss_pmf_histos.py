@@ -107,7 +107,7 @@ df_data2.to_csv('26_burst_durations_worse.csv')
 
 exit(0)
 
-# Timeseries is not tractable for 1.5 Mill messages
+# Timeseries is not tractable/readable for 5 million messages
 # Show timeseries
 plt.figure(plot_count)
 plot_count += 1

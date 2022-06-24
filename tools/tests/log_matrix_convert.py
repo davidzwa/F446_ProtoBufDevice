@@ -1,6 +1,10 @@
 import re
 import pyperclip as pc
 
+"""
+Convert a matrix logged by C# Serilog to a matrix declaration (C# code)
+"""
+
 log = """
 [15:00:00 INF] (LoraGateway.Services.SerialProcessorService)    01 00 00 00 00 00 00 00 01 01 00 00 00 01 ff ff ff ff ff ff 
 [15:00:00 INF] (LoraGateway.Services.SerialProcessorService)    00 01 00 00 00 00 00 00 01 00 00 00 00 09 00 00 00 00 00 00 

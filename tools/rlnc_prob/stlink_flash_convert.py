@@ -17,12 +17,16 @@ alpha = 0.15
 marker_size = 1
 
 
-
-def plot_analysis_file(path, title, rate, PER_filter):
+def plot_analysis_file(path, title, rate, PER_filter, file=None):
     sequence_numbers, rssis, snrs = parse_flash_file(path)
-    
-    return plot_erasures_PER(sequence_numbers, rssis, snrs)
-    
+
+    return plot_erasures_PER(np.array(sequence_numbers), 
+                             rssis, snrs, 
+                             rate=rate, title=title, 
+                             PER_filter=PER_filter, 
+                             minor_ticks=None, major_ticks=None, 
+                             file=file)
+
 
 if __name__ == '__main__':
     # base1 = "../data/nucleo"
@@ -46,18 +50,18 @@ if __name__ == '__main__':
     # PER_set2 = plot_file(path2, title2, rate2)
     # PER_datasets.append(PER_set2)
 
-    PER_filter_size = 21
+    PER_filter_size = 41
     path3 = base+"4_a4"
-    title3 = "RSSI and SNR Floor 3 East (Coffee machine)"
+    title3 = "Indoor experiment RSSI and SNR (3rd floor)"
     rate3 = 0.25
-    PER_set3 = plot_erasures_PER(alpha, marker_size, path3, title3, rate3, PER_filter_size)
+    PER_set3 = plot_analysis_file(path3, title3, rate3, PER_filter_size, "30_flash_floor3")
     PER_datasets.append(PER_set3)
 
     path4 = base+"4_a6"
-    title4 = "RSSI and SNR Floor 4 East (Coffee machine)"
+    title4 = "Indoor experiment RSSI and SNR (4th floor)"
     rate4 = 0.25
-    PER_set4 = plot_erasures_PER(
-        alpha, marker_size, path4, title4, rate4, PER_filter_size)
+    PER_set4 = plot_analysis_file(
+        path4, title4, rate4, PER_filter_size, "30_flash_floor4")
     PER_datasets.append(PER_set4)
 
     # path5 = base+"3_a5"
@@ -82,5 +86,4 @@ if __name__ == '__main__':
 
     # show plot
     # fig.tight_layout()
-    plt.show()
     # plt.show()

@@ -134,7 +134,7 @@ class RlncDecisionFactory():
     def __get_unmixed_rank(self):
         return np.count_nonzero(self.unmixed_reception)
 
-    def decide_prob(self, PER, packet_index):
+    def decide_prob(self, PER):
         """Generate the dynamic probability of successful decoding"""
         error = 0
         if PER > 0:
@@ -191,7 +191,7 @@ class RlncDecisionFactory():
         return error
 
 
-gens = 100
+gens = 1000
 G = 20
 delta = 2
 count = gens * G * (1+delta)
@@ -206,7 +206,7 @@ pi_b = 0.6  # % burst PER
 xrange = np.linspace(pow(10, xmin), pow(10, xmax), num=xcount)
 results = None
 
-read_csv = True
+read_csv = False
 
 if read_csv:
     results = pd.read_csv('27_burst_resistance.csv')
@@ -347,7 +347,6 @@ plt.hist(results.loc[:, "PER"], density=True)
 plt.xlabel("Temporal PER [%]")
 plt.ylabel("Density")
 plt.savefig('27_burst_resistance_PER_hist.pdf')
-# plt.show()
 
 plt.figure(3)
 rlnc = 100*results.loc[:, "SuccessRate"]

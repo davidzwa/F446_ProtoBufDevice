@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
+ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 from shared import success_rates
 import pandas as pd
 
@@ -67,14 +68,11 @@ for per_name, group in gk:
              color=colors[color_index], label=f'$\epsilon$={per_name:.1f} (fail)')
 
     plt.plot(reds, model, '--', color='black')
-    # label = '{0}'.format(per_name)
-    # plt.text(color_index * 6 * 5, y[30] - color_index / 350, label)
 
     color_index += 1
 
 df_model.to_csv('21_output.csv')
 
-# plt.text(color_index * 6 * 5, y[30] - color_index / 350, label)
 plt.legend(loc='center')
 # plt.grid(True)
 plt.xlabel('Redundancy [%]')

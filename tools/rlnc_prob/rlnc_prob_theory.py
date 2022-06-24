@@ -75,51 +75,21 @@ i+=1
 plt.plot(redundancies, failure_rates_0_1,
          label='GF($2^1$)', color=colors[i], alpha=alpha)
 
-# PLOT THE P-Rate
-# pfunc1 = []
-# pfunc2 = []
-# pfunc3 = []
-# pfunc4 = []
-# packets = range(0, threshold+delta_max+1)
-# for m in packets:
-#     val = P(m, threshold, 0, pow(2, 8))
-#     val2 = P(m, threshold, 0, pow(2, 4))
-#     val3 = P(m, threshold, 0, pow(2, 2))
-#     val4 = P(m, threshold, 0, pow(2, 1))
-#     print(m, threshold, val, val2, val3, val4)
-#     pfunc1.append(val)
-#     pfunc2.append(val2)
-#     pfunc3.append(val3)
-#     pfunc4.append(val4)
-
-# plt.plot(packets, pfunc1, label='2^8')
-# plt.plot(packets, pfunc2, label='2^4')
-# plt.plot(packets, pfunc3, label='2^2')
-# plt.plot(packets, pfunc4, label='2^1')
-
-# plt.plot(redundancies, failure_rates_2, '-.', label='Failure R=2', alpha=alpha)
-# plt.plot(redundancies, paper_values, '--', label='Paper Values R=2 GF(2^8)', alpha=alpha)
 plt.grid(True)
 plt.legend()
-# plt.colorbar()
-
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Failure Probability')
 prefix = "Decoding Failure $P_\{fail\}$ vs Redundancy"
 plt.title(f"{prefix} (G={G}, R={R}, $\epsilon$=20%)")
-# plt.show()
 plt.savefig('10_rlnc_theory.pdf')
 
-# plt.figure(2)
 G = 10
 for m in range(G, G+10):
     print(P(m, G, 0, pow(2, 8)))
 exit(0)
 
-# BINOMIAL TESTS BELOW
-
-# setting the values
-# of n and p
+# BINOMIAL MATH TESTS BELOW
+# setting the values of n and p
 n = 6
 p = 0.6
 # defining the list of r values

@@ -2,6 +2,7 @@ from math import comb, ceil
 from random import Random
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator, NullFormatter)
 
@@ -213,7 +214,7 @@ def find_erasures(sequence_numbers, rate, print_debug=False):
     return timestrings, erasures_found, counter, last_seq_number, packets_missed, resets
 
 
-def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, rate, PER_filter):
+def plot_erasures_PER(sequence_numbers, rssis, snrs, title, rate, PER_filter, minor_ticks=0.5, major_ticks=1, file=None):
     timestrings, erasures, counter, last_seq_number, packets_missed, resets = find_erasures(
         sequence_numbers, rate)
 
@@ -231,46 +232,71 @@ def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, 
     # Extra debugging
     # print("PER mean length", len(erasure_indices),
     #       len(PER_output), timestrings[-1], step)
-
+    # plt.figure(figsize=(10,3))
     fig, ax1 = plt.subplots()
-    lns1 = ax1.scatter(erasure_indices_time, PER_output, s=1,
+    lns1 = ax1.scatter(erasure_indices_time, PER_output * 100, s=1,
                        color='orange', label='PER estimate ($\epsilon$)')
-    ax1.set_ylim([0, 1])
-    ax1.set_ylabel("PER estimate ($\epsilon$)")
+    ax1.yaxis.set_major_formatter(mtick.PercentFormatter())
+    ax1.set_ylim([0, 50])
+    ax1.set_box_aspect(0.3)
+    ax1.set_ylabel("PER estimate ($\epsilon$) [%]")
     
     ax2 = ax1.twinx()
+    ax2.set_box_aspect(0.3)
     lns2 = ax2.scatter(sequence_numbers_time, sequence_numbers,
                      s=0.25,
                      label='Sequence Numbers')
     ax2.set_ylabel('Sequence Numbers')
     
     lns = [lns1, lns2]
-    labs = [l.get_label() for l in lns]
-    ax1.legend(lns, labs, loc=0)
-
-    ax1.xaxis.set_major_locator(MultipleLocator(1))
-    ax1.xaxis.set_minor_locator(MultipleLocator(0.5))
-    ax1.xaxis.set_minor_formatter(NullFormatter())
+    datatypes = [l.get_label() for l in lns]
+    leg = ax1.legend(lns, datatypes, loc=0)
+    for lh in leg.legendHandles:
+        lh.set_alpha(1)
+    
+    if major_ticks is not None:
+        ax1.xaxis.set_major_locator(MultipleLocator(1))
+    if minor_ticks is not None:        
+        ax1.xaxis.set_minor_locator(MultipleLocator(0.5))
+        ax1.xaxis.set_minor_formatter(NullFormatter())
 
     ax1.set_xlabel('Time (min)')
-    plt.title(title)
-    # l1 = ax1.scatter(timestrings, rssis,
-    #                  color='orange',
-    #                  alpha=alpha,
-    #                  s=marker_size,
-    #                  label='RSSI')
-    # ax1.text(1, -95, "RSSI")
-    # l2 = ax2.scatter(timestrings, snrs,
-    #                  alpha=alpha,
-    #                  s=marker_size,
-    #                  label='SNR')
-    # ax2.text(2, -7, "SNR")
-    # # ax1.legend(handles=l1+l2)
-    # ax1.set_xlabel('Time (h)')
-    # ax1.set_title(title)
-    # ax1.set_ylabel("RSSI [dBm]")
-    # ax2.set_ylabel("SNR [dB]")
+    plt.title(title.replace("RSSI and SNR", "PER"))
+    
+    if file is not None:
+        fig.tight_layout()
+        plt.savefig(file+".png")
+        plt.savefig(file+".pdf")
+    
+    # Plot SNR RSSI
+    fig, ax1 = plt.subplots()
+    l1 = ax1.scatter(timestrings, rssis,
+                     color='orange',
+                     alpha=0.15,
+                     s=2,
+                     label='RSSI')
+    ax2 = ax1.twinx()
+    l2 = ax2.scatter(timestrings, snrs,
+                     alpha=0.15,
+                     s=1,
+                     label='SNR')
+    lns = [l1, l2]
+    datatypes = [l.get_label() for l in lns]
+    leg2 = ax1.legend(lns, datatypes, loc=0)
+    for lh in leg2.legendHandles:
+        lh.set_alpha(1)
+    ax1.set_box_aspect(0.3)
+    ax1.set_xlabel('Time (h)')
+    ax1.set_title(title)
+    ax1.set_ylabel("RSSI [dBm]")
+    ax2.set_box_aspect(0.3)
+    ax2.set_ylabel("SNR [dB]")
 
+    if file is not None:
+        fig.tight_layout()
+        plt.savefig(file+"_RSSISNR.png")
+        plt.savefig(file+"_RSSISNR.pdf")
+        
     return PER_output
 
 

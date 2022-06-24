@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from stlink_flash_convert import plot_erasures_PER
 
 alpha = 0.15
-marker_size = 0.5
 plt_index = 1
 
 def plot_file(csv_path, rate, title):
@@ -19,7 +18,7 @@ def plot_file(csv_path, rate, title):
     print(f"FIRST: {first} LAST: {last} RX: {received}")
     print(f"TOTAL PER: {per: .2f}%")
     plt.figure(plt_index)
-    plot_erasures_PER(alpha, marker_size, seqs.values, rssis, snrs,
+    plot_erasures_PER(seqs.values, rssis, snrs,
                       title, rate, PER_filter)
     
     plt_index +=1
@@ -52,7 +51,8 @@ plt.plot([s*0.185, s*0.245], [2500, 2500], color='purple', marker='o', linestyle
 plt.text(s*0.205, 2750, "Outage")
 
 # plt.scatter(0.15, )
-plt.savefig('27_SF8_bike.pdf')
+# plt.savefig('27_SF8_bike.pdf')
+plt.savefig('27_SF8_bike.png')
 # plot_file(csv_file_sf9, 10, "Bike Range Test PER (SF9)")
 # plot_file(csv_file_sf10, 10, "Bike Range Test PER (SF10)")
 # plot_file(csv_file_sf11, 10, "Bike Range Test PER (SF11)")
