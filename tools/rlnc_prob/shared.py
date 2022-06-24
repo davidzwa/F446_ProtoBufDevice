@@ -2,6 +2,8 @@ from math import comb, ceil
 from random import Random
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator, NullFormatter)
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
@@ -221,54 +223,53 @@ def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, 
     print(f"{counter} measurements found, total packets missed {packets_missed}, resets {resets}")
 
     PER_output = meanfilt(np.array(erasures), PER_filter)
-    # TODO this x-axis determination is very weak and buggy
-    step = 1/rate/3600
-    erasure_indices = np.arange(0, timestrings[-1] + 20000 * step, step)
-    # TODO this is very weak and doesnt promise good x axis
-    erasure_indices = erasure_indices[:len(PER_output)]
+    
+    # Reproduce vectors
+    erasure_indices_time = np.arange(0, len(PER_output), 1) / (rate * 60)
+    sequence_numbers_time = sequence_numbers / (rate * 60)
+    
+    # Extra debugging
+    # print("PER mean length", len(erasure_indices),
+    #       len(PER_output), timestrings[-1], step)
 
-    print("PER mean length", len(erasure_indices),
-          len(PER_output), timestrings[-1], step)
-
-    fig, axs = plt.subplots(2)
-    ax1 = axs[0]
+    fig, ax1 = plt.subplots()
+    lns1 = ax1.scatter(erasure_indices_time, PER_output, s=1,
+                       color='orange', label='PER estimate ($\epsilon$)')
+    ax1.set_ylim([0, 1])
+    ax1.set_ylabel("PER estimate ($\epsilon$)")
+    
     ax2 = ax1.twinx()
+    lns2 = ax2.scatter(sequence_numbers_time, sequence_numbers,
+                     s=0.25,
+                     label='Sequence Numbers')
+    ax2.set_ylabel('Sequence Numbers')
+    
+    lns = [lns1, lns2]
+    labs = [l.get_label() for l in lns]
+    ax1.legend(lns, labs, loc=0)
 
-    ax3 = axs[1]
-    l3 = ax3.scatter(erasure_indices, PER_output,
-                     s=2,
-                     color='orange', label='PER')
-    ax3.set_ylim([0, 1])
-    ax3.text(1.5, 0.1, "PER")
-    ax4 = ax3.twinx()
-    l4 = ax4.scatter(timestrings, sequence_numbers,
-                     s=marker_size,
-                     label='sequence_numbers')
-    ax4.text(3, 4000, "Seq")
-    # ax3.legend(handles=l3+l4)
-    ax3.set_title("PER over time")
-    ax3.set_xlabel('Time (h)')
+    ax1.xaxis.set_major_locator(MultipleLocator(1))
+    ax1.xaxis.set_minor_locator(MultipleLocator(0.5))
+    ax1.xaxis.set_minor_formatter(NullFormatter())
 
-    l1 = ax1.scatter(timestrings, rssis,
-                     color='orange',
-                     alpha=alpha,
-                     s=marker_size,
-                     label='RSSI')
-    ax1.text(1, -95, "RSSI")
-    l2 = ax2.scatter(timestrings, snrs,
-                     alpha=alpha,
-                     s=marker_size,
-                     label='SNR')
-    ax2.text(2, -7, "SNR")
-    # ax1.legend(handles=l1+l2)
-    ax1.set_xlabel('Time (h)')
-    ax1.set_title(title)
-    ax1.set_ylabel("RSSI [dBm]")
-    ax2.set_ylabel("SNR [dB]")
-
-    # fig.tight_layout()  # otherwise the right y-label is slightly clipped
-
-    plt.show(block=False)
+    ax1.set_xlabel('Time (min)')
+    plt.title(title)
+    # l1 = ax1.scatter(timestrings, rssis,
+    #                  color='orange',
+    #                  alpha=alpha,
+    #                  s=marker_size,
+    #                  label='RSSI')
+    # ax1.text(1, -95, "RSSI")
+    # l2 = ax2.scatter(timestrings, snrs,
+    #                  alpha=alpha,
+    #                  s=marker_size,
+    #                  label='SNR')
+    # ax2.text(2, -7, "SNR")
+    # # ax1.legend(handles=l1+l2)
+    # ax1.set_xlabel('Time (h)')
+    # ax1.set_title(title)
+    # ax1.set_ylabel("RSSI [dBm]")
+    # ax2.set_ylabel("SNR [dB]")
 
     return PER_output
 
@@ -295,7 +296,7 @@ def calculate_burst_timeseries(count, p, r, burst_prr, good_prr, PER_decider):
         error = None
         if new_state == 0:
             # Burst state
-            error = PER_decider(burst_per, index)
+            error = PER_decider(burst_per)
             if prev_state != 0:
                 burst_start_steps.append(index)
 
@@ -305,7 +306,7 @@ def calculate_burst_timeseries(count, p, r, burst_prr, good_prr, PER_decider):
 
         elif new_state == 1:
             # Good state
-            error = PER_decider(good_per, index)
+            error = PER_decider(good_per)
 
             if prev_state != 1:
                 duration = index - burst_start_steps[-1]

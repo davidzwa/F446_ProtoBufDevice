@@ -49,8 +49,8 @@ plt.figure(plot_count)
 plot_count += 1
 steps3, pmf = calculate_burst_duration_pmf(pmf_steps, r)
 steps4, pmf2 = calculate_burst_duration_pmf(pmf_steps, r2)
-plt.plot(steps3, pmf, label='Burst Duration PMF')
-plt.plot(steps4, pmf2, label='Burst Duration PMF Bad')
+plt.plot(steps4, pmf2, label='Burst Duration PMF (heavy, x=0.25)')
+plt.plot(steps3, pmf, label='Burst Duration PMF (light, x=0.6)')
 
 # Simulate Burst
 pi_G, pi_B, p_E = calculate_steady_state(p, r, h, k)
@@ -84,18 +84,16 @@ if (len(bdiff2) > 0):
 
 bin_count = pmf_steps
 plt.hist(bdiff, bins=bin_count, range=[
-         0, pmf_steps+1], label='Bad burst duration', histtype='step', density=True)
+         0, pmf_steps+1], label='Burst histogram (heavy, x=0.25)', histtype='step', density=True)
 plt.hist(bdiff2, bins=bin_count, range=[
-         0, pmf_steps+1], label='Good burst duration', histtype='step', density=True)
+         0, pmf_steps+1], label='Burst histogram (light, x=0.6)', histtype='step', density=True)
 bin_size = round(pmf_steps / bin_count)
-plt.xlabel(f"Burst Duration [Bin Size: {bin_size} time-steps]")
+plt.xlabel(f"Burst Duration [Bin Size: {bin_size} time steps]")
 plt.ylabel("Duration Probability")
 plt.grid(True)
 plt.legend()
 plt.title("Duration histograms and PMFs")
 plt.savefig('25_burst_duration_pmf_histos.pdf')
-# plt.show()
-
 
 # Verify data length consistency
 print(mean(bdiff), len(bs), len(bdiff), len(be))
