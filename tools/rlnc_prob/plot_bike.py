@@ -19,7 +19,7 @@ def plot_file(csv_path, rate, title):
     print(f"TOTAL PER: {per: .2f}%")
     plt.figure(plt_index)
     plot_erasures_PER(seqs.values, rssis, snrs,
-                      title, rate, PER_filter)
+                      title, rate, PER_filter, ymax=1.0, x_hours=False)
     
     plt_index +=1
 
@@ -40,7 +40,7 @@ plt.text(s*0.045, 1050, "Stable")
 
 plt.plot([s*0.14, s*0.155], [3500, 3500], color='orange', marker='o', linestyle='dashed',
          linewidth=1, markersize=2)
-plt.text(s*0.137, 3750, "Lossy")
+plt.text(s*0.137, 3750, "Loss")
 
 plt.plot([s*0.165, s*0.18], [2250, 2250], color='red', marker='o', linestyle='dashed',
          linewidth=1, markersize=2)
@@ -52,7 +52,7 @@ plt.text(s*0.205, 2750, "Outage")
 
 # plt.scatter(0.15, )
 # plt.savefig('27_SF8_bike.pdf')
-plt.savefig('27_SF8_bike.png')
+plt.savefig('27_SF8_bike.png', dpi=300)
 # plot_file(csv_file_sf9, 10, "Bike Range Test PER (SF9)")
 # plot_file(csv_file_sf10, 10, "Bike Range Test PER (SF10)")
 # plot_file(csv_file_sf11, 10, "Bike Range Test PER (SF11)")

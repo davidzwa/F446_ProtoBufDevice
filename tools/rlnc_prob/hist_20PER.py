@@ -66,9 +66,9 @@ plt.axvspan(measured_success_threshold,
             max_threshold, color='green', alpha=0.1)
 plt.axvspan(0, measured_success_threshold, color='red', alpha=0.1)
 plt.text(measured_success_threshold + (max_threshold - measured_success_threshold)
-         * 0.1, 0.5, "Success", alpha=0.2, rotation=90, verticalalignment='center')
-plt.text((measured_success_threshold)*0.8, 0.5, "Failure",
-         alpha=0.2, rotation=90, verticalalignment='center')
+         * 0.05, 0.5, "Success", alpha=0.9, rotation=90, verticalalignment='center')
+plt.text((measured_success_threshold)*0.85, 0.5, "Failure",
+         alpha=0.9, rotation=90, verticalalignment='center')
 plt.vlines(measured_success_threshold, 0, 1, color='green',
            linestyles='solid', label='Measured success threshold')
 # plt.grid(True)

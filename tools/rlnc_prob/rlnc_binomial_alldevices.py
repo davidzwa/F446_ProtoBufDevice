@@ -17,11 +17,11 @@ def save_device_plot(plot_prefix, F, s_f, G, devices, q, PER, delta):
         F, s_f, G, devices, q, PER,  delta)
 
     global plot_count
-    
+
     plt.figure(plot_count)
     fig, ax = plt.subplots()
     ax.xaxis.set_major_formatter(mtick.PercentFormatter())
-    
+
     plot_count += 1
     alpha = 1.0
     # Rescale the x-axis to percentages
@@ -35,34 +35,33 @@ def save_device_plot(plot_prefix, F, s_f, G, devices, q, PER, delta):
 
     # Calculate heuristic worst-case network success threshold
     success_threshold_pre = np.argwhere(np.array(devices) > 0.999)
-    
+
     # Apply the success threshold if it is known, otherwise mark complete failure
     max_red = max(redundancies)
     min_red = min(redundancies)
     if len(success_threshold_pre) > 0:
         # Collect minimum success point
         success_threshold = success_threshold_pre[0]
-        
+
         # Convert to redundancy percentage
         success_threshold_perc = 100*(success_threshold[0]-G) / G
         print(f"PER: {PER}, needed redundancy: {success_threshold_perc:.1f}%")
         plt.axvspan(success_threshold_perc, max_red, color='green', alpha=0.1)
         plt.axvspan(min_red, success_threshold_perc, color='red', alpha=0.1)
-        plt.text(success_threshold_perc + (max_red - success_threshold_perc)
-                 / 2, 0.5, "Success", alpha=0.2, rotation=90, verticalalignment='center')
+        plt.text(success_threshold_perc + 20, 0.5, "Success", alpha=0.9, rotation=90, verticalalignment='center')
         plt.vlines(success_threshold_perc, 0, 1, color='green',
                    linestyles='solid', label='99.9% success threshold')
 
-        plt.text((min_red + success_threshold_perc)*0.5, 0.5, "Failure",
-         alpha=0.2, rotation=90, verticalalignment='center')
+        plt.text(success_threshold_perc - 25, 0.5, "Failure",
+                 alpha=0.9, rotation=90, verticalalignment='center')
     else:
-        plt.axvspan(min_red, max_red,color='red', alpha=0.1)
-        plt.text((max_red)*0.7, 0.5, "Failure",
-                 alpha=0.2, rotation=90, verticalalignment='center')
-    
+        plt.axvspan(min_red, max_red, color='red', alpha=0.1)
+        plt.text(max_red-20, 0.5, "Failure",
+                 alpha=0.9, rotation=90, verticalalignment='center')
+
     # plt.grid(True)
     plt.legend()
-    
+
     plt.xlabel('Redundancy [%]')
     plt.ylabel('Decoding Probability')
     size = int(ceil(F/1E3))
