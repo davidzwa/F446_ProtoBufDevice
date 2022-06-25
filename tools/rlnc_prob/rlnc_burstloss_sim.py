@@ -206,7 +206,7 @@ pi_b = 0.6  # % burst PER
 xrange = np.linspace(pow(10, xmin), pow(10, xmax), num=xcount)
 results = None
 
-read_csv = False
+read_csv = True
 
 if read_csv:
     results = pd.read_csv('27_burst_resistance.csv')
@@ -313,7 +313,7 @@ fig, ax1 = plt.subplots()
 per_perc = pi_b * 100
 fragment_max = G*(delta+1)
 plt.title(
-    f"Decoding Burst Resistance (n=20,N={fragment_max},PER={per_perc:.0f}%)")
+    f"Decoding Burst Resistance (G=20,R={fragment_max},PER={per_perc:.0f}%)")
 plt.grid(True)
 plt.xlabel('Burst Frequency/Duration coefficient (x)')
 # plt.xscale('log')
