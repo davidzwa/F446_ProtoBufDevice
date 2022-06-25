@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import norm
 import matplotlib.ticker as mtick
-ax.xaxis.set_major_formatter(mtick.PercentFormatter())
 from shared import success_rates
 import pandas as pd
 
@@ -17,6 +17,7 @@ colors = ['green']
 color_index = 0
 gk = df[df.Success == True].groupby('PerConfig')
 
+
 # Set percentage
 fig, ax = plt.subplots()
 ax.xaxis.set_major_formatter(mtick.PercentFormatter())
@@ -27,16 +28,19 @@ colors = plt.cm.viridis(np.linspace(0, 1, len(gk)-1))
 output_data = []
 df_model = pd.DataFrame({'Redundancy': [], 'SuccessRate': [], 'PER': []})
 for per_name, group in gk:
-
     print("Plotting PER", per_name, type(per_name))
     if per_name == 0.0:
         continue
 
     grp = group['RedundancyUsed']
-
+    
     # Get histogram from data and run through model
     hist, bins = np.histogram(grp, bins=delta_max, range=[0, 60])
     reds, model = success_rates(G, delta_max, per_name, q, False)
+    
+    mu, std = norm.fit(hist)
+    print(mu, std)
+
 
     # Append to series for csv export
     added_df = pd.DataFrame(
@@ -76,6 +80,6 @@ df_model.to_csv('21_output.csv')
 plt.legend(loc='center')
 # plt.grid(True)
 plt.xlabel('Redundancy [%]')
-plt.ylabel('Decoding Probability')
+plt.ylabel('Decoding probability')
 plt.title('Decoding probability vs redundancy ($\epsilon$ [10%-80%], G=20)')
 plt.savefig('21_rlnc_vs_model.pdf')
