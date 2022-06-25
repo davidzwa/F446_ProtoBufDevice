@@ -2,6 +2,9 @@ from math import comb, ceil
 from random import Random
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator, NullFormatter)
 
 nullword = ['0xFF', '0xFF', '0xFF', '0xFF']
 nullword_bytes = bytes([int(x, 0) for x in nullword])
@@ -16,8 +19,11 @@ def equals_nullword(bytestring):
     return bytestring == nullword_bytes
 
 
-def index_to_time(index, rate):
-    return index / rate / 60 / 60
+def index_to_time(index, rate, x_hours=True):
+    if x_hours:
+        return index / rate / 60 / 60
+    else:
+        return index / rate / 60
 
 
 def parse_flash_file(path):
@@ -125,19 +131,19 @@ def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
     # Total generation frame count
     f = ceil(F / (s_f))  # Frame count
     n_g = ceil(f / G)  # Generation count
-    N = G * (1+delta)
+    R = G * (1+delta)
 
     print(f"Firmware of {F} bytes")
     print(f"{f} frames")
     print(f"Number of gens {n_g}")
-    print(f"{G}/{N} gen frame ratio")
+    print(f"{G}/{R} gen frame ratio")
 
     decoding_probs = []
     all_gen_probs = []
     all_devices_probs = []
     # part_devices_probs = []
 
-    redundancies = range(0, N+1)
+    redundancies = range(0, R+1)
     for redundancy in redundancies:
         p_fail_decode = failure_rate(G, redundancy, PER, q, True)
         p_success_decode = 1.0 - p_fail_decode
@@ -167,7 +173,7 @@ def calculate_decoding_prob_devices(F, s_f, G, devices, q, PER, delta):
     return redundancies, decoding_probs, all_gen_probs, all_devices_probs
 
 
-def find_erasures(sequence_numbers, rate, print_debug=False):
+def find_erasures(sequence_numbers, rate, x_hours, print_debug=False):
     counter = 0
     last_seq_number = None
     packets_missed = 0
@@ -201,7 +207,7 @@ def find_erasures(sequence_numbers, rate, print_debug=False):
         else:
             erasures_found.append(0)
 
-        data_time = index_to_time(sequence_number, rate)
+        data_time = index_to_time(sequence_number, rate, x_hours)
         timestrings.append(data_time)
 
         # Iterate
@@ -211,9 +217,13 @@ def find_erasures(sequence_numbers, rate, print_debug=False):
     return timestrings, erasures_found, counter, last_seq_number, packets_missed, resets
 
 
-def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, rate, PER_filter):
+def plot_erasures_PER(
+    sequence_numbers, rssis, snrs, title, rate, PER_filter,
+    minor_ticks=0.5, major_ticks=1, file=None, ymax=0.5,
+    x_hours=True
+):
     timestrings, erasures, counter, last_seq_number, packets_missed, resets = find_erasures(
-        sequence_numbers, rate)
+        sequence_numbers, rate, x_hours)
 
     print("First seq", sequence_numbers[0])
     print("Last seq", sequence_numbers[-1])
@@ -221,54 +231,110 @@ def plot_erasures_PER(alpha, marker_size, sequence_numbers, rssis, snrs, title, 
     print(f"{counter} measurements found, total packets missed {packets_missed}, resets {resets}")
 
     PER_output = meanfilt(np.array(erasures), PER_filter)
-    # TODO this x-axis determination is very weak and buggy
-    step = 1/rate/3600
-    erasure_indices = np.arange(0, timestrings[-1] + 20000 * step, step)
-    # TODO this is very weak and doesnt promise good x axis
-    erasure_indices = erasure_indices[:len(PER_output)]
 
-    print("PER mean length", len(erasure_indices),
-          len(PER_output), timestrings[-1], step)
+    # Reproduce x axis vectors
+    factor = 60
+    if not x_hours:
+        factor = 1
+    erasure_indices_time = np.arange(0, len(PER_output), 1) / (rate * 60) / factor
+    sequence_numbers_time = sequence_numbers / (rate * 60) / factor
 
-    fig, axs = plt.subplots(2)
-    ax1 = axs[0]
-    ax2 = ax1.twinx()
-
-    ax3 = axs[1]
-    l3 = ax3.scatter(erasure_indices, PER_output,
-                     s=2,
-                     color='orange', label='PER')
-    ax3.set_ylim([0, 1])
-    ax3.text(1.5, 0.1, "PER")
-    ax4 = ax3.twinx()
-    l4 = ax4.scatter(timestrings, sequence_numbers,
-                     s=marker_size,
-                     label='sequence_numbers')
-    ax4.text(3, 4000, "Seq")
-    # ax3.legend(handles=l3+l4)
-    ax3.set_title("PER over time")
-    ax3.set_xlabel('Time (h)')
+    # Plot SNR RSSI
+    fig, ax1 = plt.subplots()
 
     l1 = ax1.scatter(timestrings, rssis,
                      color='orange',
-                     alpha=alpha,
-                     s=marker_size,
+                     alpha=0.15,
+                     s=2,
                      label='RSSI')
-    ax1.text(1, -95, "RSSI")
+    ax2 = ax1.twinx()
     l2 = ax2.scatter(timestrings, snrs,
-                     alpha=alpha,
-                     s=marker_size,
+                     alpha=0.15,
+                     s=1,
                      label='SNR')
-    ax2.text(2, -7, "SNR")
-    # ax1.legend(handles=l1+l2)
-    ax1.set_xlabel('Time (h)')
-    ax1.set_title(title)
+    lns = [l1, l2]
+    datatypes = [l.get_label() for l in lns]
+    leg2 = ax1.legend(lns, datatypes, loc=0)
+    for lh in leg2.legendHandles:
+        lh.set_alpha(1)
+
+    if x_hours:
+        ax1.set_xlabel('Time (h)')
+    else:
+        ax1.set_xlabel('Time (min)')
+    ax1.set_title(title.replace("PER", "RSSI and SNR"))
     ax1.set_ylabel("RSSI [dBm]")
     ax2.set_ylabel("SNR [dB]")
+    ax1.set_ylim([-110,-40])
+    ax2.set_ylim([-20, 20])
 
-    # fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    # if major_ticks is not None:
+    ax1.xaxis.set_major_locator(MultipleLocator(1))
+    # if minor_ticks is not None:
+    ax1.xaxis.set_minor_locator(MultipleLocator(0.5))
+    ax1.xaxis.set_minor_formatter(NullFormatter())
+    ax1.yaxis.set_minor_locator(MultipleLocator(5))
+    ax2.yaxis.set_minor_locator(MultipleLocator(2))
 
-    plt.show(block=False)
+    ax1.grid()
+    ax1.set_box_aspect(0.3)
+    ax2.set_box_aspect(0.3)
+    if file is not None:
+        fig.tight_layout()
+        plt.savefig(file+"_RSSISNR.png", dpi=300)
+        plt.savefig(file+"_RSSISNR.pdf", dpi=300)
+    else:
+        fig.tight_layout()
+        plt.savefig("27_SF8_bike_RSSISNR.png", dpi=300)
+        plt.savefig("27_SF8_bike_RSSISNR.pdf", dpi=300)
+
+    plt.figure()
+    # Extra debugging
+    # print("PER mean length", len(erasure_indices),
+    #       len(PER_output), timestrings[-1], step)
+    # plt.figure(figsize=(10,3))
+    fig, ax1 = plt.subplots()
+    lns1 = ax1.scatter(erasure_indices_time, PER_output * 100, s=1,
+                       color='orange', label='PER estimate ($\epsilon$)')
+    ax1.yaxis.set_major_formatter(mtick.PercentFormatter())
+    ax1.set_ylim([0, ymax * 100])
+
+    ax1.set_ylabel("PER estimate ($\epsilon$) [%]")
+
+    ax2 = ax1.twinx()
+    lns2 = ax2.scatter(sequence_numbers_time, sequence_numbers,
+                       s=0.25,
+                       label='Sequence Numbers')
+    ax2.set_ylabel('Sequence Numbers')
+
+    lns = [lns1, lns2]
+    datatypes = [l.get_label() for l in lns]
+    leg = ax1.legend(lns, datatypes, loc=0)
+    for lh in leg.legendHandles:
+        lh.set_alpha(1)
+
+    # if major_ticks is not None:
+    ax1.xaxis.set_major_locator(MultipleLocator(1))
+    # if minor_ticks is not None:
+    ax1.xaxis.set_minor_locator(MultipleLocator(0.5))
+    ax1.xaxis.set_minor_formatter(NullFormatter())
+    ax1.yaxis.set_minor_locator(MultipleLocator(5))
+    ax2.yaxis.set_minor_locator(MultipleLocator(500))
+    ax2.set_ylim([0, max(sequence_numbers+500)])
+    
+    ax1.grid()
+    if x_hours:
+        ax1.set_box_aspect(0.4)
+        ax2.set_box_aspect(0.4)
+        ax1.set_xlabel('Time (h)')
+    else:
+        ax1.set_xlabel('Time (min)')
+    plt.title(title.replace("RSSI and SNR", "PER"))
+
+    if file is not None:
+        fig.tight_layout()
+        plt.savefig(file+".png", dpi=300)
+        plt.savefig(file+".pdf", dpi=300)
 
     return PER_output
 
@@ -295,7 +361,7 @@ def calculate_burst_timeseries(count, p, r, burst_prr, good_prr, PER_decider):
         error = None
         if new_state == 0:
             # Burst state
-            error = PER_decider(burst_per, index)
+            error = PER_decider(burst_per)
             if prev_state != 0:
                 burst_start_steps.append(index)
 
@@ -305,7 +371,7 @@ def calculate_burst_timeseries(count, p, r, burst_prr, good_prr, PER_decider):
 
         elif new_state == 1:
             # Good state
-            error = PER_decider(good_per, index)
+            error = PER_decider(good_per)
 
             if prev_state != 1:
                 duration = index - burst_start_steps[-1]
@@ -343,7 +409,7 @@ def calc_lora_toa(frame_size: int, SF: int, BW: int, CR: int, num_preamble: int 
     tPreamble = (num_preamble + 4.25) * tSymb
 
     numerator = 8 * frame_size - 4 * SF + 28 + 16 - 20 * impl_hdr
-    denominator = 4 * SF # Skipped low DR (=12) for now
+    denominator = 4 * SF  # Skipped low DR (=12) for now
     payload_symb = ceil(numerator / denominator) * (CR + 4)
     payload_symb_nb = 8 + max(payload_symb, 0)
 
@@ -352,6 +418,7 @@ def calc_lora_toa(frame_size: int, SF: int, BW: int, CR: int, num_preamble: int 
     return t_packet, t_payload, payload_symb, payload_symb_nb
 
 
-def calc_lora_tpacket(frame_size: int, SF: int, BW: int, CR:int, num_preamble: int = 8, impl_hdr: bool = False):
-    val, _, _, _ = calc_lora_toa(frame_size, SF, BW, num_preamble, CR, impl_hdr)
+def calc_lora_tpacket(frame_size: int, SF: int, BW: int, CR: int, num_preamble: int = 8, impl_hdr: bool = False):
+    val, _, _, _ = calc_lora_toa(
+        frame_size, SF, BW, num_preamble, CR, impl_hdr)
     return val
