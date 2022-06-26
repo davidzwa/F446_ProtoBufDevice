@@ -196,6 +196,7 @@ $ make
 ## Acknowledgments
 
 * This repository was forked from [LoRaMac-node](https://github.com/Lora-net/LoRaMac-node/tree/master)
+* It makes good use of Efficient UART and Flash serialization interface using [EmbeddedProto](https://github.com/Embedded-AMS/EmbeddedProto) by the company Embedded AMS
 * The mbed (https://mbed.org/) project was used at the beginning as source of
 inspiration.
 * This program uses the AES algorithm implementation (http://www.gladman.me.uk/) by Brian Gladman.
