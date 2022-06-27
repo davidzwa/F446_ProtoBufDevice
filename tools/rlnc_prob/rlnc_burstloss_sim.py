@@ -358,6 +358,23 @@ plt.title(
 plt.plot(results.loc[:, "x"], rlnc, label="Rlnc")
 plt.plot(results.loc[:, "x"], unmixed, label="Rngmixed")
 plt.plot(results.loc[:, "x"], semi_unmixed, label="Semi-Rngmixed")
+
+plt.plot([0.2, 0.2], [25, 63], color='black', marker='o', linestyle='solid',
+         linewidth=1, markersize=2)
+diff = 63-25
+plt.text(0.09, 45, f"+{diff}%")
+
+plt.plot([0.6, 0.6], [3.5, 78.5], color='black', marker='o', linestyle='solid',
+         linewidth=1, markersize=2)
+diff = 78.5-3.5
+plt.text(0.49, 45, f"+{diff:.0f}%")
+
+plt.plot([1.0, 1.0], [1, 89], color='black', marker='o', linestyle='solid',
+         linewidth=1, markersize=2)
+diff = 89-1 
+plt.text(0.89, 45, f"+{diff}%")
+
+plt.ylim([0, 100])
 plt.xlabel("Burst Frequency/Duration coefficient (x)")
 plt.ylabel("Success Rate [%]")
 plt.grid()
