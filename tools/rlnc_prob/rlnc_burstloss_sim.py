@@ -329,15 +329,16 @@ p12 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMax"],
 plt.legend()
 plt.ylabel('Required Redundancy [%]')
 ax2 = ax1.twinx()
-p2 = ax2.plot(results.loc[:, "x"], results.loc[:, "SuccessRate"],
+p2 = ax2.plot(results.loc[:, "x"], 100*results.loc[:, "SuccessRate"],
               '-', linewidth=0.3, color='green', label="Success Rate")[0]
-plt.plot(results.loc[:, "x"], results.loc[:,
+plt.plot(results.loc[:, "x"], 100*results.loc[:,
                                           "PER"], '-', color='red', linewidth=0.3, label="Temporal PER")[0]
 plt.ylabel('Success Rate [%]')
 ax1.yaxis.label.set_color(p1.get_color())
 ax2.yaxis.label.set_color(p2.get_color())
 
 plt.legend()
+plt.ylim([0, 100])
 plt.savefig('27_burst_resistance.pdf')
 
 plt.figure(2)
