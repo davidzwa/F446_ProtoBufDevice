@@ -317,29 +317,30 @@ plt.title(
 plt.grid(True)
 plt.xlabel('Burst Frequency/Duration coefficient (x)')
 # plt.xscale('log')
-p1 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMin"],
-              '-',
-              linewidth=0.3,
-              color='darkblue', label="Redundancy Used (min)")[0]
+# p1 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMin"],
+#               '-',
+#               linewidth=0.3,
+#               color='darkblue', label="Redundancy Used (min)")[0]
 p11 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsed"],
-               '-', color='blue', linewidth=0.2, label="Redundancy Used (mean)")[0]
-p12 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMax"],
-               '-', color='black', linewidth=0.3, label="Redundancy Used (max)")[0]
+               '-', color='blue', linewidth=1, label="Redundancy Used (mean)")[0]
+# p12 = ax1.plot(results.loc[:, "x"], results.loc[:, "RedundancyUsedMax"],
+#                '-', color='black', linewidth=0.3, label="Redundancy Used (max)")[0]
 
-plt.legend()
+plt.legend(loc='upper left')
 plt.ylabel('Required Redundancy [%]')
 ax2 = ax1.twinx()
 p2 = ax2.plot(results.loc[:, "x"], 100*results.loc[:, "SuccessRate"],
-              '-', linewidth=0.3, color='green', label="Success Rate")[0]
+              '-', linewidth=1, color='green', label="Success Rate")[0]
 plt.plot(results.loc[:, "x"], 100*results.loc[:,
-                                          "PER"], '-', color='red', linewidth=0.3, label="Temporal PER")[0]
+                                          "PER"], '-', color='red', linewidth=1, label="Temporal PER")[0]
 plt.ylabel('Success Rate [%]')
-ax1.yaxis.label.set_color(p1.get_color())
+ax1.yaxis.label.set_color(p11.get_color())
 ax2.yaxis.label.set_color(p2.get_color())
 
-plt.legend()
+plt.legend(loc='lower right')
 plt.ylim([0, 100])
 plt.savefig('27_burst_resistance.pdf')
+plt.savefig('27_burst_resistance.png')
 
 plt.figure(2)
 
@@ -348,6 +349,7 @@ plt.hist(results.loc[:, "PER"], density=True)
 plt.xlabel("Temporal PER [%]")
 plt.ylabel("Density")
 plt.savefig('27_burst_resistance_PER_hist.pdf')
+plt.savefig('27_burst_resistance_PER_hist.png')
 
 plt.figure(3)
 rlnc = 100*results.loc[:, "SuccessRate"]

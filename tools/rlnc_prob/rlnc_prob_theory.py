@@ -79,9 +79,10 @@ plt.grid(True)
 plt.legend()
 plt.xlabel('Redundancy [%]')
 plt.ylabel('Decoding Failure Probability')
-prefix = "Decoding Failure $P_\{fail\}$ vs Redundancy"
+prefix = "Decoding Failure $P_{fail}$ vs Redundancy"
 plt.title(f"{prefix} (G={G}, R={R}, $\epsilon$=20%)")
 plt.savefig('10_rlnc_theory.pdf')
+plt.savefig('10_rlnc_theory.png')
 
 G = 10
 for m in range(G, G+10):
